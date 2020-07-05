@@ -9,8 +9,8 @@ import com.heartbeat.db.impl.CBDataAccess;
 import com.heartbeat.model.data.*;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class Session {
   public void sync(CBDataAccess cba) {
     cba.sync(Integer.toString(id), this, ar -> {
       if (ar.failed())
-        LOGGER.error(ar.cause());
+        LOGGER.error(ar.cause().getMessage());
     });
   }
 

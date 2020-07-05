@@ -5,8 +5,8 @@ import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 public class SystemController implements Handler<RoutingContext> {
@@ -15,6 +15,7 @@ public class SystemController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
     try {
+      LOGGER.error("test controller");
       String cmd        = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
