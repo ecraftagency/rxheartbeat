@@ -1,0 +1,134 @@
+package com.heartbeat.model.data;
+
+import com.heartbeat.common.Utilities;
+import com.heartbeat.db.impl.CBDataAccess;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
+import com.heartbeat.model.Session;
+import com.statics.MediaData;
+import com.statics.WordFilter;
+
+import java.util.List;
+
+public class UserGameInfo extends com.transport.model.GameInfo {
+  public static final int MAX_AVATAR                = 10;
+  public static final int MAX_GENDER                = 2;
+  public static final int MEDIA_INTERVAL            = 59;
+  public static final int CLAIM_MEDIA_COUNT_ITEM    = 2; //hợp đồng truyền thông
+
+  public String toJson() {
+    return Utilities.gson.toJson(this);
+  }
+
+  public static UserGameInfo ofDefault() {
+    UserGameInfo defaultInfo      = new UserGameInfo();
+    defaultInfo.avatar            = -1;
+    defaultInfo.gender            = -1; //0 male, 1 female;
+    defaultInfo.displayName       = "";
+    defaultInfo.money             = 2000000000;
+    defaultInfo.view              = 2000000000;
+    defaultInfo.fan               = 2000000000;
+    defaultInfo.talent            = 3000;
+    defaultInfo.titleId           = 1;
+    defaultInfo.time              = 0;
+    defaultInfo.exp               = 2000;
+    defaultInfo.currMedia         = 3;
+    defaultInfo.maxMedia          = 2;
+    defaultInfo.lastMediaClaim    = 0;
+    defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
+    return defaultInfo;
+  }
+
+  /********************************************************************************************************************/
+
+  public String updateDisplayName(Session session,  String dName) throws Exception {
+    dName = dName.trim();
+    if (Utilities.isValidString(dName)) {
+      if (WordFilter.isValidUserName(dName, session.buildSource)) {
+        String sha256DisplayName = Utilities.sha256Hash(dName);
+        if (CBDataAccess.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
+          this.displayName = dName;
+          return "ok";
+        }
+        else
+          return "display_name_exist";
+      }
+      else
+        return "display_name_invalid";
+    }
+    else
+      return "display_name_invalid";
+  }
+
+  public String replaceDisplayName(Session session, String displayName){
+    displayName = displayName.trim();
+    if (Utilities.isValidString(displayName)) {
+      if (WordFilter.isValidUserName(displayName, session.buildSource)) {
+        try {
+          String sha256DisplayName = Utilities.sha256Hash(displayName);
+          if (CBDataAccess.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
+            String oldDisplayName = this.displayName;
+            this.displayName = displayName;
+            String sha256OldDisplayName = Utilities.sha256Hash(oldDisplayName);
+            CBDataAccess.getInstance().unmap(sha256OldDisplayName);
+            return "ok";
+          }
+          else
+            return "display_name_exist";
+        }
+        catch (Exception e) {
+          return "display_name_invalid";
+        }
+
+      }
+      else
+        return "display_name_invalid";
+    }
+    else
+      return "display_name_invalid";
+  }
+
+  /*MEDIA**************************************************************************************************************/
+
+  public void updateUserMedia(long curMs) {
+    int second        = (int)(curMs/1000);
+    int mediaDt       = second - lastMediaClaim;
+    int newMediaCount = mediaDt/MEDIA_INTERVAL;
+    lastMediaClaim   += newMediaCount*MEDIA_INTERVAL;
+    currMedia        += newMediaCount;
+    currMedia         = Math.min(currMedia, maxMedia);
+  }
+
+  public String claimMedia(Session session, int answer) {
+    long curMs = System.currentTimeMillis();
+    updateUserMedia(curMs);
+    if (currMedia > 0) {
+      currMedia      -= 1;
+      lastMediaClaim = (int)(curMs/1000);
+      MediaData.Media media = MediaData.mediaMap.get(nextQuestion);
+      if (media != null) {
+        List<List<Integer>> rewards;
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, -1, "");
+        if (answer == 1) {
+          rewards = media.reward_1;
+          for (List<Integer> reward : rewards)
+            EffectManager.inst().handleEffect(extArgs, session, reward);
+        }
+        if (answer == 2) {
+          rewards = media.reward_2;
+          for (List<Integer> reward : rewards)
+            EffectManager.inst().handleEffect(extArgs, session, reward);
+        }
+        nextQuestion = MediaData.nextRandQuestion();
+      }
+      return "ok";
+    }
+    else
+      return "media_time_out";
+  }
+
+  public void addMediaClaim(int amount) {
+    currMedia += amount;
+    currMedia  = Math.min(currMedia, maxMedia);
+  }
+}

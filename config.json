@@ -1,0 +1,8 @@
+{
+  "http.port" : 8080,
+  "db.host": "localhost",
+  "db.port": "8091",
+  "db.user": "Administrator",
+  "db.pwd": "n5t5lnsct",
+  "ONLINE_INFO.ONLINE_HEARTBEAT_TIME": 30
+}
