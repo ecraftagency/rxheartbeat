@@ -49,6 +49,8 @@ public class Session {
   public UserIdol           userIdol;
   public UserInventory      userInventory;
   public UserFight          userFight;
+  public UserTravel         userTravel;
+
   public List<EffectResult> effectResults;
 
   public void initRegister(String password) {
@@ -58,6 +60,7 @@ public class Session {
     userIdol              = UserIdol.ofDefault();
     userInventory         = UserInventory.ofDefault();
     userFight             = UserFight.ofDefault();
+    userTravel            = UserTravel.ofDefault();
     userProfile.password  = password;
 
     long curMs            = System.currentTimeMillis();
@@ -70,8 +73,8 @@ public class Session {
       isClose = true;
     }
     long curMs = System.currentTimeMillis();
-    userProfile.lastLogout = (int)curMs/1000;
-    int onlineTime = userProfile.lastLogin - userProfile.lastLogout;
+    userProfile.lastLogout        = (int)curMs/1000;
+    int onlineTime                = userProfile.lastLogin - userProfile.lastLogout;
     userProfile.totalPlayingTime += onlineTime;
 
     CBDataAccess cba = CBDataAccess.getInstance();
@@ -106,7 +109,10 @@ public class Session {
       }
     }
 
-    userProfile.lastLogin = second;
+    if (userTravel == null)
+      userTravel = UserTravel.ofDefault();
+    userProfile.lastLogin   = second;
+    userTravel.chosenNPCId  = -1;
   }
 
   public void updateClientInfo(LoginRequest message) {

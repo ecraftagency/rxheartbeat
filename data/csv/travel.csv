@@ -1,18 +1,18 @@
-id,structure,name,type,title,desc
-1,1,Tiết Vạn Tam,1,giàu,giàu nhất
-2,1,Liễu Nhân,1,đẹp,đẹp nhất
-3,1,Tiết Đinh,2,giỏi,giỏi nhất
-4,2,Lý Chính Đao,1,ghê,ghê nhất
-5,2,Lý Chí,2,xấu,xấu nhất
-6,3,Từ Tài Tử,1,ga lăng,ga lăng nhất
-7,4,Giả Mẫu,1,màu,màu nhất
-8,4,Lâm Đai Ngọc,2,chảnh,chảnh nhất
-9,4,Tiết Bảo Thoa,3,ác,ác nhất
-10,5,Hồ Thanh Ngưu,3,ngốc,ngốc nhất
-11,6,Hỏa Tỷ,3,nóng,nóng nhất
-12,6,Nhị Cẩu Tử,3,gay,gay nhất
-13,7,Ung Thân Vương,1,lú,lú nhất
-14,7,Ô Lạp Na Lạp,2,quái,quái nhất
-15,7,A Tát Lý,2,dâm,dâm nhất
-16,8,Vi Tiểu Bảo,1,nhiều vợ,nhiều vợ nhất
-17,9,Triệu Văn Tuyên,3,ko biết, hết rồi
+id,structure,name,type,title,desc,reward
+1,1,Tiết Vạn Tam,1,giàu,giàu nhất,"[102,46,0,0]"
+2,1,Liễu Nhân,1,đẹp,đẹp nhất,"[102,46,0,0]"
+3,1,Tiết Đinh,2,giỏi,giỏi nhất,"[102,47,0,0]"
+4,2,Lý Chính Đao,1,ghê,ghê nhất,"[102,46,0,0]"
+5,2,Lý Chí,2,xấu,xấu nhất,"[102,47,0,0]"
+6,3,Từ Tài Tử,1,ga lăng,ga lăng nhất,"[102,46,0,0]"
+7,4,Giả Mẫu,1,màu,màu nhất,"[102,46,0,0]"
+8,4,Lâm Đai Ngọc,2,chảnh,chảnh nhất,"[102,47,0,0]"
+9,4,Tiết Bảo Thoa,3,ác,ác nhất,"[102,48,0,0]"
+10,5,Hồ Thanh Ngưu,3,ngốc,ngốc nhất,"[102,48,0,0]"
+11,6,Hỏa Tỷ,3,nóng,nóng nhất,"[102,48,0,0]"
+12,6,Nhị Cẩu Tử,3,gay,gay nhất,"[102,48,0,0]"
+13,7,Ung Thân Vương,1,lú,lú nhất,"[102,46,0,0]"
+14,7,Ô Lạp Na Lạp,2,quái,quái nhất,"[102,47,0,0]"
+15,7,A Tát Lý,2,dâm,dâm nhất,"[102,47,0,0]"
+16,8,Vi Tiểu Bảo,1,nhiều vợ,nhiều vợ nhất,"[102,46,0,0]"
+17,9,Triệu Văn Tuyên,3,ko biết, hết rồi,"[102,48,0,0]"

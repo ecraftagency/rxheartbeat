@@ -23,6 +23,7 @@ import io.vertx.reactivex.RxHelper;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 /*
  * RXServer = reactive server, a server that try not to waiting on anything, hope so!!
@@ -155,6 +156,16 @@ public class HBServer extends AbstractVerticle {
               StandardCharsets.UTF_8);
       ShoppingData.loadJson(shoppingJson);
 
+      //todo this is ORACLE java! group, join...JAVA x SQL!
+      //1 month later pls don't ever ask me about this chunk of code T___T
+      String travelJson    = new String(Files.readAllBytes(Paths.get("data/json/travel.json")),
+              StandardCharsets.UTF_8);
+      TravelData.loadJson(travelJson, () ->
+              TravelData.npcTypeMap = TravelData.travelNPCMap
+                      .values()
+                      .stream()
+                      .collect(Collectors.groupingBy(TravelData.TravelNPC::getType, Collectors.toList())));
+
       WordFilter.loadJson("");
 
       String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
@@ -187,6 +198,8 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/idol").handler(new IdolController());
         router.post("/api/fight").handler(new FightController());
         router.post("/api/item").handler(new ItemController());
+        router.post("/api/travel").handler(new TravelController());
+
         router.post("/gm/inject").handler(new InjectController());
 
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->

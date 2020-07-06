@@ -13,12 +13,13 @@ public class ExtMessage {
   public List<EffectResult> effectResults;
 
   public static class Data {
-    public GameInfo gameInfo;
-    public Idols idols;
+    public GameInfo   gameInfo;
+    public Idols      idols;
     public Production production;
-    public Profile        profile;
-    public Inventory inventory;
-    public Fight          fight;
+    public Profile    profile;
+    public Inventory  inventory;
+    public Fight      fight;
+    public Travel     travel;
   }
 
   public static ExtMessage idol() {
@@ -80,6 +81,15 @@ public class ExtMessage {
     result.cmd = "";
     result.msg = "ok";
     result.group = "media";
+    result.data = new Data();
+    return result;
+  }
+
+  public static ExtMessage travel() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "travel";
     result.data = new Data();
     return result;
   }
