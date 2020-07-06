@@ -120,10 +120,11 @@ public class ProfileController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processUserGameInfo(Session session) {
-    ExtMessage resp = ExtMessage.profile();
-    resp.data.gameInfo = session.userGameInfo;
-    resp.data.production = session.userProduction;
-    resp.data.idols = session.userIdol;
+    ExtMessage resp       = ExtMessage.profile();
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.production  = session.userProduction;
+    resp.data.idols       = session.userIdol;
+    resp.data.inventory   = session.userInventory;
     return resp;
   }
 }

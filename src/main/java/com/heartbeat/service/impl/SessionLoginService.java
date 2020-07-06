@@ -130,6 +130,9 @@ public class SessionLoginService implements AuthService {
       lr.buildSource = session.buildSource;
       lr.osPlatform = session.osPlatForm;
       lr.clientVersion = request.clientVersion;
+      lr.displayName  = session.userGameInfo.displayName;
+      lr.gender = session.userGameInfo.gender;
+      lr.avatar = session.userGameInfo.avatar;
       return lr;
     }
 

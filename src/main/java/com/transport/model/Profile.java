@@ -16,4 +16,7 @@ public class Profile {
   public String       osPlatform;
   public String       clientVersion;
   public String       jwtToken;
+  public String       displayName;
+  public int          avatar;
+  public int          gender;
 }
