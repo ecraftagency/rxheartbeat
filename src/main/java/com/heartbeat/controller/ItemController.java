@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.List;
+
 public class ItemController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
 
@@ -34,6 +36,9 @@ public class ItemController implements Handler<RoutingContext> {
           case "userInventory":
             resp = processGetUserInventory(session);
             break;
+          case "effectTest":
+            resp = processTestEffect(session, ctx);
+            break;
           default:
             resp = ExtMessage.item();
             resp.msg = "unknown_cmd";
@@ -50,6 +55,17 @@ public class ItemController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processTestEffect(Session session, RoutingContext ctx) {
+    List<Integer> effect          = ctx.getBodyAsJson().getJsonArray("effect").getList();
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+    ExtMessage resp               = ExtMessage.item();
+    session.effectResults.clear();
+    resp.msg                      = EffectManager.inst().handleEffect(extArgs, session, effect);
+    resp.data.gameInfo            = session.userGameInfo;
+    resp.effectResults            = session.effectResults;
+    return resp;
   }
 
   private ExtMessage processUseEffectItem(Session session, RoutingContext ctx) {
