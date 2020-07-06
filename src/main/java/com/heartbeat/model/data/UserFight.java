@@ -45,16 +45,19 @@ public class UserFight extends Fight {
         runShow.reward.add(pack.get(ThreadLocalRandom.current()
                 .nextInt(0,pack.size())));
       }
+    };
 
-//      List<Integer> pack = RunShowData.runShowRewards.get(round);
-//
-//      Random random = new Random();
-//      runShow.reward = IntStream
-//              .generate(() -> random.nextInt(pack.size()))
-//              .distinct()
-//              .limit(RunShowData.nItemPerShow.get(round))
-//              .mapToObj(pack::get)
-//              .collect(Collectors.toList());
+    ShoppingData.randomer = shopping -> {
+      if (shopping.id == -1)
+        return;
+      int round = ((shopping.id - 1)%10)/2;
+      int nItem = ShoppingData.nItemPerShopping.get(round% ShoppingData.nItemPerShopping.size());
+      shopping.reward.clear();
+      for (int i = 0; i < nItem; i++) {
+        List<Integer> pack = ShoppingData.shoppingReward.get(i);
+        shopping.reward.add(pack.get(ThreadLocalRandom.current()
+                .nextInt(0,pack.size())));
+      }
     };
   }
 
@@ -335,9 +338,22 @@ public class UserFight extends Fight {
 
     if (session.userGameInfo.money >= moneyConsume) {
       session.userGameInfo.money -= moneyConsume;
+
+      //reward
       session.effectResults.clear();
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
-      EffectManager.inst().handleEffect(extArgs, session, currentRunShow.reward);
+
+      List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+      for (Integer item : currentShopping.reward) {
+        rewardFormat.set(1, item);
+        int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+        if (rand <= RUN_SHOW_DROP_RATE)
+          EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+      }
+
+//      session.effectResults.clear();
+//      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+//      EffectManager.inst().handleEffect(extArgs, session, currentShopping.reward);
 
       int nextFightId   = currentShopping.id + 1;
       currentShopping   = ShoppingData.of(nextFightId);
