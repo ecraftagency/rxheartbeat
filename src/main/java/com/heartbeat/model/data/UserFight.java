@@ -19,13 +19,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("unused")
 public class UserFight extends Fight {
-  public static final int IDOL_DAMAGE_SCALE           = 5000;
-  public static final int IDOL_FREE_FIGHT_ITEM        = 3;
-  public static final int SHOPPING_COEFFICIENT        = 4;
-  public static final float SHOPPING_MONEY_SCL        = 0.25f;
-  public static final int   RUN_SHOW_DROP_RATE        = 33;
+  public static final int             IDOL_DAMAGE_SCALE           = 5000;
+  public static final int             IDOL_FREE_FIGHT_ITEM        = 3;
+  public static final int             SHOPPING_COEFFICIENT        = 4;
+  public static final float           SHOPPING_MONEY_SCL          = 0.25f;
+  public static final int             RUN_SHOW_DROP_RATE          = 33;
+  public static final List<Integer>   RUN_SHOW_EXP_REWARD;
 
   static {
+    RUN_SHOW_EXP_REWARD = Arrays.asList(1, 6, 5, 0);
 
     RunShowData.randomer = runShow -> {
       if (runShow.id == -1)
@@ -299,6 +301,8 @@ public class UserFight extends Fight {
         if (rand <= RUN_SHOW_DROP_RATE)
           EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
       }
+
+      EffectManager.inst().handleEffect(extArgs, session, RUN_SHOW_EXP_REWARD);
 
       //next fight
       int nextFightId = currentRunShow.id + 1;

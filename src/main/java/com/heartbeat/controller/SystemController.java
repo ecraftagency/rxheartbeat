@@ -15,7 +15,6 @@ public class SystemController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
     try {
-      LOGGER.error("test controller");
       String cmd        = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));

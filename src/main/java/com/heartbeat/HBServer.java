@@ -2,7 +2,6 @@ package com.heartbeat;
 
 import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.common.Constant;
-import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.DataAccess;
 import com.heartbeat.db.impl.CBDataAccess;
@@ -131,6 +130,10 @@ public class HBServer extends AbstractVerticle {
       String dropJson = new String(Files.readAllBytes(Paths.get("data/json/drop.json")),
               StandardCharsets.UTF_8);
       DropData.loadJson(dropJson);
+
+      String bookLimitJson = new String(Files.readAllBytes(Paths.get("data/json/servantBookLimit.json")),
+              StandardCharsets.UTF_8);
+      BookLimitData.loadJson(bookLimitJson);
 
       String fightBossJson     = new String(Files.readAllBytes(Paths.get("data/json/fightBoss.json")),
               StandardCharsets.UTF_8);

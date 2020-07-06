@@ -50,6 +50,7 @@ public class IdolController implements Handler<RoutingContext> {
             break;
         }
         resp.cmd = cmd;
+        resp.data.idols = session.userIdol;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
       else {
@@ -94,18 +95,19 @@ public class IdolController implements Handler<RoutingContext> {
 
   private ExtMessage processIdolAptAddByExp(Session session, RoutingContext ctx) {
     ExtMessage resp = ExtMessage.idol();
-    int idolId = ctx.getBodyAsJson().getInteger("idolId");
-    int speciality = ctx.getBodyAsJson().getInteger("speciality"); //[2 - sang tao, 3 - bieu dien, 4 - cuon hut]
-    resp.msg = session.userIdol.addAptByExp(idolId, speciality);
+    int idolId      = ctx.getBodyAsJson().getInteger("idolId");
+    int speciality  = ctx.getBodyAsJson().getInteger("speciality"); //[2 - sang tao, 3 - bieu dien, 4 - cuon hut]
+    resp.msg        = session.userIdol.addAptByExp(idolId, speciality);
     return resp;
   }
 
   private ExtMessage processAptUpByItem(Session session, RoutingContext ctx) {
-    ExtMessage resp = ExtMessage.idol();
-    int idolId      = ctx.getBodyAsJson().getInteger("idolId");
-    int speciality  = ctx.getBodyAsJson().getInteger("speciality");
-    int step        = ctx.getBodyAsJson().getInteger("step");
-    resp.msg        = session.userIdol.addAptByItem(session, idolId, speciality, step);
+    ExtMessage resp     = ExtMessage.idol();
+    int idolId          = ctx.getBodyAsJson().getInteger("idolId");
+    int speciality      = ctx.getBodyAsJson().getInteger("speciality");
+    int step            = ctx.getBodyAsJson().getInteger("step");
+    resp.msg            = session.userIdol.addAptByItem(session, idolId, speciality, step);
+    resp.data.inventory = session.userInventory;
     return resp;
   }
 
