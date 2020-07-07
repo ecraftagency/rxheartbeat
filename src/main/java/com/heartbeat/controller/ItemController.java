@@ -91,6 +91,7 @@ public class ItemController implements Handler<RoutingContext> {
       resp.data.gameInfo  = session.userGameInfo;
       resp.data.inventory = session.userInventory;
       resp.data.idols     = session.userIdol;
+      resp.effectResults  = session.effectResults;
     }
     else {
       resp.msg = "not_enough_item";
@@ -120,6 +121,7 @@ public class ItemController implements Handler<RoutingContext> {
       resp.data.gameInfo    = session.userGameInfo;
       resp.data.inventory   = session.userInventory;
       resp.data.idols       = session.userIdol;
+      resp.effectResults  = session.effectResults;
     }
     else {
       resp.msg = "not_enough_item";

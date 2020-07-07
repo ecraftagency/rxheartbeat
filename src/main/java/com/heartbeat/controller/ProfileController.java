@@ -24,6 +24,9 @@ public class ProfileController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          case "addVipExp":
+            resp = processAddVipExp(session, ctx);
+            break;
           case "userGameInfo":
             resp = processUserGameInfo(session);
             break;
@@ -49,6 +52,14 @@ public class ProfileController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processAddVipExp(Session session, RoutingContext ctx) {
+    int amount = ctx.getBodyAsJson().getInteger("amount");
+    ExtMessage resp = ExtMessage.profile();
+    session.userGameInfo.addVipExp(session, amount);
+    resp.data.gameInfo = session.userGameInfo;
+    return resp;
   }
 
   private ExtMessage processUserLevelUp(Session session) {

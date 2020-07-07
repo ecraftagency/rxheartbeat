@@ -4,6 +4,7 @@ import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.statics.TravelData;
+import com.statics.VipData;
 import com.transport.model.Travel;
 
 import java.util.Arrays;
@@ -21,11 +22,16 @@ public class UserTravel extends Travel {
     travel.lastTravelClaim          = 0;
     travel.chosenNPCId              = -1;
     travel.travelInv                = TRAVEL_CLAIM_INTERVAL;
+    travel.dailyTravelAdd           = 0;
+    travel.dailyTravelAddLimit      = 5;
     return travel;
   }
 
   /********************************************************************************************************************/
   public void updateTravel(Session session, long curMs) {
+    VipData.Vip vip          = VipData.getVipData(session.userGameInfo.vipExp);
+    maxTravelClaim           = vip.travelLimit;
+
     int second               = (int)(curMs/1000);
     int travelDt             = second - lastTravelClaim;
     int newTravelClaimCount  = travelDt/TRAVEL_CLAIM_INTERVAL;
@@ -37,8 +43,10 @@ public class UserTravel extends Travel {
   public String claimTravel(Session session, long curMs) {
     updateTravel(session, curMs);
 
-    if (currentTravelClaimCount < 1)
+    if (currentTravelClaimCount < 1) {
+      chosenNPCId = -1;
       return "claim_travel_timeout";
+    }
 
     int rand = ThreadLocalRandom.current().nextInt(1, 101),acc = 0,npcType = 0;
 
@@ -70,6 +78,26 @@ public class UserTravel extends Travel {
 
     session.effectResults.clear();
     EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
+    return "ok";
+  }
+
+  public void newDay() {
+    dailyTravelAdd = 0;
+  }
+
+  public String addTravelClaim(Session session) {
+    if (dailyTravelAdd >= dailyTravelAddLimit)
+      return "max_travel_add";
+
+    long viewConsume = 100000 + 10000*dailyTravelAdd*dailyTravelAdd; //100k + 10k*d^2
+
+    if (session.userGameInfo.view < viewConsume)
+      return "insufficient_view";
+
+    session.userGameInfo.view -= viewConsume;
+    dailyTravelAdd++;
+    currentTravelClaimCount++;
+    currentTravelClaimCount  = Math.min(currentTravelClaimCount, maxTravelClaim);
     return "ok";
   }
 }

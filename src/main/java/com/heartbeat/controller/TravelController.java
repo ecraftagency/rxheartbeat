@@ -22,6 +22,9 @@ public class TravelController implements Handler<RoutingContext> {
         long curMs = System.currentTimeMillis();
         ExtMessage resp;
         switch (cmd) {
+          case "addTravelClaim":
+            resp = processAddTravelClaim(session);
+            break;
           case "travelInfo":
             resp = processTravelInfo(session, curMs);
             break;
@@ -46,6 +49,14 @@ public class TravelController implements Handler<RoutingContext> {
     }
   }
 
+  private ExtMessage processAddTravelClaim(Session session) {
+    ExtMessage resp     = ExtMessage.travel();
+    resp.msg            = session.userTravel.addTravelClaim(session);
+    resp.data.travel    = session.userTravel;
+    resp.data.gameInfo  = session.userGameInfo;
+    return resp;
+  }
+
   private ExtMessage processTravelInfo(Session session, long curMs) {
     session.userTravel.updateTravel(session, curMs);
     ExtMessage resp = ExtMessage.travel();
@@ -60,6 +71,7 @@ public class TravelController implements Handler<RoutingContext> {
     resp.data.travel    = session.userTravel;
     resp.effectResults  = session.effectResults;
     resp.serverTime     = (int)(curMs/1000);
+    resp.data.gameInfo  = session.userGameInfo;
     return resp;
   }
 }

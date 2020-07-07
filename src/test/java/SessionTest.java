@@ -1,3 +1,9 @@
+import com.heartbeat.controller.SystemController;
+import com.heartbeat.model.Session;
+import com.heartbeat.model.data.UserGameInfo;
+import com.heartbeat.model.data.UserIdol;
+import com.heartbeat.model.data.UserInventory;
+import com.heartbeat.model.data.UserTravel;
 import com.statics.*;
 
 import java.nio.charset.StandardCharsets;
@@ -5,8 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-public class StaticLoadTest {
+public class SessionTest {
   public static void main(String[] args) {
+    Session session = Session.of(100000);
+    session.userTravel = UserTravel.ofDefault();
+    session.userInventory = UserInventory.ofDefault();
+    session.userGameInfo = UserGameInfo.ofDefault();
+    session.userIdol = UserIdol.ofDefault();
+
     try {
       String servantJson = new String(Files.readAllBytes(Paths.get("data/json/servants.json")),
               StandardCharsets.UTF_8);
@@ -85,14 +97,15 @@ public class StaticLoadTest {
                       .stream()
                       .collect(Collectors.groupingBy(TravelData.TravelNPC::getType, Collectors.toList())));
 
-      String vipJson    = new String(Files.readAllBytes(Paths.get("data/json/vip.json")),
-              StandardCharsets.UTF_8);
-      VipData.loadJson(vipJson);
-
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {
       //
+    }
+
+    for (int i = 0; i < 10000; i++) {
+      String res = session.userTravel.claimTravel(session, 0);
+      System.out.println(session.userTravel.chosenNPCId + " " + res);
     }
   }
 }

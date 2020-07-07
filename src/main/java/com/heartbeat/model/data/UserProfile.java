@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
 import com.statics.TextData;

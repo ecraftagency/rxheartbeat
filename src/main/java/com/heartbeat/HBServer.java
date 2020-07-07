@@ -156,6 +156,7 @@ public class HBServer extends AbstractVerticle {
               StandardCharsets.UTF_8);
       ShoppingData.loadJson(shoppingJson);
 
+
       //todo this is ORACLE java! group, join...JAVA x SQL!
       //1 month later pls don't ever ask me about this chunk of code T___T
       String travelJson    = new String(Files.readAllBytes(Paths.get("data/json/travel.json")),
@@ -165,6 +166,10 @@ public class HBServer extends AbstractVerticle {
                       .values()
                       .stream()
                       .collect(Collectors.groupingBy(TravelData.TravelNPC::getType, Collectors.toList())));
+
+      String vipJson    = new String(Files.readAllBytes(Paths.get("data/json/vip.json")),
+              StandardCharsets.UTF_8);
+      VipData.loadJson(vipJson);
 
       WordFilter.loadJson("");
 
@@ -218,9 +223,8 @@ public class HBServer extends AbstractVerticle {
     //for logging backend
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 
-
-    //for faster startup, fucking couchbase java sdk T___T
-    dataAccess = CBDataAccess.getInstance();
+      //for faster startup, fucking couchbase java sdk T___T
+      dataAccess = CBDataAccess.getInstance();
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();

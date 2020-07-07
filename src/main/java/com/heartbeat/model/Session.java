@@ -1,6 +1,7 @@
 package com.heartbeat.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.DeviceUID;
 import com.heartbeat.common.GlobalVariable;
@@ -103,6 +104,7 @@ public class Session {
       dayDiff = Utilities.dayDiff(second, userProfile.lastLogin);
       if (dayDiff > 0) {
         userFight.newDay();
+        userTravel.newDay();
       }
       else {
         userFight.reLogin();

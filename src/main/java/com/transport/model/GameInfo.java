@@ -11,6 +11,7 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public long     time            = 0;
   public int      titleId         = 1;
   public long     exp             = 0;
+  public int      vipExp          = 0;
 
   //media data
   public int      currMedia       = 3;

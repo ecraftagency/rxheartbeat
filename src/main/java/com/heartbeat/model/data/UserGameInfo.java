@@ -1,15 +1,18 @@
 package com.heartbeat.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.common.Utilities;
 import com.heartbeat.db.impl.CBDataAccess;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.statics.MediaData;
+import com.statics.VipData;
 import com.statics.WordFilter;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends com.transport.model.GameInfo {
   public static final int MAX_AVATAR                = 10;
   public static final int MAX_GENDER                = 2;
@@ -35,6 +38,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     defaultInfo.currMedia         = 3;
     defaultInfo.maxMedia          = 2;
     defaultInfo.lastMediaClaim    = 0;
+    defaultInfo.vipExp = 0;
     defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
     return defaultInfo;
   }
@@ -130,5 +134,15 @@ public class UserGameInfo extends com.transport.model.GameInfo {
   public void addMediaClaim(int amount) {
     currMedia += amount;
     currMedia  = Math.min(currMedia, maxMedia);
+  }
+
+  public void addVipExp(Session session, int amount) {
+    if (amount <= 0)
+      return;
+    vipExp += amount;
+
+    VipData.Vip vip = VipData.getVipData(vipExp);
+    session.userTravel.maxTravelClaim       = vip.travelLimit;
+    session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
   }
 }

@@ -6,4 +6,6 @@ public class Travel {
   public int lastTravelClaim;
   public int chosenNPCId;
   public int travelInv;
+  public int dailyTravelAdd;
+  public int dailyTravelAddLimit;
 }
