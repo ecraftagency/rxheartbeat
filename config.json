@@ -1,6 +1,6 @@
 {
   "http.port" : 8080,
-  "db.host": "localhost",
+  "db.host": "18.140.197.136",
   "db.port": "8091",
   "db.user": "Administrator",
   "db.pwd": "n5t5lnsct",

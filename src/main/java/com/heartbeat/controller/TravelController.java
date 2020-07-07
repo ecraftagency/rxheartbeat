@@ -59,6 +59,7 @@ public class TravelController implements Handler<RoutingContext> {
     resp.msg            = session.userTravel.claimTravel(session, curMs);
     resp.data.travel    = session.userTravel;
     resp.effectResults  = session.effectResults;
+    resp.serverTime     = (int)(curMs/1000);
     return resp;
   }
 }

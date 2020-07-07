@@ -35,6 +35,10 @@ public class UserTravel extends Travel {
 
   public String claimTravel(Session session, long curMs) {
     updateTravel(session, curMs);
+
+    if (currentTravelClaimCount < 1)
+      return "claim_travel_timeout";
+
     int rand = ThreadLocalRandom.current().nextInt(1, 101),acc = 0,npcType = 0;
 
     for (int i = 0; i < visitPercent.size(); i++){
@@ -60,6 +64,8 @@ public class UserTravel extends Travel {
     TravelData.TravelNPC chosen   = npcList.get(ThreadLocalRandom.current().nextInt(npcList.size()));
     chosenNPCId                   = chosen.id;
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0,0,"");
+    currentTravelClaimCount      -= 1;
+    lastTravelClaim               = (int)(curMs/1000);
 
     session.effectResults.clear();
     EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
