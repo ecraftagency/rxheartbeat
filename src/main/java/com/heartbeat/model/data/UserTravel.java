@@ -20,6 +20,7 @@ public class UserTravel extends Travel {
     travel.maxTravelClaim           = 5;
     travel.lastTravelClaim          = 0;
     travel.chosenNPCId              = -1;
+    travel.travelInv                = TRAVEL_CLAIM_INTERVAL;
     return travel;
   }
 
