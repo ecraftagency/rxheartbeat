@@ -22,11 +22,14 @@ public class TravelController implements Handler<RoutingContext> {
         long curMs = System.currentTimeMillis();
         ExtMessage resp;
         switch (cmd) {
+          case "travelInfo":
+            resp = processTravelInfo(session, curMs);
+            break;
           case "claimTravel":
             resp = processClaimTravel(session, curMs);
             break;
           default:
-            resp = ExtMessage.production();
+            resp = ExtMessage.travel();
             resp.msg = "unknown_cmd";
             break;
         }
@@ -43,9 +46,17 @@ public class TravelController implements Handler<RoutingContext> {
     }
   }
 
+  private ExtMessage processTravelInfo(Session session, long curMs) {
+    session.userTravel.updateTravel(session, curMs);
+    ExtMessage resp = ExtMessage.travel();
+    resp.data.travel = session.userTravel;
+    resp.serverTime = (int)(curMs/1000);
+    return resp;
+  }
+
   private ExtMessage processClaimTravel(Session session, long curMs) {
     ExtMessage resp     = ExtMessage.travel();
-    resp.msg            = session.userTravel.claimTravel(session);
+    resp.msg            = session.userTravel.claimTravel(session, curMs);
     resp.data.travel    = session.userTravel;
     resp.effectResults  = session.effectResults;
     return resp;

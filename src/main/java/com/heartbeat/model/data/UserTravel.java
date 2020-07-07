@@ -24,8 +24,17 @@ public class UserTravel extends Travel {
   }
 
   /********************************************************************************************************************/
+  public void updateTravel(Session session, long curMs) {
+    int second               = (int)(curMs/1000);
+    int travelDt             = second - lastTravelClaim;
+    int newTravelClaimCount  = travelDt/TRAVEL_CLAIM_INTERVAL;
+    lastTravelClaim         += newTravelClaimCount*TRAVEL_CLAIM_INTERVAL;
+    currentTravelClaimCount += newTravelClaimCount;
+    currentTravelClaimCount  = Math.min(currentTravelClaimCount, maxTravelClaim);
+  }
 
-  public String claimTravel(Session session) {
+  public String claimTravel(Session session, long curMs) {
+    updateTravel(session, curMs);
     int rand = ThreadLocalRandom.current().nextInt(1, 101),acc = 0,npcType = 0;
 
     for (int i = 0; i < visitPercent.size(); i++){

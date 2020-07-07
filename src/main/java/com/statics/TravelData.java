@@ -11,6 +11,7 @@ public class TravelData {
     public int            type;
     public String         title;
     public String         desc;
+    public String         talk;
     public List<Integer>  reward;
 
     public int getType() {
