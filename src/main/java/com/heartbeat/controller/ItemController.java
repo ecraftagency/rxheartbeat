@@ -88,8 +88,9 @@ public class ItemController implements Handler<RoutingContext> {
       if (!resp.msg.equals("ok")) { //roll back
         session.userInventory.addItem(propId, amount);
       }
-      resp.data.gameInfo = session.userGameInfo;
+      resp.data.gameInfo  = session.userGameInfo;
       resp.data.inventory = session.userInventory;
+      resp.data.idols     = session.userIdol;
     }
     else {
       resp.msg = "not_enough_item";
@@ -116,8 +117,9 @@ public class ItemController implements Handler<RoutingContext> {
       for (int i = 0; i < amount; i++) {
         resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);
       }
-      resp.data.gameInfo = session.userGameInfo;
-      resp.data.inventory = session.userInventory;
+      resp.data.gameInfo    = session.userGameInfo;
+      resp.data.inventory   = session.userInventory;
+      resp.data.idols       = session.userIdol;
     }
     else {
       resp.msg = "not_enough_item";
