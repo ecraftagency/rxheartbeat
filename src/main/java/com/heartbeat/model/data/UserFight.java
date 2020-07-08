@@ -108,7 +108,8 @@ public class UserFight extends Fight {
 
     long curMs            = System.currentTimeMillis();
 
-    Constant.SCHEDULE.gameShowOpen = (curMs >= firstOpenTime && curMs <= firstCloseTime) || (curMs >= secondOpenTime && curMs <= secondCloseTime);
+    Constant.SCHEDULE.gameShowOpen = (curMs >= firstOpenTime && curMs <= firstCloseTime)
+            || (curMs >= secondOpenTime && curMs <= secondCloseTime);
   }
 
   public String toJson() {
@@ -288,7 +289,7 @@ public class UserFight extends Fight {
     long totalTalent      = session.userIdol.getTotalCreativity()
             + session.userIdol.getTotalPerformance()
             + session.userIdol.getTotalAttractive();
-    long expectedConsume  = (int)(currentRunShow.randFanNPC*currentRunShow.randAptNPC/totalTalent) + fixConsume;
+    long expectedConsume  = (currentRunShow.randFanNPC*currentRunShow.randAptNPC/totalTalent) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
       session.userGameInfo.fan -= expectedConsume;
@@ -326,17 +327,18 @@ public class UserFight extends Fight {
       return "max_run_show";
 
     long totalExpectConsume = 0;
-    for (int i = currentRunShow.id; i < time - 1; i++) {
-      RunShowData.RunShow rs = RunShowData.of(i);
+
+    for (int i = 0; i < time; i++) {
+      RunShowData.RunShow rs = RunShowData.of(currentRunShow.id + i);
       if (rs.id == -1)
         return "run_show_invalid";
       int avrFanNPC         = (int)(rs.minFanNPC + rs.maxFanNPC)/2;
-      int avrAptNPC         = (int)(rs.minAptNPC + rs.maxFanNPC)/2;
+      int avrAptNPC         = (int)(rs.minAptNPC + rs.maxAptNPC)/2;
       long fixConsume       = (int)(avrAptNPC*0.1f);
       long totalTalent      = session.userIdol.getTotalCreativity()
               + session.userIdol.getTotalPerformance()
               + session.userIdol.getTotalAttractive();
-      long expectedConsume  = (int)(avrAptNPC*avrAptNPC/totalTalent) + fixConsume;
+      long expectedConsume  = (avrFanNPC*avrAptNPC/totalTalent) + fixConsume;
       totalExpectConsume   += expectedConsume;
     }
 
@@ -347,8 +349,9 @@ public class UserFight extends Fight {
 
     if (session.userGameInfo.fan >= totalExpectConsume) {
       session.userGameInfo.fan -= totalExpectConsume;
-      for (int i = currentRunShow.id; i < time - 1; i++) {
-        RunShowData.RunShow rs = RunShowData.of(i);
+
+      for (int i = 0; i < time; i++) {
+        RunShowData.RunShow rs = RunShowData.of(i + currentRunShow.id);
         if (rs.id == -1)
           return "run_show_invalid";
 

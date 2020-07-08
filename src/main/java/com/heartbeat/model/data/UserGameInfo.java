@@ -28,9 +28,9 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     defaultInfo.avatar            = -1;
     defaultInfo.gender            = -1; //0 male, 1 female;
     defaultInfo.displayName       = "";
-    defaultInfo.money             = 2000000000;
-    defaultInfo.view              = 2000000000;
-    defaultInfo.fan               = 2000000000;
+    defaultInfo.money             = 2000000000000000L;
+    defaultInfo.view              = 2000000000000000L;
+    defaultInfo.fan               = 2000000000000000L;
     defaultInfo.talent            = 3000;
     defaultInfo.titleId           = 1;
     defaultInfo.time              = 0;
