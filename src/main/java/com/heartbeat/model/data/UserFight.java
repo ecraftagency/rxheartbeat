@@ -319,6 +319,61 @@ public class UserFight extends Fight {
     }
   }
 
+  public String handleMultiRunShowFight(Session session, int time) {
+    if (time < 0)
+      return "invalid_time";
+    if (currentRunShow.id == -1 || currentRunShow.id + time - 1 > RunShowData.runShowMap.size())
+      return "max_run_show";
+
+    long totalExpectConsume = 0;
+    for (int i = currentRunShow.id; i < time - 1; i++) {
+      RunShowData.RunShow rs = RunShowData.of(i);
+      if (rs.id == -1)
+        return "run_show_invalid";
+      int avrFanNPC         = (int)(rs.minFanNPC + rs.maxFanNPC)/2;
+      int avrAptNPC         = (int)(rs.minAptNPC + rs.maxFanNPC)/2;
+      long fixConsume       = (int)(avrAptNPC*0.1f);
+      long totalTalent      = session.userIdol.getTotalCreativity()
+              + session.userIdol.getTotalPerformance()
+              + session.userIdol.getTotalAttractive();
+      long expectedConsume  = (int)(avrAptNPC*avrAptNPC/totalTalent) + fixConsume;
+      totalExpectConsume   += expectedConsume;
+    }
+
+    //reward
+    session.effectResults.clear();
+    List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+
+    if (session.userGameInfo.fan >= totalExpectConsume) {
+      session.userGameInfo.fan -= totalExpectConsume;
+      for (int i = currentRunShow.id; i < time - 1; i++) {
+        RunShowData.RunShow rs = RunShowData.of(i);
+        if (rs.id == -1)
+          return "run_show_invalid";
+
+        for (Integer item : rs.reward) {
+          rewardFormat.set(1, item);
+          int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+          if (rand <= RUN_SHOW_DROP_RATE)
+            EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+        }
+
+        EffectManager.inst().handleEffect(extArgs, session, RUN_SHOW_EXP_REWARD);
+      }
+
+      //next fight
+      int nextFightId = currentRunShow.id + time;
+      currentRunShow = RunShowData.of(nextFightId);
+
+      return "win";
+    }
+    else {
+      session.userGameInfo.fan      = 0;
+      return "lose";
+    }
+  }
+
   /*SHOPPING***********************************************************************************************************/
 
   public String handleShoppingFight(Session session) {

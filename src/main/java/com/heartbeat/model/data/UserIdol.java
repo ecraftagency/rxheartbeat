@@ -1,7 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.couchbase.client.core.deps.com.fasterxml.jackson.annotation.JsonIgnore;
-import com.heartbeat.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -43,10 +41,6 @@ public class UserIdol extends Idols {
 
   private transient Map<Integer, List<Idol>> halo2Idol; //group Idol by Halos
 
-  public String toJson() {
-    return Utilities.gson.toJson(this);
-  }
-
   public static UserIdol ofDefault() {
     UserIdol defaultUserIdol = new UserIdol();
     defaultUserIdol.idolMap = new HashMap<>();
@@ -84,12 +78,6 @@ public class UserIdol extends Idols {
     }));
   }
 
-  //idol_not_exist
-  //idol_max_level
-  //idol_level_invalid
-  //idol_level_insufficient_exp
-  //idol_honor_invalid
-  //idol_honor_max_level
   public String levelUp(Session session, int idolId) { //todo update total properties
     Idol idol = idolMap.get(idolId);
     if (idol == null)
@@ -120,9 +108,6 @@ public class UserIdol extends Idols {
     return "ok";
   }
 
-  //idol_not_exist
-  //insufficient_aptitude_exp
-  //aptitude_limit
   public String addAptByExp(int idolId, int speciality) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
@@ -237,12 +222,6 @@ public class UserIdol extends Idols {
     return idolMap.values().stream().mapToInt(e -> e.attractive).sum();
   }
 
-  //idol_not_exist
-  //halo_not_exist
-  //halo_invalid
-  //insufficient_item
-  //halo_level_up_fail
-  //halo_level_max
   public String idolPersonalHaloLevelUp(Session session, int idolId, int haloId) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
@@ -271,9 +250,6 @@ public class UserIdol extends Idols {
     return result;
   }
 
-  //idol_not_exist
-  //idol_honor_max_level
-  //insufficient_item
   public String idolMaxLevelUnlock(Session session, int idolId) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
@@ -354,6 +330,8 @@ public class UserIdol extends Idols {
       idol.perfApt                = servant.defaultProperties.get(1);
       idol.attrApt                = servant.defaultProperties.get(2);
 
+
+      //todo this one 1 first shot, move to props change
       idol.crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
       idol.perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
       idol.attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
@@ -371,12 +349,12 @@ public class UserIdol extends Idols {
   /********************************************************************************************************************/
 
   public static void onPropertiesChange(Idol idol, String change) {
-    if (change.equals(LV_UP_EVT)) {
+    //if (change.equals(LV_UP_EVT)) {
       idol.crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
       idol.perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
       idol.attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
-    }
-    if (change.equals(HALO_UP_EVT)) {
+    //}
+    //if (change.equals(HALO_UP_EVT)) {
       float sumCrtHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.crtBufRate).sum() +
               idol.groupHalo.stream().mapToDouble(halo -> halo.crtBufRate).sum());
 
@@ -389,7 +367,7 @@ public class UserIdol extends Idols {
       idol.totalCrtHLBuf = (int)(sumCrtHLBufRate *(idol.crtItemBuf + idol.crtAptBuf));
       idol.totalPerfHLBuf = (int)(sumPerfHLBufRate *(idol.perfItemBuf + idol.perfAptBuf));
       idol.totalAttrHLBuf = (int)(sumAttrHLBufRate *(idol.attrItemBuf + idol.attrAptBuf));
-    }
+    //}
 
     idol.creativity   = idol.crtAptBuf + idol.crtItemBuf + idol.totalCrtHLBuf;
     idol.performance  = idol.perfAptBuf + idol.perfItemBuf + idol.totalPerfHLBuf;
