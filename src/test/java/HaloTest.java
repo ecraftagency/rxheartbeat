@@ -1,5 +1,9 @@
+import com.heartbeat.model.Session;
+import com.heartbeat.model.data.UserGameInfo;
 import com.heartbeat.model.data.UserIdol;
+import com.heartbeat.model.data.UserInventory;
 import com.statics.*;
+import com.transport.model.Idols;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -96,8 +100,46 @@ public class HaloTest {
       //
     }
 
-    UserIdol userIdol = UserIdol.ofDefault();
-    userIdol.addIdol(UserIdol.buildIdol(48));
+    Session session = Session.of(0);
+    session.userGameInfo = UserGameInfo.ofDefault();
+    session.userIdol = UserIdol.ofDefault();
+    session.userIdol.addIdol(UserIdol.buildIdol(48));
+    session.userInventory = UserInventory.ofDefault();
+
+    System.out.println("\nidol 48 halo 7 level up to max");
+    for (int i = 0; i < 10; i++) {
+      session.userIdol.idolPersonalHaloLevelUp(session, 48, 7);
+      int level = session.userIdol.idolMap.get(48).personalHalos.get(0).level;
+      float crtPBuf = session.userIdol.idolMap.get(48).personalHalos.get(0).crtBufRate;
+      float perfPBuf = session.userIdol.idolMap.get(48).personalHalos.get(0).perfBufRate;
+      float attrPBuf = session.userIdol.idolMap.get(48).personalHalos.get(0).attrBufRate;
+      System.out.println(level + " " + crtPBuf + " " + perfPBuf + " " + attrPBuf);
+    }
+
+    System.out.println("\nidol 53");
+
+    int level,id;float crtPBuf,perfPBuf,attrPBuf;
+    session.userIdol.addIdol(UserIdol.buildIdol(53));
+    for (Idols.IdolHalo pHalo : session.userIdol.idolMap.get(53).personalHalos) {
+      id = pHalo.id;
+      level = pHalo.level;
+      crtPBuf = pHalo.crtBufRate;
+      perfPBuf = pHalo.perfBufRate;
+      attrPBuf = pHalo.attrBufRate;
+      System.out.println("Halo ID: " +id + " level " + level + " " + crtPBuf + " " + perfPBuf + " " + attrPBuf);
+    }
+
+
+    System.out.println("\nidol 35 -> 42");
+    for (int i = 0; i < 8; i++) {
+      session.userIdol.addIdol(UserIdol.buildIdol(i + 35));
+      level = session.userIdol.idolMap.get(i + 35).personalHalos.get(0).level;
+      crtPBuf = session.userIdol.idolMap.get(i + 35).personalHalos.get(0).crtBufRate;
+      perfPBuf = session.userIdol.idolMap.get(i + 35).personalHalos.get(0).perfBufRate;
+      attrPBuf = session.userIdol.idolMap.get(i + 35).personalHalos.get(0).attrBufRate;
+      System.out.println(level + " " + crtPBuf + " " + perfPBuf + " " + attrPBuf);
+    }
+
 //    userIdol.addIdol(UserIdol.buildIdol(49));
 //    userIdol.addIdol(UserIdol.buildIdol(50));
 //    userIdol.addIdol(UserIdol.buildIdol(51));

@@ -225,7 +225,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
     String result =  subHandler.handleEffect(session, idol, updateFields, effectFormat);
 
     if (result.equals(EffectHandler.SUCCESS)) {
-      UserIdol.onPropertiesChange(idol, UserIdol.HALO_UP_EVT);
+      UserIdol.onPropertiesChange(idol);
     }
 
     return result;

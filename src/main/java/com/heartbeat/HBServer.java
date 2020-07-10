@@ -61,7 +61,7 @@ public class HBServer extends AbstractVerticle {
           LOGGER.info("execute new day task");
         },
         fault -> LOGGER.error("error new day task")
-      );
+      ).dispose();
 
     CronObservable.cronspec(scheduler, "0 0 12,19 * * ? *", "Asia/Ho_Chi_Minh")
       .subscribe(
@@ -71,7 +71,7 @@ public class HBServer extends AbstractVerticle {
           LOGGER.info("open game show");
         },
         fault -> LOGGER.error("error open game show task")
-      );
+      ).dispose();
 
     CronObservable.cronspec(scheduler, "0 0 14,21 * * ? *", "Asia/Ho_Chi_Minh")
       .subscribe(
@@ -81,7 +81,7 @@ public class HBServer extends AbstractVerticle {
           LOGGER.info("close game show");
         },
         fault -> LOGGER.error("error close game show task")
-      );
+      ).dispose();
   }
 
 

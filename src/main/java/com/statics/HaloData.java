@@ -10,72 +10,43 @@ import java.util.Map;
 import static com.heartbeat.model.data.UserIdol.*;
 
 public class HaloData {
-  public static class Halo implements Common.hasKey<Integer> {
+  public static class HaloDTO implements Common.hasKey<Integer> {
+    //id,name,level,startLV,type,preFixHalo,updateItem,buff
     public int id;
-    public int level;
+    public String name;
+    public int maxLevel;
+    public int startLV;
     public int type;
+    public List<Integer> preFixHalo;
+    public List<Integer> updateItem;
     public List<List<List<Integer>>> buff;
     //The first round is level-element array contain buff for each level
     //The second round is [0-3] element array specify which idol attribute it will effect [performance, creativity, attractive]
     //The last round is exact 2-element array which first element is attribute id and second is buff percent
-    public List<Integer> updateItem;
     @Override
     public Integer mapKey() {
       return id;
     }
   }
 
-  public static Map<Integer, Halo> haloMap;
+  public static Map<Integer, HaloDTO> haloMap;
 
   public static void loadJson(String haloJson) {
-    haloMap = Common.loadMap(haloJson, Halo.class);
+    haloMap = Common.loadMap(haloJson, HaloDTO.class);
   }
 
   public static Idols.IdolHalo makeHalo(int haloId) {
-    Halo halo = haloMap.get(haloId);
-    if (halo == null)
+    HaloDTO haloDTO = haloMap.get(haloId);
+    if (haloDTO == null)
       return null;
-
-//        List<List<Integer>> defBuf = halo.buff.get(pHalo.level);
-//    for (List<Integer> buff : defBuf) {
-//      if (buff.size() != 2)
-//        continue;
-//
-//      float creativityBuff    = 0.0f;
-//      float performanceBuff   = 0.0f;
-//      float attractiveBuff    = 0.0f;
-//
-//      switch (buff.get(0)) {
-//        case 2:
-//          creativityBuff += buff.get(1)*1.0/100.0;
-//          break;
-//        case 3:
-//          performanceBuff += buff.get(1)*1.0/100.0;
-//          break;
-//        case 4:
-//          attractiveBuff += buff.get(1)*1.0/100.0;
-//          break;
-//        default:
-//          break;
-//      }
-//      pHalo.crtBufRate = creativityBuff;
-//      pHalo.perfBufRate = performanceBuff;
-//      pHalo.attrBufRate = attractiveBuff;
-//    }
-
-    return IdolHalo.of(haloId, 0, 0.0f, 0.0f, 0.0f, halo.updateItem);
+    return IdolHalo.of(haloId, haloDTO.startLV, 0.0f, 0.0f, 0.0f, haloDTO.updateItem);
   }
 
-  public static String pHaloLevelUp(Idol idol, Idols.IdolHalo pHalo) {
-    Halo halo = haloMap.get(pHalo.id);
-    if (halo == null || halo.level != halo.buff.size())
-      return "halo_level_up_fail";
-
-    if (pHalo.level + 1 >= halo.level)
-      return "halo_level_max";
-
-    pHalo.level += 1;
-    List<List<Integer>> defBuf = halo.buff.get(pHalo.level);
+  public static void reCalcPHalo(Idol idol, IdolHalo pHalo) {
+    HaloDTO haloDTO = haloMap.get(pHalo.id);
+    if (haloDTO == null || haloDTO.startLV != 1)
+      return;
+    List<List<Integer>> defBuf = haloDTO.buff.get(pHalo.level - 1);
 
     float creativityBuff    = 0.0f;
     float performanceBuff   = 0.0f;
@@ -103,8 +74,48 @@ public class HaloData {
     pHalo.crtBufRate = creativityBuff;
     pHalo.perfBufRate = performanceBuff;
     pHalo.attrBufRate = attractiveBuff;
+    UserIdol.onPropertiesChange(idol);
+  }
 
-    UserIdol.onPropertiesChange(idol, HALO_UP_EVT);
+  public static String pHaloLevelUp(Idol idol, Idols.IdolHalo pHalo) {
+    HaloDTO haloDTO = haloMap.get(pHalo.id);
+    if (haloDTO == null || (haloDTO.maxLevel - haloDTO.buff.size()) != 1)
+      return "halo_level_up_fail";
+
+    if (pHalo.level + 1 >= haloDTO.maxLevel)
+      return "halo_level_max";
+
+    List<List<Integer>> defBuf = haloDTO.buff.get(pHalo.level);
+
+    float creativityBuff    = 0.0f;
+    float performanceBuff   = 0.0f;
+    float attractiveBuff    = 0.0f;
+
+    for (List<Integer> buff : defBuf) {
+      if (buff.size() != 2)
+        continue;
+
+      switch (buff.get(0)) {
+        case 2:
+          creativityBuff += buff.get(1)*1.0/100.0;
+          break;
+        case 3:
+          performanceBuff += buff.get(1)*1.0/100.0;
+          break;
+        case 4:
+          attractiveBuff += buff.get(1)*1.0/100.0;
+          break;
+        default:
+          break;
+      }
+    }
+
+    pHalo.crtBufRate = creativityBuff;
+    pHalo.perfBufRate = performanceBuff;
+    pHalo.attrBufRate = attractiveBuff;
+    pHalo.level += 1;
+
+    UserIdol.onPropertiesChange(idol);
     return "ok";
   }
 
@@ -113,11 +124,11 @@ public class HaloData {
 
     for (Map.Entry<Integer, List<Idols.Idol>> entry : halo2Idol.entrySet()) {
       int haloID = entry.getKey();
-      HaloData.Halo halo = HaloData.haloMap.get(haloID);
-      if (halo != null) {
+      HaloDTO haloDTO = HaloData.haloMap.get(haloID);
+      if (haloDTO != null) {
         int level = entry.getValue().size();
-        if (level <= halo.level && level <= halo.buff.size() && level >= 1 && halo.buff.size() == halo.level) {
-          List<List<Integer>> buffs     = halo.buff.get(level - 1);
+        if (level <= haloDTO.maxLevel && level <= haloDTO.buff.size() && level >= 1 && haloDTO.buff.size() == haloDTO.maxLevel) {
+          List<List<Integer>> buffs     = haloDTO.buff.get(level - 1);
           List<Idols.Idol> updateIdols  = entry.getValue();
           float creativityBuff          = 0.0f;
           float performanceBuff         = 0.0f;
@@ -145,7 +156,7 @@ public class HaloData {
           for (Idol idol : updateIdols) {
             IdolHalo gHalo = IdolHalo.of(haloID, level, creativityBuff, performanceBuff, attractiveBuff, new ArrayList<>());
             idol.groupHalo.add(gHalo);
-            UserIdol.onPropertiesChange(idol, HALO_UP_EVT);
+            UserIdol.onPropertiesChange(idol);
           }
         }
       }

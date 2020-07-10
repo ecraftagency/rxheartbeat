@@ -18,8 +18,6 @@ public class UserIdol extends Idols {
   public static final int     ATTRACTIVE              = 4; //mị lực
   public static final int     GROUP_HALO              = 1;
   public static final int     PERSONAL_HALO           = 0;
-  public static final String  LV_UP_EVT               = "levelUp";
-  public static final String  HALO_UP_EVT             = "haloUp";
 
   public static final int     EXP_PER_UPGRADE         = 200;
   public static final int     EXP_UP_STEP             = 1;
@@ -29,8 +27,6 @@ public class UserIdol extends Idols {
   public static final int     ATTR_UP_ITEM            = 69;
   public static List<Integer> APT_UP_RATE             = new ArrayList<>();
   public static final int     APT_UP_COST             = 1;
-
-  public static final int     FUCKIN_EXCEPTION_PHALO  = 13;
 
   static {
     APT_UP_RATE.add(0);
@@ -68,9 +64,7 @@ public class UserIdol extends Idols {
       groupByHalo();
       HaloData.gUpdateGroupHalo(idolMap, halo2Idol);
       for (IdolHalo idolHalo : idol.personalHalos)
-        if (idolHalo.id == FUCKIN_EXCEPTION_PHALO) {
-          HaloData.pHaloLevelUp(idol, idolHalo);
-        }
+        HaloData.reCalcPHalo(idol, idolHalo);
       return true;
     }
     return false;
@@ -110,7 +104,7 @@ public class UserIdol extends Idols {
 
     session.userGameInfo.money -= nextLevel.exp;
     idol.level += 1;
-    onPropertiesChange(idol, LV_UP_EVT);
+    onPropertiesChange(idol);
     return "ok";
   }
 
@@ -141,7 +135,7 @@ public class UserIdol extends Idols {
         idol.attrApt += EXP_UP_STEP;
     }
     idol.aptitudeExp -= EXP_PER_UPGRADE;
-    onPropertiesChange(idol, LV_UP_EVT);
+    onPropertiesChange(idol);
     return "ok";
   }
 
@@ -170,7 +164,7 @@ public class UserIdol extends Idols {
         session.userInventory.useItem(CRT_UP_ITEM, APT_UP_COST);
         if (rand <= rate) {
           idol.crtApt += step;
-          onPropertiesChange(idol, LV_UP_EVT);
+          onPropertiesChange(idol);
           return "ok";
         }
         else {
@@ -186,7 +180,7 @@ public class UserIdol extends Idols {
         session.userInventory.useItem(PERF_UP_ITEM, APT_UP_COST);
         if (rand <= rate) {
           idol.perfApt += step;
-          onPropertiesChange(idol, LV_UP_EVT);
+          onPropertiesChange(idol);
           return "ok";
         }
         else {
@@ -202,7 +196,7 @@ public class UserIdol extends Idols {
         session.userInventory.useItem(ATTR_UP_ITEM, APT_UP_COST);
         if (rand <= rate) {
           idol.attrApt += step;
-          onPropertiesChange(idol, LV_UP_EVT);
+          onPropertiesChange(idol);
           return "ok";
         }
         else {
@@ -307,12 +301,12 @@ public class UserIdol extends Idols {
       idol.groupHalo              = new ArrayList<>();
 
       for (Integer haloId : servant.halo) {
-        HaloData.Halo halo  = HaloData.haloMap.get(haloId);
-        if (halo != null) {
-          if (halo.type == GROUP_HALO) {
+        HaloData.HaloDTO haloDTO = HaloData.haloMap.get(haloId);
+        if (haloDTO != null) {
+          if (haloDTO.type == GROUP_HALO) {
             idol.groupHaloIds.add(haloId);
           }
-          else if (halo.type == PERSONAL_HALO) {
+          else if (haloDTO.type == PERSONAL_HALO) {
             IdolHalo pHalo = HaloData.makeHalo(haloId);
             if (pHalo != null)
               idol.personalHalos.add(pHalo);
@@ -354,26 +348,22 @@ public class UserIdol extends Idols {
 
   /********************************************************************************************************************/
 
-  public static void onPropertiesChange(Idol idol, String change) {
-    //if (change.equals(LV_UP_EVT)) {
-      idol.crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
-      idol.perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
-      idol.attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
-    //}
-    //if (change.equals(HALO_UP_EVT)) {
-      float sumCrtHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.crtBufRate).sum() +
-              idol.groupHalo.stream().mapToDouble(halo -> halo.crtBufRate).sum());
+  public static void onPropertiesChange(Idol idol) {
+    idol.crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
+    idol.perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
+    idol.attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
+    float sumCrtHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.crtBufRate).sum() +
+            idol.groupHalo.stream().mapToDouble(halo -> halo.crtBufRate).sum());
 
-      float sumPerfHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.perfBufRate).sum() +
-              idol.groupHalo.stream().mapToDouble(halo -> halo.perfBufRate).sum());
+    float sumPerfHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.perfBufRate).sum() +
+            idol.groupHalo.stream().mapToDouble(halo -> halo.perfBufRate).sum());
 
-      float sumAttrHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.attrBufRate).sum() +
-              idol.groupHalo.stream().mapToDouble(halo -> halo.attrBufRate).sum());
+    float sumAttrHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.attrBufRate).sum() +
+            idol.groupHalo.stream().mapToDouble(halo -> halo.attrBufRate).sum());
 
-      idol.totalCrtHLBuf = (int)(sumCrtHLBufRate *(idol.crtItemBuf + idol.crtAptBuf));
-      idol.totalPerfHLBuf = (int)(sumPerfHLBufRate *(idol.perfItemBuf + idol.perfAptBuf));
-      idol.totalAttrHLBuf = (int)(sumAttrHLBufRate *(idol.attrItemBuf + idol.attrAptBuf));
-    //}
+    idol.totalCrtHLBuf = (int)(sumCrtHLBufRate *(idol.crtItemBuf + idol.crtAptBuf));
+    idol.totalPerfHLBuf = (int)(sumPerfHLBufRate *(idol.perfItemBuf + idol.perfAptBuf));
+    idol.totalAttrHLBuf = (int)(sumAttrHLBufRate *(idol.attrItemBuf + idol.attrAptBuf));
 
     idol.creativity   = idol.crtAptBuf + idol.crtItemBuf + idol.totalCrtHLBuf;
     idol.performance  = idol.perfAptBuf + idol.perfItemBuf + idol.totalPerfHLBuf;
