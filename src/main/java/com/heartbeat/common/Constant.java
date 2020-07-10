@@ -14,11 +14,6 @@ public class Constant {
     public static int     gameShowTwoCloseHour    = 21;
   }
 
-  public static class GAME_FUNCTIONS {
-    public static boolean USE_GLOBAL_FILE_LOG = true;
-    public static boolean USE_CONSOLE_LOG = true;
-  }
-
   public static class GAME_INFO {
     public static int SERVER_VERSION = 150;
     public static int MIN_AVAILABLE_VERSION = 147;
@@ -38,7 +33,7 @@ public class Constant {
   }
 
   public static class DB {
-    public static       String HOST               = "18.140.197.136";
+    public static       String HOST               = "localhost";
     public static       String PORT               = "8091";
     public static       String USER               = "Administrator";
     public static       String PWD                = "n5t5lnsct";

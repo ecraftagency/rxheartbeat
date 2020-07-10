@@ -1,6 +1,5 @@
 package com.heartbeat.controller;
 
-import com.heartbeat.model.Session;
 import com.heartbeat.service.AuthService;
 import com.heartbeat.service.impl.SessionLoginService;
 import com.transport.ExtMessage;

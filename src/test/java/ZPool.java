@@ -1,5 +1,3 @@
-package com.heartbeat.controller;
-
 import com.transport.ExtMessage;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;

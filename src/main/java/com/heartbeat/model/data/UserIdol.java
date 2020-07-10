@@ -13,22 +13,24 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class UserIdol extends Idols {
-  public static final int     CREATIVITY          = 2; //trí lực
-  public static final int     PERFORMANCE         = 3; //chính trị
-  public static final int     ATTRACTIVE          = 4; //mị lực
-  public static final int     GROUP_HALO          = 1;
-  public static final int     PERSONAL_HALO       = 0;
-  public static final String  LV_UP_EVT           = "levelUp";
-  public static final String  HALO_UP_EVT         = "haloUp";
+  public static final int     CREATIVITY              = 2; //trí lực
+  public static final int     PERFORMANCE             = 3; //chính trị
+  public static final int     ATTRACTIVE              = 4; //mị lực
+  public static final int     GROUP_HALO              = 1;
+  public static final int     PERSONAL_HALO           = 0;
+  public static final String  LV_UP_EVT               = "levelUp";
+  public static final String  HALO_UP_EVT             = "haloUp";
 
-  public static final int     EXP_PER_UPGRADE     = 200;
-  public static final int     EXP_UP_STEP         = 1;
+  public static final int     EXP_PER_UPGRADE         = 200;
+  public static final int     EXP_UP_STEP             = 1;
 
-  public static final int     CRT_UP_ITEM         = 67;
-  public static final int     PERF_UP_ITEM        = 68;
-  public static final int     ATTR_UP_ITEM        = 69;
-  public static List<Integer> APT_UP_RATE         = new ArrayList<>();
-  public static final int     APT_UP_COST         = 1;
+  public static final int     CRT_UP_ITEM             = 67;
+  public static final int     PERF_UP_ITEM            = 68;
+  public static final int     ATTR_UP_ITEM            = 69;
+  public static List<Integer> APT_UP_RATE             = new ArrayList<>();
+  public static final int     APT_UP_COST             = 1;
+
+  public static final int     FUCKIN_EXCEPTION_PHALO  = 13;
 
   static {
     APT_UP_RATE.add(0);
@@ -65,6 +67,10 @@ public class UserIdol extends Idols {
       idolMap.put(idol.id, idol);
       groupByHalo();
       HaloData.gUpdateGroupHalo(idolMap, halo2Idol);
+      for (IdolHalo idolHalo : idol.personalHalos)
+        if (idolHalo.id == FUCKIN_EXCEPTION_PHALO) {
+          HaloData.pHaloLevelUp(idol, idolHalo);
+        }
       return true;
     }
     return false;

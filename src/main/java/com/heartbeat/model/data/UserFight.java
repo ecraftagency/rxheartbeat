@@ -332,9 +332,9 @@ public class UserFight extends Fight {
       RunShowData.RunShow rs = RunShowData.of(currentRunShow.id + i);
       if (rs.id == -1)
         return "run_show_invalid";
-      int avrFanNPC         = (int)(rs.minFanNPC + rs.maxFanNPC)/2;
-      int avrAptNPC         = (int)(rs.minAptNPC + rs.maxAptNPC)/2;
-      long fixConsume       = (int)(avrAptNPC*0.1f);
+      long avrFanNPC        = (rs.minFanNPC + rs.maxFanNPC)/2;
+      long avrAptNPC        = (rs.minAptNPC + rs.maxAptNPC)/2;
+      long fixConsume       = (long)(avrAptNPC*0.1f);
       long totalTalent      = session.userIdol.getTotalCreativity()
               + session.userIdol.getTotalPerformance()
               + session.userIdol.getTotalAttractive();
@@ -409,10 +409,6 @@ public class UserFight extends Fight {
           EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
       }
 
-//      session.effectResults.clear();
-//      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
-//      EffectManager.inst().handleEffect(extArgs, session, currentShopping.reward);
-
       int nextFightId   = currentShopping.id + 1;
       currentShopping   = ShoppingData.of(nextFightId);
       return "win";
@@ -420,5 +416,11 @@ public class UserFight extends Fight {
     else {
       return "lose";
     }
+  }
+
+  public String handleMultiShoppingFight(Session session, int time) {
+    if (currentShopping.id == -1)
+      return "max_shopping";
+    return "";
   }
 }

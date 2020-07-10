@@ -36,7 +36,7 @@ public class HaloData {
     if (halo == null)
       return null;
 
-    //    List<List<Integer>> defBuf = halo.buff.get(pHalo.level);
+//        List<List<Integer>> defBuf = halo.buff.get(pHalo.level);
 //    for (List<Integer> buff : defBuf) {
 //      if (buff.size() != 2)
 //        continue;
