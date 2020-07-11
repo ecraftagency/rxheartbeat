@@ -36,7 +36,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     defaultInfo.time              = 0;
     defaultInfo.exp               = 2000;
     defaultInfo.currMedia         = 3;
-    defaultInfo.maxMedia          = 2;
+    defaultInfo.maxMedia          = 3;
     defaultInfo.lastMediaClaim    = 0;
     defaultInfo.vipExp = 0;
     defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
@@ -139,10 +139,14 @@ public class UserGameInfo extends com.transport.model.GameInfo {
   public void addVipExp(Session session, int amount) {
     if (amount <= 0)
       return;
+    VipData.Vip oldVip  = VipData.getVipData(vipExp);
     vipExp += amount;
 
     VipData.Vip vip = VipData.getVipData(vipExp);
     session.userTravel.maxTravelClaim       = vip.travelLimit;
     session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
+
+    if (vip.level > oldVip.level) //level up
+      maxMedia++; //for now
   }
 }
