@@ -48,6 +48,9 @@ public class FightController implements Handler<RoutingContext> {
           case "shoppingFight":
             resp = processShoppingFight(session);
             break;
+          case "multiShoppingFight":
+            resp = processMultiShoppingFight(session, ctx);
+            break;
           default:
             resp = ExtMessage.fight();
             resp.msg = "unknown_cmd";
@@ -64,6 +67,16 @@ public class FightController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processMultiShoppingFight(Session session, RoutingContext ctx) {
+    int time            = ctx.getBodyAsJson().getInteger("time");
+    ExtMessage resp     = ExtMessage.fight();
+    resp.msg            = session.userFight.handleMultiShoppingFight(session, time);
+    resp.data.fight     = session.userFight;
+    resp.data.gameInfo  = session.userGameInfo;
+    resp.effectResults  = session.effectResults;
+    return resp;
   }
 
   private ExtMessage processMultiRunShowFight(Session session, RoutingContext ctx) {

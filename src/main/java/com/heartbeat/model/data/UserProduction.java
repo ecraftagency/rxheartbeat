@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Utilities;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
 
@@ -12,10 +11,6 @@ public class UserProduction extends com.transport.model.Production{
   public static final     int PRODUCE_FAN                 = 1;
   public static final     int PRODUCE_VIEW                = 2;
   public static final     int PRODUCE_GOLD                = 3;
-
-  public String toJson() {
-    return Utilities.gson.toJson(this);
-  }
 
   public static UserProduction ofDefault() {
     UserProduction defaultUserProduction = new UserProduction();

@@ -419,8 +419,59 @@ public class UserFight extends Fight {
   }
 
   public String handleMultiShoppingFight(Session session, int time) {
-    if (currentShopping.id == -1)
+    if (time < 0)
+      return "invalid_time";
+
+    if (currentShopping.id == -1 || currentShopping.id + time - 1 > ShoppingData.shoppingMap.size())
       return "max_shopping";
-    return "";
+
+
+    long totalMoneyConsume = 0;
+    for (int i = 0; i < time; i++) {
+      ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);
+      if (sp.id == -1)
+        return "run_show_invalid";
+
+      long moneyConsume;
+      long base         = SHOPPING_COEFFICIENT*currentShopping.creativeNPC;
+      long totalCrt     = session.userIdol.getTotalCreativity();
+
+      if (base >= totalCrt) {
+        moneyConsume = currentShopping.moneyNPC*currentShopping.creativeNPC /totalCrt;
+      }
+      else {
+        moneyConsume = (long)(currentShopping.moneyNPC*SHOPPING_MONEY_SCL);
+      }
+      totalMoneyConsume += moneyConsume;
+    }
+
+    if (session.userGameInfo.money >= totalMoneyConsume) {
+      session.userGameInfo.money -= totalMoneyConsume;
+
+      //reward
+      session.effectResults.clear();
+      List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+
+      for (int i = 0; i < time; i++) {
+        ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);
+        if (sp.id == -1)
+          return "run_show_invalid";
+
+        for (Integer item : sp.reward) {
+          rewardFormat.set(1, item);
+          int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+          if (rand <= RUN_SHOW_DROP_RATE)
+            EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+        }
+      }
+
+      int nextShoppingId  = currentShopping.id + time;
+      currentRunShow      = RunShowData.of(nextShoppingId);
+      return "win";
+    }
+    else {
+      return "lose";
+    }
   }
 }

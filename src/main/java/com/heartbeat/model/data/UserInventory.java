@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Utilities;
 import com.statics.PropData;
 import com.transport.model.Inventory;
 
@@ -15,10 +14,6 @@ public class UserInventory extends Inventory {
     UserInventory userInventory = new UserInventory();
     PropData.propMap.values().forEach(prop -> userInventory.addItem(prop.propID, 1000));
     return userInventory;
-  }
-
-  public String toJson() {
-    return Utilities.gson.toJson(this);
   }
 
   public void addItem(int itemId, int amount) {

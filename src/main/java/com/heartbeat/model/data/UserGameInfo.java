@@ -19,10 +19,6 @@ public class UserGameInfo extends com.transport.model.GameInfo {
   public static final int MEDIA_INTERVAL            = 59;
   public static final int CLAIM_MEDIA_COUNT_ITEM    = 2; //hợp đồng truyền thông
 
-  public String toJson() {
-    return Utilities.gson.toJson(this);
-  }
-
   public static UserGameInfo ofDefault() {
     UserGameInfo defaultInfo      = new UserGameInfo();
     defaultInfo.avatar            = -1;
