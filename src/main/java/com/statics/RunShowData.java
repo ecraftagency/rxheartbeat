@@ -39,8 +39,8 @@ public class RunShowData {
     List<Integer> pack1 = Arrays.asList(19,20,28,29,60,35);
     List<Integer> pack2 = Arrays.asList(2,1,40,44,48,60,36);
     List<Integer> pack3 = Arrays.asList(64,70,71,72,61,5,40,44,48,22,31);
-    List<Integer> pack4 = Arrays.asList(104,64,61,5,41,45,49,65,57,23,32);
-    List<Integer> pack5 = Arrays.asList(104,57,65,66,42,46,50,5,91,24,33);
+    List<Integer> pack4 = Arrays.asList(108,64,61,5,41,45,49,65,57,23,32);
+    List<Integer> pack5 = Arrays.asList(108,57,65,66,42,46,50,5,91,24,33);
     runShowRewards      = Arrays.asList(pack1, pack2, pack3, pack4, pack5);
     nItemPerShow        = Arrays.asList(1,2,3,4,5);
   }

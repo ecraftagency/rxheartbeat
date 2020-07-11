@@ -140,6 +140,17 @@ public class HaloTest {
       System.out.println(level + " " + crtPBuf + " " + perfPBuf + " " + attrPBuf);
     }
 
+    System.out.println("prefix condition test:");
+    session.userIdol.addIdol(UserIdol.buildIdol(43));
+    for (int i = 0; i < 11; i++) {
+      String result = session.userIdol.idolPersonalHaloLevelUp(session, 43, 5);
+      System.out.println(result);
+    }
+    for (int i = 0; i < 11; i++) {
+      String result = session.userIdol.idolPersonalHaloLevelUp(session, 43, 6);
+      System.out.println(result);
+    }
+
 //    userIdol.addIdol(UserIdol.buildIdol(49));
 //    userIdol.addIdol(UserIdol.buildIdol(50));
 //    userIdol.addIdol(UserIdol.buildIdol(51));

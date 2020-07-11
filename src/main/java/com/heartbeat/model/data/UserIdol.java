@@ -235,6 +235,9 @@ public class UserIdol extends Idols {
     if (pHalo == null)
       return "halo_not_exist";
 
+    if (!checkPrefixCondition(idol, pHalo))
+      return "prefix_condition_not_match";
+
     List<Integer> updateItems = pHalo.updateItems;
     if (updateItems.size() != 4)
       return "halo_invalid";
@@ -248,6 +251,31 @@ public class UserIdol extends Idols {
     if (result.equals("ok"))
       session.userInventory.useItem(itemId, amount);
     return result;
+  }
+
+  private static boolean checkPrefixCondition(Idol idol, IdolHalo pHalo) {
+    //check prefixCondition
+    HaloData.HaloDTO haloDTO = HaloData.haloMap.get(pHalo.id);
+    if (haloDTO == null)
+      return false;
+
+    if (haloDTO.preFixHalo == null)
+      return true;
+
+    if (haloDTO.preFixHalo.size() == 2) {
+      int prefixID          = haloDTO.preFixHalo.get(0);
+      int prefixLevelCond   = haloDTO.preFixHalo.get(1);
+      IdolHalo preFixHalo   = null;
+      for (IdolHalo pfHalo : idol.personalHalos) {
+        if (pfHalo.id == prefixID)
+          preFixHalo = pfHalo;
+      }
+      if (preFixHalo == null) //pHalo have prefixData but can not found prefixHalo
+        return false;
+
+      return preFixHalo.level == prefixLevelCond;
+    }
+    return true;
   }
 
   public String idolMaxLevelUnlock(Session session, int idolId) {

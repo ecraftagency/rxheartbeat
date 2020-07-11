@@ -33,10 +33,10 @@ public class ShoppingData {
 
   static {
     List<Integer> pack1 = Arrays.asList(26,27,28,29,60,35);
-    List<Integer> pack2 = Arrays.asList(2,1,98,99,5,60,35);
+    List<Integer> pack2 = Arrays.asList(2,1,103,105,5,60,35);
     List<Integer> pack3 = Arrays.asList(64,70,71,72,5,40,44,48,61);
-    List<Integer> pack4 = Arrays.asList(104,64,61,5,65,57,41,45,49,102,91);
-    List<Integer> pack5 = Arrays.asList(104,57,65,66,42,46,50,5,91,103,100);
+    List<Integer> pack4 = Arrays.asList(108,64,61,5,65,57,41,45,49,106,91);
+    List<Integer> pack5 = Arrays.asList(108,57,65,66,42,46,50,5,91,107,104);
     shoppingReward      = Arrays.asList(pack1, pack2, pack3, pack4, pack5);
     nItemPerShopping    = Arrays.asList(1,2,3,4,5);
   }
