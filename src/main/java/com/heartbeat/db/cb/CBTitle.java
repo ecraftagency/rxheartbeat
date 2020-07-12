@@ -1,4 +1,4 @@
-package com.heartbeat.db.impl;
+package com.heartbeat.db.cb;
 
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.GetResult;
@@ -15,18 +15,18 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-public class CBBadge implements DataAccess<Title> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CBBadge.class);
+public class CBTitle implements DataAccess<Title> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(CBTitle.class);
   private static final int    EXPIRY = 2; //minutes
 
   private ReactiveBucket    rxIndexBucket;
 
-  private CBBadge() {
+  private CBTitle() {
     rxIndexBucket   = HBServer.rxIndexBucket;
   }
 
-  private static CBBadge instance = new CBBadge();
-  public static CBBadge getInstance() {
+  private static CBTitle instance = new CBTitle();
+  public static CBTitle getInstance() {
     return instance;
   }
 
@@ -48,28 +48,6 @@ public class CBBadge implements DataAccess<Title> {
   @Override
   public void add(String id, Title obj, Handler<AsyncResult<String>> handler) {
     handler.handle(Future.failedFuture("unimplemented"));
-  }
-
-  @Override
-  public void map(String id, String key, Handler<AsyncResult<String>> handler) {
-    handler.handle(Future.failedFuture("unimplemented"));
-  }
-
-  @Override
-  public void unmap(String key, Handler<AsyncResult<String>> handler) {
-    handler.handle(Future.failedFuture("unimplemented"));
-  }
-
-  @Override
-  public String map(String id, String key) {
-    //todo implementation
-    return null;
-  }
-
-  @Override
-  public String unmap(String key) {
-    //todo implementation
-    return null;
   }
 
   @Override
@@ -112,11 +90,5 @@ public class CBBadge implements DataAccess<Title> {
       LOGGER.error(e.getMessage());
       return false;
     }
-  }
-
-  @Override
-  public long nextId() {
-    //todo implementation
-    return 0;
   }
 }

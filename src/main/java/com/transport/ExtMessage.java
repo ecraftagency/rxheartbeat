@@ -1,6 +1,5 @@
 package com.transport;
 
-import com.heartbeat.db.impl.CBBadge;
 import com.transport.model.*;
 
 import java.util.List;

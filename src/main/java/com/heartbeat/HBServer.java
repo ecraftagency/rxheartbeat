@@ -6,7 +6,7 @@ import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.common.Constant;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.DataAccess;
-import com.heartbeat.db.impl.CBSession;
+import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserFight;

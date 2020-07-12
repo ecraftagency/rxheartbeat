@@ -1,7 +1,7 @@
 package com.heartbeat.effect;
 
 import com.heartbeat.db.DataAccess;
-import com.heartbeat.db.impl.CBBadge;
+import com.heartbeat.db.cb.CBTitle;
 import com.heartbeat.model.Session;
 import com.transport.model.Title;
 
@@ -22,7 +22,7 @@ public class TitleEffectHandler implements EffectHandler{
   }
 
   public TitleEffectHandler() {
-    dataAccess = CBBadge.getInstance();
+    dataAccess = CBTitle.getInstance();
   }
 
   @Override

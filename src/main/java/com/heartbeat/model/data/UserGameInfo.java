@@ -2,7 +2,7 @@ package com.heartbeat.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.common.Utilities;
-import com.heartbeat.db.impl.CBSession;
+import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -46,7 +46,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     if (Utilities.isValidString(dName)) {
       if (WordFilter.isValidUserName(dName, session.buildSource)) {
         String sha256DisplayName = Utilities.sha256Hash(dName);
-        if (CBSession.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
+        if (CBMapper.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
           this.displayName = dName;
           return "ok";
         }
@@ -66,11 +66,11 @@ public class UserGameInfo extends com.transport.model.GameInfo {
       if (WordFilter.isValidUserName(displayName, session.buildSource)) {
         try {
           String sha256DisplayName = Utilities.sha256Hash(displayName);
-          if (CBSession.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
+          if (CBMapper.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
             String oldDisplayName = this.displayName;
             this.displayName = displayName;
             String sha256OldDisplayName = Utilities.sha256Hash(oldDisplayName);
-            CBSession.getInstance().unmap(sha256OldDisplayName);
+            CBMapper.getInstance().unmap(sha256OldDisplayName);
             return "ok";
           }
           else

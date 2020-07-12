@@ -1,11 +1,8 @@
-package com.heartbeat.db.impl;
+package com.heartbeat.db.cb;
 
-import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.java.ReactiveBucket;
-import static com.heartbeat.common.Constant.*;
 
 import com.heartbeat.HBServer;
-import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.db.DataAccess;
 import com.heartbeat.model.Session;
 import io.vertx.core.AsyncResult;
@@ -14,12 +11,7 @@ import io.vertx.core.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import static com.couchbase.client.java.kv.LookupInSpec.get;
 
 /*
@@ -27,26 +19,12 @@ import static com.couchbase.client.java.kv.LookupInSpec.get;
  * repeat after me java[script]!
  */
 
-public class CBSession implements Runnable, DataAccess<Session> {
+@SuppressWarnings("unused")
+public class CBSession implements DataAccess<Session> {
   private static final Logger LOGGER = LoggerFactory.getLogger(CBSession.class);
   private ReactiveBucket    rxSessionBucket;
-  private ReactiveBucket    rxIndexBucket;
-  private CouchbaseClient   idIncrementer;
   private CBSession() {
     rxSessionBucket = HBServer.rxSessionBucket;
-    rxIndexBucket   = HBServer.rxIndexBucket;
-
-    try {
-      List<URI> hosts = new ArrayList<>();
-      String uri      = String.format("http://%s:%s/pools", DB.HOST, DB.PORT);
-      hosts.add(new URI(uri));
-      idIncrementer = new CouchbaseClient(hosts, "index", DB.PWD);
-      GlobalVariable.schThreadPool.scheduleAtFixedRate(this, 0,
-            DB.COUCHBASE_CHECK_INTERVAL, TimeUnit.MILLISECONDS);
-    }
-    catch (Exception e) {
-      LOGGER.error("error open bucket");
-    }
   }
 
   private static CBSession instance = new CBSession();
@@ -96,31 +74,6 @@ public class CBSession implements Runnable, DataAccess<Session> {
   }
 
   @Override
-  public void map(String id, String key, Handler<AsyncResult<String>> handler) {
-    rxIndexBucket.defaultCollection().insert(key, id).subscribe(
-            res -> handler.handle(Future.succeededFuture("ok")),
-            err -> handler.handle(Future.failedFuture(err.getMessage())));
-  }
-
-  @Override
-  public String map(String id, String key) {
-    try {
-      rxIndexBucket.defaultCollection().insert(key, id).block();
-      return "ok";
-    }
-    catch (Exception e) {
-      return e.getMessage();
-    }
-  }
-
-  @Override
-  public void unmap(String key, Handler<AsyncResult<String>> handler) {
-    rxIndexBucket.defaultCollection().remove(key).subscribe(
-            res -> handler.handle(Future.succeededFuture("ok")),
-            err -> handler.handle(Future.failedFuture(err.getMessage())));
-  }
-
-  @Override
   public Session load(String id) {
     //todo implementation
     return null;
@@ -144,29 +97,13 @@ public class CBSession implements Runnable, DataAccess<Session> {
     return false;
   }
 
-  @Override
-  public String unmap(String key) {
-    try {
-      rxIndexBucket.defaultCollection().remove(key).block();
-      return "ok";
-    }
-    catch (Exception e) {
-      return e.getMessage();
-    }
-  }
-
-  @Override
-  public long nextId() {
-    return idIncrementer.incr(DB.INCR_KEY, 1,100001L);
-  }
-
-  @Override
-  public void run() {
-    try {
-        idIncrementer.incr(DB.COUCHBASE_CHECK_KEY, 1, 0L);
-    }
-    catch(Exception e) {
-      LOGGER.error(e.getMessage());
-    }
-  }
+//  @Override
+//  public void run() {
+//    try {
+//        idIncrementer.incr(DB.COUCHBASE_CHECK_KEY, 1, 0L);
+//    }
+//    catch(Exception e) {
+//      LOGGER.error(e.getMessage());
+//    }
+//  }
 }

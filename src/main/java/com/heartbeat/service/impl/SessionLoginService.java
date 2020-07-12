@@ -2,7 +2,8 @@ package com.heartbeat.service.impl;
 
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
-import com.heartbeat.db.impl.CBSession;
+import com.heartbeat.db.cb.CBCounter;
+import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.service.AuthService;
@@ -155,7 +156,12 @@ public class SessionLoginService implements AuthService {
   protected void registerAccount(LoginRequest message, Handler<AsyncResult<Session>> handler) {
     CBSession dbAccess = CBSession.getInstance();
 
-    long    userId        = dbAccess.nextId();
+    long    userId        = CBCounter.getInstance().increase(Constant.DB.ID_INCR_KEY, 100000);
+    if (userId == -1) {
+      handler.handle(Future.failedFuture("login_id_gen_fail"));
+      return;
+    }
+
     String  strUserID     = Long.toString(userId);
     Session session = Session.of((int)userId);
 

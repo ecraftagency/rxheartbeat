@@ -1,6 +1,6 @@
 package com.heartbeat.controller;
 
-import com.heartbeat.db.impl.CBBadge;
+import com.heartbeat.db.cb.CBTitle;
 import com.heartbeat.effect.TitleEffectHandler;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -53,7 +53,7 @@ public class TitleController implements Handler<RoutingContext> {
       resp.msg = "invalid_title_id";
     }
 
-    Title title     = CBBadge.getInstance().load(key);
+    Title title     = CBTitle.getInstance().load(key);
     if (title == null)
       title = Title.of("", "", "");
 

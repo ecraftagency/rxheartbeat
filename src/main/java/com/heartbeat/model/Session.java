@@ -5,7 +5,7 @@ import com.heartbeat.common.Constant;
 import com.heartbeat.common.DeviceUID;
 import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.common.Utilities;
-import com.heartbeat.db.impl.CBSession;
+import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;

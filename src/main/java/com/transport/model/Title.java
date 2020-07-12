@@ -1,7 +1,5 @@
 package com.transport.model;
 
-import com.heartbeat.db.impl.CBBadge;
-
 public class Title {
   public String id;
   public String username;

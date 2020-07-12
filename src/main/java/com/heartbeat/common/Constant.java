@@ -41,6 +41,6 @@ public class Constant {
     // for anti IDLE drop
     public static final int COUCHBASE_CHECK_INTERVAL = 29 * 60 * 1000; // 29' in ms
     public static final String COUCHBASE_CHECK_KEY  = "heartbeatIdleCount";
-    public static final String INCR_KEY             = "HeartBeatOnlineUserID";
+    public static final String ID_INCR_KEY = "HeartBeatOnlineUserID";
   }
 }
