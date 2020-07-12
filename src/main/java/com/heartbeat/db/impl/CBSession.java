@@ -2,9 +2,9 @@ package com.heartbeat.db.impl;
 
 import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.java.ReactiveBucket;
-import com.couchbase.client.java.ReactiveCluster;
 import static com.heartbeat.common.Constant.*;
 
+import com.heartbeat.HBServer;
 import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.db.DataAccess;
 import com.heartbeat.model.Session;
@@ -27,18 +27,14 @@ import static com.couchbase.client.java.kv.LookupInSpec.get;
  * repeat after me java[script]!
  */
 
-public class CBDataAccess implements Runnable, DataAccess<Session> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CBDataAccess.class);
-
-  private ReactiveCluster   rxCluster;
+public class CBSession implements Runnable, DataAccess<Session> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(CBSession.class);
   private ReactiveBucket    rxSessionBucket;
   private ReactiveBucket    rxIndexBucket;
-
   private CouchbaseClient   idIncrementer;
-  private CBDataAccess() {
-    rxCluster       = ReactiveCluster.connect(DB.HOST, DB.USER, DB.PWD);
-    rxSessionBucket = rxCluster.bucket("sessions");
-    rxIndexBucket   = rxCluster.bucket("index");
+  private CBSession() {
+    rxSessionBucket = HBServer.rxSessionBucket;
+    rxIndexBucket   = HBServer.rxIndexBucket;
 
     try {
       List<URI> hosts = new ArrayList<>();
@@ -53,8 +49,8 @@ public class CBDataAccess implements Runnable, DataAccess<Session> {
     }
   }
 
-  private static CBDataAccess instance = new CBDataAccess();
-  public static CBDataAccess getInstance() {
+  private static CBSession instance = new CBSession();
+  public static CBSession getInstance() {
     return instance;
   }
 
@@ -87,23 +83,23 @@ public class CBDataAccess implements Runnable, DataAccess<Session> {
 
   @Override
   public void sync(String id, Session obj, Handler<AsyncResult<String>> handler) {
-    rxSessionBucket.defaultCollection().upsert(id, obj).subscribe(res -> {
-      handler.handle(Future.succeededFuture("ok"));
-    }, err -> handler.handle(Future.succeededFuture(err.getMessage())));
+    rxSessionBucket.defaultCollection().upsert(id, obj).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.succeededFuture(err.getMessage())));
   }
 
   @Override
   public void add(String id, Session obj, Handler<AsyncResult<String>> handler) {
-    rxSessionBucket.defaultCollection().insert(id, obj).subscribe(res -> {
-      handler.handle(Future.succeededFuture("ok"));
-    }, err -> handler.handle(Future.succeededFuture(err.getMessage())));
+    rxSessionBucket.defaultCollection().insert(id, obj).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.succeededFuture(err.getMessage())));
   }
 
   @Override
   public void map(String id, String key, Handler<AsyncResult<String>> handler) {
-    rxIndexBucket.defaultCollection().insert(key, id).subscribe(res -> {
-      handler.handle(Future.succeededFuture("ok"));
-    }, err -> handler.handle(Future.failedFuture(err.getMessage())));
+    rxIndexBucket.defaultCollection().insert(key, id).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.failedFuture(err.getMessage())));
   }
 
   @Override
@@ -119,9 +115,33 @@ public class CBDataAccess implements Runnable, DataAccess<Session> {
 
   @Override
   public void unmap(String key, Handler<AsyncResult<String>> handler) {
-    rxIndexBucket.defaultCollection().remove(key).subscribe(res -> {
-      handler.handle(Future.succeededFuture("ok"));
-    }, err -> handler.handle(Future.failedFuture(err.getMessage())));
+    rxIndexBucket.defaultCollection().remove(key).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.failedFuture(err.getMessage())));
+  }
+
+  @Override
+  public Session load(String id) {
+    //todo implementation
+    return null;
+  }
+
+  @Override
+  public Session load(String id, String password) {
+    //todo implementation
+    return null;
+  }
+
+  @Override
+  public boolean sync(String id, Session obj) {
+    //todo implementation
+    return false;
+  }
+
+  @Override
+  public boolean add(String id, Session obj) {
+    //todo implementation
+    return false;
   }
 
   @Override

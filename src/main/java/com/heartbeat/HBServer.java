@@ -1,10 +1,12 @@
 package com.heartbeat;
 
+import com.couchbase.client.java.ReactiveBucket;
+import com.couchbase.client.java.ReactiveCluster;
 import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.common.Constant;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.DataAccess;
-import com.heartbeat.db.impl.CBDataAccess;
+import com.heartbeat.db.impl.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserFight;
@@ -46,6 +48,9 @@ public class HBServer extends AbstractVerticle {
   private static final String SRC_DIR = "/src/main/java/";
   private static final Logger LOGGER = LoggerFactory.getLogger(HBServer.class);
   public  static DataAccess<Session> dataAccess;
+  public  static ReactiveCluster  rxCluster;
+  public  static ReactiveBucket   rxSessionBucket;
+  public  static ReactiveBucket   rxIndexBucket;
 
   public  static JsonObject systemConfig;
   public  static JsonObject localConfig;
@@ -204,6 +209,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/fight").handler(new FightController());
         router.post("/api/item").handler(new ItemController());
         router.post("/api/travel").handler(new TravelController());
+        router.post("/api/title").handler(new TitleController());
 
         router.post("/gm/inject").handler(new InjectController());
 
@@ -220,17 +226,20 @@ public class HBServer extends AbstractVerticle {
   }
 
   public static void main(String[] args) {
+    rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
+    rxSessionBucket = HBServer.rxCluster.bucket("sessions");
+    rxIndexBucket   = HBServer.rxCluster.bucket("index");
+
     //for logging backend
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 
-      //for faster startup, fucking couchbase java sdk T___T
-      dataAccess = CBDataAccess.getInstance();
+    //for faster startup, fucking couchbase java sdk T___T
+    dataAccess = CBSession.getInstance();
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();
       LOGGER.info("HBServer shutdown hook");
     }));
-
 
     Vertx.vertx().deployVerticle(HBServer.class.getName());
   }

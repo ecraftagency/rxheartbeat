@@ -10,6 +10,7 @@ public class EffectManager implements EffectHandler{
   private EffectHandler idolEffectHandler;
   private EffectHandler dropEffectHandler;
   private EffectHandler inventoryEffectHandler;
+  private EffectHandler titleEffectHandler;
 
   public static EffectManager inst() {
     return instance;
@@ -20,6 +21,7 @@ public class EffectManager implements EffectHandler{
     idolEffectHandler         = IdolEffectHandlerV2.inst();
     inventoryEffectHandler    = InventoryEffectHandler.inst();
     dropEffectHandler         = new DropEffectHandler();
+    titleEffectHandler        = new TitleEffectHandler();
   }
 
   @Override
@@ -40,6 +42,9 @@ public class EffectManager implements EffectHandler{
     }
     else if (type == 102){
       return dropEffectHandler.handleEffect(extArgs, session, effectFormat);
+    }
+    else if (type == 103) {
+      return titleEffectHandler.handleEffect(extArgs, session, effectFormat);
     }
     return EffectHandler.UNKNOWN_FORMAT_TYPE;
   }

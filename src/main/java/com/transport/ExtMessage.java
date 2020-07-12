@@ -1,5 +1,6 @@
 package com.transport;
 
+import com.heartbeat.db.impl.CBBadge;
 import com.transport.model.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ExtMessage {
     public Inventory  inventory;
     public Fight      fight;
     public Travel     travel;
+    public Title      title;
   }
 
   public static ExtMessage idol() {
@@ -90,6 +92,15 @@ public class ExtMessage {
     result.cmd = "";
     result.msg = "ok";
     result.group = "travel";
+    result.data = new Data();
+    return result;
+  }
+
+  public static ExtMessage title() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "title";
     result.data = new Data();
     return result;
   }

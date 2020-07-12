@@ -72,7 +72,7 @@ public class ItemController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.item();
     int propId      = ctx.getBodyAsJson().getInteger("itemId");
     int objId       = ctx.getBodyAsJson().getInteger("objId");
-    int newAvatar   = ctx.getBodyAsJson().getInteger("newAvatar");
+    int newAvatar   = ctx.getBodyAsJson().getInteger("newAvatar"); //todo refactor this [objId, intParam, strParam]
     String newDN    = ctx.getBodyAsJson().getString("newDisplayName");
     int amount      = 1;
 

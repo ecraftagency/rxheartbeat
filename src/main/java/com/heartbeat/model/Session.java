@@ -1,12 +1,11 @@
 package com.heartbeat.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.DeviceUID;
 import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.common.Utilities;
-import com.heartbeat.db.impl.CBDataAccess;
+import com.heartbeat.db.impl.CBSession;
 import com.heartbeat.model.data.*;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
@@ -78,12 +77,12 @@ public class Session {
     int onlineTime                = userProfile.lastLogin - userProfile.lastLogout;
     userProfile.totalPlayingTime += onlineTime;
 
-    CBDataAccess cba = CBDataAccess.getInstance();
+    CBSession cba = CBSession.getInstance();
     cba.sync(Integer.toString(id), this, ar -> SessionPool.removeSession(id));
     SessionPool.removeSession(id); //T___T
   }
 
-  public void sync(CBDataAccess cba) {
+  public void sync(CBSession cba) {
     cba.sync(Integer.toString(id), this, ar -> {
       if (ar.failed())
         LOGGER.error(ar.cause().getMessage());
@@ -175,7 +174,7 @@ public class Session {
     Session session = updateQueue.poll();
     if(session != null && !session.isClose) {
       try {
-        CBDataAccess cbAccess = CBDataAccess.getInstance();
+        CBSession cbAccess = CBSession.getInstance();
         session.sync(cbAccess);
       }
       catch(Exception ex) {

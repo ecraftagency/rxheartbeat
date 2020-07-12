@@ -2,7 +2,7 @@ package com.heartbeat.service.impl;
 
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
-import com.heartbeat.db.impl.CBDataAccess;
+import com.heartbeat.db.impl.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.service.AuthService;
@@ -68,7 +68,7 @@ public class SessionLoginService implements AuthService {
                                     String password,
                                     String snsToken, Handler<AsyncResult<Profile>> handler) {
 
-    CBDataAccess.getInstance().load(strId, password, ar -> {
+    CBSession.getInstance().load(strId, password, ar -> {
       if (ar.succeeded()) {
         Session session = ar.result();
         if (session.isBan()) {
@@ -153,7 +153,7 @@ public class SessionLoginService implements AuthService {
   }
 
   protected void registerAccount(LoginRequest message, Handler<AsyncResult<Session>> handler) {
-    CBDataAccess dbAccess = CBDataAccess.getInstance();
+    CBSession dbAccess = CBSession.getInstance();
 
     long    userId        = dbAccess.nextId();
     String  strUserID     = Long.toString(userId);
