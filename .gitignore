@@ -5,6 +5,7 @@ log/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+config.json
 
 ### STS ###
 .apt_generated
