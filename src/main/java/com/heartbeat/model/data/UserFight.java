@@ -428,7 +428,7 @@ public class UserFight extends Fight {
 
     long totalMoneyConsume = 0;
     for (int i = 0; i < time; i++) {
-      ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);
+      ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + i);
       if (sp.id == -1)
         return "run_show_invalid";
 
@@ -467,7 +467,7 @@ public class UserFight extends Fight {
       }
 
       int nextShoppingId  = currentShopping.id + time;
-      currentRunShow      = RunShowData.of(nextShoppingId);
+      currentShopping      = ShoppingData.of(nextShoppingId);
       return "win";
     }
     else {

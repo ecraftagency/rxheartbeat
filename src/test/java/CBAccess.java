@@ -1,20 +1,59 @@
+import com.couchbase.client.core.msg.kv.SubDocumentField;
 import com.couchbase.client.java.ReactiveCluster;
+import com.couchbase.client.java.kv.LookupInAccessor;
+import com.couchbase.client.java.kv.LookupInResult;
+import com.couchbase.client.java.kv.MutationResult;
+import com.couchbase.client.java.query.QueryResult;
+import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
 import com.heartbeat.common.Constant;
+import com.heartbeat.common.Utilities;
 import com.heartbeat.db.DataAccess;
+import com.heartbeat.db.Mapper;
 import com.heartbeat.db.cb.CBCounter;
+import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBTitle;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.transport.model.Title;
+import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import static com.couchbase.client.java.kv.LookupInSpec.exists;
+import static com.couchbase.client.java.kv.MutateInSpec.*;
 
 public class CBAccess {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     HBServer.rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
     HBServer.rxSessionBucket = HBServer.rxCluster.bucket("sessions");
     HBServer.rxIndexBucket   = HBServer.rxCluster.bucket("index");
-    long id = CBCounter.getInstance().increase("HeartBeatOnlineUserID", 100000);
-    System.out.println(id);
+
+//    System.out.println("start");
+//      HBServer.rxSessionBucket.defaultCollection().lookupIn("100017", Collections.singletonList(
+//              exists("groups")
+//      )).subscribe(res -> {
+//        if (res.exists(0)) {
+//
+//          HBServer.rxSessionBucket.defaultCollection().mutateIn("100017", Collections.singletonList(
+//                  arrayAddUnique("groups", Collections.singletonList(200))
+//          )).subscribe(ress -> System.out.println(res.toString()),
+//                  errr -> System.out.println(errr.getMessage()));
+//        }
+//      });
+
+    Mono<ReactiveQueryResult> result = HBServer.rxCluster
+            .query("select * from `index`");
+
+    result.flatMapMany(ReactiveQueryResult::rowsAsObject)
+          .subscribe(row -> {
+            System.out.println("Found row: " + row.toString());
+          });
+    Thread.sleep(40000);
+//      if (ra != null)
+//        System.out.println(ra.toString().contains("SUCCESS"));
+
   }
 
   public static void titleInsert() {
@@ -28,7 +67,7 @@ public class CBAccess {
   }
 
   public static void mapTest() {
-    DataAccess<Session> da = CBSession.getInstance();
+    Mapper da = CBMapper.getInstance();
     da.map("100001", "hello", ar -> {
       if (ar.succeeded()) {
         System.out.println("ok");

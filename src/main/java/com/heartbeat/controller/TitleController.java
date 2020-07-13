@@ -25,7 +25,7 @@ public class TitleController implements Handler<RoutingContext> {
         ExtMessage resp;
         switch (cmd) {
           case "titleInfo":
-            resp = processTitleInfo(session, ctx);
+            resp = processTitleInfo(ctx);
             break;
           default:
             resp = ExtMessage.title();
@@ -45,18 +45,20 @@ public class TitleController implements Handler<RoutingContext> {
     }
   }
 
-  private ExtMessage processTitleInfo(Session session, RoutingContext ctx) {
+  private ExtMessage processTitleInfo(RoutingContext ctx) {
     int titleId     = ctx.getBodyAsJson().getInteger("titleId");
-    String key      = TitleEffectHandler.titleMap.get(titleId);
+    String key      = TitleEffectHandler.titleKeyMap.get(titleId);
+    String name     = TitleEffectHandler.titlenameMap.get(titleId);
     ExtMessage resp = ExtMessage.title();
-    if (key == null) {
+    if (key == null || name == null) {
       resp.msg = "invalid_title_id";
     }
 
     Title title     = CBTitle.getInstance().load(key);
     if (title == null)
-      title = Title.of("", "", "");
+      title = Title.of("", "","", "");
 
+    title.titleName = name;
     resp.data.title = title;
     resp.msg        = "ok";
     return resp;
