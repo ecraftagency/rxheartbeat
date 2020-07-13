@@ -43,6 +43,7 @@ public class ProfileController implements Handler<RoutingContext> {
         }
         resp.cmd = cmd;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        session.effectResults.clear();
       }
       else {
         ctx.response().setStatusCode(401).end();
