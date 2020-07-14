@@ -1,6 +1,6 @@
 package com.heartbeat.effect;
 
-import com.heartbeat.db.DataAccess;
+import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBTitle;
 import com.heartbeat.model.Session;
 import com.transport.model.Title;
@@ -13,7 +13,7 @@ public class TitleEffectHandler implements EffectHandler{
   public static final Map<Integer, String> titleKeyMap;
   public static final Map<Integer, String> titlenameMap;
 
-  public DataAccess<Title>         dataAccess;
+  public Cruder<Title> cruder;
   static {
     titleKeyMap = new HashMap<>();
     titleKeyMap.put(1, "attractive_title");
@@ -31,7 +31,7 @@ public class TitleEffectHandler implements EffectHandler{
   }
 
   public TitleEffectHandler() {
-    dataAccess = CBTitle.getInstance();
+    cruder = CBTitle.getInstance();
   }
 
   @Override
@@ -40,7 +40,7 @@ public class TitleEffectHandler implements EffectHandler{
     if (key == null)
       return "invalid_title_id";
     Title title = Title.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.newDisplayName);
-    if (dataAccess.add(key, title))
+    if (cruder.add(key, title))
       return "ok";
     return "title_already_placed";
   }

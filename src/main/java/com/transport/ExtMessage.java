@@ -104,6 +104,15 @@ public class ExtMessage {
     return result;
   }
 
+  public static ExtMessage group() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "group";
+    result.data = new Data();
+    return result;
+  }
+
   public void reset() {
     cmd = "";
     data.profile = null;

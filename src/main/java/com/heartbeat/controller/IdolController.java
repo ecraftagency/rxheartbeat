@@ -113,7 +113,7 @@ public class IdolController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processHaloLevelUp(Session session, RoutingContext ctx) {
-    ExtMessage resp = ExtMessage.item();
+    ExtMessage resp = ExtMessage.idol();
     int idolId = ctx.getBodyAsJson().getInteger("idolId");
     int haloId = ctx.getBodyAsJson().getInteger("haloId");
 
@@ -127,7 +127,7 @@ public class IdolController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processUnlockIdolMaxLevel(Session session, RoutingContext ctx) {
-    ExtMessage resp = ExtMessage.item();
+    ExtMessage resp = ExtMessage.idol();
     int idolId = ctx.getBodyAsJson().getInteger("idolId");
     resp.msg = session.userIdol.idolMaxLevelUnlock(session, idolId);
     return resp;

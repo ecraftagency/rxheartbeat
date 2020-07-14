@@ -1,28 +1,13 @@
-import com.couchbase.client.core.msg.kv.SubDocumentField;
 import com.couchbase.client.java.ReactiveCluster;
-import com.couchbase.client.java.kv.LookupInAccessor;
-import com.couchbase.client.java.kv.LookupInResult;
-import com.couchbase.client.java.kv.MutationResult;
-import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
 import com.heartbeat.common.Constant;
-import com.heartbeat.common.Utilities;
-import com.heartbeat.db.DataAccess;
+import com.heartbeat.db.Cruder;
 import com.heartbeat.db.Mapper;
-import com.heartbeat.db.cb.CBCounter;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBTitle;
-import com.heartbeat.db.cb.CBSession;
-import com.heartbeat.model.Session;
 import com.transport.model.Title;
 import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import static com.couchbase.client.java.kv.LookupInSpec.exists;
-import static com.couchbase.client.java.kv.MutateInSpec.*;
 
 public class CBAccess {
   public static void main(String[] args) throws InterruptedException {
@@ -57,9 +42,9 @@ public class CBAccess {
   }
 
   public static void titleInsert() {
-    DataAccess<Title> ta = CBTitle.getInstance();
+    Cruder<Title> ta = CBTitle.getInstance();
 
-    Title title = Title.of("1000001", "mrstart", "stalin is god");
+    Title title = Title.of("1000001", "","mrstart", "stalin is god");
     System.out.println(ta.add("numberone", title));
 
     title = ta.load("numberone");

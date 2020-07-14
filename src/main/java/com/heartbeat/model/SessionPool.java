@@ -80,7 +80,7 @@ public class SessionPool {
             }
           }
         }
-        LOGGER.info("CCU " + pool.size());
+        LOGGER.info("Session online " + pool.size());
       }
       catch(Exception ex) {
         LOGGER.error(ex.getMessage());

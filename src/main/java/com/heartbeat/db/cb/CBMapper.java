@@ -1,6 +1,7 @@
 package com.heartbeat.db.cb;
 
 import com.couchbase.client.java.ReactiveBucket;
+import com.couchbase.client.java.kv.GetResult;
 import com.heartbeat.HBServer;
 import com.heartbeat.db.Mapper;
 import io.vertx.core.AsyncResult;
@@ -38,6 +39,14 @@ public class CBMapper implements Mapper {
   }
 
   @Override
+  public void getValue(String key, Handler<AsyncResult<String>> handler) {
+    rxIndexBucket.defaultCollection().get(key).subscribe(
+            res -> handler.handle(Future.succeededFuture(res.contentAs(String.class))),
+            err -> handler.handle(Future.failedFuture(err.getMessage()))
+    );
+  }
+
+  @Override
   public String map(String id, String key) {
     try {
       rxIndexBucket.defaultCollection().insert(key, id).block();
@@ -56,6 +65,19 @@ public class CBMapper implements Mapper {
     }
     catch (Exception e) {
       return e.getMessage();
+    }
+  }
+
+  @Override
+  public String getValue(String key) {
+    try {
+      GetResult gr = rxIndexBucket.defaultCollection().get(key).block();
+      if (gr != null)
+        return gr.contentAs(String.class);
+      return "";
+    }
+    catch (Exception e) {
+      return "";
     }
   }
 }

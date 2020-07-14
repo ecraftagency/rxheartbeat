@@ -3,11 +3,12 @@ package com.heartbeat.db.cb;
 import com.couchbase.client.java.ReactiveBucket;
 
 import com.heartbeat.HBServer;
-import com.heartbeat.db.DataAccess;
+import com.heartbeat.db.Cruder;
 import com.heartbeat.model.Session;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.impl.FailedFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ import static com.couchbase.client.java.kv.LookupInSpec.get;
  */
 
 @SuppressWarnings("unused")
-public class CBSession implements DataAccess<Session> {
+public class CBSession implements Cruder<Session> {
   private static final Logger LOGGER = LoggerFactory.getLogger(CBSession.class);
   private ReactiveBucket    rxSessionBucket;
   private CBSession() {
@@ -74,6 +75,11 @@ public class CBSession implements DataAccess<Session> {
   }
 
   @Override
+  public void remove(String id, Handler<AsyncResult<String>> handler) {
+    handler.handle(Future.failedFuture("not implemented"));
+  }
+
+  @Override
   public Session load(String id) {
     //todo implementation
     return null;
@@ -97,13 +103,8 @@ public class CBSession implements DataAccess<Session> {
     return false;
   }
 
-//  @Override
-//  public void run() {
-//    try {
-//        idIncrementer.incr(DB.COUCHBASE_CHECK_KEY, 1, 0L);
-//    }
-//    catch(Exception e) {
-//      LOGGER.error(e.getMessage());
-//    }
-//  }
+  @Override
+  public boolean remove(String id) {
+    return false;
+  }
 }

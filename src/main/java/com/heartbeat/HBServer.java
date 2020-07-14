@@ -5,8 +5,9 @@ import com.couchbase.client.java.ReactiveCluster;
 import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.common.Constant;
 import com.heartbeat.controller.*;
-import com.heartbeat.db.DataAccess;
+import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserFight;
@@ -43,14 +44,17 @@ import java.util.stream.Collectors;
 //  */X means "every X"
 //  ? ("no specific value")
 
+
+// AVAILABILITY > CONSISTENCY
 @SuppressWarnings("unused")
 public class HBServer extends AbstractVerticle {
   private static final String SRC_DIR = "/src/main/java/";
   private static final Logger LOGGER = LoggerFactory.getLogger(HBServer.class);
-  public  static DataAccess<Session> dataAccess;
+  public  static Cruder<Session> cruder;
   public  static ReactiveCluster  rxCluster;
   public  static ReactiveBucket   rxSessionBucket;
   public  static ReactiveBucket   rxIndexBucket;
+  public  static ReactiveBucket   rxPersistBucket;
 
   public  static JsonObject systemConfig;
   public  static JsonObject localConfig;
@@ -183,6 +187,7 @@ public class HBServer extends AbstractVerticle {
 
       updateConst();
       SessionPool.checkHeartBeat.run();
+      GroupPool.groupSyncTask.run();
     }
     catch (Exception ioe) {
       LOGGER.error(ioe.getMessage());
@@ -210,6 +215,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/item").handler(new ItemController());
         router.post("/api/travel").handler(new TravelController());
         router.post("/api/title").handler(new TitleController());
+        router.post("/api/group").handler(new GroupController());
 
         router.post("/gm/inject").handler(new InjectController());
 
@@ -229,15 +235,17 @@ public class HBServer extends AbstractVerticle {
     rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
     rxSessionBucket = HBServer.rxCluster.bucket("sessions");
     rxIndexBucket   = HBServer.rxCluster.bucket("index");
+    rxPersistBucket = HBServer.rxCluster.bucket("persist");
 
     //for logging backend
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 
     //for faster startup, fucking couchbase java sdk T___T
-    dataAccess = CBSession.getInstance();
+    cruder = CBSession.getInstance();
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();
+      GroupPool.removeAll();
       LOGGER.info("HBServer shutdown hook");
     }));
 

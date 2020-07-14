@@ -117,6 +117,7 @@ public class SessionLoginService implements AuthService {
       }
 
       session.updateLogin();
+      session.loadSessionGroup(ar -> {});
 
       lr.result = result;
       lr.strUserId = strUserId;
@@ -156,7 +157,7 @@ public class SessionLoginService implements AuthService {
   protected void registerAccount(LoginRequest message, Handler<AsyncResult<Session>> handler) {
     CBSession dbAccess = CBSession.getInstance();
 
-    long    userId        = CBCounter.getInstance().increase(Constant.DB.ID_INCR_KEY, 100000);
+    long    userId        = CBCounter.getInstance().increase(Constant.DB.ID_INCR_KEY, Constant.DB.ID_INIT);
     if (userId == -1) {
       handler.handle(Future.failedFuture("login_id_gen_fail"));
       return;

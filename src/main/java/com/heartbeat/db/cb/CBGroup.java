@@ -1,0 +1,127 @@
+package com.heartbeat.db.cb;
+
+import com.couchbase.client.java.ReactiveBucket;
+import com.couchbase.client.java.kv.MutationResult;
+import com.heartbeat.HBServer;
+import com.heartbeat.common.GlobalVariable;
+import com.heartbeat.db.Cruder;
+import com.heartbeat.model.data.UserGroup;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.beancontext.BeanContextMembershipEvent;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@SuppressWarnings("unused")
+public class CBGroup implements Cruder<UserGroup> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(CBGroup.class);
+  private ReactiveBucket      rxPersistBucket;
+  private static CBGroup      instance = new CBGroup();
+  private static final String keyPrefix = "group";
+
+  private CBGroup() {
+    rxPersistBucket = HBServer.rxPersistBucket;
+  }
+
+  public static CBGroup getInstance() {
+    return instance;
+  }
+
+  @Override
+  public void load(String id, Handler<AsyncResult<UserGroup>> handler) {
+    StringBuilder builder = GlobalVariable.stringBuilder.get();
+    builder.append(keyPrefix).append("_").append(id);
+
+    rxPersistBucket.defaultCollection().get(builder.toString()).subscribe(res -> {
+      UserGroup group = res.contentAs(UserGroup.class);
+      if (group != null) {
+        group.refCount = new AtomicInteger();
+      }
+      handler.handle(Future.succeededFuture(group));
+    }, err -> handler.handle(Future.failedFuture(err)));
+  }
+
+  @Override
+  public void load(String id, String password, Handler<AsyncResult<UserGroup>> handler) {
+    handler.handle(Future.failedFuture("not_support"));
+  }
+
+  @Override
+  public void sync(String id, UserGroup obj, Handler<AsyncResult<String>> handler) {
+    StringBuilder builder = GlobalVariable.stringBuilder.get();
+    builder.append(keyPrefix).append("_").append(id);
+
+    rxPersistBucket.defaultCollection().upsert(builder.toString(), obj).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.succeededFuture(err.getMessage())));
+  }
+
+  @Override
+  public void add(String id, UserGroup obj, Handler<AsyncResult<String>> handler) {
+    StringBuilder builder = GlobalVariable.stringBuilder.get();
+    builder.append(keyPrefix).append("_").append(id);
+    CBMapper.getInstance().map(Integer.toString(obj.id),Integer.toString(obj.owner), ar -> {
+      if (ar.succeeded()) {
+        rxPersistBucket.defaultCollection().insert(builder.toString(), obj).subscribe(
+          res -> handler.handle(Future.succeededFuture("ok")),
+          err -> handler.handle(Future.failedFuture(err.getMessage()))
+        );
+      }
+      else {
+        //this happen maybe because last remove group but fail to unmap
+        CBMapper.getInstance().unmap(Integer.toString(obj.owner));
+        handler.handle(Future.failedFuture(ar.cause().getMessage()));
+      }
+    });
+  }
+
+  @Override
+  public void remove(String id, Handler<AsyncResult<String>> handler) {
+    StringBuilder builder = GlobalVariable.stringBuilder.get();
+    builder.append(keyPrefix).append("_").append(id);
+    rxPersistBucket.defaultCollection().remove(builder.toString()).subscribe(
+      res -> handler.handle(Future.succeededFuture("ok")),
+      err -> handler.handle(Future.failedFuture(err.getMessage()))
+    );
+  }
+
+  @Override
+  public UserGroup load(String id) {
+    //todo implementation
+    return null;
+  }
+
+  @Override
+  public UserGroup load(String id, String password) {
+    //todo implementation
+    return null;
+  }
+
+  @Override
+  public boolean sync(String id, UserGroup obj) {
+    //todo implementation
+    return false;
+  }
+
+  @Override
+  public boolean add(String id, UserGroup obj) {
+    //todo implementation
+    return false;
+  }
+
+  @Override
+  public boolean remove(String id) {
+    try {
+      StringBuilder builder = GlobalVariable.stringBuilder.get();
+      builder.append(keyPrefix).append("_").append(id);
+      MutationResult a = rxPersistBucket.defaultCollection().remove(builder.toString()).block();
+      return a != null;
+    }
+    catch (Exception e) {
+      return false;
+    }
+  }
+}

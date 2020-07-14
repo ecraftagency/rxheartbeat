@@ -5,7 +5,7 @@ import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.InsertOptions;
 import com.couchbase.client.java.kv.MutationResult;
 import com.heartbeat.HBServer;
-import com.heartbeat.db.DataAccess;
+import com.heartbeat.db.Cruder;
 import com.transport.model.Title;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-public class CBTitle implements DataAccess<Title> {
+public class CBTitle implements Cruder<Title> {
   private static final Logger LOGGER = LoggerFactory.getLogger(CBTitle.class);
   private static final int    EXPIRY = 2; //minutes
 
@@ -48,6 +48,11 @@ public class CBTitle implements DataAccess<Title> {
   @Override
   public void add(String id, Title obj, Handler<AsyncResult<String>> handler) {
     handler.handle(Future.failedFuture("unimplemented"));
+  }
+
+  @Override
+  public void remove(String id, Handler<AsyncResult<String>> handler) {
+    handler.handle(Future.failedFuture("not implemented"));
   }
 
   @Override
@@ -90,5 +95,10 @@ public class CBTitle implements DataAccess<Title> {
       LOGGER.error(e.getMessage());
       return false;
     }
+  }
+
+  @Override
+  public boolean remove(String id) {
+    return false;
   }
 }
