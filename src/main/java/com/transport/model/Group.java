@@ -20,6 +20,7 @@ public class Group {
   public int                      joinType;
   public String                   docType           = "group";
   public transient AtomicInteger  refCount;
+  protected transient boolean     isChange;
 
   public void close() {
 

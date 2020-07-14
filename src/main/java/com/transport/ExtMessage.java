@@ -1,5 +1,6 @@
 package com.transport;
 
+import com.heartbeat.model.data.UserGroup;
 import com.transport.model.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class ExtMessage {
     public Fight      fight;
     public Travel     travel;
     public Title      title;
+    public Group      group;
   }
 
   public static ExtMessage idol() {

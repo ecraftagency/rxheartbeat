@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -19,29 +20,20 @@ public class GroupController implements Handler<RoutingContext> {
       String strUserId  = ctx.user().principal().getString("username");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
       if (session != null) {
-        ExtMessage resp = ExtMessage.group();
+        ExtMessage resp;
         switch (cmd) {
-          case "idolInfo":
-            break;
-          case "idolLevelUp":
-            break;
-          case "addIdol":
-            break;
-          case "addAptByExp":
-            break;
-          case "addAptByItem":
-            break;
-          case "haloLevelUp":
-            break;
-          case "idolMaxLevelUnlock":
-            break;
+          case "createGroup":
+            processCreateGroup(session, ctx, cmd);
+            return;
+          case "removeGroup":
+            processRemoveGroup(session, ctx, cmd);
+            return;
           default:
             resp = ExtMessage.group();
             resp.msg = "unknown_cmd";
             break;
         }
         resp.cmd = cmd;
-        resp.data.idols = session.userIdol;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
       }
@@ -53,5 +45,52 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private void processRemoveGroup(Session session, RoutingContext ctx, String cmd) {
+    ExtMessage resp = ExtMessage.group();
+    session.removeGroup(crtRes -> {
+      if (crtRes.succeeded()) {
+        resp.msg = "ok";
+        resp.cmd = cmd;
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+      else {
+        resp.msg = crtRes.cause().getMessage();
+        resp.cmd = cmd;
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
+  }
+
+  private void processCreateGroup(Session session, RoutingContext ctx, String cmd) {
+    int groupType;
+    try {
+      groupType = ctx.getBodyAsJson().getInteger("groupType");
+    }
+    catch (Exception e) {
+      ctx.response().setStatusCode(404).end();
+      return;
+    }
+
+    ExtMessage resp = ExtMessage.group();
+    if (groupType < 0 || groupType > 1) {
+      resp.msg = "invalid_group_type";
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      return;
+    }
+    session.createGroup(groupType, crtRes -> {
+      if (crtRes.succeeded()) {
+        resp.msg = "ok";
+        resp.cmd = cmd;
+        resp.data.group = GroupPool.getGroupFromPool(session.groupID);
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+      else {
+        resp.msg = crtRes.cause().getMessage();
+        resp.cmd = cmd;
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
   }
 }

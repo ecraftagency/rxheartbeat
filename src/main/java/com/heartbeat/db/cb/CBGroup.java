@@ -3,8 +3,10 @@ package com.heartbeat.db.cb;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.MutationResult;
 import com.heartbeat.HBServer;
+import com.heartbeat.common.Constant;
 import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.db.Cruder;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.data.UserGroup;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -12,7 +14,6 @@ import io.vertx.core.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.beancontext.BeanContextMembershipEvent;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("unused")
@@ -61,31 +62,65 @@ public class CBGroup implements Cruder<UserGroup> {
 
   @Override
   public void add(String id, UserGroup obj, Handler<AsyncResult<String>> handler) {
-    StringBuilder builder = GlobalVariable.stringBuilder.get();
-    builder.append(keyPrefix).append("_").append(id);
-    CBMapper.getInstance().map(Integer.toString(obj.id),Integer.toString(obj.owner), ar -> {
-      if (ar.succeeded()) {
-        rxPersistBucket.defaultCollection().insert(builder.toString(), obj).subscribe(
-          res -> handler.handle(Future.succeededFuture("ok")),
-          err -> handler.handle(Future.failedFuture(err.getMessage()))
-        );
+    CBCounter.getInstance().increase(Constant.DB.GID_INCR_KEY, Constant.DB.GID_INIT, idRes -> {
+      if (idRes.succeeded()) {
+        obj.id = idRes.result().intValue();
+        StringBuilder builder = GlobalVariable.stringBuilder.get();
+        builder.append(keyPrefix).append("_").append(obj.id);
+
+        CBMapper.getInstance().map(Integer.toString(obj.id),Integer.toString(obj.owner), mapRes -> {
+          if (mapRes.succeeded()) {
+            rxPersistBucket.defaultCollection().insert(builder.toString(), obj).subscribe(
+                res -> {
+                  //ok, then add group to pool
+                  GroupPool.addGroup(obj);
+                  handler.handle(Future.succeededFuture(Integer.toString(obj.id)));
+                },
+                err -> {
+                  //if add group fail, then rollback
+                  CBMapper.getInstance().unmap(Integer.toString(obj.owner));
+                  handler.handle(Future.failedFuture(err.getMessage()));
+                }
+            );
+          }
+          else {
+            handler.handle(Future.failedFuture(mapRes.cause().getMessage()));
+          }
+        });
       }
       else {
-        //this happen maybe because last remove group but fail to unmap
-        CBMapper.getInstance().unmap(Integer.toString(obj.owner));
-        handler.handle(Future.failedFuture(ar.cause().getMessage()));
+        handler.handle(Future.failedFuture(idRes.cause().getMessage()));
       }
     });
   }
 
   @Override
   public void remove(String id, Handler<AsyncResult<String>> handler) {
-    StringBuilder builder = GlobalVariable.stringBuilder.get();
-    builder.append(keyPrefix).append("_").append(id);
-    rxPersistBucket.defaultCollection().remove(builder.toString()).subscribe(
-      res -> handler.handle(Future.succeededFuture("ok")),
-      err -> handler.handle(Future.failedFuture(err.getMessage()))
-    );
+    UserGroup group = GroupPool.getGroupFromPool(Integer.parseInt(id));
+    if (group != null) {
+      CBMapper.getInstance().unmap(Integer.toString(group.owner), unmapRes -> {
+        if (unmapRes.succeeded()) {
+          StringBuilder builder = GlobalVariable.stringBuilder.get();
+          builder.append(keyPrefix).append("_").append(id);
+          rxPersistBucket.defaultCollection().remove(builder.toString()).subscribe(
+                  res -> {
+                    GroupPool.removeGroup(group.id);
+                    handler.handle(Future.succeededFuture("ok"));
+                  },
+                  err -> {
+                    LOGGER.error("red alert: already unmap sid_gid but fail to delete group from db, gid: " + id + " sid: " + group.owner);
+                    handler.handle(Future.failedFuture(err.getMessage()));
+                  }
+          );
+        }
+        else {
+          LOGGER.error("red alert: sid_gid fail to unmap but have group instance online, gid: " + id + " sid: " + group.owner);
+          handler.handle(Future.failedFuture(unmapRes.cause().getMessage()));
+        }
+      });
+    }
+    else
+      handler.handle(Future.failedFuture("group_not_found"));
   }
 
   @Override
