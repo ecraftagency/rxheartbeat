@@ -31,5 +31,14 @@ public class Group {
     public String   displayName;
     public int      joinTime;
     public int      role;
+
+    public static   Member of(int id, String displayName) {
+      Member member = new Member();
+      member.id = id;
+      member.displayName = displayName;
+      member.role = USER_ROLE;
+      member.joinTime = (int)(System.currentTimeMillis());
+      return member;
+    }
   }
 }

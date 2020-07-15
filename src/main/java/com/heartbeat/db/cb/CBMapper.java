@@ -2,6 +2,7 @@ package com.heartbeat.db.cb;
 
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.GetResult;
+import com.couchbase.client.java.kv.UpsertOptions;
 import com.heartbeat.HBServer;
 import com.heartbeat.db.Mapper;
 import io.vertx.core.AsyncResult;
@@ -32,6 +33,13 @@ public class CBMapper implements Mapper {
   }
 
   @Override
+  public void mapOverride(String id, String key, UpsertOptions options, Handler<AsyncResult<String>> handler) {
+    rxIndexBucket.defaultCollection().upsert(key, id).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.failedFuture(err.getMessage())));
+  }
+
+  @Override
   public void unmap(String key, Handler<AsyncResult<String>> handler) {
     rxIndexBucket.defaultCollection().remove(key).subscribe(
             res -> handler.handle(Future.succeededFuture("ok")),
@@ -50,6 +58,17 @@ public class CBMapper implements Mapper {
   public String map(String id, String key) {
     try {
       rxIndexBucket.defaultCollection().insert(key, id).block();
+      return "ok";
+    }
+    catch (Exception e) {
+      return e.getMessage();
+    }
+  }
+
+  @Override
+  public String mapOverride(String id, String key, UpsertOptions options) {
+    try {
+      rxIndexBucket.defaultCollection().upsert(key, id).block();
       return "ok";
     }
     catch (Exception e) {

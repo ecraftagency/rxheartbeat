@@ -23,6 +23,7 @@ public class ExtMessage {
     public Travel     travel;
     public Title      title;
     public Group      group;
+    public int        currentGroupState;
   }
 
   public static ExtMessage idol() {

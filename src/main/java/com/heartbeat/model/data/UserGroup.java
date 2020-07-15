@@ -1,5 +1,8 @@
 package com.heartbeat.model.data;
 
+import com.heartbeat.db.cb.CBGroup;
+import com.heartbeat.model.GroupPool;
+import com.heartbeat.model.Session;
 import com.transport.model.Group;
 
 import java.util.HashMap;
@@ -28,8 +31,7 @@ public class UserGroup extends Group {
 
   @Override
   public void close() {
-//    CBGroup.getInstance().sync(Integer.toString(id), this, ar -> GroupPool.removeGroup(id));
-//    GroupPool.removeGroup(id); //T_____________T im crazy
+    CBGroup.getInstance().sync(Integer.toString(id), this, ar -> GroupPool.removeGroup(id));
   }
 
   public int getRole(int memberId) {
@@ -37,5 +39,39 @@ public class UserGroup extends Group {
     if (member != null)
       return member.role;
     return -1;
+  }
+
+  public synchronized String processJoinGroup(Session session) {
+    Member member = Member.of(session.id, session.userGameInfo.displayName);
+
+    if (members.size() >= 25) {
+      return "group_full_seat";
+    }
+
+    if (joinType == AUTO_JOIN) {
+      members.put(member.id, member);
+      session.groupID = id;
+      return "ok";
+    }
+    else if (joinType == REQUEST_JOIN) {
+      pendingMembers.put(member.id, member);
+      return "ok";
+    }
+    else {
+      return "unknown_join_type";
+    }
+  }
+
+  //user for reverse if mapping not success
+  public synchronized void removeMember(Session session) {
+    members.remove(session.id);
+  }
+
+  public synchronized String kickMember(int memberId) {
+    if (members.get(memberId) != null) {
+      members.remove(memberId);
+      return "ok";
+    }
+    return "member_not_found";
   }
 }

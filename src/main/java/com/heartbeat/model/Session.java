@@ -5,7 +5,6 @@ import com.heartbeat.common.Constant;
 import com.heartbeat.common.DeviceUID;
 import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.common.Utilities;
-import com.heartbeat.db.cb.CBCounter;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
@@ -91,14 +90,6 @@ public class Session {
     int onlineTime                = userProfile.lastLogin - userProfile.lastLogout;
     userProfile.totalPlayingTime += onlineTime;
 
-    //mute the refcount
-//    Group group = GroupPool.getGroupFromPool(groupID);
-//    if (group != null) {
-//      int refCount = group.refCount.decrementAndGet();
-//      if (refCount <= 0)
-//        group.close();
-//    }
-
     CBSession cba = CBSession.getInstance();
     cba.sync(Integer.toString(id), this, ar -> SessionPool.removeSession(id));
     SessionPool.removeSession(id); //T___T
@@ -173,31 +164,14 @@ public class Session {
       if (group != null) {
         int role    = group.getRole(id);
         if (role == Group.OWNER_ROLE) {
-//          CBMapper.getInstance().unmap(Integer.toString(id), ar -> {
-//            if (ar.succeeded())
-//              CBGroup.getInstance().remove(Integer.toString(id), arr -> {
-//                if (arr.succeeded()) {
-//                  handler.handle(Future.succeededFuture("ok"));
-//                  GroupPool.removeGroup(groupID);
-//                }
-//                else {
-//                  LOGGER.error("fail_to_remove_group " + id);
-//                  handler.handle(Future.failedFuture(arr.cause().getMessage()));
-//                }
-//              });
-//            else {
-//              //fail to unmap but also try to remove persistent group
-//              LOGGER.error("fail_to_unmap_group " + id);
-//              CBGroup.getInstance().remove(Integer.toString(id), arr -> {
-//                if (!arr.succeeded())
-//                  LOGGER.error("fail to remove group after fail to unmap T___T");
-//              });
-//              handler.handle(Future.failedFuture(ar.cause().getMessage()));
-//            }
-//          });
           CBGroup.getInstance().remove(Integer.toString(groupID), revRes -> {
             if (revRes.succeeded()) {
-              groupID = 0;
+              for (Group.Member member : group.members.values()) {
+                Session session = SessionPool.getSessionFromPool(member.id);
+                if (session != null)
+                  session.groupID = 0;
+                CBMapper.getInstance().unmap(Integer.toString(member.id), ar -> {});
+              }
               handler.handle(Future.succeededFuture("ok"));
             }
             else {
@@ -273,38 +247,6 @@ public class Session {
     else {
       handler.handle(Future.failedFuture("unknown_gid"));
     }
-//    if (groupID == 0) { //user have no group
-//      //todo check resource
-//      CBCounter.getInstance().increase(Constant.DB.GID_INCR_KEY, Constant.DB.GID_INIT, ar -> {
-//        if (ar.succeeded()) {
-//          UserGroup newGroup = UserGroup.of(ar.result().intValue(), id, userGameInfo.displayName, groupType);
-//          CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, arr -> {
-//            if (arr.succeeded()) {
-//              GroupPool.addGroup(newGroup);
-//              handler.handle(Future.succeededFuture("ok"));
-//            }
-//            else { //fail to create group, try remove map
-//              LOGGER.error(arr.cause().getMessage());
-//              CBMapper.getInstance().unmap(Integer.toString(id), mar -> {});
-//              handler.handle(Future.failedFuture(arr.cause().getMessage()));
-//            }
-//          });
-//        }
-//        else {
-//          LOGGER.error(ar.cause().getMessage());
-//          handler.handle(Future.failedFuture(ar.cause().getMessage()));
-//        }
-//      });
-//    }
-//    else if (groupID > 0){
-//      handler.handle(Future.failedFuture("user_already_have_group"));
-//    }
-//    else if (groupID == -1) {
-//      handler.handle(Future.failedFuture("create_group_delay"));
-//    }
-//    else {
-//      handler.handle(Future.failedFuture("create_group_unknown_err"));
-//    }
   }
 
   public void loadSessionGroup(Handler<AsyncResult<String>> handler) {
@@ -319,23 +261,20 @@ public class Session {
           else if (gid > 0) { //user have group
             Group group = GroupPool.getGroupFromPool(gid);
             if (group != null) { //and that group also online
-              //group.refCount.incrementAndGet();
               groupID = gid;
               handler.handle(Future.succeededFuture("ok"));
             }
             else { //group not online
               CBGroup.getInstance().load(ar.result(), gar -> {
                 if (gar.succeeded()) {
-                  //gar.result().refCount.incrementAndGet();
                   GroupPool.addGroup(gar.result());
                   groupID = gid;
-                  handler.handle(Future.succeededFuture("ok"));
                 }
-                else { //user have sid-gid mapping entry but no doc under gid
+                else { //user have sid-gid mapping entry but no doc under gid //todo critical part
                   CBMapper.getInstance().unmap(Integer.toString(id), a -> {});
                   groupID = 0;
-                  handler.handle(Future.succeededFuture("ok"));
                 }
+                handler.handle(Future.succeededFuture("ok"));
               });
             }
           }
@@ -351,6 +290,115 @@ public class Session {
         handler.handle(Future.succeededFuture("ok"));
       }
     });
+  }
+
+  public void joinGroup(int groupID, Handler<AsyncResult<String>> handler) {
+    UserGroup currentGroup = GroupPool.getGroupFromPool(groupID);
+    if (currentGroup != null){
+      handler.handle(Future.failedFuture("user_already_have_group"));
+      return;
+    }
+
+    String oldMap = CBMapper.getInstance().getValue(Integer.toString(id));
+    if (oldMap.equals("") && this.groupID == 0) { // no group, disk also agree
+      UserGroup joinedGroup = GroupPool.getGroupFromPool(groupID);
+      if (joinedGroup != null) {
+        CBMapper.getInstance().map(Integer.toString(joinedGroup.id), Integer.toString(id), mapAr -> {
+          if (mapAr.succeeded()) {
+            String result = joinedGroup.processJoinGroup(this);
+            if (result.equals("ok")) {
+              this.groupID = joinedGroup.id;
+              handler.handle(Future.succeededFuture("ok"));
+            }
+            else {
+              //rollback
+              this.groupID = 0;
+              joinedGroup.removeMember(this);
+              handler.handle(Future.failedFuture(result));
+            }
+          }
+          else {
+            handler.handle(Future.failedFuture("join_group_fail_mapping"));
+          }
+        });
+      }
+      else { //group not online
+        CBGroup.getInstance().load(Integer.toString(groupID), loadAr -> {
+          if (loadAr.succeeded()) {
+            UserGroup loadedGroup = loadAr.result();
+            GroupPool.addGroup(loadAr.result());
+
+            CBMapper.getInstance().map(Integer.toString(loadedGroup.id), Integer.toString(id), mapAr -> {
+              if (mapAr.succeeded()) {
+                String result = loadedGroup.processJoinGroup(this);
+                if (result.equals("ok")) {
+                  this.groupID = loadedGroup.id;
+                  handler.handle(Future.succeededFuture("ok"));
+                }
+                else {
+                  //rollback
+                  this.groupID = 0;
+                  loadedGroup.removeMember(this);
+                  handler.handle(Future.failedFuture(result));
+                }
+              }
+              else {
+                handler.handle(Future.failedFuture("join_group_fail_mapping"));
+              }
+            });
+          }
+          else {
+            handler.handle(Future.failedFuture("group_not_found"));
+          }
+        });
+      }
+    }
+    else {
+      try { // -1: kick, must wait | -number: pending member,
+        int oldGID = Integer.parseInt(oldMap);
+        if (oldGID == -1) {
+          handler.handle(Future.failedFuture("join_group_delay"));
+        }
+        else if (oldGID > 0) { //fuck map say valid gid, but runtime gid == 0
+          LOGGER.error("alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
+          handler.handle(Future.failedFuture("join_group_fail runtime and persistent mismatch"));
+        }
+        else {
+          handler.handle(Future.failedFuture("join_group_fail_unknown"));
+        }
+      }
+      catch (Exception e) {
+        //mal form map field, delete it
+        CBMapper.getInstance().unmap(Integer.toString(id), unmapR -> {});
+        handler.handle(Future.failedFuture("join_group_fail"));
+      }
+    }
+  }
+
+  public String kick(int memberId) {
+    UserGroup group = GroupPool.getGroupFromPool(groupID);
+    if (group == null)
+      return "fail_no_group";
+    int role = group.getRole(this.id);
+
+    int memberRole = group.getRole(memberId);
+    if (memberRole == Group.OWNER_ROLE)
+      return "fail_cant_kick_owner";
+
+    if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
+      Session session = SessionPool.getSessionFromPool(memberId);
+      if (session != null) {
+        session.groupID = -1;
+      }
+      String result = group.kickMember(memberId);
+      if (result.equals("ok")) {
+        CBMapper.getInstance().mapOverride("-1", Integer.toString(memberId), ar -> {});
+      }
+      return result;
+    }
+    else {
+      return "fail_no_permission";
+    }
   }
 
   /*HEARTBEAT**********************************************************************************************************/
