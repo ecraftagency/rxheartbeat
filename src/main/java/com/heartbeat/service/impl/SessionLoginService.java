@@ -22,8 +22,10 @@ public class SessionLoginService implements AuthService {
   public void processLogin(LoginRequest request, long curMs, Handler<AsyncResult<Profile>> handler) {
     int userID = Integer.parseInt(request.userID);
     Session session = SessionPool.getSessionFromPool(userID);
-    if (session != null)
+    if (session != null) {
       handler.handle(Future.failedFuture("login_session_online"));
+      return;
+    }
 
     String clientVersion = request.clientVersion;
     String clientSource = request.clientSource;

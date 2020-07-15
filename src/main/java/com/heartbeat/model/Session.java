@@ -54,7 +54,7 @@ public class Session {
   transient public DeviceUID.DeviceUIDUpdateInfo deviceInfo;
 
   //runtime data
-  public transient int groupID;
+  transient public int      groupID;
   //persistent data
   public UserProfile        userProfile;
   public UserGameInfo       userGameInfo;
@@ -292,16 +292,16 @@ public class Session {
     });
   }
 
-  public void joinGroup(int groupID, Handler<AsyncResult<String>> handler) {
-    UserGroup currentGroup = GroupPool.getGroupFromPool(groupID);
+  public void joinGroup(int joinedGID, Handler<AsyncResult<String>> handler) {
+    UserGroup currentGroup = GroupPool.getGroupFromPool(this.groupID);
     if (currentGroup != null){
       handler.handle(Future.failedFuture("user_already_have_group"));
       return;
     }
 
     String oldMap = CBMapper.getInstance().getValue(Integer.toString(id));
-    if (oldMap.equals("") && this.groupID == Group.GROUP_ID_TYPE_NONE) { // no group, disk also agree
-      UserGroup joinedGroup = GroupPool.getGroupFromPool(groupID);
+    if (oldMap.equals("") && !Group.isValidGid(this.groupID)) { // no group, disk also agree
+      UserGroup joinedGroup = GroupPool.getGroupFromPool(joinedGID);
       if (joinedGroup != null) {
         CBMapper.getInstance().map(Integer.toString(joinedGroup.id), Integer.toString(id), mapAr -> {
           if (mapAr.succeeded()) {
@@ -323,7 +323,7 @@ public class Session {
         });
       }
       else { //group not online
-        CBGroup.getInstance().load(Integer.toString(groupID), loadAr -> {
+        CBGroup.getInstance().load(Integer.toString(joinedGID), loadAr -> {
           if (loadAr.succeeded()) {
             UserGroup loadedGroup = loadAr.result();
             GroupPool.addGroup(loadAr.result());
@@ -354,7 +354,7 @@ public class Session {
       }
     }
     else {
-      try { // -1: kick, must wait | -number: pending member,
+      try {
         int oldGID = Integer.parseInt(oldMap);
         if (oldGID == Group.GROUP_ID_TYPE_KICK) {
           handler.handle(Future.failedFuture("join_group_delay"));

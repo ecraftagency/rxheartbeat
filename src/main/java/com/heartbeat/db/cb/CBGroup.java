@@ -38,9 +38,7 @@ public class CBGroup implements Cruder<UserGroup> {
 
     rxPersistBucket.defaultCollection().get(builder.toString()).subscribe(res -> {
       UserGroup group = res.contentAs(UserGroup.class);
-      if (group != null) {
-        group.refCount = new AtomicInteger();
-      }
+      group.isChange  = false;
       handler.handle(Future.succeededFuture(group));
     }, err -> handler.handle(Future.failedFuture(err)));
   }

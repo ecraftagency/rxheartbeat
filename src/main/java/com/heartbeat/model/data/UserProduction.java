@@ -67,7 +67,7 @@ public class UserProduction extends com.transport.model.Production{
     long curMs = System.currentTimeMillis();
     updateProduction(session, curMs);
     switch (produceType) {
-      case PRODUCE_FAN: //[binh lính - fan] - mị lực - attractive]
+      case PRODUCE_FAN:
         long totalFanAdd = session.userIdol.getTotalAttractive();
         if (currentFanClaimCount > 0 && session.userGameInfo.view >= totalFanAdd) {
           currentFanClaimCount -= 1;
@@ -78,7 +78,7 @@ public class UserProduction extends com.transport.model.Production{
         }
         else
           return "claim_product_timeout";
-      case PRODUCE_GOLD: //[thương sản - money] depend [creativity - trí lực]
+      case PRODUCE_GOLD:
         if (currentGoldClaimCount > 0) {
           currentGoldClaimCount -= 1;
           session.userGameInfo.money += session.userIdol.getTotalCreativity();
@@ -87,7 +87,7 @@ public class UserProduction extends com.transport.model.Production{
         }
         else
           return "claim_product_timeout";
-      case PRODUCE_VIEW: //[nông sản - chính trị
+      case PRODUCE_VIEW:
         if (currentViewClaimCount > 0) {
           currentViewClaimCount -= 1;
           session.userGameInfo.view += session.userIdol.getTotalPerformance();

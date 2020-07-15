@@ -44,17 +44,19 @@ public class UserGroup extends Group {
   public synchronized String processJoinGroup(Session session) {
     Member member = Member.of(session.id, session.userGameInfo.displayName);
 
-    if (members.size() >= 25) {
+    if (members.size() >= MAX_GROUP_MEMBER) {
       return "group_full_seat";
     }
 
     if (joinType == AUTO_JOIN) {
       members.put(member.id, member);
       session.groupID = id;
+      isChange        = true;
       return "ok";
     }
     else if (joinType == REQUEST_JOIN) {
       pendingMembers.put(member.id, member);
+      isChange = true;
       return "ok";
     }
     else {
@@ -70,6 +72,7 @@ public class UserGroup extends Group {
   public synchronized String kickMember(int memberId) {
     if (members.get(memberId) != null) {
       members.remove(memberId);
+      isChange = true;
       return "ok";
     }
     return "member_not_found";

@@ -24,6 +24,9 @@ public class GroupController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          //approve
+          //list
+          //promote
           case "leaveGroup":
             resp = processLeaveGroup(session);
             break;
