@@ -11,6 +11,8 @@ import io.vertx.core.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+
 @SuppressWarnings("unused")
 public class CBMapper implements Mapper {
   private static final Logger LOGGER    = LoggerFactory.getLogger(CBMapper.class);
@@ -33,8 +35,8 @@ public class CBMapper implements Mapper {
   }
 
   @Override
-  public void mapOverride(String id, String key, UpsertOptions options, Handler<AsyncResult<String>> handler) {
-    rxIndexBucket.defaultCollection().upsert(key, id).subscribe(
+  public void mapOverride(String id, String key, int expiry, Handler<AsyncResult<String>> handler) {
+    rxIndexBucket.defaultCollection().upsert(key, id, UpsertOptions.upsertOptions().expiry(Duration.ofMinutes(expiry))).subscribe(
             res -> handler.handle(Future.succeededFuture("ok")),
             err -> handler.handle(Future.failedFuture(err.getMessage())));
   }
@@ -66,9 +68,10 @@ public class CBMapper implements Mapper {
   }
 
   @Override
-  public String mapOverride(String id, String key, UpsertOptions options) {
+  public String mapOverride(String id, String key, int expiry) {
     try {
-      rxIndexBucket.defaultCollection().upsert(key, id).block();
+      rxIndexBucket.defaultCollection().upsert(key, id,
+              UpsertOptions.upsertOptions().expiry(Duration.ofMinutes(expiry))).block();
       return "ok";
     }
     catch (Exception e) {

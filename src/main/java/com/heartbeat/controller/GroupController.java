@@ -5,18 +5,13 @@ import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
+import com.transport.model.Group;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-/*
-EtxMessage.data.currentGroupState = [số dương -> có group, -1 -> bị kich hoạc tự out, 0 -> ko có group]
-EtxMessage.data.group -> group data , null nếu group stage = -1 hoặc 0
-tạo group param group type 0 là auto join, 1 là phải chờ duyệt, chưa support tính năng duyệt
- */
 public class GroupController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(GroupController.class);
 
@@ -29,6 +24,9 @@ public class GroupController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          case "leaveGroup":
+            resp = processLeaveGroup(session);
+            break;
           case "kickMember":
             resp = processKickMember(session, ctx);
             break;
@@ -61,6 +59,13 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processLeaveGroup(Session session) {
+    ExtMessage resp = ExtMessage.group();
+    resp.msg        = session.leaveGroup();
+    resp.data.currentGroupState = session.groupID;
+    return resp;
   }
 
   private ExtMessage processKickMember(Session session, RoutingContext ctx) {
@@ -100,11 +105,11 @@ public class GroupController implements Handler<RoutingContext> {
   private ExtMessage processGroupInfo(Session session) {
     ExtMessage resp   = ExtMessage.group();
     UserGroup group;
-    if (session.groupID > 0 && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
+    if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
       resp.data.group = group;
       resp.msg        = "ok";
     }
-    else if (session.groupID == -1) {
+    else if (session.groupID == Group.GROUP_ID_TYPE_KICK) {
       resp.msg        = "user_group_delay";
     }
     else {
