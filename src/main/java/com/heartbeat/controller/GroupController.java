@@ -30,8 +30,11 @@ public class GroupController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
-          //approve
           //promote
+          //delegate
+          case "approve":
+            resp = processGroupApproval(session, ctx);
+            break;
           case "listGroup":
             processListGroup(cmd, ctx);
             return;
@@ -70,6 +73,16 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processGroupApproval(Session session, RoutingContext ctx) {
+    int memberId    = ctx.getBodyAsJson().getInteger("memberId");
+    String action   = ctx.getBodyAsJson().getString("action");
+    ExtMessage resp = ExtMessage.group();
+    resp.msg        = session.approveMember(memberId, action);
+    resp.data.group = GroupPool.getGroupFromPool(session.groupID);
+    resp.data.currentGroupState = session.groupID;
+    return resp;
   }
 
   private void processListGroup(String cmd, RoutingContext ctx) {

@@ -303,24 +303,22 @@ public class Session {
     if (oldMap.equals("") && !Group.isValidGid(this.groupID)) { // no group, disk also agree
       UserGroup joinedGroup = GroupPool.getGroupFromPool(joinedGID);
       if (joinedGroup != null) {
-        CBMapper.getInstance().map(Integer.toString(joinedGroup.id), Integer.toString(id), mapAr -> {
-          if (mapAr.succeeded()) {
-            String result = joinedGroup.processJoinGroup(this);
-            if (result.equals("ok")) {
-              this.groupID = joinedGroup.id;
-              handler.handle(Future.succeededFuture("ok"));
-            }
-            else {
-              //rollback
-              this.groupID = Group.GROUP_ID_TYPE_NONE;
-              joinedGroup.removeMember(this);
-              handler.handle(Future.failedFuture(result));
-            }
-          }
-          else {
-            handler.handle(Future.failedFuture("join_group_fail_mapping"));
-          }
-        });
+        String result = joinedGroup.processJoinGroup(this);
+
+        if (result.equals("ok")) {
+          this.groupID = joinedGroup.id;
+          CBMapper.getInstance().map(Integer.toString(this.groupID), Integer.toString(this.id), mar -> {});
+          handler.handle(Future.succeededFuture("ok"));
+        }
+        else if (result.equals("pending")) {
+          this.groupID = Group.GROUP_ID_TYPE_NONE;
+          handler.handle(Future.failedFuture("ok"));
+        }
+        else {
+          //rollback
+          this.groupID = Group.GROUP_ID_TYPE_NONE;
+          handler.handle(Future.failedFuture(result));
+        }
       }
       else { //group not online
         CBGroup.getInstance().load(Integer.toString(joinedGID), loadAr -> {
@@ -428,6 +426,61 @@ public class Session {
     else {
       return "user_have_no_group";
     }
+  }
+
+  public String approveMember(int memberId, String action) {
+    //check online group
+    UserGroup group = GroupPool.getGroupFromPool(this.groupID);
+    if (group == null) {
+      String err = String.format("user_have_no_group[sid:%d,gid:%d,runtime:%s]",id, groupID, "no");
+      LOGGER.error(err);
+      return err;
+    }
+
+    if (memberId == this.id) {
+      return "approve_fail_malform";
+    }
+
+    //check role
+    int role = group.getRole(this.id);
+    if (role != Group.OWNER_ROLE && role != Group.MOD_ROLE) {
+      return "approve_fail_permission";
+    }
+
+    //check member condition
+    String state = CBMapper.getInstance().getValue(Integer.toString(memberId));
+    if (!state.equals("")) {
+      try {
+        int currentGID = Integer.parseInt(state);
+        if (currentGID == -1) {
+          group.removePendingMember(memberId);
+          return "approve_fail_delay";
+        }
+        else if (Group.isValidGid(currentGID)) {
+          group.removePendingMember(memberId);
+          return "approve_fail_user_already_have_group";
+        }
+        else {
+          group.removePendingMember(memberId);
+          return "approve_fail_unknown";
+        }
+
+      }
+      catch (Exception e) {
+        //malform
+        LOGGER.error(String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
+        CBMapper.getInstance().unmap(Integer.toString(memberId), ar -> {});
+        group.removePendingMember(memberId);
+        return "approve_fail_unknown";
+      }
+    }
+
+    String approveRes =  group.approveGroup(memberId, action);
+
+    if (approveRes.equals("ok") && action.equals("approve")) {
+      CBMapper.getInstance().map(Integer.toString(group.id), Integer.toString(memberId));
+    }
+    return approveRes;
   }
 
   /*HEARTBEAT**********************************************************************************************************/
