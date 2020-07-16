@@ -1,11 +1,17 @@
 package com.heartbeat.controller;
 
+import com.couchbase.client.java.json.JsonObject;
+import com.couchbase.client.java.query.ReactiveQueryResult;
+import com.heartbeat.HBServer;
+import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
 import com.transport.model.Group;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -27,6 +33,9 @@ public class GroupController implements Handler<RoutingContext> {
           //approve
           //list
           //promote
+          case "listGroup":
+            processListGroup(cmd, ctx);
+            return;
           case "leaveGroup":
             resp = processLeaveGroup(session);
             break;
@@ -62,6 +71,37 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private void processListGroup(String cmd, RoutingContext ctx) {
+    fetchGroups(ar -> {
+      if (ar.succeeded()) {
+        ExtMessage resp   = ExtMessage.group();
+        resp.data.extObj  = ar.result();
+        resp.cmd          = cmd;
+        resp.msg          = "ok";
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
+  }
+
+  private static void fetchGroups(Handler<AsyncResult<String>> handler) {
+    HBServer.rxCluster.query("SELECT * from `persist` WHERE docType = \"group\"")
+            .flatMapMany(ReactiveQueryResult::rowsAsObject).collectList().subscribe(
+            ar -> {
+              StringBuilder builder = GlobalVariable.stringBuilder.get();
+              builder.append("[");
+              for (int i = 0; i < ar.size(); i++) {
+                JsonObject row = ar.get(i);
+                builder.append(row.getObject("persist"));
+                if (i < ar.size() - 1)
+                  builder.append(",");
+              }
+              builder.append("]");
+              handler.handle(Future.succeededFuture(builder.toString()));
+            },
+            er -> handler.handle(Future.succeededFuture("[]"))
+    );
   }
 
   private ExtMessage processLeaveGroup(Session session) {

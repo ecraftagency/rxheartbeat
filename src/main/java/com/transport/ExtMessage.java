@@ -1,6 +1,5 @@
 package com.transport;
 
-import com.heartbeat.model.data.UserGroup;
 import com.transport.model.*;
 
 import java.util.List;
@@ -24,6 +23,7 @@ public class ExtMessage {
     public Title      title;
     public Group      group;
     public int        currentGroupState;
+    public String     extObj;
   }
 
   public static ExtMessage idol() {
