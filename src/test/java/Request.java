@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.heartbeat.common.Utilities;
 import com.transport.ExtMessage;
 import com.transport.LoginRequest;
 import io.vertx.core.AbstractVerticle;
@@ -31,18 +32,30 @@ public class Request extends AbstractVerticle {
   public void start() throws Exception {
     super.start();
 
-    client.post(PORT, "localhost", "/api/auth")
-            .putHeader("Content-Type", "text/json")
-            .sendJson(loginRequest, ar -> {
-              if (ar.succeeded()) {
-                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, heartbeat, "/api/system");
-                //authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, userGameInfo, "/api/profile");
-                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, updateInfo, "/api/profile");
-              }
-              else {
-                System.out.println(ar.cause().getMessage());
-              }
-            });
+    String cat = "{\"turns\":0,\"histories\":[{\"type\":1,\"name\":\"abc\",\"date\":1594906761548}]}" + "getItem" + "NPW7S4EFSS";
+
+    client.get("http://68.183.180.71:3000/api/v1/log/add")
+            .addQueryParam("type", "getItem")
+            .addQueryParam("name", "tylinh01")
+            .addQueryParam("data", "{\"turns\":0,\"histories\":[{\"type\":1,\"name\":\"abc\",\"date\":1594906761548}]}")
+            .addQueryParam("hash", Utilities.md5Encode(cat)).send(ar -> {
+              if (ar.succeeded())
+                System.out.println(ar.result().bodyAsString());
+    });
+
+
+//    client.post(PORT, "localhost", "/api/auth")
+//            .putHeader("Content-Type", "text/json")
+//            .sendJson(loginRequest, ar -> {
+//              if (ar.succeeded()) {
+//                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, heartbeat, "/api/system");
+//                //authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, userGameInfo, "/api/profile");
+//                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, updateInfo, "/api/profile");
+//              }
+//              else {
+//                System.out.println(ar.cause().getMessage());
+//              }
+//            });
   }
 
   private static LoginRequest loginRequest;
