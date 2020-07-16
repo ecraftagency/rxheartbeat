@@ -31,7 +31,6 @@ public class Main {
     HBServer.rxSessionBucket = HBServer.rxCluster.bucket("sessions");
     HBServer.rxIndexBucket   = HBServer.rxCluster.bucket("index");
     HBServer.rxPersistBucket = HBServer.rxCluster.bucket("persist");
-
     fetchGroups(ar -> {
       if (ar.succeeded())
         System.out.println(ar.result());

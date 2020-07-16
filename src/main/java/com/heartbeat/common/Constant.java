@@ -34,7 +34,7 @@ public class Constant {
   }
 
   public static class DB {
-    public static       String HOST               = "localhost";
+    public static       String HOST               = "18.140.197.136";
     public static       String PORT               = "8091";
     public static       String USER               = "Administrator";
     public static       String PWD                = "n5t5lnsct";

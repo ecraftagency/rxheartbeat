@@ -327,25 +327,22 @@ public class Session {
           if (loadAr.succeeded()) {
             UserGroup loadedGroup = loadAr.result();
             GroupPool.addGroup(loadAr.result());
+            String result = loadedGroup.processJoinGroup(this);
 
-            CBMapper.getInstance().map(Integer.toString(loadedGroup.id), Integer.toString(id), mapAr -> {
-              if (mapAr.succeeded()) {
-                String result = loadedGroup.processJoinGroup(this);
-                if (result.equals("ok")) {
-                  this.groupID = loadedGroup.id;
-                  handler.handle(Future.succeededFuture("ok"));
-                }
-                else {
-                  //rollback
-                  this.groupID = Group.GROUP_ID_TYPE_NONE;
-                  loadedGroup.removeMember(this);
-                  handler.handle(Future.failedFuture(result));
-                }
-              }
-              else {
-                handler.handle(Future.failedFuture("join_group_fail_mapping"));
-              }
-            });
+            if (result.equals("ok")) {
+              this.groupID = loadedGroup.id;
+              CBMapper.getInstance().map(Integer.toString(this.groupID), Integer.toString(this.id), mar -> {});
+              handler.handle(Future.succeededFuture("ok"));
+            }
+            else if (result.equals("pending")) {
+              this.groupID = Group.GROUP_ID_TYPE_NONE;
+              handler.handle(Future.failedFuture("ok"));
+            }
+            else {
+              //rollback
+              this.groupID = Group.GROUP_ID_TYPE_NONE;
+              handler.handle(Future.failedFuture(result));
+            }
           }
           else {
             handler.handle(Future.failedFuture("group_not_found"));

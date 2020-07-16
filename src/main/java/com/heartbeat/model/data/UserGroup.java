@@ -57,7 +57,7 @@ public class UserGroup extends Group {
     else if (joinType == REQUEST_JOIN) {
       pendingMembers.put(member.id, member);
       isChange = true;
-      return "ok";
+      return "pending";
     }
     else {
       return "unknown_join_type";

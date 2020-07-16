@@ -31,7 +31,6 @@ public class GroupController implements Handler<RoutingContext> {
         ExtMessage resp;
         switch (cmd) {
           //approve
-          //list
           //promote
           case "listGroup":
             processListGroup(cmd, ctx);
