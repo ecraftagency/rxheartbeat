@@ -15,6 +15,8 @@ public class Group {
   public static final int GROUP_ID_TYPE_KICK  = -1;
 
   public static final int MAX_GROUP_MEMBER    = 25;
+  public static final int INTERNAL_INFORM     = 0;
+  public static final int EXTERNAL_INFORM     = 1;
 
   public int                      id;
   public int                      createTime;
@@ -26,6 +28,7 @@ public class Group {
   public int                      joinType;
   public String                   docType           = "group";
   public transient boolean        isChange;
+
 
   public void close() {
 

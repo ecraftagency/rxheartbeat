@@ -499,6 +499,33 @@ public class Session {
     return "set_role_fail";
   }
 
+  public String setGroupInform(int type, String informMsg) {
+    UserGroup group = GroupPool.getGroupFromPool(this.groupID);
+
+    if (group == null)
+      return "group_not_found";
+
+    int role = group.getRole(this.id);
+
+    if (type == Group.INTERNAL_INFORM) {
+      if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
+        return group.changeInform(informMsg, type);
+      }
+      else
+        return "set_inform_fail_permission";
+    }
+    else if (type == Group.EXTERNAL_INFORM) {
+      if (role == Group.OWNER_ROLE) {
+        return group.changeInform(informMsg, type);
+      }
+      else
+        return "set_inform_fail_permission";
+    }
+    else {
+      return "set_inform_fail";
+    }
+  }
+
   /*HEARTBEAT**********************************************************************************************************/
   public void updateOnline(long curMs) {
     if(!isClose) {

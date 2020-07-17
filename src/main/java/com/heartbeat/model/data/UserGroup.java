@@ -111,4 +111,16 @@ public class UserGroup extends Group {
 
     return "member_not_found";
   }
+
+  public synchronized String changeInform(String informMsg, int type) {
+    if (type == INTERNAL_INFORM) {
+      this.internalInform = informMsg;
+      return "ok";
+    }
+    if (type == EXTERNAL_INFORM) {
+      this.externalInform = informMsg;
+      return "ok";
+    }
+    return "set_inform_fail";
+  }
 }

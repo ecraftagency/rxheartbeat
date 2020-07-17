@@ -31,13 +31,13 @@ public class WheelItem implements Handler<RoutingContext> {
   }
   public WheelItem() {
     incrementer = new AtomicInteger();
-    incrementer.set(100000);
+    incrementer.set(0);
   }
 
   @Override
   public void handle(RoutingContext ctx) {
-    String megaID = ctx.request().getParam("megaID");
-    String token  = ctx.request().getParam("token");
+    String megaID = Integer.toString(incrementer.getAndIncrement()%10000);//ctx.request().getParam("megaID");
+    String  token  = ctx.request().getParam("token");
 
     TLS.redisApi.get(megaID, ar -> {
       if (ar.succeeded()) {

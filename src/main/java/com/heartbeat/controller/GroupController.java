@@ -32,6 +32,9 @@ public class GroupController implements Handler<RoutingContext> {
         switch (cmd) {
           //promote
           //delegate
+          case "setInform":
+            resp = processSetInform(session, ctx);
+            break;
           case "setRole":
             resp = processSetRole(session, ctx);
             break;
@@ -76,6 +79,17 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processSetInform(Session session, RoutingContext ctx) {
+    String informMsg  = ctx.getBodyAsJson().getString("inform");
+    int    type       = ctx.getBodyAsJson().getInteger("type");
+    //type 0 -> doi noi, type 1 -> doi ngoai
+    ExtMessage resp   = ExtMessage.group();
+    resp.data.currentGroupState = session.groupID;
+    resp.msg          = session.setGroupInform(type, informMsg);
+    resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
+    return resp;
   }
 
   private ExtMessage processSetRole(Session session, RoutingContext ctx) {
