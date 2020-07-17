@@ -38,7 +38,11 @@ public class Group {
     public int      id;
     public String   displayName;
     public int      joinTime;
+    public int      titleId;
     public int      role;
+    public long     totalCrt;
+    public long     totalPerf;
+    public long     totalAttr;
 
     public static   Member of(int id, String displayName) {
       Member member = new Member();

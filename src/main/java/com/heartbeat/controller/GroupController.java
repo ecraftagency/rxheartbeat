@@ -103,6 +103,9 @@ public class GroupController implements Handler<RoutingContext> {
       return resp;
     }
 
+    resp.msg = session.setGroupRole(memberId, role);
+    resp.data.group = GroupPool.getGroupFromPool(session.groupID);
+    resp.data.currentGroupState = session.groupID;
     return resp;
   }
 
