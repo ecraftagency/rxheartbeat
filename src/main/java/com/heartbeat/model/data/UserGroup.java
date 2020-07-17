@@ -94,10 +94,12 @@ public class UserGroup extends Group {
         return "approve_fail_member_not_found";
       members.put(memberId, member);
       pendingMembers.remove(memberId);
+      isChange = true;
       return "ok";
     }
     else if(action.equals("refuse")) {
       pendingMembers.remove(memberId);
+      isChange = true;
       return "ok";
     }
     else {
@@ -113,6 +115,7 @@ public class UserGroup extends Group {
     Member member = members.get(memberId);
     if (member != null) {
       member.role = newRole;
+      isChange = true;
       return "ok";
     }
 
@@ -122,10 +125,12 @@ public class UserGroup extends Group {
   public synchronized String changeInform(String informMsg, int type) {
     if (type == INTERNAL_INFORM) {
       this.internalInform = informMsg;
+      isChange = true;
       return "ok";
     }
     if (type == EXTERNAL_INFORM) {
       this.externalInform = informMsg;
+      isChange = true;
       return "ok";
     }
     return "set_inform_fail";
