@@ -32,6 +32,9 @@ public class GroupController implements Handler<RoutingContext> {
         switch (cmd) {
           //promote
           //delegate
+          case "setRole":
+            resp = processSetRole(session, ctx);
+            break;
           case "approve":
             resp = processGroupApproval(session, ctx);
             break;
@@ -73,6 +76,20 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processSetRole(Session session, RoutingContext ctx) {
+    //role ==
+    int role        = ctx.getBodyAsJson().getInteger("role");
+    int memberId    = ctx.getBodyAsJson().getInteger("memberId");
+
+    ExtMessage resp = ExtMessage.group();
+    if (session.id == memberId) {
+      resp.msg = "set_role_fail_dup_memberID";
+      return resp;
+    }
+
+    return resp;
   }
 
   private ExtMessage processGroupApproval(Session session, RoutingContext ctx) {

@@ -483,6 +483,22 @@ public class Session {
     return approveRes;
   }
 
+  public String setGroupRole(int memberId, int newRole) {
+    UserGroup group = GroupPool.getGroupFromPool(this.groupID);
+
+    if (group == null)
+      return "group_not_found";
+
+    int myRole = group.getRole(this.id);
+    if (myRole != Group.OWNER_ROLE)
+      return "set_role_fail_permission]";
+
+    if ((newRole == Group.MOD_ROLE && group.modCount() < 2) || newRole == Group.USER_ROLE) {
+      return group.setRole(memberId, newRole);
+    }
+    return "set_role_fail";
+  }
+
   /*HEARTBEAT**********************************************************************************************************/
   public void updateOnline(long curMs) {
     if(!isClose) {

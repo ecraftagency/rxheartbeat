@@ -97,4 +97,18 @@ public class UserGroup extends Group {
       return "approve_fail_unknown_action";
     }
   }
+
+  public synchronized long modCount() {
+    return members.values().stream().filter(e -> e.role == Group.MOD_ROLE).count();
+  }
+
+  public synchronized String setRole(int memberId, int newRole) {
+    Member member = members.get(memberId);
+    if (member != null) {
+      member.role = newRole;
+      return "ok";
+    }
+
+    return "member_not_found";
+  }
 }

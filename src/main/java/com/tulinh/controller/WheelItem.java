@@ -6,15 +6,16 @@ import com.tulinh.config.ItemConfig;
 import com.tulinh.dto.*;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WheelItem implements Handler<RoutingContext> {
   private static Map<Integer, String> tileMap;
+  AtomicInteger incrementer;
   static {
     tileMap = new HashMap<>();
     tileMap.put(0, "thecao10");
@@ -29,7 +30,10 @@ public class WheelItem implements Handler<RoutingContext> {
     tileMap.put(9, "tphung");
   }
   public WheelItem() {
+    incrementer = new AtomicInteger();
+    incrementer.set(100000);
   }
+
   @Override
   public void handle(RoutingContext ctx) {
     String megaID = ctx.request().getParam("megaID");
@@ -58,6 +62,21 @@ public class WheelItem implements Handler<RoutingContext> {
             if (kar.succeeded()) {
               if (kar.result().toInteger() < ItemConfig.lsItem.get(randItem.type).maximum) {
                 TLS.redisApi.incr(resKey, incrar -> {});
+                TLS.redisApi.set(Arrays.asList(megaID, Utilities.gson.toJson(user)), sar -> {});
+
+                //log
+                String userJson = Utilities.gson.toJson(user);
+                String cat      = userJson + "getItem" + "NPW7S4EFSS";
+                try {
+                  TLS.client.get("http://68.183.180.71:3000/api/v1/log/add")
+                          .addQueryParam("type", "getItem")
+                          .addQueryParam("name", "tylinh01")
+                          .addQueryParam("data", Utilities.gson.toJson(user))
+                          .addQueryParam("hash", Utilities.md5Encode(cat)).send(logar -> {});
+                }
+                catch (Exception e) {
+                  //todo
+                }
               }
               else {
                 ctx.response().putHeader("Content-Type", "text/json")
@@ -69,20 +88,6 @@ public class WheelItem implements Handler<RoutingContext> {
                       .end(Json.encode(Resp.ItemFail.of("failed", 0)));
             }
           });
-
-
-//          String userJson = Utilities.gson.toJson(user);
-//          String cat      = userJson + "getItem" + "NPW7S4EFSS";
-//          try {
-//            TLS.client.get("http://68.183.180.71:3000/api/v1/log/add")
-//                    .addQueryParam("type", "getItem")
-//                    .addQueryParam("name", "tylinh01")
-//                    .addQueryParam("data", Utilities.gson.toJson(user))
-//                    .addQueryParam("hash", Utilities.md5Encode(cat)).send(logar -> {});
-//          }
-//          catch (Exception e) {
-//            //todo
-//          }
 
           ctx.response().putHeader("Content-Type", "text/json")
                   .end(Json.encode(Resp.ItemOk.of(randItem.type, randItem.name, user.turns)));
