@@ -43,6 +43,8 @@ public class Group {
     public long     totalCrt;
     public long     totalPerf;
     public long     totalAttr;
+    public int      avatarId;
+    public int      gender;
 
     public static   Member of(int id, String displayName) {
       Member member = new Member();
