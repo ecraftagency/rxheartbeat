@@ -507,23 +507,11 @@ public class Session {
 
     int role = group.getRole(this.id);
 
-    if (type == Group.INTERNAL_INFORM) {
-      if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
-        return group.changeInform(informMsg, type);
-      }
-      else
-        return "set_inform_fail_permission";
+    if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
+      return group.changeInform(informMsg, type);
     }
-    else if (type == Group.EXTERNAL_INFORM) {
-      if (role == Group.OWNER_ROLE) {
-        return group.changeInform(informMsg, type);
-      }
-      else
-        return "set_inform_fail_permission";
-    }
-    else {
-      return "set_inform_fail";
-    }
+    else
+      return "set_inform_fail_permission";
   }
 
   /*HEARTBEAT**********************************************************************************************************/

@@ -30,8 +30,10 @@ public class GroupController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
-          //promote
           //delegate
+          case "switchJoinType":
+            resp = processsSwitchMode(session, ctx);
+            break;
           case "setInform":
             resp = processSetInform(session, ctx);
             break;
@@ -79,6 +81,36 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processsSwitchMode(Session session, RoutingContext ctx) {
+    int joinType = ctx.getBodyAsJson().getInteger("joinType");
+    ExtMessage resp = ExtMessage.group();
+    if (joinType < 0 || joinType > 1) {
+      resp.msg = "switch_join_type_fail";
+      return resp;
+    }
+
+     UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+     if (group == null) {
+       resp.msg = "group_not_found";
+       return resp;
+     }
+
+     int role = group.getRole(session.id);
+     if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
+       if (joinType != group.joinType) {
+         group.joinType = joinType;
+         group.isChange = true;
+       }
+       resp.msg = "ok";
+       resp.data.group = group;
+       resp.data.currentGroupState = session.groupID;
+       return resp;
+     }
+
+     resp.msg = "switch_type_fail_permission";
+     return resp;
   }
 
   private ExtMessage processSetInform(Session session, RoutingContext ctx) {
