@@ -13,7 +13,8 @@ public class Const {
   public static       Map<Integer, String>  globalCounter;
   public static final JedisPoolConfig       poolConfig      = new JedisPoolConfig();
   public static       List<Item>            staticItems;
-  public static       int                   SYNC_INTERVAL = 4000; //milis
+  public static       int                   SYNC_INTERVAL   = 4000; //milis
+  public static       int                   nUSER = 5000;
 
   static {
 

@@ -1,16 +1,19 @@
 package com.tulinh.controller;
 
+import com.heartbeat.common.Utilities;
 import com.tulinh.Const;
+import com.tulinh.dto.Item;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import static com.tulinh.Const.*;
 
 import static com.tulinh.TLS.*;
 public class SetUpHandler implements Handler<RoutingContext> {
-  public static int         nUser = 5000;
   private static final int  nType = 10;
   private Jedis             agent;
 
@@ -20,30 +23,24 @@ public class SetUpHandler implements Handler<RoutingContext> {
 
   @Override
   public void handle(RoutingContext ctx) {
-    String snUser = ctx.request().getParam("nUser");
-    nUser         = Integer.parseInt(snUser);
+    nUSER           = ctx.getBodyAsJson().getInteger("nUser");
+    SYNC_INTERVAL   = ctx.getBodyAsJson().getInteger("syncInterval");
+    String strItems = ctx.getBodyAsJson().getJsonArray("items").toString();
+    staticItems     = Arrays.asList(Utilities.gson.fromJson(strItems, Item[].class));
 
     agent.flushAll();
-    for (String counterKey : Const.globalCounter.values())
-      agent.set(counterKey, "0");
 
     List<String> batch = new ArrayList<>();
-    try {
-      for (int i = 0; i < nUser; i++) {
-        for (int t = 0; t < nType; t++) {
-          batch.add("h" + i + "_" + t);
-          batch.add("0");
-          batch.add("i" + i + "_" + t);
-          batch.add("0");
-        }
-        batch.add(Integer.toString(i));
-        batch.add("5000000");
-      }
-      agent.mset(batch.toArray(new String[]{}));
-      ctx.response().end("ok");
+    for (String counterKey : Const.globalCounter.values()) {
+      batch.add(counterKey);
+      batch.add("0");
     }
-    catch (Exception e) {
-      ctx.response().end(e.getMessage());
+
+    for (int i = 0; i < nUSER; i++) {
+      batch.add(Integer.toString(i));
+      batch.add("5000000");
     }
+    agent.mset(batch.toArray(new String[]{}));
+    ctx.response().end(staticItems.get(0).name);
   }
 }

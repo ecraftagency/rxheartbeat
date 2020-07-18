@@ -1,5 +1,6 @@
 package com.tulinh.controller;
 
+import com.heartbeat.common.Utilities;
 import com.tulinh.dto.*;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -25,7 +26,7 @@ public class BenchWheelItem implements Handler<RoutingContext> {
 
   protected String getUserId(RoutingContext ctx) {
     int currentReqCount   = requestCounter.getAndIncrement();
-    return Integer.toString(currentReqCount%SetUpHandler.nUser);
+    return Integer.toString(currentReqCount% nUSER);
   }
 
   @Override
@@ -45,7 +46,7 @@ public class BenchWheelItem implements Handler<RoutingContext> {
           localCounter.get(randItem.type).getAndIncrement();
           agent.decr(id);
           agent.incr("h" + id + "_" + randItem.type);
-          agent.incr("h" + id + "_" + randItem.type);
+          agent.rpush("h" + id, Utilities.gson.toJson(History.of(randItem.type, randItem.name, curMs)));
           syncGlobalCounter(curMs);
 
           jsonResp(ctx, Resp.ItemOk.of(randItem.type, randItem.name, --remainTurn));
