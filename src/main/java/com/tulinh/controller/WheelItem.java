@@ -1,106 +1,83 @@
 package com.tulinh.controller;
 
-import com.heartbeat.common.Utilities;
-import com.tulinh.TLS;
-import com.tulinh.config.ItemConfig;
 import com.tulinh.dto.*;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class WheelItem implements Handler<RoutingContext> {
-  private static Map<Integer, String> tileMap;
-  AtomicInteger incrementer;
-  static {
-    tileMap = new HashMap<>();
-    tileMap.put(0, "thecao10");
-    tileMap.put(1, "thecao50");
-    tileMap.put(2, "mlong");
-    tileMap.put(3, "mlan");
-    tileMap.put(4, "mquy");
-    tileMap.put(5, "mphung");
-    tileMap.put(6, "tlong");
-    tileMap.put(7, "tlan");
-    tileMap.put(8, "tquy");
-    tileMap.put(9, "tphung");
-  }
-  public WheelItem() {
-    incrementer = new AtomicInteger();
-    incrementer.set(0);
-  }
+import static com.tulinh.TLS.*;
+import static com.tulinh.Const.*;
 
+public class WheelItem implements Handler<RoutingContext> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WheelItem.class);
+
+  private long lastSync = 0;
+
+  private Jedis agent;
+  public WheelItem() {
+    agent = redisPool.getResource();
+  }
   @Override
   public void handle(RoutingContext ctx) {
-    String megaID = Integer.toString(incrementer.getAndIncrement()%10000);//ctx.request().getParam("megaID");
-    String  token  = ctx.request().getParam("token");
+    int currentReqCount   = requestCounter.getAndIncrement();
+    final int id          = currentReqCount%SetUpHandler.nUser;
+    Item randItem         = calcRnd(lsItem);
+    String counterKey     = globalCounter.get(randItem.type);
+    List<String> mres     = agent.mget(Integer.toString(id), counterKey);
 
-    TLS.redisApi.get(megaID, ar -> {
-      if (ar.succeeded()) {
-        String strData    = ar.result().toString(StandardCharsets.UTF_8);
+    if (mres != null && mres.size() == 2) {
+      int remainTurn, totalCounter;
+      try {
+        remainTurn      = Integer.parseInt(mres.get(0));
+        totalCounter    = Integer.parseInt(mres.get(1));
+        if (remainTurn > 0 && totalCounter < lsItem.get(randItem.type).maximum) {
+          localCounter.get(randItem.type).getAndIncrement();
+          agent.decr(Integer.toString(id));
+          agent.incr("h" + id + "_" + randItem.type);
+          agent.incr("h" + id + "_" + randItem.type);
 
-        if (strData == null) {
-          ctx.response().putHeader("Content-Type",  "text/json")
-                  .end(Json.encode(Resp.ItemFail.of("failed", 0)));
-        }
-
-        User user         = Utilities.gson.fromJson(ar.result().toString(), User.class);
-
-        if (user.turns > 0) {
-          //todo blacklist
-          Item randItem = calcRnd(ItemConfig.lsItem);
-          updateHistory(user, randItem);
-          updateInventory(user, randItem);
-          user.turns--;
-
-          String resKey = tileMap.get(randItem.type);
-          TLS.redisApi.get(resKey, kar -> {
-            if (kar.succeeded()) {
-              if (kar.result().toInteger() < ItemConfig.lsItem.get(randItem.type).maximum) {
-                TLS.redisApi.incr(resKey, incrar -> {});
-                TLS.redisApi.set(Arrays.asList(megaID, Utilities.gson.toJson(user)), sar -> {});
-
-                //log
-                String userJson = Utilities.gson.toJson(user);
-                String cat      = userJson + "getItem" + "NPW7S4EFSS";
-                try {
-                  TLS.client.get("http://68.183.180.71:3000/api/v1/log/add")
-                          .addQueryParam("type", "getItem")
-                          .addQueryParam("name", "tylinh01")
-                          .addQueryParam("data", Utilities.gson.toJson(user))
-                          .addQueryParam("hash", Utilities.md5Encode(cat)).send(logar -> {});
-                }
-                catch (Exception e) {
-                  //todo
-                }
-              }
-              else {
-                ctx.response().putHeader("Content-Type", "text/json")
-                        .end(Json.encode(Resp.ItemFail.of("failed", 0)));
-              }
-            }
-            else {
-              ctx.response().putHeader("Content-Type", "text/json")
-                      .end(Json.encode(Resp.ItemFail.of("failed", 0)));
-            }
-          });
-
-          ctx.response().putHeader("Content-Type", "text/json")
-                  .end(Json.encode(Resp.ItemOk.of(randItem.type, randItem.name, user.turns)));
+          if (System.currentTimeMillis() - lastSync > 4000) {
+            agent.incrBy("10_counter", localCounter.get(0).get());
+            agent.incrBy("50_counter", localCounter.get(1).get());
+            agent.incrBy("mlg_counter",localCounter.get(2).get());
+            agent.incrBy("mlg_counter",localCounter.get(3).get());
+            agent.incrBy("mq_counter", localCounter.get(4).get());
+            agent.incrBy("mp_counter", localCounter.get(5).get());
+            agent.incrBy("tlg_counter",localCounter.get(6).get());
+            agent.incrBy("tln_counter",localCounter.get(7).get());
+            agent.incrBy("tq_counter", localCounter.get(8).get());
+            agent.incrBy("tp_counter", localCounter.get(9).get());
+            for (AtomicInteger ai : localCounter.values())
+              ai.set(0);
+            lastSync = System.currentTimeMillis();
+          }
+          jsonResp(ctx, Resp.ItemOk.of(randItem.type, randItem.name, --remainTurn));
         }
         else {
-          ctx.response().putHeader("Content-Type", "text/json")
-                  .end(Json.encode(Resp.ItemFail.of("failed", 0)));
+          jsonResp(ctx, Resp.ItemFail.of("failed", -1));
         }
       }
-      else
-        ctx.response().putHeader("Content-Type", "text/json")
-                .end(Json.encode(Resp.ItemFail.of("failed", 0)));
-    });
+      catch (Exception e) {
+        LOGGER.info("nil_remain_or_counter_exception");
+        ctx.response().setStatusCode(400).end("nil_remain_or_counter");
+      }
+    }
+    else {
+      LOGGER.info("get_counter_remain_fail " + id + " " + counterKey);
+      ctx.response().setStatusCode(400).end("nil_remain_or_counter");
+    }
+  }
+
+  private void jsonResp(RoutingContext ctx, Object jsonBody) {
+    ctx.response().putHeader("Content-Type", "text/json")
+            .end(Json.encode(jsonBody));
   }
 
   private Item calcRnd(List<Item> items) {
@@ -121,37 +98,5 @@ public class WheelItem implements Handler<RoutingContext> {
 
     res.amount += 1;
     return res;
-  }
-
-  private void updateHistory(User user, Item item) {
-    if (user.histories == null || user.histories.size() == 0) {
-      user.histories = new ArrayList<>();
-      user.histories.add(History.of(item.type, item.name));
-    }
-    else {
-      user.histories.add(History.of(item.type, item.name));
-    }
-  }
-
-  private void updateInventory(User user, Item item) {
-    if (user.inventories == null || user.inventories.size() == 0) {
-      user.inventories = new ArrayList<>();
-      user.inventories.add(Inventory.of(item.type, item.name, 1, item.is_gift, item.upgrade, item.condi_merge));
-    }
-    else {
-      Inventory target = null;
-      for (Inventory inv : user.inventories) {
-        if (inv.type == item.type) {
-          target = inv;
-          break;
-        }
-      }
-      if (target != null) {
-        target.amount += 1;
-      }
-      else {
-        user.inventories.add(Inventory.of(item.type, item.name, 1, item.is_gift, item.upgrade, item.condi_merge));
-      }
-    }
   }
 }
