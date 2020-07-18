@@ -1,9 +1,7 @@
 package com.tulinh;
 
-import com.heartbeat.common.GlobalVariable;
 import com.tulinh.controller.*;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
@@ -15,7 +13,6 @@ import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TLS extends AbstractVerticle {
@@ -32,6 +29,7 @@ public class TLS extends AbstractVerticle {
   public void start(Promise<Void> startPromise) {
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
+    router.post("/bench/wheel/get-item").handler(new BenchWheelItem());
     router.post("/api/wheel/get-item").handler(new WheelItem());
     router.post("/api/setup").handler(new SetUpHandler());
 

@@ -10,12 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Const {
-  //common
-  public static Map<Integer, String> globalCounter;
-
-  public static final JedisPoolConfig poolConfig = new JedisPoolConfig();
-
-  public static List<Item> lsItem;
+  public static       Map<Integer, String>  globalCounter;
+  public static final JedisPoolConfig       poolConfig      = new JedisPoolConfig();
+  public static       List<Item>            staticItems;
+  public static       int                   SYNC_INTERVAL = 4000; //milis
 
   static {
 
@@ -42,16 +40,16 @@ public class Const {
     globalCounter.put(8, "tq_counter");
     globalCounter.put(9, "tp_counter");
 
-    lsItem = new ArrayList<>();
-    lsItem.add(Item.of(0, "The 10k", 500000, 8000, 0, true, -1, 0, -1, false));
-    lsItem.add(Item.of(1, "The 50k", 500000, 1500, 0, true, -1, 0, -1, false));
-    lsItem.add(Item.of(2, "Manh ghep Long", 500000, 90000, 0, false, 6, 0, 10, true));
-    lsItem.add(Item.of(3, "Manh ghep Lan", 500000, 450000, 0, false, 7, 0, 10, true));
-    lsItem.add(Item.of(4, "Manh ghep Quy", 500000, 450000, 0, false, 8, 0, 10, true));
-    lsItem.add(Item.of(5, "Manh ghep Phung", 500000, 498, 0, false, 9, 0, 10, true));
-    lsItem.add(Item.of(6, "The Long", 500000, 0, 0, false, -1, 0, -1, true));
-    lsItem.add(Item.of(7, "The Lan", 500000, 1, 0, false, -1, 0, -1, true));
-    lsItem.add(Item.of(8, "The Quy", 500000, 1, 0, false, -1, 0, -1, true));
-    lsItem.add(Item.of(9, "The Phung", 500000, 0, 0, false, -1, 0, -1, true));
+    staticItems = new ArrayList<>();
+    staticItems.add(Item.of(0, "The 10k", 500000, 8000, 0, true, -1, 0, -1, false));
+    staticItems.add(Item.of(1, "The 50k", 500000, 1500, 0, true, -1, 0, -1, false));
+    staticItems.add(Item.of(2, "Manh ghep Long", 500000, 90000, 0, false, 6, 0, 10, true));
+    staticItems.add(Item.of(3, "Manh ghep Lan", 500000, 450000, 0, false, 7, 0, 10, true));
+    staticItems.add(Item.of(4, "Manh ghep Quy", 500000, 450000, 0, false, 8, 0, 10, true));
+    staticItems.add(Item.of(5, "Manh ghep Phung", 500000, 498, 0, false, 9, 0, 10, true));
+    staticItems.add(Item.of(6, "The Long", 500000, 0, 0, false, -1, 0, -1, true));
+    staticItems.add(Item.of(7, "The Lan", 500000, 1, 0, false, -1, 0, -1, true));
+    staticItems.add(Item.of(8, "The Quy", 500000, 1, 0, false, -1, 0, -1, true));
+    staticItems.add(Item.of(9, "The Phung", 500000, 0, 0, false, -1, 0, -1, true));
   }
 }

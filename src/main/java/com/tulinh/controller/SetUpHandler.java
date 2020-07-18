@@ -7,13 +7,12 @@ import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarEntry;
 
 import static com.tulinh.TLS.*;
 public class SetUpHandler implements Handler<RoutingContext> {
   public static int         nUser = 5000;
   private static final int  nType = 10;
-  private Jedis agent;
+  private Jedis             agent;
 
   public SetUpHandler() {
     agent = redisPool.getResource();

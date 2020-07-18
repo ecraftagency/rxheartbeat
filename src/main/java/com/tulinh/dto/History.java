@@ -5,11 +5,11 @@ public class History {
   public String   name;
   public long     date;
 
-  public static History of(int type, String name) {
+  public static History of(int type, String name, long date) {
     History res = new History();
     res.type  = type;
     res.name  = name;
-    res.date  = System.currentTimeMillis();
+    res.date  = date;
     return res;
   }
 }
