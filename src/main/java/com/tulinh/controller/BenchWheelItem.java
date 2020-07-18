@@ -45,9 +45,14 @@ public class BenchWheelItem implements Handler<RoutingContext> {
         if (remainTurn > 0 && totalCounter < staticItems.get(randItem.type).maximum) {
           localCounter.get(randItem.type).getAndIncrement();
           agent.decr(id);
-          agent.incr("h" + id + "_" + randItem.type);
+          agent.incr("i" + id + "_" + randItem.type);
           agent.rpush("h" + id, Utilities.gson.toJson(History.of(randItem.type, randItem.name, curMs)));
-          syncGlobalCounter(curMs);
+          if (SYNC_MODE) {
+            syncGlobalCounter(curMs);
+          }
+          else {
+            agent.incr(counterKey);
+          }
 
           jsonResp(ctx, Resp.ItemOk.of(randItem.type, randItem.name, --remainTurn));
         }

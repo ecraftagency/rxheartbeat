@@ -27,6 +27,7 @@ public class SetUpHandler implements Handler<RoutingContext> {
     SYNC_INTERVAL   = ctx.getBodyAsJson().getInteger("syncInterval");
     String strItems = ctx.getBodyAsJson().getJsonArray("items").toString();
     staticItems     = Arrays.asList(Utilities.gson.fromJson(strItems, Item[].class));
+    SYNC_MODE       = ctx.getBodyAsJson().getBoolean("syncMode");
 
     agent.flushAll();
 

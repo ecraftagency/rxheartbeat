@@ -32,6 +32,9 @@ public class TLS extends AbstractVerticle {
     router.post("/bench/wheel/get-item").handler(new BenchWheelItem());
     router.post("/api/wheel/get-item").handler(new WheelItem());
     router.post("/api/setup").handler(new SetUpHandler());
+    router.get("/api/counter").handler(new CounterHandler());
+    router.post("/api/history").handler(new WheelHistory());
+    router.post("/api/inventory").handler(new WheelInventory());
 
     router.get("/loaderio-af74b1534f539596f297be35c5caf523/").handler(ctx ->
             ctx.response().end("loaderio-af74b1534f539596f297be35c5caf523"));
