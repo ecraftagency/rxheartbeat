@@ -29,7 +29,12 @@ public class TLS extends AbstractVerticle {
   public void start(Promise<Void> startPromise) {
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
-    router.post("/bench/wheel/get-item").handler(new BenchWheelItem());
+
+    //todo availability > consistency
+    router.post("/sync/wheel/get-item").handler(new SyncWheelItem());
+    //todo consistency > availability
+    router.post("/shard/wheel/get-item").handler(new ShardWheelItem());
+
     router.post("/api/wheel/get-item").handler(new WheelItem());
     router.post("/api/setup").handler(new SetUpHandler());
     router.get("/api/counter").handler(new CounterHandler());

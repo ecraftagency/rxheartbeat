@@ -11,14 +11,13 @@ import java.util.Map;
 
 public class Const {
   public static       Map<Integer, String>  globalCounter;
-  public static final JedisPoolConfig       poolConfig    = new JedisPoolConfig();
+  public static final JedisPoolConfig       poolConfig      = new JedisPoolConfig();
   public static       List<Item>            staticItems;
-  public static       int                   SYNC_INTERVAL = 4000; //milis
-  public static       int                   nUSER         = 5000;
-  public static       boolean               SYNC_MODE     = true;
+  public static       int                   SYNC_INTERVAL   = 4000; //milis
+  public static       int                   nUSER           = 5000;
+  public static       boolean               SYNC_MODE       = true;
 
   static {
-
     poolConfig.setMaxTotal(64);
     poolConfig.setMaxIdle(64);
     poolConfig.setMinIdle(16);
@@ -31,16 +30,16 @@ public class Const {
     poolConfig.setBlockWhenExhausted(true);
 
     globalCounter = new HashMap<>();
-    globalCounter.put(0, "10_counter");
-    globalCounter.put(1, "50_counter");
-    globalCounter.put(2, "mlg_counter");
-    globalCounter.put(3, "mln_counter");
-    globalCounter.put(4, "mq_counter");
-    globalCounter.put(5, "mp_counter");
-    globalCounter.put(6, "tlg_counter");
-    globalCounter.put(7, "tln_counter");
-    globalCounter.put(8, "tq_counter");
-    globalCounter.put(9, "tp_counter");
+    globalCounter.put(0, "10:cnt");
+    globalCounter.put(1, "50:cnt");
+    globalCounter.put(2, "mlg:cnt");
+    globalCounter.put(3, "mln:cnt");
+    globalCounter.put(4, "mq:cnt");
+    globalCounter.put(5, "mp:cnt");
+    globalCounter.put(6, "tlg:cnt");
+    globalCounter.put(7, "tln:cnt");
+    globalCounter.put(8, "tq:cnt");
+    globalCounter.put(9, "tp:cnt");
 
     staticItems = new ArrayList<>();
     staticItems.add(Item.of(0, "The 10k", 500000, 8000, 0, true, -1, 0, -1, false));

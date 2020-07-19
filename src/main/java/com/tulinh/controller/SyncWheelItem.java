@@ -15,12 +15,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.tulinh.TLS.*;
 import static com.tulinh.Const.*;
 
-public class BenchWheelItem implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(BenchWheelItem.class);
+public class SyncWheelItem implements Handler<RoutingContext> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(SyncWheelItem.class);
   private long lastSync = 0;
   private Jedis agent;
 
-  public BenchWheelItem() {
+  public SyncWheelItem() {
     agent = redisPool.getResource();
   }
 
@@ -45,14 +45,9 @@ public class BenchWheelItem implements Handler<RoutingContext> {
         if (remainTurn > 0 && totalCounter < staticItems.get(randItem.type).maximum) {
           localCounter.get(randItem.type).getAndIncrement();
           agent.decr(id);
-          agent.incr("i" + id + "_" + randItem.type);
-          agent.rpush("h" + id, Utilities.gson.toJson(History.of(randItem.type, randItem.name, curMs)));
-          if (SYNC_MODE) {
-            syncGlobalCounter(curMs);
-          }
-          else {
-            agent.incr(counterKey);
-          }
+          agent.incr("user:" + id + ":inventory:" + randItem.type);
+          agent.rpush("user:" + id + ":history", Utilities.gson.toJson(History.of(randItem.type, randItem.name, curMs)));
+          syncGlobalCounter(curMs);
 
           jsonResp(ctx, Resp.ItemOk.of(randItem.type, randItem.name, --remainTurn));
         }
