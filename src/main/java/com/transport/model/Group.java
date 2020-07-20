@@ -1,4 +1,6 @@
 package com.transport.model;
+import com.statics.CompanyEventData;
+
 import java.util.*;
 
 public class Group {
@@ -34,6 +36,7 @@ public class Group {
   public transient int            eventEndDate;
   public transient String         strStartDate;
   public transient String         strEndDate;
+  public transient Map<Integer, CompanyEventData.CompanyEvent> tasks;
 
 
   public void close() {

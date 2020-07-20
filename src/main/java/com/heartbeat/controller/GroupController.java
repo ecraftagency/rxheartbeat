@@ -10,6 +10,7 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
+import com.statics.CompanyEventData;
 import com.transport.ExtMessage;
 import com.transport.model.Group;
 import io.vertx.core.AsyncResult;
@@ -231,6 +232,7 @@ public class GroupController implements Handler<RoutingContext> {
     if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
       group.strStartDate  = Constant.COMPANY.EVENT_START;
       group.strEndDate    = Constant.COMPANY.EVENT_END;
+      group.tasks         = CompanyEventData.eventMap;
       try {
         group.eventStartDate  = (int)(Utilities
                 .getMillisFromDateString(Constant.COMPANY.EVENT_START, Constant.COMPANY.DATE_PATTERN));
