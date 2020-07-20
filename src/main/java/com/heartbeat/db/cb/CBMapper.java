@@ -42,6 +42,13 @@ public class CBMapper implements Mapper {
   }
 
   @Override
+  public void mapOverride(String id, String key, Handler<AsyncResult<String>> handler) {
+    rxIndexBucket.defaultCollection().upsert(key, id).subscribe(
+            res -> handler.handle(Future.succeededFuture("ok")),
+            err -> handler.handle(Future.failedFuture(err.getMessage())));
+  }
+
+  @Override
   public void unmap(String key, Handler<AsyncResult<String>> handler) {
     rxIndexBucket.defaultCollection().remove(key).subscribe(
             res -> handler.handle(Future.succeededFuture("ok")),
@@ -72,6 +79,17 @@ public class CBMapper implements Mapper {
     try {
       rxIndexBucket.defaultCollection().upsert(key, id,
               UpsertOptions.upsertOptions().expiry(Duration.ofMinutes(expiry))).block();
+      return "ok";
+    }
+    catch (Exception e) {
+      return e.getMessage();
+    }
+  }
+
+  @Override
+  public String mapOverride(String id, String key) {
+    try {
+      rxIndexBucket.defaultCollection().upsert(key, id).block();
       return "ok";
     }
     catch (Exception e) {

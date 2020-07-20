@@ -13,8 +13,9 @@ public class Group {
 
   public static final int KICK_EXPIRE         = 2; //minute
 
-  public static final int GROUP_ID_TYPE_NONE  = 0;
-  public static final int GROUP_ID_TYPE_KICK  = -1;
+  public static final int GROUP_ID_TYPE_NONE    = 0;
+  public static final int GROUP_ID_TYPE_KICK    = -1;
+  public static final int GROUP_ID_TYPE_REMOVE  = -2;
 
   public static final int MAX_GROUP_MEMBER    = 25;
   public static final int INTERNAL_INFORM     = 0;

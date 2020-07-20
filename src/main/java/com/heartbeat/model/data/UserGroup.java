@@ -8,10 +8,10 @@ import com.transport.model.Group;
 import java.util.HashMap;
 
 public class UserGroup extends Group {
-  public static UserGroup of(int id, int ownerId, String ownerName, int joinType) {
+  public static UserGroup of(int id, Session session, int joinType) {
     UserGroup re          = new UserGroup();
     re.id                 = id;
-    re.owner              = ownerId;
+    re.owner              = session.id;
     re.createTime         = (int)(System.currentTimeMillis()/1000);
     re.members            = new HashMap<>();
     re.pendingMembers     = new HashMap<>();
@@ -21,11 +21,19 @@ public class UserGroup extends Group {
     re.isChange           = false;
 
     Member owner          = new Member();
-    owner.displayName     = ownerName;
-    owner.id              = ownerId;
+    owner.displayName     = session.userGameInfo.displayName;
+    owner.id              = session.id;
     owner.role            = OWNER_ROLE;
     owner.joinTime        = re.createTime;
-    re.members.put(ownerId, owner);
+    owner.titleId         = session.userGameInfo.titleId;
+    owner.totalCrt        = session.userIdol.getTotalCreativity();
+    owner.totalPerf       = session.userIdol.getTotalPerformance();
+    owner.totalAttr       = session.userIdol.getTotalAttractive();
+    owner.gender          = session.userGameInfo.gender;
+    owner.avatarId        = session.userGameInfo.avatar;
+    owner.productionCount = 0;
+    owner.gameshowCount   = 0;
+    re.members.put(session.id, owner);
     return re;
   }
 

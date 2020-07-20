@@ -169,7 +169,7 @@ public class Session {
               for (Group.Member member : group.members.values()) {
                 Session session = SessionPool.getSessionFromPool(member.id);
                 if (session != null)
-                  session.groupID = 0;
+                  session.groupID = Group.GROUP_ID_TYPE_REMOVE;
                 CBMapper.getInstance().unmap(Integer.toString(member.id), ar -> {});
               }
               handler.handle(Future.succeededFuture("ok"));
@@ -204,7 +204,7 @@ public class Session {
       //first unmap sid_gid if have
       String oldGid = CBMapper.getInstance().getValue(Integer.toString(id));
       if (oldGid.equals("")) { // there no sid_gid map, perfect
-        UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE, id, userGameInfo.displayName, groupType);
+        UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE,this, groupType);
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
@@ -225,7 +225,7 @@ public class Session {
           else { //have sid_gid mapping but don't have persistent group, ok (mean member of last delete group)
             CBMapper.getInstance().unmap(Integer.toString(id), unmapRes -> {
               if (unmapRes.succeeded()) {
-                UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE, id, userGameInfo.displayName, groupType);
+                UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE, this, groupType);
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());
@@ -256,6 +256,10 @@ public class Session {
           int gid = Integer.parseInt(ar.result());
           if (gid == Group.GROUP_ID_TYPE_KICK) { //user leave or kick from some group
             groupID = Group.GROUP_ID_TYPE_KICK;
+            handler.handle(Future.succeededFuture("ok"));
+          }
+          if (gid == Group.GROUP_ID_TYPE_REMOVE) {
+            groupID = Group.GROUP_ID_TYPE_REMOVE;
             handler.handle(Future.succeededFuture("ok"));
           }
           else if (Group.isValidGid(gid)) { //user have group
