@@ -49,9 +49,10 @@ public class Constant {
   }
 
   public static class COMPANY {
-    public static final String DATE_PATTERN   = "dd/MM/yyyy HH:mm:ss";
-    public static String EVENT_START          = "01/01/20202 23:00:00";
-    public static String EVENT_END            = "31/01/20202 23:00:00";
+    public static final String DATE_PATTERN       = "dd/MM/yyyy HH:mm:ss";
+    public static String EVENT_START              = "01/01/20202 23:00:00";
+    public static String EVENT_END                = "31/01/20202 23:00:00";
+    public static int    CREATE_GROUP_TIME_COST   = 5*86400; //5 days
   }
 
   public static class USER_GAME_INFO {

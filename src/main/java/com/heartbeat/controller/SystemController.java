@@ -46,12 +46,12 @@ public class SystemController implements Handler<RoutingContext> {
     session.updateOnline(System.currentTimeMillis());
     ExtMessage resp = ExtMessage.system();
     resp.serverTime = (int)(curMs/1000);
-    if (session.userGameInfo.titleId >= Constant.USER_GAME_INFO.TIME_ACTIVE_LEVEL) {
-      session.userGameInfo.time -= Constant.ONLINE_INFO.ONLINE_HEARTBEAT_TIME;
-      if (session.userGameInfo.time < 0)
-        session.userGameInfo.time = 0;
-      resp.userRemainTime = session.userGameInfo.time;
-    }
+    int second    = (int)(curMs/1000);
+    int deltaTime = second - session.lastHearBeatTime;
+    session.userGameInfo.time -= deltaTime;
+    if (session.userGameInfo.time < 0)
+      session.userGameInfo.time = 0;
+    resp.userRemainTime = session.userGameInfo.time;
     return resp;
   }
 }

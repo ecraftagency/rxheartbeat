@@ -133,6 +133,7 @@ public class Session {
       userTravel = UserTravel.ofDefault();
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;
+    lastHearBeatTime        = second;
   }
 
   public void updateClientInfo(LoginRequest message) {
@@ -202,6 +203,10 @@ public class Session {
   }
 
   public void createGroup(int groupType, String name, String externalInform, String internalInform, Handler<AsyncResult<String>> handler) {
+    if (userGameInfo.time < Constant.COMPANY.CREATE_GROUP_TIME_COST) {
+      handler.handle(Future.failedFuture("insufficient_time"));
+      return;
+    }
     if (Group.isValidGid(groupID)) { //user have group
       handler.handle(Future.failedFuture("user_already_have_group"));
     }
@@ -217,6 +222,7 @@ public class Session {
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
+            userGameInfo.time -= Constant.COMPANY.CREATE_GROUP_TIME_COST;
             handler.handle(Future.succeededFuture("ok"));
           }
           else{
@@ -239,6 +245,7 @@ public class Session {
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());
+                    userGameInfo.time -= Constant.COMPANY.CREATE_GROUP_TIME_COST;
                     handler.handle(Future.succeededFuture("ok"));
                   }
                   else{
