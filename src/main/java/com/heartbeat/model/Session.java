@@ -170,7 +170,9 @@ public class Session {
                 Session session = SessionPool.getSessionFromPool(member.id);
                 if (session != null)
                   session.groupID = Group.GROUP_ID_TYPE_REMOVE;
-                CBMapper.getInstance().unmap(Integer.toString(member.id), ar -> {});
+                //todo sync
+                CBMapper.getInstance().mapOverride(Integer.toString(Group.GROUP_ID_TYPE_REMOVE),
+                        Integer.toString(Group.KICK_EXPIRE));
               }
               handler.handle(Future.succeededFuture("ok"));
             }
