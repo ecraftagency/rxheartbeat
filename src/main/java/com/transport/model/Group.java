@@ -23,6 +23,7 @@ public class Group {
 
   public int                      id;
   public int                      createTime;
+  public String                   name;
   public int                      owner;
   public Map<Integer, Member>     members;
   public Map<Integer, Member>     pendingMembers;
@@ -33,11 +34,11 @@ public class Group {
   public transient boolean        isChange;
 
   //runtime data
-  public transient int            eventStartDate;
-  public transient int            eventEndDate;
-  public transient String         strStartDate;
-  public transient String         strEndDate;
-  public transient Map<Integer, CompanyEventData.CompanyEvent> tasks;
+  public int            eventStartDate;
+  public int            eventEndDate;
+  public String         strStartDate;
+  public String         strEndDate;
+  public Map<Integer, CompanyEventData.CompanyEvent> tasks;
 
 
   public void close() {

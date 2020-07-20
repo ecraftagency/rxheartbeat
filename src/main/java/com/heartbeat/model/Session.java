@@ -195,7 +195,7 @@ public class Session {
     }
   }
 
-  public void createGroup(int groupType, Handler<AsyncResult<String>> handler) {
+  public void createGroup(int groupType, String name, String externalInform, String internalInform, Handler<AsyncResult<String>> handler) {
     if (Group.isValidGid(groupID)) { //user have group
       handler.handle(Future.failedFuture("user_already_have_group"));
     }
@@ -206,7 +206,8 @@ public class Session {
       //first unmap sid_gid if have
       String oldGid = CBMapper.getInstance().getValue(Integer.toString(id));
       if (oldGid.equals("")) { // there no sid_gid map, perfect
-        UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE,this, groupType);
+        UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE,
+                this, groupType, name, externalInform, internalInform);
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
@@ -227,7 +228,8 @@ public class Session {
           else { //have sid_gid mapping but don't have persistent group, ok (mean member of last delete group)
             CBMapper.getInstance().unmap(Integer.toString(id), unmapRes -> {
               if (unmapRes.succeeded()) {
-                UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE, this, groupType);
+                UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE,
+                        this, groupType, name, externalInform, internalInform);
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());

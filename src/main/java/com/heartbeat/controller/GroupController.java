@@ -36,7 +36,7 @@ public class GroupController implements Handler<RoutingContext> {
         switch (cmd) {
           //delegate
           case "flushGroupState":
-            resp = processFlushGroupState(session, ctx);
+            resp = processFlushGroupState(session);
             break;
           case "switchJoinType":
             resp = processsSwitchMode(session, ctx);
@@ -90,7 +90,7 @@ public class GroupController implements Handler<RoutingContext> {
     }
   }
 
-  private ExtMessage processFlushGroupState(Session session, RoutingContext ctx) {
+  private ExtMessage processFlushGroupState(Session session) {
     ExtMessage resp = ExtMessage.group();
     if (session.groupID == Group.GROUP_ID_TYPE_REMOVE) {
       session.groupID = Group.GROUP_ID_TYPE_NONE;
@@ -288,8 +288,12 @@ public class GroupController implements Handler<RoutingContext> {
 
   private void processCreateGroup(Session session, RoutingContext ctx, String cmd) {
     int groupType;
+    String name, externalInform, internalInform;
     try {
       groupType = ctx.getBodyAsJson().getInteger("groupType");
+      name = ctx.getBodyAsJson().getString("name");
+      externalInform = ctx.getBodyAsJson().getString("externalInform");
+      internalInform = ctx.getBodyAsJson().getString("internalInform");
     }
     catch (Exception e) {
       ctx.response().setStatusCode(404).end();
@@ -302,7 +306,7 @@ public class GroupController implements Handler<RoutingContext> {
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       return;
     }
-    session.createGroup(groupType, crtRes -> {
+    session.createGroup(groupType, name, externalInform, internalInform, crtRes -> {
       if (crtRes.succeeded()) {
         resp.msg = "ok";
         resp.cmd = cmd;

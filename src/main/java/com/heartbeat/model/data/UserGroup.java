@@ -8,7 +8,7 @@ import com.transport.model.Group;
 import java.util.HashMap;
 
 public class UserGroup extends Group {
-  public static UserGroup of(int id, Session session, int joinType) {
+  public static UserGroup of(int id, Session session, int joinType, String externalInform, String internalInform, String name) {
     UserGroup re          = new UserGroup();
     re.id                 = id;
     re.owner              = session.id;
