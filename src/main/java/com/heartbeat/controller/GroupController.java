@@ -5,13 +5,12 @@ import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.GlobalVariable;
-import com.heartbeat.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
-import com.statics.CompanyEventData;
+import com.statics.GroupMissionData;
 import com.transport.ExtMessage;
 import com.transport.model.Group;
 import io.vertx.core.AsyncResult;
@@ -34,7 +33,9 @@ public class GroupController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
-          //delegate
+          case "claimReward":
+            resp = processClaimReward(session, ctx, System.currentTimeMillis());
+            break;
           case "flushGroupState":
             resp = processFlushGroupState(session);
             break;
@@ -88,6 +89,20 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processClaimReward(Session session, RoutingContext ctx, long curMs) {
+    ExtMessage resp = ExtMessage.group();
+    UserGroup group = GroupPool.getGroupFromPool(session.id);
+    int missionId   = ctx.getBodyAsJson().getInteger("missionId");
+
+    if (group == null) {
+      resp.msg      = "group_not_found";
+      return resp;
+    }
+    resp.msg            = group.claimReward(session, missionId, (int)(curMs/1000));
+    resp.effectResults  = session.effectResults;
+    return resp;
   }
 
   private ExtMessage processFlushGroupState(Session session) {
@@ -245,21 +260,14 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.group();
     UserGroup group;
     if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
-      group.strStartDate  = Constant.COMPANY.EVENT_START;
-      group.strEndDate    = Constant.COMPANY.EVENT_END;
-      group.tasks         = CompanyEventData.eventMap;
-      try {
-        group.eventStartDate  = (int)(Utilities
-                .getMillisFromDateString(Constant.COMPANY.EVENT_START, Constant.COMPANY.DATE_PATTERN));
-        group.eventEndDate    = (int)(Utilities
-                .getMillisFromDateString(Constant.COMPANY.EVENT_END, Constant.COMPANY.DATE_PATTERN));
-      }
-      catch (Exception e) {
-        group.eventEndDate    = -1;
-        group.eventStartDate  = -1;
-      }
-      resp.data.group = group;
-      resp.msg        = "ok";
+      group.calcMissionHitMember();
+      group.strStartDate    = Constant.GROUP.EVENT_START;
+      group.strEndDate      = Constant.GROUP.EVENT_END;
+      group.missions        = GroupMissionData.missionMap;
+      group.missionStartDate = Constant.GROUP.missionStart;
+      group.missionEndDate = Constant.GROUP.messionEnd;
+      resp.data.group       = group;
+      resp.msg              = "ok";
     }
     else if (session.groupID == Group.GROUP_ID_TYPE_KICK) {
       resp.msg        = "user_group_delay";

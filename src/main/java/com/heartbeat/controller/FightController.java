@@ -2,8 +2,10 @@ package com.heartbeat.controller;
 
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -147,6 +149,11 @@ public class FightController implements Handler<RoutingContext> {
       resp.effectResults  = session.effectResults;
       resp.data.fight     = session.userFight;
       resp.data.gameInfo  = session.userGameInfo;
+      if (resp.msg.equals("ok") && Constant.GROUP.missionStart > 0) {
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        if (group != null)
+          group.addGameShowRecord(session, Constant.GROUP.missionStart);
+      }
     }
 
     return resp;

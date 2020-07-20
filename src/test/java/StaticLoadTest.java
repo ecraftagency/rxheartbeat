@@ -91,7 +91,7 @@ public class StaticLoadTest {
 
       String companyEventJson = new String(Files.readAllBytes(Paths.get("data/json/companyEvent.json")),
               StandardCharsets.UTF_8);
-      CompanyEventData.loadJson(companyEventJson);
+      GroupMissionData.loadJson(companyEventJson);
 
       WordFilter.loadJson("");
     }

@@ -40,23 +40,37 @@ public class Constant {
     public static       String PWD                = "n5t5lnsct";
 
     // for anti IDLE drop
-    public static final int     COUCHBASE_CHECK_INTERVAL = 29 * 60 * 1000; // 29' in ms
-    public static final String  COUCHBASE_CHECK_KEY  = "heartbeatIdleCount";
     public static final String  ID_INCR_KEY     = "HeartBeatOnlineUserID";
     public static final int     ID_INIT         = 100000;
     public static final String  GID_INCR_KEY    = "HeartBeatGroupID";
     public static final int     GID_INIT        = 10000;
   }
 
-  public static class COMPANY {
-    public static final String DATE_PATTERN       = "dd/MM/yyyy HH:mm:ss";
-    public static String EVENT_START              = "01/01/20202 23:00:00";
-    public static String EVENT_END                = "31/01/20202 23:00:00";
-    public static int    CREATE_GROUP_TIME_COST   = 5*86400; //5 days
+  public static class GROUP {
+    public static final String  DATE_PATTERN            = "dd/MM/yyyy HH:mm:ss";
+    public static String        EVENT_START             = "01/01/20202 23:00:00";
+    public static String        EVENT_END               = "31/01/20202 23:00:00";
+    public static int           missionStart            = -1;
+    public static int           messionEnd              = -1;
+    public static int           CREATE_GROUP_TIME_COST  = 5*86400; //5 days
+    public static int           GAMESHOW_MISSION_ID     = 0;
+    public static int           PRODUCTION_MISSION_ID   = 1;
   }
 
   public static class USER_GAME_INFO {
-    public static final int TIME_ACTIVE_LEVEL   = 2;
     public static final int INIT_TIME_GIFT      = 86400*7;
+  }
+
+  public static void serverStartUp() {
+    try {
+      GROUP.missionStart =
+              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_START, GROUP.DATE_PATTERN)/1000);
+      GROUP.messionEnd =
+              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_END, GROUP.DATE_PATTERN)/1000);
+    }
+    catch (Exception e) {
+      GROUP.missionStart = -1;
+      GROUP.messionEnd = -1;
+    }
   }
 }

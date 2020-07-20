@@ -1,11 +1,20 @@
 package com.heartbeat.model.data;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.db.cb.CBGroup;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
+import com.statics.GroupMissionData;
 import com.transport.model.Group;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+
+import static com.statics.GroupMissionData.*;
+import static com.heartbeat.common.Constant.*;
 
 public class UserGroup extends Group {
   public static UserGroup of(int id, Session session, int joinType, String externalInform, String internalInform, String name) {
@@ -35,7 +44,7 @@ public class UserGroup extends Group {
     owner.gender          = session.userGameInfo.gender;
     owner.avatarId        = session.userGameInfo.avatar;
     owner.productionCount = 0;
-    owner.gameshowCount   = 0;
+    owner.gameShowCount = 0;
     re.members.put(session.id, owner);
     return re;
   }
@@ -61,7 +70,7 @@ public class UserGroup extends Group {
     member.avatarId         = session.userGameInfo.avatar;
     member.gender           = session.userGameInfo.gender;
     member.productionCount  = 0;
-    member.gameshowCount    = 0;
+    member.gameShowCount = 0;
 
 
     if (members.size() >= MAX_GROUP_MEMBER) {
@@ -147,5 +156,88 @@ public class UserGroup extends Group {
       return "ok";
     }
     return "set_inform_fail";
+  }
+
+  public void addGameShowRecord(Session session, int cas) {
+    Member member = members.get(session.id);
+    if (member == null)
+      return;
+    if (member.cas != cas) {
+      member.cas = cas;
+      member.resetRecords();
+      member.giftClaim = false;
+    }
+    member.gameShowCount++;
+  }
+
+  public void addProductionRecord(Session session, int cas) {
+    Member member = members.get(session.id);
+    if (member == null)
+      return;
+    if (member.cas != cas) {
+      member.cas = cas;
+      member.resetRecords();
+      member.giftClaim = false;
+    }
+    member.productionCount++;
+  }
+
+  public List<Integer> calcMissionHitMember() {
+    try {
+      int cas = Constant.GROUP.missionStart;
+      int gameShowHitMember    = 0;
+      int productionHitMember  = 0;
+      for (Member member : members.values()) {
+        if (member.cas != cas) {
+          member.resetRecords();
+          member.cas = cas;
+        }
+        if (member.gameShowCount >= missionMap.get(GROUP.GAMESHOW_MISSION_ID).hitCount)
+          gameShowHitMember++;
+        if (member.productionCount >= missionMap.get(GROUP.PRODUCTION_MISSION_ID).hitCount)
+          productionHitMember++;
+      }
+      missionHitCount =  Arrays.asList(gameShowHitMember, productionHitMember);
+      return missionHitCount;
+    }
+    catch (Exception e) {
+      missionHitCount = Arrays.asList(0,0);
+      return missionHitCount;
+    }
+  }
+
+  public String claimReward(Session session, int missionId, int second) {
+    GroupMissionData.GroupMission evt = missionMap.get(missionId);
+    if (evt == null)
+      return "mission_not_found";
+
+    Member member = members.get(session.id);
+    if (member == null)
+      return "member_not_found";
+
+    if (GROUP.missionStart <= 0     ||
+        GROUP.messionEnd <= 0       ||
+        second < GROUP.missionStart ||
+        second > GROUP.messionEnd   ||
+        member.giftClaim) {
+      return "claim_reward_time_out";
+    }
+
+    List<Integer> hitMembers = calcMissionHitMember();
+    if (hitMembers.get(missionId) < evt.hitMember) {//
+      return "mission_impossible"; // :D, chưa đủ tuổi
+    }
+
+    session.effectResults.clear();
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+
+    List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+    for (Integer item : evt.gift) {
+      rewardFormat.set(1, item);
+        EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+    }
+    member.giftClaim = true;
+
+    return "ok";
   }
 }

@@ -1,7 +1,10 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserGroup;
 import com.heartbeat.model.data.UserProduction;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
@@ -74,24 +77,29 @@ public class ProductionController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processClaimProduct(Session session, RoutingContext ctx) {
-    int productType = ctx.getBodyAsJson().getInteger("productType");
-    String result = session.userProduction.produce(session, productType);
-    ExtMessage resp = ExtMessage.production();
-    resp.msg = result;
-    resp.data.gameInfo = session.userGameInfo;
-    resp.data.production = session.userProduction;
-    resp.data.idols = session.userIdol;
+    int productType       = ctx.getBodyAsJson().getInteger("productType");
+    String result         = session.userProduction.produce(session, productType);
+    ExtMessage resp       = ExtMessage.production();
+    resp.msg              = result;
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.production  = session.userProduction;
+    resp.data.idols       = session.userIdol;
+    if (resp.msg.equals("ok") && Constant.GROUP.missionStart > 0) {
+      UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+      if (group != null)
+        group.addProductionRecord(session, Constant.GROUP.missionStart);
+    }
     return resp;
   }
 
   private ExtMessage processGetProductInfo(Session session, long curMs) {
     session.userProduction.updateProduction(session, curMs);
-    ExtMessage resp = ExtMessage.production();
-    resp.msg = "ok";
-    resp.data.production = session.userProduction;
-    resp.data.gameInfo = session.userGameInfo;
-    resp.data.idols = session.userIdol;
-    resp.serverTime = (int)(curMs/1000);
+    ExtMessage resp       = ExtMessage.production();
+    resp.msg              = "ok";
+    resp.data.production  = session.userProduction;
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.idols       = session.userIdol;
+    resp.serverTime       = (int)(curMs/1000);
     return resp;
   }
 }

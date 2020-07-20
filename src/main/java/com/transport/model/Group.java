@@ -1,8 +1,9 @@
 package com.transport.model;
-import com.statics.CompanyEventData;
+import com.statics.GroupMissionData;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class Group {
   public static final int OWNER_ROLE          = 0;
   public static final int MOD_ROLE            = 1;
@@ -34,12 +35,12 @@ public class Group {
   public transient boolean        isChange;
 
   //runtime data
-  public int            eventStartDate;
-  public int            eventEndDate;
+  public Map<Integer, GroupMissionData.GroupMission> missions;
+  public List<Integer>  missionHitCount;
+  public int            missionStartDate;
+  public int            missionEndDate;
   public String         strStartDate;
   public String         strEndDate;
-  public Map<Integer, CompanyEventData.CompanyEvent> tasks;
-
 
   public void close() {
 
@@ -57,7 +58,9 @@ public class Group {
     public int      avatarId;
     public int      gender;
     public int      productionCount;
-    public int      gameshowCount;
+    public int      gameShowCount;
+    public int      cas;
+    public boolean  giftClaim;
 
     public static   Member of(int id, String displayName) {
       Member member       = new Member();
@@ -65,7 +68,14 @@ public class Group {
       member.displayName  = displayName;
       member.role         = USER_ROLE;
       member.joinTime     = (int)(System.currentTimeMillis());
+      member.cas          = 0;
+      member.giftClaim    = true;
       return member;
+    }
+
+    public void resetRecords() {
+      productionCount = 0;
+      gameShowCount   = 0;
     }
   }
 

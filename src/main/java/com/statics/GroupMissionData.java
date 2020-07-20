@@ -3,8 +3,8 @@ package com.statics;
 import java.util.List;
 import java.util.Map;
 
-public class CompanyEventData {
-  public static class CompanyEvent implements Common.hasKey<Integer>{
+public class GroupMissionData {
+  public static class GroupMission implements Common.hasKey<Integer>{
     public int            id;
     public int            hitMember;
     public int            hitCount;
@@ -18,9 +18,9 @@ public class CompanyEventData {
     }
   }
 
-  public static Map<Integer, CompanyEvent> eventMap;
+  public static Map<Integer, GroupMission> missionMap;
 
   public static void loadJson(String jsonText) {
-    eventMap = Common.loadMap(jsonText, CompanyEvent.class);
+    missionMap = Common.loadMap(jsonText, GroupMission.class);
   }
 }

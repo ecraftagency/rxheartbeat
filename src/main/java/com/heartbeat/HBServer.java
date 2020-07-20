@@ -167,7 +167,7 @@ public class HBServer extends AbstractVerticle {
 
       String companyEventJson = new String(Files.readAllBytes(Paths.get("data/json/companyEvent.json")),
               StandardCharsets.UTF_8);
-      CompanyEventData.loadJson(companyEventJson);
+      GroupMissionData.loadJson(companyEventJson);
 
       //todo this is ORACLE java! group, join...JAVA x SQL!
       //1 month later pls don't ever ask me about this chunk of code T___T
@@ -197,7 +197,14 @@ public class HBServer extends AbstractVerticle {
       startPromise.fail(ioe);
     }
 
-    UserFight.serverStartup();
+    try {
+      UserFight.serverStartup();
+      Constant.serverStartUp();
+    }
+    catch (Exception e) {
+      LOGGER.error(e.getMessage());
+      startPromise.fail(e);
+    }
 
     ConfigRetriever retriever = ConfigRetriever.create(vertx);
     retriever.getConfig(ar ->{
