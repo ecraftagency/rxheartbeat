@@ -94,8 +94,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
     if (session.groupID == Group.GROUP_ID_TYPE_REMOVE) {
       session.groupID = Group.GROUP_ID_TYPE_NONE;
-      CBMapper.getInstance().mapOverride(Integer.toString(Group.GROUP_ID_TYPE_NONE),
-              Integer.toString(session.id));
+      CBMapper.getInstance().unmap(Integer.toString(session.id));
       resp.msg = "ok";
       return resp;
     }
