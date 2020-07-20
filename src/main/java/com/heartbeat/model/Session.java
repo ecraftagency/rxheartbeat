@@ -172,7 +172,7 @@ public class Session {
                   session.groupID = Group.GROUP_ID_TYPE_REMOVE;
                 //todo sync
                 CBMapper.getInstance().mapOverride(Integer.toString(Group.GROUP_ID_TYPE_REMOVE),
-                        Integer.toString(Group.KICK_EXPIRE));
+                        Integer.toString(member.id));
               }
               handler.handle(Future.succeededFuture("ok"));
             }
