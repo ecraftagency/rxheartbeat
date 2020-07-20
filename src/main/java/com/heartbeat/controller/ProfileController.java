@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
+import static com.heartbeat.common.Constant.USER_GAME_INFO.INIT_TIME_GIFT;
+
 public class ProfileController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileController.class);
 
@@ -84,6 +86,7 @@ public class ProfileController implements Handler<RoutingContext> {
 
     session.userGameInfo.exp -= nextLV.exp;
     session.userGameInfo.titleId = nextLV.officeLV;
+    session.userGameInfo.time = INIT_TIME_GIFT;
     resp.msg = "ok";
     resp.data.gameInfo = session.userGameInfo;
     resp.data.production = session.userProduction;

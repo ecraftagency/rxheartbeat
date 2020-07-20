@@ -8,7 +8,7 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public long     view            = 2000;
   public long     fan             = 2000;
   public long     talent          = 0;
-  public long     time            = 0;
+  public int      time            = 0;
   public int      titleId         = 1;
   public long     exp             = 0;
   public int      vipExp          = 0;

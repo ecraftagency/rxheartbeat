@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -45,6 +46,12 @@ public class SystemController implements Handler<RoutingContext> {
     session.updateOnline(System.currentTimeMillis());
     ExtMessage resp = ExtMessage.system();
     resp.serverTime = (int)(curMs/1000);
+    if (session.userGameInfo.titleId >= Constant.USER_GAME_INFO.TIME_ACTIVE_LEVEL) {
+      session.userGameInfo.time -= Constant.ONLINE_INFO.ONLINE_HEARTBEAT_TIME;
+      if (session.userGameInfo.time < 0)
+        session.userGameInfo.time = 0;
+      resp.userRemainTime = session.userGameInfo.time;
+    }
     return resp;
   }
 }

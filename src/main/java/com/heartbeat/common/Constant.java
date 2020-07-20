@@ -53,4 +53,9 @@ public class Constant {
     public static String EVENT_START          = "01/01/20202 23:00:00";
     public static String EVENT_END            = "31/01/20202 23:00:00";
   }
+
+  public static class USER_GAME_INFO {
+    public static final int TIME_ACTIVE_LEVEL   = 2;
+    public static final int INIT_TIME_GIFT      = 86400*7;
+  }
 }

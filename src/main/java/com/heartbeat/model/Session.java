@@ -121,6 +121,12 @@ public class Session {
       else {
         userFight.reLogin();
       }
+
+      //todo critical
+      int deltaTime = second - userProfile.lastLogin;
+      userGameInfo.time -= deltaTime;
+      if (userGameInfo.time < 0)
+        userGameInfo.time = 0;
     }
 
     if (userTravel == null)
