@@ -218,7 +218,7 @@ public class Session {
       String oldGid = CBMapper.getInstance().getValue(Integer.toString(id));
       if (oldGid.equals("")) { // there no sid_gid map, perfect
         UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE,
-                this, groupType, name, externalInform, internalInform);
+                this, groupType, externalInform, internalInform, name);
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
@@ -241,7 +241,7 @@ public class Session {
             CBMapper.getInstance().unmap(Integer.toString(id), unmapRes -> {
               if (unmapRes.succeeded()) {
                 UserGroup newGroup = UserGroup.of(Group.GROUP_ID_TYPE_NONE,
-                        this, groupType, name, externalInform, internalInform);
+                        this, groupType, externalInform, internalInform, name);
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());

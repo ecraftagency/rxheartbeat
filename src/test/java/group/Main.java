@@ -69,11 +69,6 @@ public class Main {
   }
 
   public static void createGroup(Session session) {
-    session.createGroup(Group.AUTO_JOIN, ar -> {
-      if (ar.succeeded())
-        System.out.println("ok");
-      else
-        System.out.println(ar.cause().getMessage());
-    });
+
   }
 }

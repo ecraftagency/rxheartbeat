@@ -98,5 +98,7 @@ public class StaticLoadTest {
     catch (Exception ioe) {
       //
     }
+
+    System.out.println(VipData.getVipData(5000).level);
   }
 }

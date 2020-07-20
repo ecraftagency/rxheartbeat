@@ -23,9 +23,15 @@ public class VipData {
   }
 
   public static Vip getVipData(int exp) {
-    for (Vip vip : vipMap.values())
-      if (exp <= vip.exp)
-        return vip;
+    if (exp <= 0)
+      return VipData.vipMap.get(0);
+    int idx = 0;
+    for (Vip vip : vipMap.values()) {
+      if (exp < vip.exp) {
+        return vipMap.get(idx-1);
+      }
+      idx++;
+    }
     return ofNullObject();
   }
 
