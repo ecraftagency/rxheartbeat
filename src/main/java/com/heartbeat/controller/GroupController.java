@@ -34,6 +34,9 @@ public class GroupController implements Handler<RoutingContext> {
         ExtMessage resp;
         switch (cmd) {
           //delegate
+          case "flushGroupState":
+            resp = processFlushGroupState(session, ctx);
+            break;
           case "switchJoinType":
             resp = processsSwitchMode(session, ctx);
             break;
@@ -84,6 +87,16 @@ public class GroupController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processFlushGroupState(Session session, RoutingContext ctx) {
+    ExtMessage resp = ExtMessage.group();
+    if (session.groupID == Group.GROUP_ID_TYPE_REMOVE) {
+      session.groupID = Group.GROUP_ID_TYPE_NONE;
+      resp.msg = "ok";
+      return resp;
+    }
+    return resp;
   }
 
   private ExtMessage processsSwitchMode(Session session, RoutingContext ctx) {
