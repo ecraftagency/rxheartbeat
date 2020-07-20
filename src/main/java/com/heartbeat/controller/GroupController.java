@@ -3,7 +3,9 @@ package com.heartbeat.controller;
 import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
+import com.heartbeat.common.Constant;
 import com.heartbeat.common.GlobalVariable;
+import com.heartbeat.common.Utilities;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -227,6 +229,18 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.group();
     UserGroup group;
     if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
+      group.strStartDate  = Constant.COMPANY.EVENT_START;
+      group.strEndDate    = Constant.COMPANY.EVENT_END;
+      try {
+        group.eventStartDate  = (int)(Utilities
+                .getMillisFromDateString(Constant.COMPANY.EVENT_START, Constant.COMPANY.DATE_PATTERN));
+        group.eventEndDate    = (int)(Utilities
+                .getMillisFromDateString(Constant.COMPANY.EVENT_END, Constant.COMPANY.DATE_PATTERN));
+      }
+      catch (Exception e) {
+        group.eventEndDate    = -1;
+        group.eventStartDate  = -1;
+      }
       resp.data.group = group;
       resp.msg        = "ok";
     }

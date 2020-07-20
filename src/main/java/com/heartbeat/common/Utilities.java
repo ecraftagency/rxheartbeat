@@ -3,7 +3,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 @SuppressWarnings("unused")
@@ -78,5 +80,10 @@ public class Utilities {
 
     Random r = new Random();
     return r.nextInt((max - min) + 1) + min;
+  }
+
+  public static long getMillisFromDateString(String dateString, String pattern) throws Exception {
+    Date date = new SimpleDateFormat(pattern).parse(dateString);
+    return date.getTime();
   }
 }

@@ -47,4 +47,10 @@ public class Constant {
     public static final String  GID_INCR_KEY    = "HeartBeatGroupID";
     public static final int     GID_INIT        = 10000;
   }
+
+  public static class COMPANY {
+    public static final String DATE_PATTERN   = "dd/MM/yyyy HH:mm:ss";
+    public static String EVENT_START          = "01/01/20202 23:00:00";
+    public static String EVENT_END            = "31/01/20202 23:00:00";
+  }
 }

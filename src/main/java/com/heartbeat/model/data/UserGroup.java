@@ -42,13 +42,15 @@ public class UserGroup extends Group {
   }
 
   public synchronized String processJoinGroup(Session session) {
-    Member member       = Member.of(session.id, session.userGameInfo.displayName);
-    member.titleId      = session.userGameInfo.titleId;
-    member.totalCrt     = session.userIdol.getTotalCreativity();
-    member.totalPerf    = session.userIdol.getTotalPerformance();
-    member.totalAttr    = session.userIdol.getTotalAttractive();
-    member.avatarId     = session.userGameInfo.avatar;
-    member.gender       = session.userGameInfo.gender;
+    Member member           = Member.of(session.id, session.userGameInfo.displayName);
+    member.titleId          = session.userGameInfo.titleId;
+    member.totalCrt         = session.userIdol.getTotalCreativity();
+    member.totalPerf        = session.userIdol.getTotalPerformance();
+    member.totalAttr        = session.userIdol.getTotalAttractive();
+    member.avatarId         = session.userGameInfo.avatar;
+    member.gender           = session.userGameInfo.gender;
+    member.productionCount  = 0;
+    member.gameshowCount    = 0;
 
 
     if (members.size() >= MAX_GROUP_MEMBER) {

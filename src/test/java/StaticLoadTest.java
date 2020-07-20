@@ -89,6 +89,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       VipData.loadJson(vipJson);
 
+      String companyEventJson = new String(Files.readAllBytes(Paths.get("data/json/companyEvent.json")),
+              StandardCharsets.UTF_8);
+      CompanyEventData.loadJson(companyEventJson);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {

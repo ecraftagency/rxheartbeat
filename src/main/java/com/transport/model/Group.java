@@ -29,6 +29,12 @@ public class Group {
   public String                   docType           = "group";
   public transient boolean        isChange;
 
+  //runtime data
+  public transient int            eventStartDate;
+  public transient int            eventEndDate;
+  public transient String         strStartDate;
+  public transient String         strEndDate;
+
 
   public void close() {
 
@@ -45,13 +51,15 @@ public class Group {
     public long     totalAttr;
     public int      avatarId;
     public int      gender;
+    public int      productionCount;
+    public int      gameshowCount;
 
     public static   Member of(int id, String displayName) {
-      Member member = new Member();
-      member.id = id;
-      member.displayName = displayName;
-      member.role = USER_ROLE;
-      member.joinTime = (int)(System.currentTimeMillis());
+      Member member       = new Member();
+      member.id           = id;
+      member.displayName  = displayName;
+      member.role         = USER_ROLE;
+      member.joinTime     = (int)(System.currentTimeMillis());
       return member;
     }
   }

@@ -58,6 +58,6 @@ public class SetUpHandler implements Handler<RoutingContext> {
 
     agent.mset(batch.toArray(new String[]{}));
 
-    ctx.response().end("allah");
+    ctx.response().end("duy");
   }
 }
