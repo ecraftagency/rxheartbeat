@@ -87,6 +87,8 @@ public class ProfileController implements Handler<RoutingContext> {
     session.userGameInfo.exp -= nextLV.exp;
     session.userGameInfo.titleId = nextLV.officeLV;
     session.userGameInfo.time = INIT_TIME_GIFT;
+    session.userGameInfo.maxMedia++;
+
     resp.msg = "ok";
     resp.data.gameInfo = session.userGameInfo;
     resp.data.production = session.userProduction;

@@ -139,10 +139,10 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     vipExp += amount;
 
     VipData.Vip vip = VipData.getVipData(vipExp);
-    session.userTravel.maxTravelClaim       = vip.travelLimit;
-    session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
 
-    if (vip.level > oldVip.level) //level up
-      maxMedia++; //for now
+    if (vip.level > oldVip.level) { //level up
+      session.userTravel.maxTravelClaim       = vip.travelLimit;
+      session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
+    }
   }
 }

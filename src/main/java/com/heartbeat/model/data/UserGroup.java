@@ -19,6 +19,9 @@ public class UserGroup extends Group {
     re.internalInform     = "";
     re.joinType           = joinType;
     re.isChange           = false;
+    re.name               = name;
+    re.externalInform     = externalInform;
+    re.internalInform     = internalInform;
 
     Member owner          = new Member();
     owner.displayName     = session.userGameInfo.displayName;
