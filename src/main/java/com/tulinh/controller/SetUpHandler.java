@@ -15,10 +15,14 @@ import static com.tulinh.Const.*;
 
 import static com.tulinh.TLS.*;
 public class SetUpHandler implements Handler<RoutingContext> {
-  private Jedis             agent;
+  private Jedis userAgent;
+  private Jedis cntAgent;
 
   public SetUpHandler() {
-    agent = redisPool.getResource();
+    userAgent = redisPool.getResource();
+    cntAgent = redisPool.getResource();
+    userAgent.select(0);
+    cntAgent.select(1);
   }
 
   @Override
@@ -29,7 +33,8 @@ public class SetUpHandler implements Handler<RoutingContext> {
     staticItems     = Arrays.asList(Utilities.gson.fromJson(strItems, Item[].class));
     SYNC_MODE       = ctx.getBodyAsJson().getBoolean("syncMode");
 
-    agent.flushAll();
+    userAgent.flushAll();
+    cntAgent.flushAll();
 
     List<String> batch      = new ArrayList<>();
 
@@ -37,6 +42,9 @@ public class SetUpHandler implements Handler<RoutingContext> {
       batch.add(counterKey);
       batch.add("0");
     }
+
+    cntAgent.mset(batch.toArray(new String[]{}));
+    batch.clear();
 
     if (!SYNC_MODE) {
       for (int i = 0; i < nUSER; i++) {
@@ -56,7 +64,7 @@ public class SetUpHandler implements Handler<RoutingContext> {
       }
     }
 
-    agent.mset(batch.toArray(new String[]{}));
+    userAgent.mset(batch.toArray(new String[]{}));
 
     ctx.response().end("duy");
   }

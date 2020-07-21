@@ -8,15 +8,20 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.statics.GroupMissionData;
 import com.transport.model.Group;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.statics.GroupMissionData.*;
 import static com.heartbeat.common.Constant.*;
 
 public class UserGroup extends Group {
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserGroup.class);
+
   public static UserGroup of(int id, Session session, int joinType, String externalInform, String internalInform, String name) {
     UserGroup re          = new UserGroup();
     re.id                 = id;
@@ -43,8 +48,6 @@ public class UserGroup extends Group {
     owner.totalAttr       = session.userIdol.getTotalAttractive();
     owner.gender          = session.userGameInfo.gender;
     owner.avatarId        = session.userGameInfo.avatar;
-    owner.productionCount = 0;
-    owner.gameShowCount = 0;
     re.members.put(session.id, owner);
     return re;
   }
@@ -69,8 +72,6 @@ public class UserGroup extends Group {
     member.totalAttr        = session.userIdol.getTotalAttractive();
     member.avatarId         = session.userGameInfo.avatar;
     member.gender           = session.userGameInfo.gender;
-    member.productionCount  = 0;
-    member.gameShowCount = 0;
 
 
     if (members.size() >= MAX_GROUP_MEMBER) {
@@ -158,52 +159,55 @@ public class UserGroup extends Group {
     return "set_inform_fail";
   }
 
-  public void addGameShowRecord(Session session, int cas) {
+  public void addRecord(Session session, int cas, int missionId) {
     Member member = members.get(session.id);
-    if (member == null)
+    if (member == null) {
+      LOGGER.error("member_not_found");
       return;
+    }
+    Mission mission = member.missions.get(missionId);
+    if (mission == null) {
+      LOGGER.error("mission_not_found");
+      return;
+    }
+
     if (member.cas != cas) {
       member.cas = cas;
-      member.resetRecords();
-      member.giftClaim = false;
+      mission.resetMission();
     }
-    member.gameShowCount++;
+    mission.count++;
+    isChange = true;
   }
 
-  public void addProductionRecord(Session session, int cas) {
-    Member member = members.get(session.id);
-    if (member == null)
-      return;
-    if (member.cas != cas) {
-      member.cas = cas;
-      member.resetRecords();
-      member.giftClaim = false;
-    }
-    member.productionCount++;
-  }
+  public Map<Integer, Integer> calcMissionHitMember() {
+    Map<Integer, Integer> res = new HashMap<>();
 
-  public List<Integer> calcMissionHitMember() {
     try {
       int cas = Constant.GROUP.missionStart;
-      int gameShowHitMember    = 0;
-      int productionHitMember  = 0;
-      for (Member member : members.values()) {
-        if (member.cas != cas) {
-          member.resetRecords();
-          member.cas = cas;
+
+      for (GroupMission gm : missionMap.values()) {
+        int hitMember = 0;
+        for (Member member : members.values()) {
+          if (member.cas != cas) {
+            member.cas = cas;
+            for (Mission mission : member.missions.values())
+              mission.resetMission();
+          }
+          Mission mission = member.missions.get(gm.id);
+          if (mission == null)
+            continue;
+          if (mission.count > gm.hitCount)
+            hitMember++;
         }
-        if (member.gameShowCount >= missionMap.get(GROUP.GAMESHOW_MISSION_ID).hitCount)
-          gameShowHitMember++;
-        if (member.productionCount >= missionMap.get(GROUP.PRODUCTION_MISSION_ID).hitCount)
-          productionHitMember++;
+        res.put(gm.id, hitMember);
       }
-      missionHitCount =  Arrays.asList(gameShowHitMember, productionHitMember);
-      return missionHitCount;
     }
     catch (Exception e) {
-      missionHitCount = Arrays.asList(0,0);
-      return missionHitCount;
+      res.clear();
     }
+
+    this.missionHitMember = res;
+    return res;
   }
 
   public String claimReward(Session session, int missionId, int second) {
@@ -215,16 +219,24 @@ public class UserGroup extends Group {
     if (member == null)
       return "member_not_found";
 
+    Mission mission = member.missions.get(missionId);
+    if (mission == null)
+      return "mission_not_found";
+
     if (GROUP.missionStart <= 0     ||
         GROUP.messionEnd <= 0       ||
         second < GROUP.missionStart ||
         second > GROUP.messionEnd   ||
-        member.giftClaim) {
+        mission.claim) {
       return "claim_reward_time_out";
     }
 
-    List<Integer> hitMembers = calcMissionHitMember();
-    if (hitMembers.get(missionId) < evt.hitMember) {//
+    Map<Integer, Integer> hitMembers = calcMissionHitMember();
+    Integer missionHitM = hitMembers.get(evt.id);
+    if (missionHitM == null)
+      return "mission_not_found";
+
+    if (missionHitM < evt.hitMember) {//
       return "mission_impossible"; // :D, chưa đủ tuổi
     }
 
@@ -236,7 +248,8 @@ public class UserGroup extends Group {
       rewardFormat.set(1, item);
         EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
     }
-    member.giftClaim = true;
+
+    mission.claim = true;
 
     return "ok";
   }

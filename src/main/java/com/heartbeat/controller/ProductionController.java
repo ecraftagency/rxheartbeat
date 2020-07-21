@@ -87,7 +87,7 @@ public class ProductionController implements Handler<RoutingContext> {
     if (resp.msg.equals("ok") && Constant.GROUP.missionStart > 0) {
       UserGroup group = GroupPool.getGroupFromPool(session.groupID);
       if (group != null)
-        group.addProductionRecord(session, Constant.GROUP.missionStart);
+        group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID);
     }
     return resp;
   }

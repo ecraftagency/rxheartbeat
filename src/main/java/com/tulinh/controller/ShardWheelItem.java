@@ -1,6 +1,5 @@
 package com.tulinh.controller;
 
-import com.heartbeat.common.Utilities;
 import com.tulinh.dto.*;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -18,10 +17,14 @@ import static com.tulinh.Const.*;
 
 public class ShardWheelItem implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ShardWheelItem.class);
-  private Jedis agent;
+  private Jedis userAgent;
+  private Jedis cntAgent;
 
   public ShardWheelItem() {
-    agent = redisPool.getResource();
+    userAgent = redisPool.getResource();
+    cntAgent  = redisPool.getResource();
+    userAgent.select(0);
+    cntAgent.select(1);
   }
 
   @Override
@@ -30,7 +33,7 @@ public class ShardWheelItem implements Handler<RoutingContext> {
     String id           = Integer.toString(currentReqCount% nUSER);
     Item randItem       = calcRnd(staticItems);
     String counterKey   = globalCounter.get(randItem.type);
-    String res          = agent.get(id);
+    String res          = userAgent.get(id);
     long curMs          = System.currentTimeMillis();
 
     if (res != null) {
@@ -40,14 +43,14 @@ public class ShardWheelItem implements Handler<RoutingContext> {
 
       try {
         if (remainTurn > 0) {
-          String rm       = agent.get(counterKey);
+          String rm       = cntAgent.get(counterKey);
           int totalCount  = Integer.parseInt(rm);
           if (totalCount < staticItems.get(randItem.type).maximum) {
             user.put("turn", --remainTurn);
             user.put("i" + randItem.type, ++inv);
-            agent.set(id, user.toString());
-            agent.rpush("user:" + id + ":history", Utilities.gson.toJson(History.of(randItem.type, randItem.name, curMs)));
-            agent.incr(counterKey);
+            userAgent.set(id, user.toString());
+            userAgent.rpush("user:" + id + ":history", curMs + "_" + randItem.type);
+            cntAgent.incr(counterKey);
             jsonResp(ctx, user);
           }
           else {

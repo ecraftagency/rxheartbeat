@@ -46,7 +46,7 @@ public class SyncWheelItem implements Handler<RoutingContext> {
           localCounter.get(randItem.type).getAndIncrement();
           agent.decr(id);
           agent.incr("user:" + id + ":inventory:" + randItem.type);
-          agent.rpush("user:" + id + ":history", Utilities.gson.toJson(History.of(randItem.type, randItem.name, curMs)));
+          agent.rpush("user:" + id + ":history", curMs + "_" + randItem.type);
           syncGlobalCounter(curMs);
 
           jsonResp(ctx, Resp.ItemOk.of(randItem.type, randItem.name, --remainTurn));

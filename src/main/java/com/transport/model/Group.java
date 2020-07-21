@@ -35,8 +35,8 @@ public class Group {
   public transient boolean        isChange;
 
   //runtime data
-  public Map<Integer, GroupMissionData.GroupMission> missions;
-  public List<Integer>  missionHitCount;
+  public Map<Integer, GroupMissionData.GroupMission>  missions;
+  public Map<Integer, Integer>                        missionHitMember;
   public int            missionStartDate;
   public int            missionEndDate;
   public String         strStartDate;
@@ -44,6 +44,23 @@ public class Group {
 
   public void close() {
 
+  }
+
+  public static class Mission {
+    public int id;
+    public int count;
+    public boolean claim;
+    public static Mission of(int id, int count) {
+      Mission res = new Mission();
+      res.id = id;
+      res.count = count;
+      res.claim = true;
+      return res;
+    }
+    public void resetMission() {
+      count = 0;
+      claim = false;
+    }
   }
 
   public static class Member {
@@ -57,10 +74,8 @@ public class Group {
     public long     totalAttr;
     public int      avatarId;
     public int      gender;
-    public int      productionCount;
-    public int      gameShowCount;
     public int      cas;
-    public boolean  giftClaim;
+    public Map<Integer, Mission> missions;
 
     public static   Member of(int id, String displayName) {
       Member member       = new Member();
@@ -69,13 +84,15 @@ public class Group {
       member.role         = USER_ROLE;
       member.joinTime     = (int)(System.currentTimeMillis());
       member.cas          = 0;
-      member.giftClaim    = true;
-      return member;
-    }
+      member.missions     = new HashMap<>();
+      if (GroupMissionData.missionMap != null) {
+        for (GroupMissionData.GroupMission gm : GroupMissionData.missionMap.values()) {
+          Mission mission = Mission.of(gm.id, 0);
+          member.missions.put(gm.id, mission);
+        }
+      }
 
-    public void resetRecords() {
-      productionCount = 0;
-      gameShowCount   = 0;
+      return member;
     }
   }
 

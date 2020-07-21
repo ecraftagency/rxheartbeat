@@ -152,7 +152,7 @@ public class FightController implements Handler<RoutingContext> {
       if (resp.msg.equals("ok") && Constant.GROUP.missionStart > 0) {
         UserGroup group = GroupPool.getGroupFromPool(session.groupID);
         if (group != null)
-          group.addGameShowRecord(session, Constant.GROUP.missionStart);
+          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAMESHOW_MISSION_ID);
       }
     }
 

@@ -8,7 +8,6 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.client.WebClient;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
@@ -19,9 +18,6 @@ public class TLS extends AbstractVerticle {
   public static WebClient client;
 
   public static JedisPool redisPool = null;
-
-  public static Jedis taskWriter = null;
-
   public static Map<Integer, AtomicInteger> localCounter;
   public static AtomicInteger requestCounter;
 
@@ -59,8 +55,6 @@ public class TLS extends AbstractVerticle {
 
   public static void main(String[] args) {
     redisPool = new JedisPool(Const.poolConfig, "localhost");
-    taskWriter = redisPool.getResource();
-
     localCounter = new HashMap<>();
     localCounter.put(0, new AtomicInteger());
     localCounter.put(1, new AtomicInteger());
