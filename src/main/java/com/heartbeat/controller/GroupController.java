@@ -93,7 +93,7 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processClaimReward(Session session, RoutingContext ctx, long curMs) {
     ExtMessage resp = ExtMessage.group();
-    UserGroup group = GroupPool.getGroupFromPool(session.id);
+    UserGroup group = GroupPool.getGroupFromPool(session.groupID);
     int missionId   = ctx.getBodyAsJson().getInteger("missionId");
 
     if (group == null) {
@@ -102,6 +102,8 @@ public class GroupController implements Handler<RoutingContext> {
     }
     resp.msg            = group.claimReward(session, missionId, (int)(curMs/1000));
     resp.effectResults  = session.effectResults;
+    resp.data.group     = group;
+    resp.data.currentGroupState = session.groupID;
     return resp;
   }
 
