@@ -77,6 +77,10 @@ public class Group {
     public int      cas;
     public Map<Integer, Mission> missions;
 
+    private Member() {
+
+    }
+
     public static   Member of(int id, String displayName) {
       Member member       = new Member();
       member.id           = id;
