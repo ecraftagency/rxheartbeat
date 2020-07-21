@@ -37,9 +37,7 @@ public class UserGroup extends Group {
     re.externalInform     = externalInform;
     re.internalInform     = internalInform;
 
-    Member owner          = new Member();
-    owner.displayName     = session.userGameInfo.displayName;
-    owner.id              = session.id;
+    Member owner          = Member.of(session.id, session.userGameInfo.displayName);
     owner.role            = OWNER_ROLE;
     owner.joinTime        = re.createTime;
     owner.titleId         = session.userGameInfo.titleId;
