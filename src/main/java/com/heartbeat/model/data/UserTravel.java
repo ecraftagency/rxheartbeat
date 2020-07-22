@@ -94,7 +94,7 @@ public class UserTravel extends Travel {
       return "claim_travel_timeout";
     }
 
-    while (currentTravelClaimCount > 1) {
+    while (currentTravelClaimCount > 0) {
       int rand = ThreadLocalRandom.current().nextInt(1, 101),acc = 0,npcType = 0;
 
       for (int i = 0; i < visitPercent.size(); i++){
@@ -106,8 +106,9 @@ public class UserTravel extends Travel {
       }
 
       if (npcType < 1 || npcType > 3 || TravelData.npcTypeMap.size() != 3) {
-        chosenNPCId = -1;
-        currentTravelClaimCount      -= 1;
+        chosenNPCId              = -1;
+        currentTravelClaimCount -= 1;
+        continue;
       }
 
       List<TravelData.TravelNPC> npcList  = TravelData.npcTypeMap.get(npcType);
@@ -115,6 +116,7 @@ public class UserTravel extends Travel {
       if (npcList.size() == 0) {
         chosenNPCId               = -1;
         currentTravelClaimCount  -= 1;
+        continue;
       }
 
       TravelData.TravelNPC chosen   = npcList.get(ThreadLocalRandom.current().nextInt(npcList.size()));
@@ -123,7 +125,6 @@ public class UserTravel extends Travel {
       currentTravelClaimCount      -= 1;
       lastTravelClaim               = (int)(curMs/1000);
 
-      session.effectResults.clear();
       EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
     }
 

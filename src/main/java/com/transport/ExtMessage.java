@@ -13,18 +13,30 @@ public class ExtMessage {
   public int                userRemainTime;
   public List<EffectResult> effectResults;
 
+
+
   public static class Data {
-    public GameInfo   gameInfo;
-    public Idols      idols;
-    public Production production;
-    public Profile    profile;
-    public Inventory  inventory;
-    public Fight      fight;
-    public Travel     travel;
-    public Title      title;
-    public Group      group;
-    public int        currentGroupState;
-    public String     extObj;
+    public GameInfo     gameInfo;
+    public Idols        idols;
+    public Production   production;
+    public Profile      profile;
+    public Inventory    inventory;
+    public Fight        fight;
+    public Travel       travel;
+    public Title        title;
+    public Group        group;
+    public DailyMission dailyMission;
+    public int          currentGroupState;
+    public String       extObj;
+  }
+
+  public static ExtMessage mission() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "mission";
+    result.data = new Data();
+    return result;
   }
 
   public static ExtMessage idol() {

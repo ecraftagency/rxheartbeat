@@ -63,6 +63,7 @@ public class Session {
   public UserInventory      userInventory;
   public UserFight          userFight;
   public UserTravel         userTravel;
+  public UserDailyMission   userDailyMission;
 
   public List<EffectResult> effectResults;
 
@@ -75,6 +76,7 @@ public class Session {
     userFight             = UserFight.ofDefault();
     userTravel            = UserTravel.ofDefault();
     userProfile.password  = password;
+    userDailyMission      = UserDailyMission.ofDefault();
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -110,6 +112,17 @@ public class Session {
   public void updateLogin() {
     long curMs = System.currentTimeMillis();
     int second = (int)(curMs/1000);
+
+    //todo null check, consistency rebalance
+    if (userDailyMission == null)
+      userDailyMission = UserDailyMission.ofDefault();
+    if (userTravel == null)
+      userTravel = UserTravel.ofDefault();
+
+    userProfile.lastLogin   = second;
+    userTravel.chosenNPCId  = -1;
+    lastHearBeatTime        = second;
+
     int dayDiff;
     if (userProfile.lastLogin > 0) {
       userProfile.loginCount++;
@@ -117,6 +130,7 @@ public class Session {
       if (dayDiff > 0) {
         userFight.newDay();
         userTravel.newDay();
+        userDailyMission.newDay();
       }
       else {
         userFight.reLogin();
@@ -128,12 +142,6 @@ public class Session {
       if (userGameInfo.time < 0)
         userGameInfo.time = 0;
     }
-
-    if (userTravel == null)
-      userTravel = UserTravel.ofDefault();
-    userProfile.lastLogin   = second;
-    userTravel.chosenNPCId  = -1;
-    lastHearBeatTime        = second;
   }
 
   public void updateClientInfo(LoginRequest message) {

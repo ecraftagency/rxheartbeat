@@ -51,7 +51,7 @@ public class TravelController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOGGER.error(e.getCause().getMessage());
       ctx.response().setStatusCode(404).end();
     }
   }

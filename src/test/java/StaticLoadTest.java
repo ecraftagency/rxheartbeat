@@ -93,6 +93,11 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       GroupMissionData.loadJson(companyEventJson);
 
+
+      String dailyMission = new String(Files.readAllBytes(Paths.get("data/json/dailyMission.json")),
+              StandardCharsets.UTF_8);
+      DailyMissionData.loadJson(dailyMission);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {

@@ -165,9 +165,7 @@ public class HBServer extends AbstractVerticle {
               StandardCharsets.UTF_8);
       ShoppingData.loadJson(shoppingJson);
 
-      String companyEventJson = new String(Files.readAllBytes(Paths.get("data/json/companyEvent.json")),
-              StandardCharsets.UTF_8);
-      GroupMissionData.loadJson(companyEventJson);
+
 
       //todo this is ORACLE java! group, join...JAVA x SQL!
       //1 month later pls don't ever ask me about this chunk of code T___T
@@ -182,6 +180,14 @@ public class HBServer extends AbstractVerticle {
       String vipJson    = new String(Files.readAllBytes(Paths.get("data/json/vip.json")),
               StandardCharsets.UTF_8);
       VipData.loadJson(vipJson);
+
+      String companyEventJson = new String(Files.readAllBytes(Paths.get("data/json/companyEvent.json")),
+              StandardCharsets.UTF_8);
+      GroupMissionData.loadJson(companyEventJson);
+
+      String dailyMission = new String(Files.readAllBytes(Paths.get("data/json/dailyMission.json")),
+              StandardCharsets.UTF_8);
+      DailyMissionData.loadJson(dailyMission);
 
       WordFilter.loadJson("");
 
