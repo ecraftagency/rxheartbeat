@@ -48,13 +48,13 @@ public class Constant {
 
   public static class GROUP {
     public static final String  DATE_PATTERN            = "dd/MM/yyyy HH:mm:ss";
-    public static String        EVENT_START             = "01/01/2020 23:00:00";
-    public static String        EVENT_END               = "31/01/2020 23:00:00";
+    public static String        EVENT_START             = "01/07/2020 23:00:00";
+    public static String        EVENT_END               = "31/08/2020 23:00:00";
     public static int           missionStart            = -1;
     public static int           messionEnd              = -1;
     public static int           CREATE_GROUP_TIME_COST  = 5*86400; //5 days
-    public static int           GAMESHOW_MISSION_ID     = 1;
-    public static int           PRODUCTION_MISSION_ID   = 2;
+    public static int           PRODUCTION_MISSION_ID   = 1;
+    public static int           GAMESHOW_MISSION_ID     = 2;
   }
 
   public static class USER_GAME_INFO {

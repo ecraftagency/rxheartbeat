@@ -14,6 +14,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class UserTravel extends Travel {
   public static final int TRAVEL_CLAIM_INTERVAL = 20*60; //seconds
   public static final List<Integer> visitPercent = Arrays.asList(60, 30, 6, 4);
+  public static final int COEFF_0 = 100000;
+  public static final int COEFF_1 = 10000;
+
 
   public static UserTravel ofDefault() {
     UserTravel travel = new UserTravel();
@@ -89,7 +92,7 @@ public class UserTravel extends Travel {
     if (dailyTravelAdd >= dailyTravelAddLimit)
       return "max_travel_add";
 
-    long viewConsume = 100000 + 10000*dailyTravelAdd*dailyTravelAdd; //100k + 10k*d^2
+    long viewConsume = COEFF_0 + COEFF_1*dailyTravelAdd*dailyTravelAdd; //100k + 10k*d^2
 
     if (session.userGameInfo.view < viewConsume)
       return "insufficient_view";
@@ -97,6 +100,21 @@ public class UserTravel extends Travel {
     session.userGameInfo.view -= viewConsume;
     dailyTravelAdd++;
     currentTravelClaimCount++;
+    currentTravelClaimCount  = Math.min(currentTravelClaimCount, maxTravelClaim);
+    return "ok";
+  }
+
+  public String addMultiTravelClaim(Session session, int count) {
+    if (dailyTravelAdd + count > dailyTravelAddLimit)
+      return "max_travel_add";
+    long viewConsume = count*(COEFF_0 + COEFF_1*dailyTravelAdd*dailyTravelAdd);
+
+    if (session.userGameInfo.view < viewConsume)
+      return "insufficient_view";
+
+    session.userGameInfo.view -= viewConsume;
+    dailyTravelAdd += count;
+    currentTravelClaimCount += count;
     currentTravelClaimCount  = Math.min(currentTravelClaimCount, maxTravelClaim);
     return "ok";
   }

@@ -22,6 +22,9 @@ public class TravelController implements Handler<RoutingContext> {
         long curMs = System.currentTimeMillis();
         ExtMessage resp;
         switch (cmd) {
+          case "addMultiTravelClaim":
+            resp = processAddMultiClaim(session, ctx);
+            break;
           case "addTravelClaim":
             resp = processAddTravelClaim(session);
             break;
@@ -48,6 +51,15 @@ public class TravelController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processAddMultiClaim(Session session, RoutingContext ctx) {
+    ExtMessage resp     = ExtMessage.travel();
+    int amount          = ctx.getBodyAsJson().getInteger("amount");
+    resp.msg            = session.userTravel.addMultiTravelClaim(session, amount);
+    resp.data.travel    = session.userTravel;
+    resp.data.gameInfo  = session.userGameInfo;
+    return resp;
   }
 
   private ExtMessage processAddTravelClaim(Session session) {
