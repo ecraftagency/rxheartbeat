@@ -232,6 +232,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/travel").handler(new TravelController());
         router.post("/api/title").handler(new TitleController());
         router.post("/api/group").handler(new GroupController());
+        router.post("/api/daily_mission").handler(new DailyMissionController());
 
         router.post("/gm/inject").handler(new InjectController());
 
