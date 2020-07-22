@@ -58,7 +58,7 @@ public class Constant {
   }
 
   public static class DAILY_MISSION {
-    public static int CRT_PROD_MISSION_TYPE = 1;
+    public static int MEDIA_ACTION_TYPE = 4;
   }
 
   public static class USER_GAME_INFO {

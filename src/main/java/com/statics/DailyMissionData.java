@@ -9,7 +9,7 @@ public class DailyMissionData {
     public int                  type;
     public String               desc;
     public int                  target;
-    public List<List<Integer>>  rewards;
+    public List<List<Integer>>  reward;
     @Override
     public Integer mapKey() {
       return id;

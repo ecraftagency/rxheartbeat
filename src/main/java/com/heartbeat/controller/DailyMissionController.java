@@ -29,7 +29,7 @@ public class DailyMissionController implements Handler<RoutingContext> {
             resp = processClaimMissionReward(session, ctx);
             break;
           default:
-            resp = ExtMessage.mission();
+            resp = ExtMessage.daily_mission();
             resp.msg = "unknown_cmd";
             break;
         }
@@ -48,7 +48,7 @@ public class DailyMissionController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processClaimMissionReward(Session session, RoutingContext ctx) {
-    ExtMessage resp         = ExtMessage.mission();
+    ExtMessage resp         = ExtMessage.daily_mission();
     int missionId           = ctx.getBodyAsJson().getInteger("missionId");
     resp.msg                = session.userDailyMission.claimReward(session, missionId);
     resp.data.dailyMission  = session.userDailyMission;
@@ -57,7 +57,7 @@ public class DailyMissionController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processGetMissions(Session session) {
-    ExtMessage resp         = ExtMessage.mission();
+    ExtMessage resp         = ExtMessage.daily_mission();
     resp.msg                = "ok";
     resp.data.dailyMission  = session.userDailyMission;
     return resp;

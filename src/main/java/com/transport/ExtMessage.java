@@ -31,11 +31,11 @@ public class ExtMessage {
     public String       extObj;
   }
 
-  public static ExtMessage mission() {
+  public static ExtMessage daily_mission() {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "mission";
+    result.group = "daily_mission";
     result.data = new Data();
     return result;
   }

@@ -1,9 +1,11 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGameInfo;
 import com.transport.ExtMessage;
+import com.tulinh.Const;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import org.slf4j.Logger;
@@ -77,6 +79,9 @@ public class MediaController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.media();
     resp.msg = session.userGameInfo.claimMedia(session, answer);
     resp.data.gameInfo = session.userGameInfo;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.MEDIA_ACTION_TYPE);
+    }
     return resp;
   }
 

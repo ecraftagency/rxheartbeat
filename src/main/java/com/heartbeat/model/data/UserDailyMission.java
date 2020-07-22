@@ -50,7 +50,7 @@ public class UserDailyMission extends DailyMission {
 
     session.effectResults.clear();
 
-    for (List<Integer> reward : dto.rewards) {
+    for (List<Integer> reward : dto.reward) {
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
       EffectManager.inst().handleEffect(extArgs, session, reward);
     }
