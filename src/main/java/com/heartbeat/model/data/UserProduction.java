@@ -10,7 +10,7 @@ public class UserProduction extends com.transport.model.Production{
 
   public static final     int PRODUCE_FAN                 = 1;
   public static final     int PRODUCE_VIEW                = 2;
-  public static final     int PRODUCE_GOLD                = 3;
+  public static final     int PRODUCE_GOLD                = 3; //sáng tác
 
   public static UserProduction ofDefault() {
     UserProduction defaultUserProduction = new UserProduction();

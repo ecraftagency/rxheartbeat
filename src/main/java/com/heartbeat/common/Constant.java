@@ -57,6 +57,10 @@ public class Constant {
     public static int           GAMESHOW_MISSION_ID     = 2;
   }
 
+  public static class DAILY_MISSION {
+    public static int CRT_PROD_MISSION_TYPE = 1;
+  }
+
   public static class USER_GAME_INFO {
     public static final int INIT_TIME_GIFT      = 86400*7;
   }

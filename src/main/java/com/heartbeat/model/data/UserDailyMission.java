@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -15,23 +14,23 @@ public class UserDailyMission extends DailyMission {
     UserDailyMission res = new UserDailyMission();
     res.missionMap = new HashMap<>();
     for (DailyMissionData.DailyMissionDTO dm : DailyMissionData.missionMap.values()) {
-      res.missionMap.put(dm.id, DailyMission.Mission.of(dm.id, 0));
+      res.missionMap.put(dm.id, DailyMission.Mission.of(dm.id, 0, dm.type));
     }
     return res;
   }
 
   public void newDay() {
-    missionMap.clear();
-    for (DailyMissionData.DailyMissionDTO dm : DailyMissionData.missionMap.values()) {
-      missionMap.put(dm.id, DailyMission.Mission.of(dm.id, 0));
+    for (Mission um : missionMap.values()) {
+      um.dailyCount = 0;
+      um.claim      = false;
     }
   }
 
-  public void addRecord(int missionID) {
-    Mission uMission = missionMap.get(missionID);
-    if (uMission == null)
-      return;
-    uMission.dailyCount++;
+  public void addRecord(int type) {
+    for (Mission mission : missionMap.values()) {
+      if (mission.type == type)
+        mission.dailyCount++;
+    }
   }
 
   public String claimReward(Session session, int missionID) {

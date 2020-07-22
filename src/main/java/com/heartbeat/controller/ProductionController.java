@@ -84,10 +84,14 @@ public class ProductionController implements Handler<RoutingContext> {
     resp.data.gameInfo    = session.userGameInfo;
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
-    if (resp.msg.equals("ok") && Constant.GROUP.missionStart > 0) {
-      UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-      if (group != null)
-        group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID);
+    if (resp.msg.equals("ok")) {
+      if (Constant.GROUP.missionStart > 0) {
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        if (group != null)
+          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID);
+      }
+
+      session.userDailyMission.addRecord(productType);
     }
     return resp;
   }
