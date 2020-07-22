@@ -11,6 +11,7 @@ public class ExtMessage {
   public String             group;
   public int                serverTime;
   public int                userRemainTime;
+  public boolean            timeChange;
   public List<EffectResult> effectResults;
 
 

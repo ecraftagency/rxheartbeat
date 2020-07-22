@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class HBServer extends AbstractVerticle {
   private static final String SRC_DIR = "/src/main/java/";
   private static final Logger LOGGER = LoggerFactory.getLogger(HBServer.class);
-  public  static Cruder<Session> cruder;
+  public  static Cruder<Session>  cruder;
   public  static ReactiveCluster  rxCluster;
   public  static ReactiveBucket   rxSessionBucket;
   public  static ReactiveBucket   rxIndexBucket;
@@ -66,7 +66,7 @@ public class HBServer extends AbstractVerticle {
     CronObservable.cronspec(scheduler, "0 0 0 * * ? *", "Asia/Ho_Chi_Minh")
       .subscribe(
         timed -> {
-          SessionPool.resetUserFight.run();
+          SessionPool.dailyReset.run();
           LOGGER.info("execute new day task");
         },
         fault -> LOGGER.error("error new day task")

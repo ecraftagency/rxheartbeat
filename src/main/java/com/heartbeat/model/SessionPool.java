@@ -90,7 +90,7 @@ public class SessionPool {
     }
   };
 
-  public static Runnable resetUserFight = () -> {
+  public static Runnable dailyReset = () -> {
     try {
       int second = (int)(System.currentTimeMillis()/1000);
       Enumeration<Integer> e = pool.keys();
@@ -98,10 +98,14 @@ public class SessionPool {
         Integer sessionId = e.nextElement();
         Session session = pool.get(sessionId);
         if (session != null) {
+          //todo userfight
           session.userFight.usedIdols.clear();
           session.userFight.restoreIdols.clear();
           session.userFight.currentRunShow = RunShowData.of(1);
           session.userFight.currentShopping = ShoppingData.of(1);
+
+          //todo userMission;
+          session.userDailyMission.newDay();
         }
       }
     }

@@ -90,9 +90,10 @@ public class ProfileController implements Handler<RoutingContext> {
     session.userGameInfo.maxMedia++;
 
     resp.msg = "ok";
-    resp.data.gameInfo = session.userGameInfo;
-    resp.data.production = session.userProduction;
-    resp.data.idols = session.userIdol;
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.production  = session.userProduction;
+    resp.data.idols       = session.userIdol;
+    resp.timeChange       = true;
     return resp;
   }
 

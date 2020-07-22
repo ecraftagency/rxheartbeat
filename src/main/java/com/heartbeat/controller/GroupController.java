@@ -318,9 +318,10 @@ public class GroupController implements Handler<RoutingContext> {
     }
     session.createGroup(groupType, name, externalInform, internalInform, crtRes -> {
       if (crtRes.succeeded()) {
-        resp.msg = "ok";
-        resp.cmd = cmd;
-        resp.data.group = GroupPool.getGroupFromPool(session.groupID);
+        resp.msg          = "ok";
+        resp.cmd          = cmd;
+        resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
+        resp.timeChange   = true;
       }
       else {
         resp.msg = crtRes.cause().getMessage();

@@ -22,7 +22,7 @@ public class GameNode extends AbstractVerticle {
     CronObservable.cronspec(scheduler, "0 0 0 * * ? *", "Asia/Ho_Chi_Minh")
             .subscribe(
                     timed -> {
-                      SessionPool.resetUserFight.run();
+                      SessionPool.dailyReset.run();
                       LOGGER.info("execute new day task");
                     },
                     fault -> LOGGER.error("error new day task")
