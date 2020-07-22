@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -70,6 +71,9 @@ public class TravelController implements Handler<RoutingContext> {
     resp.msg            = session.userTravel.addTravelClaim(session);
     resp.data.travel    = session.userTravel;
     resp.data.gameInfo  = session.userGameInfo;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.TRAVEL_MISSION_TYPE);
+    }
     return resp;
   }
 

@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserIdol;
@@ -78,6 +79,9 @@ public class IdolController implements Handler<RoutingContext> {
     resp.msg = session.userIdol.levelUp(session, idolID);
     resp.data.gameInfo = session.userGameInfo;
     resp.data.production = session.userProduction;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.IDOL_LV_MISSION_TYPE);
+    }
     return resp;
   }
 
@@ -99,6 +103,9 @@ public class IdolController implements Handler<RoutingContext> {
     int idolId      = ctx.getBodyAsJson().getInteger("idolId");
     int speciality  = ctx.getBodyAsJson().getInteger("speciality"); //[2 - sang tao, 3 - bieu dien, 4 - cuon hut]
     resp.msg        = session.userIdol.addAptByExp(idolId, speciality);
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.IDOL_APT_MISSION_TYPE);
+    }
     return resp;
   }
 

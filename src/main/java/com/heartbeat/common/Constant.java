@@ -58,7 +58,14 @@ public class Constant {
   }
 
   public static class DAILY_MISSION {
-    public static int MEDIA_ACTION_TYPE = 4;
+    public static int MEDIA_MISSION_TYPE        = 4;
+    public static int GAME_SHOW_MISSION_TYPE    = 5; //phụ bản game show
+    public static int FIGHT_MISSION_TYPE        = 5; //đời sống showbiz, ải
+    public static int TRAVEL_MISSION_TYPE       = 7;
+    public static int IDOL_LV_MISSION_TYPE      = 8;
+    public static int IDOL_APT_MISSION_TYPE     = 9;
+    public static int RUN_SHOW_MISSION_TYPE     = 11;
+    public static int SHOPPING_MISSION_TYPE     = 12;
   }
 
   public static class USER_GAME_INFO {

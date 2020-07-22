@@ -4,10 +4,7 @@ import com.tulinh.dto.Item;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Const {
   public static       Map<Integer, String>  globalCounter;
@@ -17,7 +14,12 @@ public class Const {
   public static       int                   nUSER           = 5000;
   public static       boolean               SYNC_MODE       = true;
 
+  public static List<String>                redisHost;
+
   static {
+    redisHost     = Arrays.asList("localhost");
+
+
     poolConfig.setMaxTotal(64);
     poolConfig.setMaxIdle(64);
     poolConfig.setMinIdle(16);

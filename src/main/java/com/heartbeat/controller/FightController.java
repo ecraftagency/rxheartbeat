@@ -137,6 +137,9 @@ public class FightController implements Handler<RoutingContext> {
     resp.effectResults  = session.effectResults;
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.FIGHT_MISSION_TYPE);
+    }
     return resp;
   }
 
@@ -149,10 +152,13 @@ public class FightController implements Handler<RoutingContext> {
       resp.effectResults  = session.effectResults;
       resp.data.fight     = session.userFight;
       resp.data.gameInfo  = session.userGameInfo;
-      if (resp.msg.equals("ok") && Constant.GROUP.missionStart > 0) {
-        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-        if (group != null)
-          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAMESHOW_MISSION_ID);
+      if (resp.msg.equals("ok")) {
+        if (Constant.GROUP.missionStart > 0) {
+          UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+          if (group != null)
+            group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAMESHOW_MISSION_ID);
+        }
+        session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
       }
     }
 
@@ -182,6 +188,9 @@ public class FightController implements Handler<RoutingContext> {
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
     resp.effectResults  = session.effectResults;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.RUN_SHOW_MISSION_TYPE);
+    }
     return resp;
   }
 
@@ -191,6 +200,9 @@ public class FightController implements Handler<RoutingContext> {
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
     resp.effectResults  = session.effectResults;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.SHOPPING_MISSION_TYPE);
+    }
     return resp;
   }
 }
