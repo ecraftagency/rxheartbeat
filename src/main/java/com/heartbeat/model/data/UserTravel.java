@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class UserTravel extends Travel {
-  public static final int TRAVEL_CLAIM_INTERVAL = 20*60; //seconds
+  public static final int           TRAVEL_CLAIM_INTERVAL = 20*60; //seconds
   public static final List<Integer> visitPercent = Arrays.asList(60, 30, 6, 4);
-  public static final int COEFF_0 = 100000;
-  public static final int COEFF_1 = 10000;
+  public static final int           COEFF_0 = 100000;
+  public static final int           COEFF_1 = 10000;
 
 
   public static UserTravel ofDefault() {
@@ -63,6 +63,7 @@ public class UserTravel extends Travel {
 
     if (npcType < 1 || npcType > 3 || TravelData.npcTypeMap.size() != 3) {
       chosenNPCId = -1;
+      currentTravelClaimCount      -= 1;
       return "miss";
     }
 
@@ -70,6 +71,7 @@ public class UserTravel extends Travel {
 
     if (npcList.size() == 0) {
       chosenNPCId = -1;
+      currentTravelClaimCount      -= 1;
       return "miss";
     }
 
@@ -81,6 +83,50 @@ public class UserTravel extends Travel {
 
     session.effectResults.clear();
     EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
+    return "ok";
+  }
+
+  public String claimMultiTravel(Session session, long curMs) {
+    updateTravel(session, curMs);
+
+    if (currentTravelClaimCount < 1) {
+      chosenNPCId = -1;
+      return "claim_travel_timeout";
+    }
+
+    while (currentTravelClaimCount > 1) {
+      int rand = ThreadLocalRandom.current().nextInt(1, 101),acc = 0,npcType = 0;
+
+      for (int i = 0; i < visitPercent.size(); i++){
+        acc += visitPercent.get(i);
+        if (rand <= acc) {
+          npcType = i + 1;
+          break;
+        }
+      }
+
+      if (npcType < 1 || npcType > 3 || TravelData.npcTypeMap.size() != 3) {
+        chosenNPCId = -1;
+        currentTravelClaimCount      -= 1;
+      }
+
+      List<TravelData.TravelNPC> npcList  = TravelData.npcTypeMap.get(npcType);
+
+      if (npcList.size() == 0) {
+        chosenNPCId               = -1;
+        currentTravelClaimCount  -= 1;
+      }
+
+      TravelData.TravelNPC chosen   = npcList.get(ThreadLocalRandom.current().nextInt(npcList.size()));
+      chosenNPCId                   = chosen.id;
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0,0,"");
+      currentTravelClaimCount      -= 1;
+      lastTravelClaim               = (int)(curMs/1000);
+
+      session.effectResults.clear();
+      EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
+    }
+
     return "ok";
   }
 
@@ -105,9 +151,13 @@ public class UserTravel extends Travel {
   }
 
   public String addMultiTravelClaim(Session session, int count) {
-    if (dailyTravelAdd + count > dailyTravelAddLimit)
+    if (dailyTravelAdd + count > dailyTravelAddLimit || count <= 0)
       return "max_travel_add";
-    long viewConsume = count*(COEFF_0 + COEFF_1*dailyTravelAdd*dailyTravelAdd);
+
+    long viewConsume = 0;
+    for (int i = 0; i < count; i++) {
+      viewConsume += count*(COEFF_0 + COEFF_1*(dailyTravelAdd + i)*(dailyTravelAdd + i)); //100k + 10k*d^2
+    }
 
     if (session.userGameInfo.view < viewConsume)
       return "insufficient_view";

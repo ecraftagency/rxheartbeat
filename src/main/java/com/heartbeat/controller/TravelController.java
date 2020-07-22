@@ -34,6 +34,9 @@ public class TravelController implements Handler<RoutingContext> {
           case "claimTravel":
             resp = processClaimTravel(session, curMs);
             break;
+          case "claimMultiTravel":
+            resp = processClaimMultiTravel(session, curMs);
+            break;
           default:
             resp = ExtMessage.travel();
             resp.msg = "unknown_cmd";
@@ -77,6 +80,17 @@ public class TravelController implements Handler<RoutingContext> {
     resp.serverTime = (int)(curMs/1000);
     return resp;
   }
+
+  private ExtMessage processClaimMultiTravel(Session session, long curMs) {
+    ExtMessage resp     = ExtMessage.travel();
+    resp.msg            = session.userTravel.claimMultiTravel(session, curMs);
+    resp.data.travel    = session.userTravel;
+    resp.effectResults  = session.effectResults;
+    resp.serverTime     = (int)(curMs/1000);
+    resp.data.gameInfo  = session.userGameInfo;
+    return resp;
+  }
+
 
   private ExtMessage processClaimTravel(Session session, long curMs) {
     ExtMessage resp     = ExtMessage.travel();
