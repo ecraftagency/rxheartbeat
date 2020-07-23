@@ -24,6 +24,7 @@ public class DailyMissionController implements Handler<RoutingContext> {
         switch (cmd) {
           case "claimCrazyMilestone":
             resp = processClaimCrazyMilestone(session, ctx);
+            break;
           case "getMissions":
             resp = processGetMissions(session);
             break;
