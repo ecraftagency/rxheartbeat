@@ -26,6 +26,7 @@ public class UserEffectHandler implements EffectHandler{
   private static final int ID_CHANGE                      = 8;
   private static final int SPECIAL_AVATAR_CHANGE          = 9;
   private static final int LINEAR_EXT_INCREASE            = 10; // x = ax + b
+  private static final int EXPONENT_INCREASE              = 11; // x = ax + b
 
   private static final int MONEY_PROPERTY       = 1;
   private static final int VIEW_PROPERTY        = 2;
@@ -271,6 +272,32 @@ public class UserEffectHandler implements EffectHandler{
           return EffectHandler.SUCCESS;
         case FAN_PROPERTY:
           long additionalFan = (long)(session.userIdol.getTotalAttractive()*percent) + inr_amount;
+          session.userGameInfo.fan += additionalFan;
+          session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
+          return EffectHandler.SUCCESS;
+        default:
+          return EffectHandler.UNKNOWN_PROPERTY;
+      }
+    });
+
+    subHandlers.put(EXPONENT_INCREASE, (extArgs, session, eff) -> {
+      int propertyId    = eff.get(EffectHandler.PARAM1);
+      int coefficient   = eff.get(EffectManager.PARAM3);
+      int level         = session.userGameInfo.titleId;
+      long totalCrt     = session.userIdol.getTotalCreativity();
+      switch (propertyId) {
+        case MONEY_PROPERTY:
+          long additionalMoney = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
+          session.userGameInfo.money += additionalMoney;
+          session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
+          return EffectHandler.SUCCESS;
+        case VIEW_PROPERTY:
+          long additionalView = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
+          session.userGameInfo.view += additionalView;
+          session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
+          return EffectHandler.SUCCESS;
+        case FAN_PROPERTY:
+          long additionalFan = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
           session.userGameInfo.fan += additionalFan;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
           return EffectHandler.SUCCESS;

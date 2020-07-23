@@ -22,6 +22,8 @@ public class DailyMissionController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          case "claimCrazyMilestone":
+            resp = processClaimCrazyMilestone(session, ctx);
           case "getMissions":
             resp = processGetMissions(session);
             break;
@@ -47,11 +49,22 @@ public class DailyMissionController implements Handler<RoutingContext> {
     }
   }
 
+  private ExtMessage processClaimCrazyMilestone(Session session, RoutingContext ctx) {
+    int milestone           = ctx.getBodyAsJson().getInteger("milestone");
+    ExtMessage resp         = ExtMessage.daily_mission();
+    resp.msg                = session.userGameInfo.claimCrazyReward(session, milestone);
+    resp.effectResults      = session.effectResults;
+    resp.data.gameInfo      = session.userGameInfo;
+    resp.data.dailyMission  = session.userDailyMission;
+    return resp;
+  }
+
   private ExtMessage processClaimMissionReward(Session session, RoutingContext ctx) {
     ExtMessage resp         = ExtMessage.daily_mission();
     int missionId           = ctx.getBodyAsJson().getInteger("missionId");
     resp.msg                = session.userDailyMission.claimReward(session, missionId);
     resp.data.dailyMission  = session.userDailyMission;
+    resp.data.gameInfo      = session.userGameInfo;
     resp.effectResults      = session.effectResults;
     return resp;
   }

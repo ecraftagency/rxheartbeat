@@ -6,10 +6,12 @@ import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
+import com.statics.CrazyRewardData;
 import com.statics.MediaData;
 import com.statics.VipData;
 import com.statics.WordFilter;
 
+import java.util.HashMap;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,6 +39,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     defaultInfo.vipExp            = 0;
     defaultInfo.crazyDegree       = 0;
     defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
+    defaultInfo.crazyRewardClaim  = new HashMap<>();
     return defaultInfo;
   }
 
@@ -44,6 +47,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
 
   public void newDay() {
     crazyDegree = 0;
+    crazyRewardClaim.clear();
   }
 
   public String updateDisplayName(Session session,  String dName) throws Exception {
@@ -149,5 +153,25 @@ public class UserGameInfo extends com.transport.model.GameInfo {
       session.userTravel.maxTravelClaim       = vip.travelLimit;
       session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
     }
+  }
+
+  public String claimCrazyReward(Session session, int milestone) {
+    if (crazyDegree < milestone)
+      return "insufficient_crazy_degree";
+    if (crazyRewardClaim.get(milestone) != null)
+      return "already_claim";
+    for (CrazyRewardData.CrazyReward cr : CrazyRewardData.crazyRewardMap.values()) {
+      if (milestone == cr.milestone) {
+        if (cr.reward == null)
+          return "crazy_claim_fail";
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, -1, "");
+        session.effectResults.clear();
+        for (List<Integer> re : cr.reward) {
+          EffectManager.inst().handleEffect(extArgs, session, re);
+        }
+      }
+    }
+
+    return "unknown_milestone";
   }
 }

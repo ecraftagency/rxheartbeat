@@ -1,5 +1,7 @@
 package com.transport.model;
 
+import java.util.Map;
+
 public class GameInfo {   //todo almost field is use combine reflection, so don't refactor without double check!!!!
   public int      gender          = -1;
   public int      avatar          = -1;
@@ -20,5 +22,6 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public int      nextQuestion    = 1;
 
   //mission data
-  public int      crazyDegree     = 0;
+  public long     crazyDegree     = 0;
+  public Map<Integer, Boolean> crazyRewardClaim;
 }

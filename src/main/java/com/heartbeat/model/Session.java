@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -118,6 +119,10 @@ public class Session {
       userDailyMission = UserDailyMission.ofDefault();
     if (userTravel == null)
       userTravel = UserTravel.ofDefault();
+
+    if (userGameInfo.crazyRewardClaim == null) {
+      userGameInfo.crazyRewardClaim = new HashMap<>();
+    }
 
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;

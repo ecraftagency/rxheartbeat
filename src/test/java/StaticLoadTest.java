@@ -93,6 +93,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       GroupMissionData.loadJson(companyEventJson);
 
+      String crazyReward = new String(Files.readAllBytes(Paths.get("data/json/crazyReward.json")),
+              StandardCharsets.UTF_8);
+      CrazyRewardData.loadJson(crazyReward);
+
 
       String dailyMission = new String(Files.readAllBytes(Paths.get("data/json/dailyMission.json")),
               StandardCharsets.UTF_8);
@@ -104,6 +108,9 @@ public class StaticLoadTest {
       //
     }
 
+    for (int i = 0; i < 300; i++) {
+      System.out.println(CrazyRewardData.getCrazyReward(i).milestone);;
+    }
     System.out.println(VipData.getVipData(5000).level);
   }
 }
