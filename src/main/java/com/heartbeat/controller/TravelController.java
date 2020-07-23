@@ -71,9 +71,6 @@ public class TravelController implements Handler<RoutingContext> {
     resp.msg            = session.userTravel.addTravelClaim(session);
     resp.data.travel    = session.userTravel;
     resp.data.gameInfo  = session.userGameInfo;
-    if (resp.msg.equals("ok")) {
-      session.userDailyMission.addRecord(Constant.DAILY_MISSION.TRAVEL_MISSION_TYPE);
-    }
     return resp;
   }
 
@@ -103,6 +100,9 @@ public class TravelController implements Handler<RoutingContext> {
     resp.effectResults  = session.effectResults;
     resp.serverTime     = (int)(curMs/1000);
     resp.data.gameInfo  = session.userGameInfo;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.TRAVEL_MISSION_TYPE);
+    }
     return resp;
   }
 }

@@ -312,7 +312,7 @@ public class UserFight extends Fight {
       int nextFightId = currentRunShow.id + 1;
       currentRunShow = RunShowData.of(nextFightId);
 
-      return "win";
+      return "ok";
     }
     else {
       session.userGameInfo.fan      = 0;
@@ -369,7 +369,7 @@ public class UserFight extends Fight {
       int nextFightId = currentRunShow.id + time;
       currentRunShow = RunShowData.of(nextFightId);
 
-      return "win";
+      return "ok";
     }
     else {
       session.userGameInfo.fan      = 0;
@@ -411,7 +411,7 @@ public class UserFight extends Fight {
 
       int nextFightId   = currentShopping.id + 1;
       currentShopping   = ShoppingData.of(nextFightId);
-      return "win";
+      return "ok";
     }
     else {
       return "lose";
@@ -468,7 +468,7 @@ public class UserFight extends Fight {
 
       int nextShoppingId  = currentShopping.id + time;
       currentShopping      = ShoppingData.of(nextShoppingId);
-      return "win";
+      return "ok";
     }
     else {
       return "lose";
