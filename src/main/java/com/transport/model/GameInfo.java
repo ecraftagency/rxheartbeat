@@ -18,4 +18,7 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public int      maxMedia        = 3;
   public int      lastMediaClaim  = 0;
   public int      nextQuestion    = 1;
+
+  //mission data
+  public int      crazyDegree     = 0;
 }

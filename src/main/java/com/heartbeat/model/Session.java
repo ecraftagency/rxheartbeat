@@ -131,6 +131,7 @@ public class Session {
         userFight.newDay();
         userTravel.newDay();
         userDailyMission.newDay();
+        userGameInfo.newDay();
       }
       else {
         userFight.reLogin();

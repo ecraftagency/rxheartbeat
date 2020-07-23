@@ -33,6 +33,8 @@ public class UserEffectHandler implements EffectHandler{
   private static final int CURR_MEDIA_PROPERTY  = 4;
   private static final int TIME_PROPERTY        = 5;
   private static final int EXP_PROPERTY         = 6;
+  private static final int CRAZY_PROPERTY       = 7;
+
   private static final int AVATAR               = 2;
   private static final int DISPLAY_NAME         = 1;
 
@@ -46,6 +48,7 @@ public class UserEffectHandler implements EffectHandler{
     format2Field.put(CURR_MEDIA_PROPERTY,       "currMedia");
     format2Field.put(TIME_PROPERTY,             "time");
     format2Field.put(EXP_PROPERTY,              "exp");
+    format2Field.put(CRAZY_PROPERTY,            "crazyDegree");
   }
 
   private static UserEffectHandler instance = new UserEffectHandler();

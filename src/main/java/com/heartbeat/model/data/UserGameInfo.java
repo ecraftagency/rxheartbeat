@@ -34,12 +34,17 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     defaultInfo.currMedia         = 3;
     defaultInfo.maxMedia          = 3;
     defaultInfo.lastMediaClaim    = 0;
-    defaultInfo.vipExp = 0;
+    defaultInfo.vipExp            = 0;
+    defaultInfo.crazyDegree       = 0;
     defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
     return defaultInfo;
   }
 
   /********************************************************************************************************************/
+
+  public void newDay() {
+    crazyDegree = 0;
+  }
 
   public String updateDisplayName(Session session,  String dName) throws Exception {
     dName = dName.trim();

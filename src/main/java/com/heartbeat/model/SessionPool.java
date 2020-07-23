@@ -106,6 +106,9 @@ public class SessionPool {
 
           //todo userMission;
           session.userDailyMission.newDay();
+
+          //todo userGameInfo
+          session.userGameInfo.newDay();
         }
       }
     }
