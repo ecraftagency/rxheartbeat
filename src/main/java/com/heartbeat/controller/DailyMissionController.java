@@ -60,6 +60,7 @@ public class DailyMissionController implements Handler<RoutingContext> {
     ExtMessage resp         = ExtMessage.daily_mission();
     resp.msg                = "ok";
     resp.data.dailyMission  = session.userDailyMission;
+    resp.data.gameInfo      = session.userGameInfo;
     return resp;
   }
 }
