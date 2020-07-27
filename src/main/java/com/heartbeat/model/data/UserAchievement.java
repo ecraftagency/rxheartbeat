@@ -18,7 +18,7 @@ public class UserAchievement extends Achievement {
     ua.claimedAchievement = new HashMap<>();
     for (Integer achievementType : AchievementData.achieveMap.keySet()) {
       ua.records.put(achievementType, 0L);
-      ua.claimedAchievement.put(achievementType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+      ua.claimedAchievement.put(achievementType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
     }
     return ua;
   }
@@ -51,7 +51,7 @@ public class UserAchievement extends Achievement {
     if (currentVal < dto.milestoneValue)
       return "insufficient_record_count";
 
-    if (!checkClaim(achievementType, milestoneId))
+    if (checkClaim(achievementType, milestoneId))
       return "milestone_already_claim";
 
     List<List<Integer>> rewards = dto.reward;

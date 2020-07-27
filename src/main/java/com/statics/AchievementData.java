@@ -45,9 +45,9 @@ public class AchievementData {
     int lastID = 0;
     for (AchievementDto dto : subMap.values()) {
       if (milestoneVal < dto.milestoneValue) {
-        return Arrays.asList(subMap.get(dto.id - 1), subMap.get(dto.id));
+        return Arrays.asList(subMap.get(dto.milestoneId - 1), subMap.get(dto.milestoneId));
       }
-      lastID = dto.id;
+      lastID = dto.milestoneId;
     }
     return Arrays.asList(subMap.get(lastID), null);
   }

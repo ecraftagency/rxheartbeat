@@ -1,3 +1,4 @@
+import com.heartbeat.model.data.UserAchievement;
 import com.statics.*;
 
 import java.nio.charset.StandardCharsets;
@@ -113,9 +114,13 @@ public class StaticLoadTest {
       //
     }
 
-
-    List<AchievementData.AchievementDto> dtos = AchievementData.getAchievementDto(4, 6);
-    for (AchievementData.AchievementDto dto : dtos)
-      System.out.println(dto.milestoneValue);
+    UserAchievement ac = UserAchievement.ofDefault();
+    ac.recordClaim(4, 2);
+    System.out.println(ac.checkClaim(4, 34));
+    for (Long l : ac.claimedAchievement.get(4))
+      System.out.println(Long.toBinaryString(l));
+//    List<AchievementData.AchievementDto> dtos = AchievementData.getAchievementDto(4, 6);
+//    for (AchievementData.AchievementDto dto : dtos)
+//      System.out.println(dto.milestoneValue);
   }
 }

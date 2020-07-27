@@ -12,8 +12,8 @@ public class Achievement {
       List<Long> subClaim = claimedAchievement.get(achievementType);
       if (subClaim == null)
         return;
-      int idx = milestone/64;
-      int shift = milestone%64;
+      int idx = milestone/32;
+      int shift = milestone%32;
       Long segment = subClaim.get(idx);
       segment |= (1<<shift);
       subClaim.set(idx, segment);
@@ -29,8 +29,8 @@ public class Achievement {
       if (subClaim == null)
         return false;
 
-      int idx = milestone/64;
-      int shift = milestone%64;
+      int idx = milestone/32;
+      int shift = milestone%32;
       Long segment = subClaim.get(idx);
       long mask = 1<<shift;
       return ((segment&mask) > 0);
