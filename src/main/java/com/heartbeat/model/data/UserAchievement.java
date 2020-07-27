@@ -18,7 +18,7 @@ public class UserAchievement extends Achievement {
     ua.claimedAchievement = new HashMap<>();
     for (Integer achievementType : AchievementData.achieveMap.keySet()) {
       ua.records.put(achievementType, 0L);
-      ua.claimedAchievement.put(achievementType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+      ua.claimedAchievement.put(achievementType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
     }
     return ua;
   }

@@ -115,8 +115,8 @@ public class StaticLoadTest {
     }
 
     UserAchievement ac = UserAchievement.ofDefault();
-    ac.recordClaim(4, 2);
-    System.out.println(ac.checkClaim(4, 34));
+    ac.recordClaim(4, 1);
+    System.out.println(ac.checkClaim(4, 33));
     for (Long l : ac.claimedAchievement.get(4))
       System.out.println(Long.toBinaryString(l));
 //    List<AchievementData.AchievementDto> dtos = AchievementData.getAchievementDto(4, 6);
