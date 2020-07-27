@@ -102,6 +102,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       DailyMissionData.loadJson(dailyMission);
 
+      String achievement = new String(Files.readAllBytes(Paths.get("data/json/achievement.json")),
+              StandardCharsets.UTF_8);
+      AchievementData.loadJson(achievement);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {
@@ -109,7 +113,7 @@ public class StaticLoadTest {
     }
 
     for (int i = 0; i < 300; i++) {
-      System.out.println(CrazyRewardData.getCrazyReward(i).milestone);;
+      System.out.println(CrazyRewardData.getCrazyReward(i).milestone);
     }
     System.out.println(VipData.getVipData(5000).level);
   }

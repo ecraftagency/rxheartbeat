@@ -150,7 +150,7 @@ public class UserFight extends Fight {
         return "invalid_fight";
       currentFightLV = nextFightLV;
 
-      return "win";
+      return "ok";
     }
     else {
       long deduct                   =   (int)(session.userGameInfo.fan*totalTalent /
@@ -192,7 +192,7 @@ public class UserFight extends Fight {
       currentFightLV = nextFightLV;
       usedIdols.clear();
       restoreIdols.clear();
-      return "win";
+      return "ok";
     }
     else {
       currentFightLV.boss.hp -= damage;
@@ -254,7 +254,7 @@ public class UserFight extends Fight {
       else
         currentGameShow = nextShow;
 
-      return "win";
+      return "ok";
     }
     else {
       currentGameShow.bosshp -= damage;

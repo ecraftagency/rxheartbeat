@@ -14,8 +14,6 @@ public class ExtMessage {
   public boolean            timeChange;
   public List<EffectResult> effectResults;
 
-
-
   public static class Data {
     public GameInfo     gameInfo;
     public Idols        idols;

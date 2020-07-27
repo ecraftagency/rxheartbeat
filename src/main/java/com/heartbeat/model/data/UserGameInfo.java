@@ -169,6 +169,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
         for (List<Integer> re : cr.reward) {
           EffectManager.inst().handleEffect(extArgs, session, re);
         }
+        crazyRewardClaim.put(milestone, true);
         return "ok";
       }
     }
