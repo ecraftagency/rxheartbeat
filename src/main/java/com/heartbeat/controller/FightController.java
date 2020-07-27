@@ -7,6 +7,7 @@ import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
+import com.tulinh.Const;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import org.slf4j.Logger;
@@ -79,6 +80,10 @@ public class FightController implements Handler<RoutingContext> {
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
     resp.effectResults  = session.effectResults;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.SHOPPING_MISSION_TYPE, time);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.SHOPPING_ACHIEVEMENT, time);
+    }
     return resp;
   }
 
@@ -89,6 +94,10 @@ public class FightController implements Handler<RoutingContext> {
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
     resp.effectResults  = session.effectResults;
+    if (resp.msg.equals("ok")) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.RUN_SHOW_MISSION_TYPE, time);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT, time);
+    }
     return resp;
   }
 
@@ -139,6 +148,7 @@ public class FightController implements Handler<RoutingContext> {
     resp.data.gameInfo  = session.userGameInfo;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.FIGHT_MISSION_TYPE);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FIGHT_ACHIEVEMENT, 1);
     }
     return resp;
   }
@@ -159,6 +169,7 @@ public class FightController implements Handler<RoutingContext> {
             group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAMESHOW_MISSION_ID);
         }
         session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
+        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAMESHOW_ACHIEVEMENT, 1);
       }
     }
 
@@ -190,6 +201,7 @@ public class FightController implements Handler<RoutingContext> {
     resp.effectResults  = session.effectResults;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.RUN_SHOW_MISSION_TYPE);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT, 1);
     }
     return resp;
   }
@@ -202,6 +214,7 @@ public class FightController implements Handler<RoutingContext> {
     resp.effectResults  = session.effectResults;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.SHOPPING_MISSION_TYPE);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.SHOPPING_ACHIEVEMENT, 1);
     }
     return resp;
   }

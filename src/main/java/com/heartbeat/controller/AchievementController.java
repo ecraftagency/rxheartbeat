@@ -3,6 +3,7 @@ package com.heartbeat.controller;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.statics.VipData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -54,7 +55,10 @@ public class AchievementController implements Handler<RoutingContext> {
 
     //start counting
     long totalTalent        = session.userIdol.getTotalCreativity() + session.userIdol.getTotalPerformance() + session.userIdol.getTotalAttractive();
+    VipData.Vip vipData     = VipData.getVipData(session.userGameInfo.vipExp);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
+    session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
 
     resp.msg                = session.userAchievement.claimAchievement(session, achievementType, milestoneId);
     resp.effectResults      = session.effectResults;

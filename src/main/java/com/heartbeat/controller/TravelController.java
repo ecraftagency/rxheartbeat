@@ -83,12 +83,17 @@ public class TravelController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processClaimMultiTravel(Session session, long curMs) {
-    ExtMessage resp     = ExtMessage.travel();
-    resp.msg            = session.userTravel.claimMultiTravel(session, curMs);
-    resp.data.travel    = session.userTravel;
-    resp.effectResults  = session.effectResults;
-    resp.serverTime     = (int)(curMs/1000);
-    resp.data.gameInfo  = session.userGameInfo;
+    ExtMessage resp         = ExtMessage.travel();
+    int currentTrvClaimCnt  = session.userTravel.currentTravelClaimCount;
+    resp.msg                = session.userTravel.claimMultiTravel(session, curMs);
+    resp.data.travel        = session.userTravel;
+    resp.effectResults      = session.effectResults;
+    resp.serverTime         = (int)(curMs/1000);
+    resp.data.gameInfo      = session.userGameInfo;
+    if (resp.msg.equals("ok") && currentTrvClaimCnt > 0) {
+      session.userDailyMission.addRecord(Constant.DAILY_MISSION.TRAVEL_MISSION_TYPE, currentTrvClaimCnt);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT, currentTrvClaimCnt);
+    }
     return resp;
   }
 
@@ -102,6 +107,7 @@ public class TravelController implements Handler<RoutingContext> {
     resp.data.gameInfo  = session.userGameInfo;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.TRAVEL_MISSION_TYPE);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT, 1);
     }
     return resp;
   }

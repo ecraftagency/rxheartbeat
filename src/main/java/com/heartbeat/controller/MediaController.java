@@ -80,6 +80,7 @@ public class MediaController implements Handler<RoutingContext> {
     resp.data.gameInfo = session.userGameInfo;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.MEDIA_MISSION_TYPE);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.MEDIA_ACHIEVEMENT, 1);
     }
     return resp;
   }

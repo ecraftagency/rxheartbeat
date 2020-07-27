@@ -143,6 +143,8 @@ public class Session {
         userTravel.newDay();
         userDailyMission.newDay();
         userGameInfo.newDay();
+
+        userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
       }
       else {
         userFight.reLogin();

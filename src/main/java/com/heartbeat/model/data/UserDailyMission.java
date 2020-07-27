@@ -33,6 +33,13 @@ public class UserDailyMission extends DailyMission {
     }
   }
 
+  public void addRecord(int type, int amount) {
+    for (Mission mission : missionMap.values()) {
+      if (mission.type == type)
+        mission.dailyCount += amount;
+    }
+  }
+
   public String claimReward(Session session, int missionID) {
     Mission uMission = missionMap.get(missionID);
     if (uMission == null)

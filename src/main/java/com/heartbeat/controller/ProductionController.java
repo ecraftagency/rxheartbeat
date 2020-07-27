@@ -92,6 +92,20 @@ public class ProductionController implements Handler<RoutingContext> {
       }
 
       session.userDailyMission.addRecord(productType);
+
+      switch (productType) {
+        case UserProduction.PRODUCE_GOLD:
+          session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.CRT_ACHIEVEMENT, 1);
+          break;
+        case UserProduction.PRODUCE_FAN:
+          session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, 1);
+          break;
+        case UserProduction.PRODUCE_VIEW:
+          session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIEW_ACHIEVEMENT, 1);
+          break;
+        default:
+          break;
+      }
     }
     return resp;
   }

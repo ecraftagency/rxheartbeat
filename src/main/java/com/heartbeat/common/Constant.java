@@ -60,7 +60,7 @@ public class Constant {
   public static class DAILY_MISSION {
     public static int MEDIA_MISSION_TYPE        = 4;
     public static int GAME_SHOW_MISSION_TYPE    = 5; //phụ bản game show
-    public static int FIGHT_MISSION_TYPE        = 5; //đời sống showbiz, ải
+    public static int FIGHT_MISSION_TYPE        = 6; //đời sống showbiz, ải
     public static int TRAVEL_MISSION_TYPE       = 7;
     public static int IDOL_LV_MISSION_TYPE      = 8;
     public static int IDOL_APT_MISSION_TYPE     = 9;
@@ -73,6 +73,18 @@ public class Constant {
     public static int LEVEL_ACHIEVEMENT         = 2;
     public static int TOTAL_TALENT_ACHIEVEMENT  = 3;
     public static int IDOL_ACHIEVEMENT          = 4;
+    public static int FIGHT_ACHIEVEMENT         = 5;
+
+    public static int CRT_ACHIEVEMENT           = 6;
+    public static int VIEW_ACHIEVEMENT          = 7;
+    public static int FAN_ACHIEVEMENT           = 8;
+    public static int MEDIA_ACHIEVEMENT         = 9;
+    public static int RUNSHOW_ACHIEVEMENT       = 10;
+    public static int SHOPPING_ACHIEVEMENT      = 11;
+    public static int TRAVEL_ACHIEVEMENT        = 12;
+    public static int VIP_ACHIEVEMENT           = 13;
+    public static int GAMESHOW_ACHIEVEMENT      = 14;
+
   }
 
   public static class USER_GAME_INFO {
