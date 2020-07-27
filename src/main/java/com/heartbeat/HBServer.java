@@ -191,6 +191,10 @@ public class HBServer extends AbstractVerticle {
               StandardCharsets.UTF_8);
       CrazyRewardData.loadJson(crazyReward);
 
+      String achievement = new String(Files.readAllBytes(Paths.get("data/json/achievement.json")),
+              StandardCharsets.UTF_8);
+      AchievementData.loadJson(achievement);
+
       WordFilter.loadJson("");
 
       String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
