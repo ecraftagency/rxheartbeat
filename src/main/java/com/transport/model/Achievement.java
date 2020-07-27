@@ -4,27 +4,34 @@ import java.util.List;
 import java.util.Map;
 
 public class Achievement {
-  public List<Long>             claimedAchievement;
-  public Map<Integer, Long>  records;
+  public Map<Integer, List<Long>> claimedAchievement;
+  public Map<Integer, Long>       records;
 
-  public void recordClaim(int milestone) {
+  public void recordClaim(int achievementType, int milestone) {
     try {
+      List<Long> subClaim = claimedAchievement.get(achievementType);
+      if (subClaim == null)
+        return;
       int idx = milestone/64;
       int shift = milestone%64;
-      Long segment = claimedAchievement.get(idx);
+      Long segment = subClaim.get(idx);
       segment |= (1<<shift);
-      claimedAchievement.set(idx, segment);
+      subClaim.set(idx, segment);
     }
     catch (Exception e) {
       //
     }
   }
 
-  public boolean checkClaim(int milestone) {
+  public boolean checkClaim(int achievementType, int milestone) {
     try {
+      List<Long> subClaim = claimedAchievement.get(achievementType);
+      if (subClaim == null)
+        return false;
+
       int idx = milestone/64;
       int shift = milestone%64;
-      Long segment = claimedAchievement.get(idx);
+      Long segment = subClaim.get(idx);
       long mask = 1<<shift;
       return ((segment&mask) > 0);
     }

@@ -15,9 +15,10 @@ public class UserAchievement extends Achievement {
   public static UserAchievement ofDefault() {
     UserAchievement ua    = new UserAchievement();
     ua.records            = new HashMap<>();
-    for (Integer achievementType : AchievementData.achieveMap.keySet())
+    for (Integer achievementType : AchievementData.achieveMap.keySet()) {
       ua.records.put(achievementType, 0L);
-    ua.claimedAchievement = Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L);
+      ua.claimedAchievement.put(achievementType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+    }
     return ua;
   }
 
@@ -49,7 +50,7 @@ public class UserAchievement extends Achievement {
     if (currentVal < dto.milestoneValue)
       return "insufficient_record_count";
 
-    if (!checkClaim(milestoneId))
+    if (!checkClaim(achievementType, milestoneId))
       return "milestone_already_claim";
 
     List<List<Integer>> rewards = dto.reward;
@@ -60,7 +61,7 @@ public class UserAchievement extends Achievement {
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
     for (List<Integer> reward : rewards )
       EffectManager.inst().handleEffect(extArgs, session, reward);
-    recordClaim(milestoneId);
+    recordClaim(achievementType, milestoneId);
     return "ok";
   }
 }
