@@ -33,7 +33,7 @@ public class AchievementData {
       if (!achieveMap.containsKey(dto.achievementType)) {
         achieveMap.put(dto.achievementType, new TreeMap<>());
       }
-      achieveMap.get(dto.achievementType).put(dto.id, dto);
+      achieveMap.get(dto.achievementType).put(dto.milestoneId, dto);
     }
   }
 

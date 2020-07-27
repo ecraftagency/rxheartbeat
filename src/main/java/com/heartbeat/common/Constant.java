@@ -71,8 +71,8 @@ public class Constant {
   public static class ACHIEVEMENT {
     public static int LOGIN_ACHIEVEMENT         = 1;
     public static int LEVEL_ACHIEVEMENT         = 2;
-    public static int TOTAL_TALENT_ACHIEVEMENT  = 1;
-    public static int IDOL_ACHIEVEMENT          = 1;
+    public static int TOTAL_TALENT_ACHIEVEMENT  = 3;
+    public static int IDOL_ACHIEVEMENT          = 4;
   }
 
   public static class USER_GAME_INFO {

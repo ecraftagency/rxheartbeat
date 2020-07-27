@@ -15,6 +15,7 @@ public class UserAchievement extends Achievement {
   public static UserAchievement ofDefault() {
     UserAchievement ua    = new UserAchievement();
     ua.records            = new HashMap<>();
+    ua.claimedAchievement = new HashMap<>();
     for (Integer achievementType : AchievementData.achieveMap.keySet()) {
       ua.records.put(achievementType, 0L);
       ua.claimedAchievement.put(achievementType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));

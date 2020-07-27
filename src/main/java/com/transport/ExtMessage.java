@@ -32,7 +32,6 @@ public class ExtMessage {
 
   public static ExtMessage achievement() {
     ExtMessage result = new ExtMessage();
-    result.reset();
     result.cmd = "";
     result.msg = "ok";
     result.group = "achievement";
@@ -42,7 +41,6 @@ public class ExtMessage {
 
   public static ExtMessage daily_mission() {
     ExtMessage result = new ExtMessage();
-    result.reset();
     result.cmd = "";
     result.msg = "ok";
     result.group = "daily_mission";
