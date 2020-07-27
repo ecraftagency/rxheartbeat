@@ -24,7 +24,11 @@ public interface EffectHandler {
     int idolId;
     int newAvatarId;
     String newDisplayName;
-    public static ExtArgs of(int idolId, int newAvatarId, String newDisplayName) {
+
+    public static ExtArgs of() {
+      return def;
+    }
+    public static ExtArgs ofDefault(int idolId, int newAvatarId, String newDisplayName) {
       ExtArgs r = new ExtArgs();
       r.idolId = idolId;
       r.newAvatarId = newAvatarId;
@@ -32,6 +36,8 @@ public interface EffectHandler {
       return r;
     }
   }
+
+  ExtArgs def = new ExtArgs();
 
   String handleEffect(ExtArgs extArgs, Session session, final List<Integer> effectFormat);
 }

@@ -60,7 +60,7 @@ public class ItemController implements Handler<RoutingContext> {
 
   private ExtMessage processTestEffect(Session session, RoutingContext ctx) {
     List<Integer> effect          = ctx.getBodyAsJson().getJsonArray("effect").getList();
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
     ExtMessage resp               = ExtMessage.item();
     session.effectResults.clear();
     resp.msg                      = EffectManager.inst().handleEffect(extArgs, session, effect);
@@ -84,7 +84,7 @@ public class ItemController implements Handler<RoutingContext> {
     }
 
     if (session.userInventory.useItem(propId, amount)) {
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(objId, newAvatar, newDN);
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, newAvatar, newDN);
       resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);
       if (!resp.msg.equals("ok")) { //roll back
         session.userInventory.addItem(propId, amount);
@@ -114,7 +114,7 @@ public class ItemController implements Handler<RoutingContext> {
     }
 
     if (session.userInventory.haveItem(propId, amount)) {
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(objId, -1, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, -1, "");
       session.userInventory.useItem(propId, amount);
       for (int i = 0; i < amount; i++) {
         resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);

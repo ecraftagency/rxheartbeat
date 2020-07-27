@@ -308,7 +308,7 @@ public class UserIdol extends Idols {
     idol.honorID = nextHonor.honorID;
 
     //add aptitude exp
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(idolId, 0, "");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(idolId, 0, "");
     EffectManager.inst().handleEffect(extArgs, session, honor.rewardFormat);
 
     return "ok";

@@ -117,7 +117,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
       MediaData.Media media = MediaData.mediaMap.get(nextQuestion);
       if (media != null) {
         List<List<Integer>> rewards;
-        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, -1, "");
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, -1, "");
         if (answer == 1) {
           rewards = media.reward_1;
           for (List<Integer> reward : rewards)
@@ -164,7 +164,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
       if (milestone == cr.milestone) {
         if (cr.reward == null)
           return "crazy_claim_fail";
-        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, -1, "");
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, -1, "");
         session.effectResults.clear();
         for (List<Integer> re : cr.reward) {
           EffectManager.inst().handleEffect(extArgs, session, re);

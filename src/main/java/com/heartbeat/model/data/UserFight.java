@@ -138,7 +138,7 @@ public class UserFight extends Fight {
 
       //reward
       session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
       EffectManager.inst().handleEffect(extArgs, session, currentFightLV.reward);
 
       //next fight
@@ -180,7 +180,7 @@ public class UserFight extends Fight {
 
     if (damage >= currentFightLV.boss.hp) {
       session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
       EffectManager.inst().handleEffect(extArgs, session, currentFightLV.boss.reward);
 
       int nextFightId = currentFightLV.id + 1;
@@ -243,7 +243,7 @@ public class UserFight extends Fight {
 
     if (damage >= currentGameShow.bosshp) {
       session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
       for (List<Integer> r : currentGameShow.reward)
         EffectManager.inst().handleEffect(extArgs, session, r);
 
@@ -296,7 +296,7 @@ public class UserFight extends Fight {
 
       //reward
       session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
 
       List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
       for (Integer item : currentRunShow.reward) {
@@ -345,7 +345,7 @@ public class UserFight extends Fight {
     //reward
     session.effectResults.clear();
     List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
 
     if (session.userGameInfo.fan >= totalExpectConsume) {
       session.userGameInfo.fan -= totalExpectConsume;
@@ -399,7 +399,7 @@ public class UserFight extends Fight {
 
       //reward
       session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
 
       List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
       for (Integer item : currentShopping.reward) {
@@ -451,7 +451,7 @@ public class UserFight extends Fight {
       //reward
       session.effectResults.clear();
       List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
 
       for (int i = 0; i < time; i++) {
         ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);

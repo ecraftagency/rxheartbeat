@@ -239,7 +239,7 @@ public class UserGroup extends Group {
     }
 
     session.effectResults.clear();
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of(0, 0, "");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
 
     List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
     for (Integer item : evt.gift) {

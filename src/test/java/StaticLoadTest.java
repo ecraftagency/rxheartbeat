@@ -3,6 +3,7 @@ import com.statics.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class StaticLoadTest {
@@ -112,9 +113,9 @@ public class StaticLoadTest {
       //
     }
 
-    for (int i = 0; i < 300; i++) {
-      System.out.println(CrazyRewardData.getCrazyReward(i).milestone);
-    }
-    System.out.println(VipData.getVipData(5000).level);
+
+    List<AchievementData.AchievementDto> dtos = AchievementData.getAchievementDto(4, 6);
+    for (AchievementData.AchievementDto dto : dtos)
+      System.out.println(dto.milestoneValue);
   }
 }

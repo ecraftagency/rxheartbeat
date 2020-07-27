@@ -1,9 +1,11 @@
 package com.transport.model;
 
 import java.util.List;
+import java.util.Map;
 
 public class Achievement {
-  public List<Long> claimedAchievement;
+  public List<Long>             claimedAchievement;
+  public Map<Integer, Integer>  records;
 
   public void recordClaim(int milestone) {
     try {

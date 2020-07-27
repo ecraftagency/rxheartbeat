@@ -1,8 +1,6 @@
 package com.statics;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AchievementData {
   public static class AchievementDto implements Common.hasKey<Integer> {
@@ -33,9 +31,24 @@ public class AchievementData {
     achieveMap = new HashMap<>();
     for (AchievementDto dto : achievementDtoMap.values()) {
       if (!achieveMap.containsKey(dto.achievementType)) {
-        achieveMap.put(dto.achievementType, new HashMap<>());
+        achieveMap.put(dto.achievementType, new TreeMap<>());
       }
       achieveMap.get(dto.achievementType).put(dto.id, dto);
     }
+  }
+
+  public static List<AchievementDto> getAchievementDto(int achievementType, int milestoneVal) throws NoSuchElementException {
+    Map<Integer, AchievementDto> subMap = achieveMap.get(achievementType);
+    if (subMap == null)
+      return Arrays.asList(null, null);
+
+    int lastID = 0;
+    for (AchievementDto dto : subMap.values()) {
+      if (milestoneVal < dto.milestoneValue) {
+        return Arrays.asList(subMap.get(dto.id - 1), subMap.get(dto.id));
+      }
+      lastID = dto.id;
+    }
+    return Arrays.asList(subMap.get(lastID), null);
   }
 }
