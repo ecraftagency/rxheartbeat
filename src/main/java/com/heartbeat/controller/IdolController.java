@@ -95,6 +95,10 @@ public class IdolController implements Handler<RoutingContext> {
     else {
       resp.msg = "add_idol_fail";
     }
+
+    if (resp.msg.equals("ok")) {
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.IDOL_ACHIEVEMENT, 1);
+    }
     return resp;
   }
 

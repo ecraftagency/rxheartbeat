@@ -16,16 +16,20 @@ public class UserAchievement extends Achievement {
     UserAchievement ua    = new UserAchievement();
     ua.records            = new HashMap<>();
     for (Integer achievementType : AchievementData.achieveMap.keySet())
-      ua.records.put(achievementType, 0);
+      ua.records.put(achievementType, 0L);
     ua.claimedAchievement = Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L);
     return ua;
   }
 
-  public void recordAchievement(int achievementType, int amount) {
+  public void addAchieveRecord(int achievementType, long amount) {
     if (!records.containsKey(achievementType))
       return;
-    int oldVal = records.get(achievementType);
+    long oldVal = records.get(achievementType);
     records.put(achievementType, oldVal + amount);
+  }
+
+  public void setAchieveRecord(int achievementType, long value) {
+    records.put(achievementType, value);
   }
 
   public String claimAchievement(Session session, int achievementType, int milestoneId) {
@@ -41,7 +45,7 @@ public class UserAchievement extends Achievement {
     if (!records.containsKey(achievementType))
       return "record_not_found";
 
-    int currentVal = records.get(achievementType);
+    long currentVal = records.get(achievementType);
     if (currentVal < dto.milestoneValue)
       return "insufficient_record_count";
 

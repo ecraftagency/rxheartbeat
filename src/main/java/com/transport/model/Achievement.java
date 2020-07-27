@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Achievement {
   public List<Long>             claimedAchievement;
-  public Map<Integer, Integer>  records;
+  public Map<Integer, Long>  records;
 
   public void recordClaim(int milestone) {
     try {

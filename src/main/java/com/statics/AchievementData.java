@@ -4,13 +4,13 @@ import java.util.*;
 
 public class AchievementData {
   public static class AchievementDto implements Common.hasKey<Integer> {
-    public int id;
-    public int achievementType;
-    public int milestoneId;
-    public int milestoneValue;
-    public String title;
-    public String rewardDesc;
-    public List<List<Integer>> reward;
+    public int                  id;
+    public int                  achievementType;
+    public int                  milestoneId;
+    public long                 milestoneValue;
+    public String               title;
+    public String               rewardDesc;
+    public List<List<Integer>>  reward;
 
     public int getType() {
       return achievementType;

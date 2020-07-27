@@ -68,6 +68,13 @@ public class Constant {
     public static int SHOPPING_MISSION_TYPE     = 12;
   }
 
+  public static class ACHIEVEMENT {
+    public static int LOGIN_ACHIEVEMENT         = 1;
+    public static int LEVEL_ACHIEVEMENT         = 2;
+    public static int TOTAL_TALENT_ACHIEVEMENT  = 1;
+    public static int IDOL_ACHIEVEMENT          = 1;
+  }
+
   public static class USER_GAME_INFO {
     public static final int INIT_TIME_GIFT      = 86400*7;
   }

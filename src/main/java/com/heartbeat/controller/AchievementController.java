@@ -1,8 +1,10 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
+import com.tulinh.Const;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -50,9 +52,15 @@ public class AchievementController implements Handler<RoutingContext> {
     int achievementType     = ctx.getBodyAsJson().getInteger("achievementType");
     int milestoneId         = ctx.getBodyAsJson().getInteger("milestoneId");
     ExtMessage resp         = ExtMessage.achievement();
+
+    //start counting
+    long totalTalent        = session.userIdol.getTotalCreativity() + session.userIdol.getTotalPerformance() + session.userIdol.getTotalAttractive();
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
+
     resp.msg                = session.userAchievement.claimAchievement(session, achievementType, milestoneId);
     resp.effectResults      = session.effectResults;
     resp.data.achievement   = session.userAchievement;
+
     return resp;
   }
 
