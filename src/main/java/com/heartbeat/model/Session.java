@@ -65,6 +65,7 @@ public class Session {
   public UserFight          userFight;
   public UserTravel         userTravel;
   public UserDailyMission   userDailyMission;
+  public UserAchievement    userAchievement;
 
   public List<EffectResult> effectResults;
 
@@ -78,6 +79,7 @@ public class Session {
     userTravel            = UserTravel.ofDefault();
     userProfile.password  = password;
     userDailyMission      = UserDailyMission.ofDefault();
+    userAchievement       = UserAchievement.ofDefault();
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -122,6 +124,10 @@ public class Session {
 
     if (userGameInfo.crazyRewardClaim == null) {
       userGameInfo.crazyRewardClaim = new HashMap<>();
+    }
+
+    if (userAchievement == null) {
+      userAchievement = UserAchievement.ofDefault();
     }
 
     userProfile.lastLogin   = second;
