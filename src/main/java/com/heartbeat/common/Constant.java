@@ -69,6 +69,7 @@ public class Constant {
   }
 
   public static class ACHIEVEMENT {
+    //todo never change this one
     public static final int LOGIN_ACHIEVEMENT         = 1;
     public static final int LEVEL_ACHIEVEMENT         = 2;
     public static final int TOTAL_TALENT_ACHIEVEMENT  = 3;
@@ -89,7 +90,7 @@ public class Constant {
     public static final int IDOL_TITLE                = 17;
     public static final int IDOL_SINGLE_QUERY         = 1;
     public static final int IDOL_MULTI_QUERY          = 0;
-
+    public static final int GROUP_JOIN                = 19;
   }
 
   public static class USER_GAME_INFO {

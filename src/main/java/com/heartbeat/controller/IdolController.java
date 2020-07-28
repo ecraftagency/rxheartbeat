@@ -120,6 +120,9 @@ public class IdolController implements Handler<RoutingContext> {
     int step            = ctx.getBodyAsJson().getInteger("step");
     resp.msg            = session.userIdol.addAptByItem(session, idolId, speciality, step);
     resp.data.inventory = session.userInventory;
+    if (resp.msg.equals("ok")) {
+      session.userAchievement.addAchieveRecord(67*100, 1);
+    }
     return resp;
   }
 

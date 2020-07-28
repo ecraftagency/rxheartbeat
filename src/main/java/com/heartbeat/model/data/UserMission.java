@@ -67,12 +67,15 @@ public class UserMission extends Mission {
         case Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT:
         case 2*100: //hợp đồng truyền thông
+        case 67*100: //cuộn cường hóa
           long cmpValue  = (long)(dto.queryFormat.get(1));
           long curValue = achievement.records.get(queryField);
           return curValue >= cmpValue;
+
         case Constant.ACHIEVEMENT.IDOL_LEVEL:
           int queryType = dto.queryFormat.get(1);
           UserIdol idols = session.userIdol;
+
           if (queryType == Constant.ACHIEVEMENT.IDOL_SINGLE_QUERY) {
             int idolId  = dto.queryFormat.get(2);
             int cmpVal  = dto.queryFormat.get(3);
@@ -91,15 +94,43 @@ public class UserMission extends Mission {
             return curCnt >= cnt;
           }
           return false;
+
+        case Constant.ACHIEVEMENT.IDOL_TITLE:
+          int qType = dto.queryFormat.get(1);
+          UserIdol userIdol = session.userIdol;
+
+          if (qType == Constant.ACHIEVEMENT.IDOL_SINGLE_QUERY) {
+            int idolId  = dto.queryFormat.get(2);
+            int cmpVal  = dto.queryFormat.get(3);
+            for (Idols.Idol idol : userIdol.idolMap.values())
+              if (idol.id == idolId && idol.honorID >= cmpVal)
+                return true;
+          }
+          else if (qType == Constant.ACHIEVEMENT.IDOL_MULTI_QUERY) {
+            int cnt     = dto.queryFormat.get(2);
+            int cmpVal  = dto.queryFormat.get(3);
+            int curCnt  = 0;
+            for (Idols.Idol idol : userIdol.idolMap.values()) {
+              if (idol.honorID >= cmpVal)
+                curCnt++;
+            }
+            return curCnt >= cnt;
+          }
+          return false;
+
         case Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT:
           long totalTalent = session.userIdol.getTotalCreativity() +
                   session.userIdol.getTotalPerformance() +
                   session.userIdol.getTotalCreativity();
           long talent_cmp = dto.queryFormat.get(1);
           return totalTalent >= talent_cmp;
+
         case Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT:
           int level_cmp = dto.queryFormat.get(1);
           return session.userGameInfo.titleId >= level_cmp;
+
+        case Constant.ACHIEVEMENT.GROUP_JOIN: //gia nhập liên minh
+          return session.groupID > 0;
         default:
           return false;
       }
