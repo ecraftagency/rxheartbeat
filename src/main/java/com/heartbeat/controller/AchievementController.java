@@ -30,7 +30,7 @@ public class AchievementController implements Handler<RoutingContext> {
             resp = processGetAchievement(session);
             break;
           default:
-            resp = ExtMessage.daily_mission();
+            resp = ExtMessage.achievement();
             resp.msg = "unknown_cmd";
             break;
         }

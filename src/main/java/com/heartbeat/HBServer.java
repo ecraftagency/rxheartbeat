@@ -62,35 +62,37 @@ public class HBServer extends AbstractVerticle {
   @Override
   public void init(Vertx vertx, Context context) {
     super.init(vertx, context);
+
     Scheduler scheduler = RxHelper.scheduler(vertx);
     CronObservable.cronspec(scheduler, "0 0 0 * * ? *", "Asia/Ho_Chi_Minh")
-      .subscribe(
-        timed -> {
-          SessionPool.dailyReset.run();
-          LOGGER.info("execute new day task");
-        },
-        fault -> LOGGER.error("error new day task")
-      ).dispose();
+            .subscribe(
+                    timed -> {
+                      SessionPool.dailyReset.run();
+                      LOGGER.info("execute new day task");
+                    },
+                    fault -> LOGGER.error("error new day task")
+            );
 
-    CronObservable.cronspec(scheduler, "0 0 12,19 * * ? *", "Asia/Ho_Chi_Minh")
-      .subscribe(
-        timed -> {
-          Constant.SCHEDULE.gameShowOpen = true;
-          SessionPool.resetGameShowIdols.run();
-          LOGGER.info("open game show");
-        },
-        fault -> LOGGER.error("error open game show task")
-      ).dispose();
+    CronObservable.cronspec(scheduler, "0 8 14,19 * * ? *", "Asia/Ho_Chi_Minh")
+            .subscribe(
+                    timed -> {
+                      Constant.SCHEDULE.gameShowOpen = true;
+                      SessionPool.resetGameShowIdols.run();
+                      System.out.println("open game show");
+                      LOGGER.info("open game show");
+                    },
+                    fault -> LOGGER.error("error open game show task")
+            );
 
     CronObservable.cronspec(scheduler, "0 0 14,21 * * ? *", "Asia/Ho_Chi_Minh")
-      .subscribe(
-        timed -> {
-          Constant.SCHEDULE.gameShowOpen = false;
-          SessionPool.resetGameShowIdols.run();
-          LOGGER.info("close game show");
-        },
-        fault -> LOGGER.error("error close game show task")
-      ).dispose();
+            .subscribe(
+                    timed -> {
+                      Constant.SCHEDULE.gameShowOpen = false;
+                      SessionPool.resetGameShowIdols.run();
+                      LOGGER.info("close game show");
+                    },
+                    fault -> LOGGER.error("error close game show task")
+            );
   }
 
 
@@ -195,6 +197,10 @@ public class HBServer extends AbstractVerticle {
               StandardCharsets.UTF_8);
       AchievementData.loadJson(achievement);
 
+      String mission = new String(Files.readAllBytes(Paths.get("data/json/mission.json")),
+              StandardCharsets.UTF_8);
+      MissionData.loadJson(mission);
+
       WordFilter.loadJson("");
 
       String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
@@ -240,6 +246,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/group").handler(new GroupController());
         router.post("/api/daily_mission").handler(new DailyMissionController());
         router.post("/api/achievement").handler(new AchievementController());
+        router.post("/api/mission").handler(new MissionController());
 
         router.post("/gm/inject").handler(new InjectController());
 
@@ -247,6 +254,7 @@ public class HBServer extends AbstractVerticle {
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
 
         vertx.createHttpServer().requestHandler(router).listen(localConfig.getInteger("http.port", 8080));
+
         startPromise.complete();
       }
       else {

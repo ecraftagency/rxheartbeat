@@ -26,8 +26,18 @@ public class ExtMessage {
     public Group        group;
     public DailyMission dailyMission;
     public Achievement  achievement;
+    public Mission      mission;
     public int          currentGroupState;
     public String       extObj;
+  }
+
+  public static ExtMessage mission() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "mission";
+    result.data = new Data();
+    return result;
   }
 
   public static ExtMessage achievement() {

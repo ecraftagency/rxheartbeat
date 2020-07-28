@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -25,7 +26,7 @@ public class UserAchievement extends Achievement {
 
   public void addAchieveRecord(int achievementType, long amount) {
     if (!records.containsKey(achievementType))
-      return;
+      records.put(achievementType, 0L);
     long oldVal = records.get(achievementType);
     records.put(achievementType, oldVal + amount);
   }

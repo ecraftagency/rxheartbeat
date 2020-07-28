@@ -66,6 +66,7 @@ public class Session {
   public UserTravel         userTravel;
   public UserDailyMission   userDailyMission;
   public UserAchievement    userAchievement;
+  public UserMission        userMission;
 
   public List<EffectResult> effectResults;
 
@@ -80,6 +81,7 @@ public class Session {
     userProfile.password  = password;
     userDailyMission      = UserDailyMission.ofDefault();
     userAchievement       = UserAchievement.ofDefault();
+    userMission           = UserMission.ofDefault();
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -128,6 +130,10 @@ public class Session {
 
     if (userAchievement == null) {
       userAchievement = UserAchievement.ofDefault();
+    }
+
+    if (userMission == null) {
+      userMission = UserMission.ofDefault();
     }
 
     userProfile.lastLogin   = second;

@@ -69,21 +69,26 @@ public class Constant {
   }
 
   public static class ACHIEVEMENT {
-    public static int LOGIN_ACHIEVEMENT         = 1;
-    public static int LEVEL_ACHIEVEMENT         = 2;
-    public static int TOTAL_TALENT_ACHIEVEMENT  = 3;
-    public static int IDOL_ACHIEVEMENT          = 4;
-    public static int FIGHT_ACHIEVEMENT         = 5;
+    public static final int LOGIN_ACHIEVEMENT         = 1;
+    public static final int LEVEL_ACHIEVEMENT         = 2;
+    public static final int TOTAL_TALENT_ACHIEVEMENT  = 3;
+    public static final int IDOL_ACHIEVEMENT          = 4;
+    public static final int FIGHT_ACHIEVEMENT         = 5;
 
-    public static int CRT_ACHIEVEMENT           = 6;
-    public static int VIEW_ACHIEVEMENT          = 7;
-    public static int FAN_ACHIEVEMENT           = 8;
-    public static int MEDIA_ACHIEVEMENT         = 9;
-    public static int RUNSHOW_ACHIEVEMENT       = 10;
-    public static int SHOPPING_ACHIEVEMENT      = 11;
-    public static int TRAVEL_ACHIEVEMENT        = 12;
-    public static int VIP_ACHIEVEMENT           = 13;
-    public static int GAMESHOW_ACHIEVEMENT      = 14;
+    public static final int CRT_ACHIEVEMENT           = 6;
+    public static final int VIEW_ACHIEVEMENT          = 7;
+    public static final int FAN_ACHIEVEMENT           = 8;
+    public static final int MEDIA_ACHIEVEMENT         = 9;
+    public static final int RUNSHOW_ACHIEVEMENT       = 10;
+    public static final int SHOPPING_ACHIEVEMENT      = 11;
+    public static final int TRAVEL_ACHIEVEMENT        = 12;
+    public static final int VIP_ACHIEVEMENT           = 13;
+    public static final int GAMESHOW_ACHIEVEMENT      = 14;
+
+    public static final int IDOL_LEVEL                = 16;
+    public static final int IDOL_TITLE                = 17;
+    public static final int IDOL_SINGLE_QUERY         = 1;
+    public static final int IDOL_MULTI_QUERY          = 0;
 
   }
 
