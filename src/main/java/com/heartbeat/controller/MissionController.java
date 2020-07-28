@@ -45,9 +45,10 @@ public class MissionController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processUnlockMission(Session session) {
-    ExtMessage resp   = ExtMessage.mission();
-    resp.msg          = session.userMission.unlockMission(session);
-    resp.data.mission = session.userMission;
+    ExtMessage resp     = ExtMessage.mission();
+    resp.msg            = session.userMission.unlockMission(session);
+    resp.data.mission   = session.userMission;
+    resp.effectResults  = session.effectResults;
     return resp;
   }
 

@@ -86,6 +86,8 @@ public class Session {
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
     userGameInfo.updateUserMedia(curMs);
+    userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
+    userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.IDOL_ACHIEVEMENT, 1);
   }
 
   public void close() {

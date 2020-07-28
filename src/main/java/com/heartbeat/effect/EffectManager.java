@@ -1,6 +1,9 @@
 package com.heartbeat.effect;
 
 import com.heartbeat.model.Session;
+import com.heartbeat.model.data.UserIdol;
+import com.transport.EffectResult;
+import com.transport.model.Idols;
 
 import java.util.List;
 
@@ -45,6 +48,15 @@ public class EffectManager implements EffectHandler{
     }
     else if (type == 103) {
       return titleEffectHandler.handleEffect(extArgs, session, effectFormat);
+    }
+    else if(type == 104) {
+      int idolId = effectFormat.get(1);
+      Idols.Idol idol = UserIdol.buildIdol(idolId);
+      if (session.userIdol.addIdol(idol)) {
+        session.effectResults.add(EffectResult.of(1000, idolId, 0));
+        return "ok";
+      }
+      return "effect_add_idol_fail";
     }
     return EffectHandler.UNKNOWN_FORMAT_TYPE;
   }
