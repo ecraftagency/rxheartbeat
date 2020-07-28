@@ -70,6 +70,8 @@ public class MediaController implements Handler<RoutingContext> {
     session.userGameInfo.addMediaClaim(amount);
     resp.data.gameInfo = session.userGameInfo;
     resp.msg = "ok";
+    //record
+    session.userAchievement.addAchieveRecord(UserGameInfo.CLAIM_MEDIA_COUNT_ITEM*100, amount);
     return resp;
   }
 

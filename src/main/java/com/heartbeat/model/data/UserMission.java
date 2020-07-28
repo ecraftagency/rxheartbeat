@@ -33,9 +33,6 @@ public class UserMission extends Mission {
     for (List<Integer> re : dto.rewardFormat)
       EffectManager.inst().handleEffect(extArgs, session, re);
     currentMissionId++;
-    if (MissionData.missionDtoMap.get(currentMissionId) == null || currentMissionId > MissionData.missionDtoMap.size())
-      currentMissionId = -1;
-
     this.complete = checkAccomplishment(session);
     return "ok";
   }
@@ -69,6 +66,7 @@ public class UserMission extends Mission {
         case Constant.ACHIEVEMENT.SHOPPING_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT:
+        case 2*100: //hợp đồng truyền thông
           long cmpValue  = (long)(dto.queryFormat.get(1));
           long curValue = achievement.records.get(queryField);
           return curValue >= cmpValue;
@@ -93,6 +91,15 @@ public class UserMission extends Mission {
             return curCnt >= cnt;
           }
           return false;
+        case Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT:
+          long totalTalent = session.userIdol.getTotalCreativity() +
+                  session.userIdol.getTotalPerformance() +
+                  session.userIdol.getTotalCreativity();
+          long talent_cmp = dto.queryFormat.get(1);
+          return totalTalent >= talent_cmp;
+        case Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT:
+          int level_cmp = dto.queryFormat.get(1);
+          return session.userGameInfo.titleId >= level_cmp;
         default:
           return false;
       }
