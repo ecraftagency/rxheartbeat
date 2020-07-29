@@ -14,6 +14,7 @@ public class UserMission extends Mission {
   public static UserMission ofDefault() {
     UserMission um      = new UserMission();
     um.currentMissionId = 1;
+    um.currentCount     = 0;
     um.complete         = false;
     return um;
   }
@@ -69,19 +70,22 @@ public class UserMission extends Mission {
         case 2*100: //hợp đồng truyền thông
         case 67*100: //cuộn cường hóa
           long cmpValue  = (long)(dto.queryFormat.get(1));
-          long curValue = achievement.records.get(queryField);
-          return curValue >= cmpValue;
+          this.currentCount = achievement.records.get(queryField);
+          return this.currentCount >= cmpValue;
 
         case Constant.ACHIEVEMENT.IDOL_LEVEL:
-          int queryType = dto.queryFormat.get(1);
-          UserIdol idols = session.userIdol;
+          int queryType       = dto.queryFormat.get(1);
+          UserIdol idols      = session.userIdol;
+          this.currentCount   = 0;
 
           if (queryType == Constant.ACHIEVEMENT.IDOL_SINGLE_QUERY) {
             int idolId  = dto.queryFormat.get(2);
             int cmpVal  = dto.queryFormat.get(3);
             for (Idols.Idol idol : idols.idolMap.values())
-              if (idol.id == idolId && idol.level >= cmpVal)
+              if (idol.id == idolId && idol.level >= cmpVal) {
+                this.currentCount = 1;
                 return true;
+              }
           }
           else if (queryType == Constant.ACHIEVEMENT.IDOL_MULTI_QUERY) {
             int cnt     = dto.queryFormat.get(2);
@@ -91,6 +95,7 @@ public class UserMission extends Mission {
               if (idol.level >= cmpVal)
                 curCnt++;
             }
+            this.currentCount = curCnt;
             return curCnt >= cnt;
           }
           return false;
@@ -103,8 +108,10 @@ public class UserMission extends Mission {
             int idolId  = dto.queryFormat.get(2);
             int cmpVal  = dto.queryFormat.get(3);
             for (Idols.Idol idol : userIdol.idolMap.values())
-              if (idol.id == idolId && idol.honorID >= cmpVal)
+              if (idol.id == idolId && idol.honorID >= cmpVal) {
+                this.currentCount = 1;
                 return true;
+              }
           }
           else if (qType == Constant.ACHIEVEMENT.IDOL_MULTI_QUERY) {
             int cnt     = dto.queryFormat.get(2);
@@ -114,6 +121,7 @@ public class UserMission extends Mission {
               if (idol.honorID >= cmpVal)
                 curCnt++;
             }
+            this.currentCount = curCnt;
             return curCnt >= cnt;
           }
           return false;
@@ -123,13 +131,16 @@ public class UserMission extends Mission {
                   session.userIdol.getTotalPerformance() +
                   session.userIdol.getTotalCreativity();
           long talent_cmp = dto.queryFormat.get(1);
+          this.currentCount = totalTalent;
           return totalTalent >= talent_cmp;
 
         case Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT:
           int level_cmp = dto.queryFormat.get(1);
+          this.currentCount = session.userGameInfo.titleId;
           return session.userGameInfo.titleId >= level_cmp;
 
         case Constant.ACHIEVEMENT.GROUP_JOIN: //gia nhập liên minh
+          this.currentCount = (session.groupID > 0) ? 1 : 0;
           return session.groupID > 0;
         default:
           return false;

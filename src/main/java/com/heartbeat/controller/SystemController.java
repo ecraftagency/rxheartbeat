@@ -43,7 +43,6 @@ public class SystemController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processHeartBeat(Session session, long curMs) {
-    session.updateOnline(System.currentTimeMillis());
     ExtMessage resp = ExtMessage.system();
     resp.serverTime = (int)(curMs/1000);
     int second    = (int)(curMs/1000);
@@ -51,6 +50,7 @@ public class SystemController implements Handler<RoutingContext> {
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
+    session.updateOnline(System.currentTimeMillis());
     resp.userRemainTime = session.userGameInfo.time;
     return resp;
   }

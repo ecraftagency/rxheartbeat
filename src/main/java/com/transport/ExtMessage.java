@@ -10,7 +10,7 @@ public class ExtMessage {
   public Data               data;
   public String             group;
   public int                serverTime;
-  public int                userRemainTime;
+  public long               userRemainTime;
   public boolean            timeChange;
   public List<EffectResult> effectResults;
 
