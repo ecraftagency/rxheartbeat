@@ -30,6 +30,7 @@ public class GroupController implements Handler<RoutingContext> {
       String cmd        = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
+
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
@@ -329,7 +330,10 @@ public class GroupController implements Handler<RoutingContext> {
         resp.cmd = cmd;
       }
       resp.data.currentGroupState = session.groupID;
+      resp.timeChange             = session.userGameInfo.timeChange;
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      session.userGameInfo.timeChange = false;
+      session.effectResults.clear();
     });
   }
 }

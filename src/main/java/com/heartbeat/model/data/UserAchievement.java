@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -60,7 +59,7 @@ public class UserAchievement extends Achievement {
       return "corrupt_reward";
 
     session.effectResults.clear();
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
     for (List<Integer> reward : rewards )
       EffectManager.inst().handleEffect(extArgs, session, reward);
     recordClaim(achievementType, milestoneId);

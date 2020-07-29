@@ -7,11 +7,11 @@ import java.util.List;
 @FunctionalInterface
 public interface EffectHandler {
   String SUCCESS = "ok";
-  String UNKNOWN_FORMAT_TYPE = "unknown_format_type";
-
+  String UNKNOWN_FORMAT_TYPE    = "unknown_format_type";
   String UNKNOWN_PROPERTY       = "unknown_property";
   String UNKNOWN_IDOL           = "unknown_idol";
   String UNKNOWN_DROP_PACK      = "unknown_drop_pack";
+  
   int    WILDCARD_PROPERTY      = 101;
   int    RANDOM_PROPERTY        = 100;
 

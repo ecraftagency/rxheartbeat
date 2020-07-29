@@ -275,6 +275,8 @@ public class HBServer extends AbstractVerticle {
     //for faster startup, fucking couchbase java sdk T___T
     cruder = CBSession.getInstance();
 
+    
+
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();
       GroupPool.removeAll();

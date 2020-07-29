@@ -14,8 +14,6 @@ import io.vertx.core.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @SuppressWarnings("unused")
 public class CBGroup implements Cruder<UserGroup> {
   private static final Logger LOGGER = LoggerFactory.getLogger(CBGroup.class);

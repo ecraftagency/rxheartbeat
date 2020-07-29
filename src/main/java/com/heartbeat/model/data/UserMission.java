@@ -30,7 +30,7 @@ public class UserMission extends Mission {
     if (dto.rewardFormat == null)
       return "reward_formal_invalid";
 
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0,-1,"");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
     for (List<Integer> re : dto.rewardFormat)
       EffectManager.inst().handleEffect(extArgs, session, re);
     currentMissionId++;
@@ -67,6 +67,7 @@ public class UserMission extends Mission {
         case Constant.ACHIEVEMENT.SHOPPING_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT:
+        case Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT:
         case 2*100: //hợp đồng truyền thông
         case 67*100: //cuộn cường hóa
           this.target       = (long)(dto.queryFormat.get(1));

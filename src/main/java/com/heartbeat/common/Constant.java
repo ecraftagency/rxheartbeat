@@ -26,6 +26,10 @@ public class Constant {
     public static final String IOS_URL = "http://helloios.com";
   }
 
+  public static class SYSTEM_INFO {
+    public static boolean USE_POOL_MSG                = false;
+  }
+
   public static class ONLINE_INFO {
     public static int ONLINE_RECORD_UPDATE_TIME       = 20; // 20'
     public static int ONLINE_HEARTBEAT_TIME           = 30; //second
@@ -35,7 +39,6 @@ public class Constant {
 
   public static class DB {
     public static       String HOST               = "localhost";
-    public static       String PORT               = "8091";
     public static       String USER               = "Administrator";
     public static       String PWD                = "n5t5lnsct";
 

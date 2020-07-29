@@ -10,12 +10,13 @@ import com.statics.CrazyRewardData;
 import com.statics.MediaData;
 import com.statics.VipData;
 import com.statics.WordFilter;
+import com.transport.model.GameInfo;
 
 import java.util.HashMap;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserGameInfo extends com.transport.model.GameInfo {
+public class UserGameInfo extends GameInfo {
   public static final int MAX_AVATAR                = 10;
   public static final int MAX_GENDER                = 2;
   public static final int MEDIA_INTERVAL            = 59;
@@ -112,25 +113,31 @@ public class UserGameInfo extends com.transport.model.GameInfo {
   public String claimMedia(Session session, int answer) {
     long curMs = System.currentTimeMillis();
     updateUserMedia(curMs);
+
     if (currMedia > 0) {
-      currMedia      -= 1;
-      lastMediaClaim = (int)(curMs/1000);
+      currMedia            -= 1;
+      lastMediaClaim        = (int)(curMs/1000);
       MediaData.Media media = MediaData.mediaMap.get(nextQuestion);
+
       if (media != null) {
         List<List<Integer>> rewards;
-        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, -1, "");
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
+
         if (answer == 1) {
           rewards = media.reward_1;
           for (List<Integer> reward : rewards)
             EffectManager.inst().handleEffect(extArgs, session, reward);
         }
+
         if (answer == 2) {
           rewards = media.reward_2;
           for (List<Integer> reward : rewards)
             EffectManager.inst().handleEffect(extArgs, session, reward);
         }
+
         nextQuestion = MediaData.nextRandQuestion();
       }
+
       return "ok";
     }
     else
@@ -165,7 +172,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
       if (milestone == cr.milestone) {
         if (cr.reward == null)
           return "crazy_claim_fail";
-        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, -1, "");
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
         session.effectResults.clear();
         for (List<Integer> re : cr.reward) {
           EffectManager.inst().handleEffect(extArgs, session, re);

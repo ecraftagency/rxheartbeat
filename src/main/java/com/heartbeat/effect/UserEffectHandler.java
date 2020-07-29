@@ -68,22 +68,26 @@ public class UserEffectHandler implements EffectHandler{
 
   private UserEffectHandler() {
     subHandlers = new HashMap<>();
+
     subHandlers.put(LINEAR_INCREASE, (extArgs , session, eff) -> {
       int propertyId    = eff.get(EffectHandler.PARAM1);
       int amount        = eff.get(EffectHandler.PARAM2);
       String result     = EffectHandler.UNKNOWN_PROPERTY;
       Field field       = getUserInfoField(format2Field.get(propertyId));
+
       if (field != null) {
         try {
           long oldValue = field.getLong(session.userGameInfo);
           field.setLong(session.userGameInfo, oldValue + amount);
           session.effectResults.add(EffectResult.of(0,propertyId, amount));
           result = EffectHandler.SUCCESS;
+
         } catch (IllegalAccessException e) {
           LOGGER.error(e.getMessage());
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
+
       return result;
     });
 
@@ -91,22 +95,26 @@ public class UserEffectHandler implements EffectHandler{
       int propertyId    = eff.get(EffectHandler.PARAM1);
       int rate          = eff.get(EffectHandler.PARAM2);
       float percent     = rate/1000.0f;
+
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (int)(session.userIdol.getTotalCreativity()*percent);
           session.userGameInfo.money += additionalMoney;
           session.effectResults.add(EffectResult.of(0,propertyId, additionalMoney));
           return EffectHandler.SUCCESS;
+
         case VIEW_PROPERTY:
           long additionalView = (int)(session.userIdol.getTotalPerformance()*percent);
           session.userGameInfo.view += additionalView;
           session.effectResults.add(EffectResult.of(0,propertyId, additionalView));
           return EffectHandler.SUCCESS;
+
         case FAN_PROPERTY:
           long additionalFan = (int)(session.userIdol.getTotalAttractive()*percent);
           session.userGameInfo.fan += additionalFan;
           session.effectResults.add(EffectResult.of(0,propertyId, additionalFan));
           return EffectHandler.SUCCESS;
+
         default:
           return EffectHandler.UNKNOWN_PROPERTY;
       }
@@ -119,6 +127,7 @@ public class UserEffectHandler implements EffectHandler{
 
       String result     = EffectHandler.UNKNOWN_PROPERTY;
       Field field       = getUserInfoField(format2Field.get(propertyId));
+
       if (field != null) {
         try {
           long    oldVale         = field.getLong(session.userGameInfo);
@@ -141,6 +150,7 @@ public class UserEffectHandler implements EffectHandler{
       int level         = session.userGameInfo.titleId;
       String result     = EffectHandler.UNKNOWN_PROPERTY;
       Field field       = getUserInfoField(format2Field.get(propertyId));
+
       if (field != null) {
         try {
           long    oldVale         = field.getLong(session.userGameInfo);
@@ -148,6 +158,7 @@ public class UserEffectHandler implements EffectHandler{
           field.setLong(session.userGameInfo, oldVale + increment);
           session.effectResults.add(EffectResult.of(1,propertyId, increment));
           result = EffectHandler.SUCCESS;
+
         } catch (Exception e) {
           LOGGER.error(e.getMessage());
           result     = EffectHandler.UNKNOWN_PROPERTY;
@@ -162,6 +173,7 @@ public class UserEffectHandler implements EffectHandler{
       int rate          = eff.get(EffectHandler.PARAM3);
       String result     = EffectHandler.UNKNOWN_PROPERTY;
       Field field       = getUserInfoField(format2Field.get(propertyId));
+
       if (field != null) {
         try {
           long    oldVale         = field.getLong(session.userGameInfo);
@@ -172,6 +184,7 @@ public class UserEffectHandler implements EffectHandler{
             session.effectResults.add(EffectResult.of(0,propertyId, amount));
             result = EffectHandler.SUCCESS;
           }
+
         } catch (IllegalAccessException e) {
           LOGGER.error(e.getMessage());
           result     = EffectHandler.UNKNOWN_PROPERTY;
@@ -184,17 +197,20 @@ public class UserEffectHandler implements EffectHandler{
       int propertyId    = eff.get(EffectHandler.PARAM1);
       int rate          = eff.get(EffectHandler.PARAM2);
       float percent     = rate/100.0f;
+
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (int)(session.userIdol.getTotalCreativity()*percent);
           session.userGameInfo.money += additionalMoney;
           session.effectResults.add(EffectResult.of(0,propertyId, additionalMoney));
           return EffectHandler.SUCCESS;
+
         case VIEW_PROPERTY:
           long additionalView = (int)(session.userIdol.getTotalPerformance()*percent);
           session.userGameInfo.view += additionalView;
           session.effectResults.add(EffectResult.of(0,propertyId, additionalView));
           return EffectHandler.SUCCESS;
+
         case FAN_PROPERTY:
           long additionalFan = (int)(session.userIdol.getTotalAttractive()*percent);
           session.userGameInfo.fan += additionalFan;
@@ -209,22 +225,26 @@ public class UserEffectHandler implements EffectHandler{
       int propertyId    = eff.get(EffectHandler.PARAM1);
       int step          = eff.get(EffectHandler.PARAM2);
       int level         = session.userGameInfo.titleId;
+
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (session.userIdol.getTotalCreativity()*level/step);
           session.userGameInfo.money += additionalMoney;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
           return EffectHandler.SUCCESS;
+
         case VIEW_PROPERTY:
           long additionalView = (session.userIdol.getTotalPerformance()*level/step);
           session.userGameInfo.view += additionalView;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
           return EffectHandler.SUCCESS;
+
         case FAN_PROPERTY:
           long additionalFan = (session.userIdol.getTotalAttractive()*level/step);
           session.userGameInfo.fan += additionalFan;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
           return EffectHandler.SUCCESS;
+
         default:
           return EffectHandler.UNKNOWN_PROPERTY;
       }
@@ -232,14 +252,17 @@ public class UserEffectHandler implements EffectHandler{
 
     subHandlers.put(ID_CHANGE, (extAgrs, session, eff) -> {
       int propertyId    = eff.get(EffectHandler.PARAM1);
+
       switch (propertyId) {
         case AVATAR:
           int newAvatar = extAgrs.newAvatarId%10;
           newAvatar = Math.max(newAvatar, 0);
           session.userGameInfo.avatar = newAvatar;
           return EffectHandler.SUCCESS;
+
         case DISPLAY_NAME:
           return session.userGameInfo.replaceDisplayName(session, extAgrs.newDisplayName);
+
         default:
           return EffectHandler.UNKNOWN_PROPERTY;
       }
@@ -248,6 +271,7 @@ public class UserEffectHandler implements EffectHandler{
     subHandlers.put(SPECIAL_AVATAR_CHANGE, (extArgs, session, eff) -> {
       int newAvatarId   = eff.get(PARAM1);
       int maxAvail      = HeadData.headMap.size();
+
       if (newAvatarId < 1 || newAvatarId > maxAvail)
         return EffectHandler.UNKNOWN_PROPERTY;
       session.userGameInfo.avatar = newAvatarId;
@@ -259,22 +283,26 @@ public class UserEffectHandler implements EffectHandler{
       int scl_percent   = eff.get(EffectHandler.PARAM2);
       int inr_amount    = eff.get(EffectManager.PARAM3);
       float percent     = scl_percent/100f;
+
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (long)(session.userIdol.getTotalCreativity()*percent) + inr_amount;
           session.userGameInfo.money += additionalMoney;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
           return EffectHandler.SUCCESS;
+
         case VIEW_PROPERTY:
           long additionalView = (long)(session.userIdol.getTotalPerformance()*percent) + inr_amount;
           session.userGameInfo.view += additionalView;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
           return EffectHandler.SUCCESS;
+
         case FAN_PROPERTY:
           long additionalFan = (long)(session.userIdol.getTotalAttractive()*percent) + inr_amount;
           session.userGameInfo.fan += additionalFan;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
           return EffectHandler.SUCCESS;
+
         default:
           return EffectHandler.UNKNOWN_PROPERTY;
       }
@@ -285,17 +313,20 @@ public class UserEffectHandler implements EffectHandler{
       int coefficient   = eff.get(EffectManager.PARAM3);
       int level         = session.userGameInfo.titleId;
       long totalCrt     = session.userIdol.getTotalCreativity();
+
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
           session.userGameInfo.money += additionalMoney;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
           return EffectHandler.SUCCESS;
+
         case VIEW_PROPERTY:
           long additionalView = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
           session.userGameInfo.view += additionalView;
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
           return EffectHandler.SUCCESS;
+
         case FAN_PROPERTY:
           long additionalFan = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
           session.userGameInfo.fan += additionalFan;

@@ -5,17 +5,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class GlobalVariable {
-  static final String USER_ID_GENERATOR_KEY = "HeartBeatOnlineUserID";
   static final int NUM_CORE = 8;//Runtime.getRuntime().availableProcessors();
   static final int NUM_THREAD_PER_POOL = NUM_CORE / 2;
   public static ThreadPoolExecutor exeThreadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUM_THREAD_PER_POOL);
   public static ScheduledThreadPoolExecutor schThreadPool = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(NUM_THREAD_PER_POOL);
-
-  public static String getNextUserID() {
-//    long nextUserId = CBDataAccess.getInstance().getNextUserID(USER_ID_GENERATOR_KEY);
-//    return Long.toString(nextUserId);
-    return "";
-  }
 
   public static DeviceUID.DeviceUIDUpdateInfo updateDeviceUID(String deviceUID, String osPlatform, int userId, boolean isRegister) throws Exception {
 //    if(Utilities.isValidString(deviceUID)) {

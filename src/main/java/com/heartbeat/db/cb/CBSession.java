@@ -8,7 +8,6 @@ import com.heartbeat.model.Session;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.impl.FailedFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

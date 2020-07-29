@@ -149,15 +149,27 @@ public class ExtMessage {
   }
 
   public void reset() {
-    cmd = "";
-    data.profile = null;
-    data.inventory = null;
-    data.fight = null;
-    data.idols = null;
-    data.gameInfo = null;
-    data.production = null;
-    msg = "";
-    group = "";
-    serverTime = 0;
+    cmd             = "";
+    msg             = "";
+    group           = "";
+    serverTime      = 0;
+    userRemainTime  = 0;
+    timeChange      = false;
+    effectResults   = null;
+
+    data.gameInfo           = null;
+    data.idols              = null;
+    data.production         = null;
+    data.profile            = null;
+    data.inventory          = null;
+    data.fight              = null;
+    data.travel             = null;
+    data.title              = null;
+    data.group              = null;
+    data.dailyMission       = null;
+    data.achievement        = null;
+    data.mission            = null;
+    data.currentGroupState  = 0;
+    data.extObj             = "";
   }
 }

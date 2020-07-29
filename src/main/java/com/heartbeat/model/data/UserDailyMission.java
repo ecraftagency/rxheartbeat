@@ -58,7 +58,7 @@ public class UserDailyMission extends DailyMission {
     session.effectResults.clear();
 
     for (List<Integer> reward : dto.reward) {
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0, 0, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
       EffectManager.inst().handleEffect(extArgs, session, reward);
     }
 

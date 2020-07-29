@@ -18,6 +18,7 @@ public class MissionController implements Handler<RoutingContext> {
       String cmd = ctx.getBodyAsJson().getString("cmd");
       String strUserId = ctx.user().principal().getString("username");
       Session session = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
+
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
@@ -32,6 +33,7 @@ public class MissionController implements Handler<RoutingContext> {
             resp.msg = "unknown_cmd";
             break;
         }
+
         resp.cmd = cmd;
         resp.timeChange = session.userGameInfo.timeChange;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));

@@ -43,12 +43,11 @@ public class AuthController implements Handler<RoutingContext> {
                     .setIssuer("Vert.x").setExpiresInMinutes(TOKEN_EXPIRE_TIME));
         resp.data.profile = profile;
         resp.msg = "ok";
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
       else {
         resp.msg = ar.cause().getMessage();
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
     });
   }
 

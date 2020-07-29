@@ -77,7 +77,7 @@ public class UserTravel extends Travel {
 
     TravelData.TravelNPC chosen   = npcList.get(ThreadLocalRandom.current().nextInt(npcList.size()));
     chosenNPCId                   = chosen.id;
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0,0,"");
+    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
     currentTravelClaimCount      -= 1;
     lastTravelClaim               = (int)(curMs/1000);
 
@@ -121,7 +121,7 @@ public class UserTravel extends Travel {
 
       TravelData.TravelNPC chosen   = npcList.get(ThreadLocalRandom.current().nextInt(npcList.size()));
       chosenNPCId                   = chosen.id;
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(0,0,"");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
       currentTravelClaimCount      -= 1;
       lastTravelClaim               = (int)(curMs/1000);
 

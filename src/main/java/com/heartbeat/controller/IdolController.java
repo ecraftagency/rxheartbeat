@@ -21,6 +21,7 @@ public class IdolController implements Handler<RoutingContext> {
       String cmd        = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
+
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
@@ -50,6 +51,7 @@ public class IdolController implements Handler<RoutingContext> {
             resp.msg = "unknown_cmd";
             break;
         }
+
         resp.data.idols = session.userIdol;
         resp.cmd = cmd;
         resp.timeChange = session.userGameInfo.timeChange;
