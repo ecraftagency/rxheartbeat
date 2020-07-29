@@ -69,6 +69,13 @@ public class AchievementController implements Handler<RoutingContext> {
 
   private ExtMessage processGetAchievement(Session session) {
     ExtMessage resp         = ExtMessage.achievement();
+    //start counting
+    long totalTalent        = session.userIdol.getTotalCreativity() + session.userIdol.getTotalPerformance() + session.userIdol.getTotalAttractive();
+    VipData.Vip vipData     = VipData.getVipData(session.userGameInfo.vipExp);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
+    session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
+
     resp.data.achievement   = session.userAchievement;
     return resp;
   }
