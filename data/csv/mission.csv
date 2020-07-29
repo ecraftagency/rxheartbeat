@@ -193,7 +193,7 @@ id,name,desc,queryFormat,rewardFormat
 192,Tìm được nhân chứng,Tích lũy chiến thắng đời sống Showbiz 1763 lần,"[5,1763]","[[1,1,700000,0]]"
 193,Tìm kiếm nha phiến,Tích lũy chiến thắng đời sống Showbiz 1804 lần,"[5,1804]","[[1,1,700000,0]]"
 194,Tăng cấp Idol,Ít nhất 2 Idol lên cấp 120,"[16,0,2,120]","[[100,3,1,0]]"
-195,Gia nhập liên minh,Gia nhập liên minh thành công,[18],"[[100,37,1,0]]"
+195,Gia nhập liên minh,Gia nhập liên minh thành công,"[18,1]","[[100,37,1,0]]"
 196,Du lịch thăm hỏi,Số lần thăm hỏi đạt 250 lần,"[12,250]","[[100,2,2,0]]"
 197,Tăng cấp Idol,Ít nhất 3 Idol lên cấp 120,"[16,0,3,120]","[[100,57,2,0]]"
 198,Vung lưới bắt cá,Tích lũy chiến thắng đời sống Showbiz 1845 lần,"[5,1845]","[[1,1,700000,0]]"
