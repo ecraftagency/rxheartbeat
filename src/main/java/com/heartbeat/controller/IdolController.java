@@ -50,10 +50,12 @@ public class IdolController implements Handler<RoutingContext> {
             resp.msg = "unknown_cmd";
             break;
         }
-        resp.cmd = cmd;
         resp.data.idols = session.userIdol;
+        resp.cmd = cmd;
+        resp.timeChange = session.userGameInfo.timeChange;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
+        session.userGameInfo.timeChange = false;
       }
       else {
         ctx.response().setStatusCode(401).end();

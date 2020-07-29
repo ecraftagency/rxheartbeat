@@ -60,8 +60,10 @@ public class FightController implements Handler<RoutingContext> {
             break;
         }
         resp.cmd = cmd;
+        resp.timeChange = session.userGameInfo.timeChange;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
+        session.userGameInfo.timeChange = false;
       }
       else {
         ctx.response().setStatusCode(401).end();

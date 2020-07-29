@@ -44,8 +44,10 @@ public class ProfileController implements Handler<RoutingContext> {
             break;
         }
         resp.cmd = cmd;
+        resp.timeChange = session.userGameInfo.timeChange;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
+        session.userGameInfo.timeChange = false;
       }
       else {
         ctx.response().setStatusCode(401).end();
@@ -86,14 +88,14 @@ public class ProfileController implements Handler<RoutingContext> {
 
     session.userGameInfo.exp -= nextLV.exp;
     session.userGameInfo.titleId = nextLV.officeLV;
-    session.userGameInfo.time = INIT_TIME_GIFT;
+    session.userGameInfo.addTime(INIT_TIME_GIFT);
     session.userGameInfo.maxMedia++;
 
     resp.msg = "ok";
     resp.data.gameInfo    = session.userGameInfo;
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
-    resp.timeChange       = true;
+    resp.timeChange       = session.userGameInfo.timeChange;
     return resp;
   }
 

@@ -40,6 +40,7 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     defaultInfo.crazyDegree       = 0;
     defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
     defaultInfo.crazyRewardClaim  = new HashMap<>();
+    defaultInfo.timeChange        = false;
     return defaultInfo;
   }
 
@@ -175,5 +176,20 @@ public class UserGameInfo extends com.transport.model.GameInfo {
     }
 
     return "unknown_milestone";
+  }
+
+  public boolean useTime(long amount) {
+    if (amount > this.time)
+      return false;
+    this.time -= amount;
+    if (this.time < 0)
+      this.time = 0;
+    timeChange = true;
+    return true;
+  }
+
+  public void addTime(long amount) {
+    this.time += amount;
+    timeChange = true;
   }
 }

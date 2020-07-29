@@ -48,6 +48,7 @@ public class SystemController implements Handler<RoutingContext> {
     int second    = (int)(curMs/1000);
     int deltaTime = second - session.lastHearBeatTime;
     session.userGameInfo.time -= deltaTime;
+
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
     session.updateOnline(System.currentTimeMillis());

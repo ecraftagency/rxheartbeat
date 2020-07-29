@@ -252,7 +252,7 @@ public class Session {
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
-            userGameInfo.time -= Constant.GROUP.CREATE_GROUP_TIME_COST;
+            userGameInfo.useTime(Constant.GROUP.CREATE_GROUP_TIME_COST);
             handler.handle(Future.succeededFuture("ok"));
           }
           else{
@@ -275,7 +275,7 @@ public class Session {
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());
-                    userGameInfo.time -= Constant.GROUP.CREATE_GROUP_TIME_COST;
+                    userGameInfo.useTime(Constant.GROUP.CREATE_GROUP_TIME_COST);
                     handler.handle(Future.succeededFuture("ok"));
                   }
                   else{

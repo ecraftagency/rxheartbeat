@@ -314,6 +314,16 @@ public class UserEffectHandler implements EffectHandler{
   @Override
   public String handleEffect(ExtArgs extArgs, Session session, final List<Integer> effectFormat) {
     EffectHandler subHandler = subHandlers.get(effectFormat.get(0));
-    return (subHandler != null) ? subHandler.handleEffect(extArgs, session, effectFormat) : EffectHandler.UNKNOWN_FORMAT_TYPE;
+    if (subHandler != null) {
+      String res = subHandler.handleEffect(extArgs, session, effectFormat);
+      int propID = effectFormat.get(EffectHandler.PARAM1);
+      if (res.equals("ok") && propID == 5) {
+        session.userGameInfo.timeChange = true;
+      }
+      return res;
+    }
+    else {
+      return EffectHandler.UNKNOWN_FORMAT_TYPE;
+    }
   }
 }

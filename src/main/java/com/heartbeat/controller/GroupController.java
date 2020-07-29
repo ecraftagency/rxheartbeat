@@ -78,8 +78,10 @@ public class GroupController implements Handler<RoutingContext> {
             break;
         }
         resp.cmd = cmd;
+        resp.timeChange = session.userGameInfo.timeChange;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
+        session.userGameInfo.timeChange = false;
       }
       else {
         ctx.response().setStatusCode(401).end();
@@ -321,7 +323,6 @@ public class GroupController implements Handler<RoutingContext> {
         resp.msg          = "ok";
         resp.cmd          = cmd;
         resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
-        resp.timeChange   = true;
       }
       else {
         resp.msg = crtRes.cause().getMessage();
