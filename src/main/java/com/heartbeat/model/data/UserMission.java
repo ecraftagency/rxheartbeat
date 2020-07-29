@@ -69,9 +69,9 @@ public class UserMission extends Mission {
         case Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT:
         case 2*100: //hợp đồng truyền thông
         case 67*100: //cuộn cường hóa
-          long cmpValue  = (long)(dto.queryFormat.get(1));
+          this.target       = (long)(dto.queryFormat.get(1));
           this.currentCount = achievement.records.get(queryField);
-          return this.currentCount >= cmpValue;
+          return this.currentCount >= this.target;
 
         case Constant.ACHIEVEMENT.IDOL_LEVEL:
           int queryType       = dto.queryFormat.get(1);
@@ -83,7 +83,8 @@ public class UserMission extends Mission {
             int cmpVal  = dto.queryFormat.get(3);
             for (Idols.Idol idol : idols.idolMap.values())
               if (idol.id == idolId && idol.level >= cmpVal) {
-                this.currentCount = 1;
+                this.currentCount = idol.level;
+                this.target = cmpVal;
                 return true;
               }
           }
@@ -96,6 +97,7 @@ public class UserMission extends Mission {
                 curCnt++;
             }
             this.currentCount = curCnt;
+            this.target       = cnt;
             return curCnt >= cnt;
           }
           return false;
@@ -109,7 +111,8 @@ public class UserMission extends Mission {
             int cmpVal  = dto.queryFormat.get(3);
             for (Idols.Idol idol : userIdol.idolMap.values())
               if (idol.id == idolId && idol.honorID >= cmpVal) {
-                this.currentCount = 1;
+                this.currentCount = idol.honorID;
+                this.target = cmpVal;
                 return true;
               }
           }
@@ -122,25 +125,26 @@ public class UserMission extends Mission {
                 curCnt++;
             }
             this.currentCount = curCnt;
+            this.target       = cnt;
             return curCnt >= cnt;
           }
           return false;
 
         case Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT:
-          long totalTalent = session.userIdol.getTotalCreativity() +
+          this.currentCount = session.userIdol.getTotalCreativity() +
                   session.userIdol.getTotalPerformance() +
                   session.userIdol.getTotalCreativity();
-          long talent_cmp = dto.queryFormat.get(1);
-          this.currentCount = totalTalent;
-          return totalTalent >= talent_cmp;
+          this.target = dto.queryFormat.get(1);
+          return this.currentCount >= this.target;
 
         case Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT:
-          int level_cmp = dto.queryFormat.get(1);
+          this.target = dto.queryFormat.get(1);
           this.currentCount = session.userGameInfo.titleId;
-          return session.userGameInfo.titleId >= level_cmp;
+          return session.userGameInfo.titleId >= this.target;
 
         case Constant.ACHIEVEMENT.GROUP_JOIN: //gia nhập liên minh
           this.currentCount = (session.groupID > 0) ? 1 : 0;
+          this.target       = 1;
           return session.groupID > 0;
         default:
           return false;
