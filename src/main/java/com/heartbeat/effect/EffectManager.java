@@ -1,5 +1,6 @@
 package com.heartbeat.effect;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserIdol;
 import com.transport.EffectResult;
@@ -53,7 +54,8 @@ public class EffectManager implements EffectHandler{
       int idolId = effectFormat.get(1);
       Idols.Idol idol = UserIdol.buildIdol(idolId);
       if (session.userIdol.addIdol(idol)) {
-        session.effectResults.add(EffectResult.of(1000, idolId, 0));
+        session.effectResults.add(EffectResult.of(2000, idolId, 0));
+        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.IDOL_ACHIEVEMENT, 1);
         return "ok";
       }
       return "effect_add_idol_fail";
