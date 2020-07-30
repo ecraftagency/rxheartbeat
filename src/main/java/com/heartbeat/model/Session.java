@@ -67,6 +67,7 @@ public class Session {
   public UserDailyMission   userDailyMission;
   public UserAchievement    userAchievement;
   public UserMission        userMission;
+  public UserRollCall       userRollCall;
 
   public List<EffectResult> effectResults;
 
@@ -82,6 +83,7 @@ public class Session {
     userDailyMission      = UserDailyMission.ofDefault();
     userAchievement       = UserAchievement.ofDefault();
     userMission           = UserMission.ofDefault();
+    userRollCall          = UserRollCall.ofDefault();
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -136,6 +138,10 @@ public class Session {
 
     if (userMission == null) {
       userMission = UserMission.ofDefault();
+    }
+
+    if (userRollCall == null) {
+      userRollCall          = UserRollCall.ofDefault();
     }
 
     userProfile.lastLogin   = second;

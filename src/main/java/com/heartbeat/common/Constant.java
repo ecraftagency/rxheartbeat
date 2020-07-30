@@ -97,7 +97,7 @@ public class Constant {
   }
 
   public static class USER_GAME_INFO {
-    public static final int INIT_TIME_GIFT      = 86400*7; //milis
+    public static final int INIT_TIME_GIFT            = 86400*7; //milis
   }
 
   public static void serverStartUp() {
