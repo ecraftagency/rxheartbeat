@@ -30,7 +30,7 @@ public class RollCallController implements Handler<RoutingContext> {
             resp = processClaimDailyGift(session, curMs);
             break;
           case "claimVipGift":
-            resp = processClaimVipGift(session, curMs);
+            resp = processClaimVipGift(session, curMs, ctx);
             break;
           default:
             resp = ExtMessage.daily_mission();
@@ -54,9 +54,10 @@ public class RollCallController implements Handler<RoutingContext> {
     }
   }
 
-  private ExtMessage processClaimVipGift(Session session, long curMs) {
+  private ExtMessage processClaimVipGift(Session session, long curMs, RoutingContext ctx) {
+    int claimLevel      = ctx.getBodyAsJson().getInteger("claimLevel");
     ExtMessage resp     = ExtMessage.rollCall();
-    resp.msg            = session.userRollCall.claimVipGift(session, curMs);
+    resp.msg            = session.userRollCall.claimVipGift(session, curMs, claimLevel);
     resp.data.rollCall  = session.userRollCall;
     return resp;
   }
