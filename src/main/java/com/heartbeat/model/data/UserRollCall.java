@@ -24,6 +24,7 @@ public class UserRollCall extends RollCall {
     UserRollCall rollCall       = new UserRollCall();
     rollCall.nClaimedDays       = 0;
     rollCall.lastDailyClaimTime = 0;
+    rollCall.todayClaim         = false;
     return rollCall;
   }
 
@@ -33,8 +34,10 @@ public class UserRollCall extends RollCall {
     int dayDiff   = (second - lastDailyClaimTime) >= 60 ? 1 : 0;
 
     if (dayDiff <= 0) {
+      todayClaim = false;
       return "delay";
     }
+    todayClaim = true;
     return "ok";
   }
 
