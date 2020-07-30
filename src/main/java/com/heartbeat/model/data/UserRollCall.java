@@ -49,7 +49,7 @@ public class UserRollCall extends RollCall {
     //int dayDiff = Utilities.dayDiff(lastDailyClaimTime, second);
     int dayDiff   = (second - lastDailyClaimTime) >= 60 ? 1 : 0;
 
-    if (dayDiff <= 0) {
+    if (dayDiff <= 0 || this.todayClaim) {
       return "daily_gift_already_claimed";
     }
 
