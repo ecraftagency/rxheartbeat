@@ -60,7 +60,8 @@ public class UserRollCall extends RollCall {
         EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
 
       nClaimedDays++;
-      lastDailyClaimTime = second;
+      lastDailyClaimTime  = second;
+      todayClaim          = false;
       return "ok";
     }
     catch (Exception e) {
