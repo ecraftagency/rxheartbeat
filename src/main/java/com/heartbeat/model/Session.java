@@ -143,6 +143,9 @@ public class Session {
     if (userRollCall == null) {
       userRollCall          = UserRollCall.ofDefault();
     }
+    else {
+      userRollCall.reBalance();
+    }
 
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;

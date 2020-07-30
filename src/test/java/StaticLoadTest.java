@@ -4,7 +4,6 @@ import com.statics.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class StaticLoadTest {
@@ -115,6 +114,10 @@ public class StaticLoadTest {
       String dailyGift = new String(Files.readAllBytes(Paths.get("data/json/dailyGift.json")),
               StandardCharsets.UTF_8);
       DailyGiftData.loadJson(dailyGift);
+
+      String vipGift = new String(Files.readAllBytes(Paths.get("data/json/vipGift.json")),
+              StandardCharsets.UTF_8);
+      VipGiftData.loadJson(vipGift);
 
       WordFilter.loadJson("");
     }

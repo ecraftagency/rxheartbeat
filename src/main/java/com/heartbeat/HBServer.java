@@ -201,6 +201,14 @@ public class HBServer extends AbstractVerticle {
               StandardCharsets.UTF_8);
       MissionData.loadJson(mission);
 
+      String dailyGift = new String(Files.readAllBytes(Paths.get("data/json/dailyGift.json")),
+              StandardCharsets.UTF_8);
+      DailyGiftData.loadJson(dailyGift);
+
+      String vipGift = new String(Files.readAllBytes(Paths.get("data/json/vipGift.json")),
+              StandardCharsets.UTF_8);
+      VipGiftData.loadJson(vipGift);
+
       WordFilter.loadJson("");
 
       String conf             = new String(Files.readAllBytes(Paths.get("config.json")));

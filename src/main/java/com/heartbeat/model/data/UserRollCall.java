@@ -4,8 +4,11 @@ import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.statics.DailyGiftData;
+import com.statics.VipData;
+import com.statics.VipGiftData;
 import com.transport.model.RollCall;
 
+import java.util.HashMap;
 import java.util.List;
 /*
 open daily gift UI  -> req DailyGiftInfo
@@ -25,19 +28,28 @@ public class UserRollCall extends RollCall {
     rollCall.nClaimedDays       = 0;
     rollCall.lastDailyClaimTime = 0;
     rollCall.todayClaim         = false;
+    rollCall.vipClaimed         = new HashMap<>();
     return rollCall;
   }
 
-  public String getDailyGiftInfo(long curMs) {
+  public void reBalance() {
+    if (this.vipClaimed == null)
+      this.vipClaimed = new HashMap<>();
+  }
+
+  public String getRollCallInfo(Session session, long curMs) {
     int second = (int)(curMs/1000);
     //int dayDiff = Utilities.dayDiff(lastDailyClaimTime, second);
     int dayDiff   = (second - lastDailyClaimTime) >= 60 ? 1 : 0;
 
     if (dayDiff <= 0) {
-      todayClaim = false;
-      return "delay";
+      todayClaim = true;
     }
-    todayClaim = true;
+
+    todayClaim = false;
+    VipData.Vip vipDto = VipData.getVipData(session.userGameInfo.vipExp);
+    currentVipLevel = (vipDto != null) ? vipDto.level : 0;
+
     return "ok";
   }
 
@@ -67,5 +79,27 @@ public class UserRollCall extends RollCall {
     catch (Exception e) {
       return "reward_not_found";
     }
+  }
+
+  public String claimVipGift(Session session, long curMs) {
+    VipData.Vip vipDto = VipData.getVipData(session.userGameInfo.vipExp);
+    if (vipDto == null)
+      return "vip_data_not_found";
+
+    if (vipDto.level == 0 || vipDto.level > VipGiftData.vipGiftDtoMap.size())
+      return "mission_impossible";
+
+    if (vipClaimed.containsKey(vipDto.level))
+      return "vip_gift_already_claim";
+
+    VipGiftData.VipGiftDto dto = VipGiftData.vipGiftDtoMap.get(vipDto.level);
+    if (dto == null || dto.reward == null)
+      return "vip_gift_data_not_found";
+
+    dto.reward.forEach(r -> EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r));
+
+    currentVipLevel = vipDto.level;
+    vipClaimed.put(currentVipLevel, curMs);
+    return "ok";
   }
 }

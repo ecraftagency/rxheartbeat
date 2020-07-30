@@ -23,11 +23,14 @@ public class RollCallController implements Handler<RoutingContext> {
         ExtMessage resp;
         long curMs = System.currentTimeMillis();
         switch (cmd) {
-          case "claimCrazyMilestone":
-            resp = processGetDailyInfo(session, curMs);
+          case "getRollCallInfo":
+            resp = processGetRollCallInfo(session, curMs);
             break;
-          case "getMissions":
+          case "claimDailyGift":
             resp = processClaimDailyGift(session, curMs);
+            break;
+          case "claimVipGift":
+            resp = processClaimVipGift(session, curMs);
             break;
           default:
             resp = ExtMessage.daily_mission();
@@ -51,6 +54,13 @@ public class RollCallController implements Handler<RoutingContext> {
     }
   }
 
+  private ExtMessage processClaimVipGift(Session session, long curMs) {
+    ExtMessage resp     = ExtMessage.rollCall();
+    resp.msg            = session.userRollCall.claimVipGift(session, curMs);
+    resp.data.rollCall  = session.userRollCall;
+    return resp;
+  }
+
   private ExtMessage processClaimDailyGift(Session session, long curMs) {
     ExtMessage resp     = ExtMessage.rollCall();
     resp.msg            = session.userRollCall.claimDailyGift(session,curMs);
@@ -58,9 +68,9 @@ public class RollCallController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processGetDailyInfo(Session session, long curMs) {
+  private ExtMessage processGetRollCallInfo(Session session, long curMs) {
     ExtMessage resp     = ExtMessage.rollCall();
-    resp.msg            = session.userRollCall.getDailyGiftInfo(curMs);
+    resp.msg            = session.userRollCall.getRollCallInfo(session, curMs);
     resp.data.rollCall  = session.userRollCall;
     return resp;
   }
