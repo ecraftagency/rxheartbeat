@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("unused")
 public class UserIdol extends Idols {
   public static final int     CREATIVITY              = 2; //trí lực
   public static final int     PERFORMANCE             = 3; //chính trị
@@ -49,6 +50,11 @@ public class UserIdol extends Idols {
   }
 
   /********************************************************************************************************************/
+
+  public void reBalance() {
+    groupByHalo();
+    HaloData.gUpdateGroupHalo(idolMap, halo2Idol);
+  }
 
   public UserIdol() {
     idolMap   = new HashMap<>();

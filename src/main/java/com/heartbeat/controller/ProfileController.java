@@ -147,6 +147,7 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
     resp.data.inventory   = session.userInventory;
+    resp.data.fight       = session.userFight;
     return resp;
   }
 }

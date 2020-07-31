@@ -79,7 +79,7 @@ public class ProductionController implements Handler<RoutingContext> {
 
       if (Constant.GROUP.missionStart > 0) {
         UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-        if (group != null && (goldCntBef - deltaGold) > 0)
+        if (group != null && deltaGold > 0)
           group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID, deltaGold);
       }
 
