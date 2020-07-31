@@ -159,6 +159,9 @@ public class UserRollCall extends RollCall {
   }
 
   public String claimGiftCardDailyGift(Session session, long curMs, int giftType) {
+    int second  = (int)(curMs/1000);
+    reCalcGiftCardInfo(session, second);
+
     GiftInfo giftInfo = giftCards.get(giftType);
     if (giftInfo == null)
       return "gift_card_not_found";
@@ -171,9 +174,9 @@ public class UserRollCall extends RollCall {
     if (giftDto == null || giftDto.dailyReward == null)
       return "gift_card_data_not_found";
 
-    int second  = (int)(curMs/1000);
     int nDays = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.boughtTime, second);
     int claimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.lastClaimTime, second);
+
 
     if (nDays > giftDto.expireDay) {
       return "gift_card_expire";
