@@ -52,8 +52,8 @@ public class UserIdol extends Idols {
   /********************************************************************************************************************/
 
   public void reBalance() {
-    groupByHalo();
-    HaloData.gUpdateGroupHalo(idolMap, halo2Idol);
+    //groupByHalo();
+    //HaloData.gUpdateGroupHalo(idolMap, halo2Idol);
   }
 
   public UserIdol() {

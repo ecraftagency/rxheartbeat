@@ -6,10 +6,7 @@ import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
-import com.statics.CrazyRewardData;
-import com.statics.MediaData;
-import com.statics.VipData;
-import com.statics.WordFilter;
+import com.statics.*;
 import com.transport.model.GameInfo;
 
 import java.util.HashMap;
@@ -19,7 +16,7 @@ import java.util.List;
 public class UserGameInfo extends GameInfo {
   public static final int MAX_AVATAR                = 10;
   public static final int MAX_GENDER                = 2;
-  public static final int MEDIA_INTERVAL            = 59;
+  public static final int MEDIA_INTERVAL            = 1198;//20'
   public static final int CLAIM_MEDIA_COUNT_ITEM    = 2; //hợp đồng truyền thông
 
   public static UserGameInfo ofDefault() {
@@ -42,6 +39,7 @@ public class UserGameInfo extends GameInfo {
     defaultInfo.nextQuestion      = MediaData.nextRandQuestion();
     defaultInfo.crazyRewardClaim  = new HashMap<>();
     defaultInfo.timeChange        = false;
+    defaultInfo.shopping          = new HashMap<>();
     return defaultInfo;
   }
 
@@ -50,6 +48,12 @@ public class UserGameInfo extends GameInfo {
   public void newDay() {
     crazyDegree = 0;
     crazyRewardClaim.clear();
+    shopping.clear();
+  }
+
+  public void reBalance() {
+    if (shopping == null)
+      shopping = new HashMap<>();
   }
 
   public String updateDisplayName(Session session,  String dName) throws Exception {
@@ -185,7 +189,8 @@ public class UserGameInfo extends GameInfo {
     return "unknown_milestone";
   }
 
-  public boolean useTime(long amount) {
+  public boolean useTime(Session session, long amount) {
+    reBalanceTime(session);
     if (amount > this.time)
       return false;
     this.time -= amount;
@@ -198,5 +203,45 @@ public class UserGameInfo extends GameInfo {
   public void addTime(long amount) {
     this.time += amount;
     timeChange = true;
+  }
+
+  private void reBalanceTime(Session session) {
+    int second    = (int)(System.currentTimeMillis()/1000);
+    int deltaTime = second - session.lastHearBeatTime;
+    session.userGameInfo.time -= deltaTime;
+
+    if (session.userGameInfo.time < 0)
+      session.userGameInfo.time = 0;
+    session.lastHearBeatTime = second;
+  }
+
+  /*SHOPPING***********************************************************************************************************/
+  public String buyShopItem(Session session, int itemId) {
+    ShopData.ShopDto dto = ShopData.shopDtoMap.get(itemId);
+
+    if (dto == null || dto.format == null || dto.format.size() == 0)
+      return "shop_data_not_found";
+
+    if (shopping.getOrDefault(itemId, 0) > dto.dailyLimit)
+      return "shop_limit";
+
+    VipData.Vip vipDto = VipData.getVipData(vipExp);
+    if (vipDto == null)
+      return "vip_data_not_found";
+
+    if (dto.vipCond < vipDto.level)
+      return "vip_condition_mismatch";
+
+    if (useTime(session, dto.timeCost)) {
+      for (List<Integer> f : dto.format)
+        EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, f);
+
+      int upt = shopping.getOrDefault(itemId, 0) + 1;
+      shopping.put(itemId, upt);
+      return "ok";
+    }
+    else {
+      return "insufficient_time";
+    }
   }
 }

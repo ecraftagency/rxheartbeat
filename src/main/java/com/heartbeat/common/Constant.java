@@ -110,10 +110,13 @@ public class Constant {
     public static final int IDOL_SINGLE_QUERY         = 1;
     public static final int IDOL_MULTI_QUERY          = 0;
     public static final int GROUP_JOIN                = 19;
+    public static final int STORE_ACHIEVEMENT         = 20;
+
   }
 
   public static class USER_GAME_INFO {
     public static final int INIT_TIME_GIFT            = 86400*7; //milis
+    public static final int INIT_TIME_GIFT_LV         = 2;
   }
 
   public static class USER_ROLL_CALL {

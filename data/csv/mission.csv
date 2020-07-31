@@ -104,7 +104,7 @@ id,name,desc,queryFormat,rewardFormat
 103,Tăng cấp Idol,Ít nhất 3 Idol lên cấp 80,"[16,0,3,80]","[[1,3,300000,0]]"
 104,Thế bất khả át,Tổng tài năng tăng lên đến 180000,"[3,180000]","[[100,2,1,0],[100,104,1,0]]"
 105,Tam nhân hành,Tích lũy chiến thắng đời sống Showbiz 697 lần,"[5,697]","[[100,5,2,0]]"
-106,Mua đạo cụ,Mua đạo cụ bất kỳ trong cửa tiệm 1 lần,"[6,3]","[[100,5,2,0]]"
+106,Mua đạo cụ,Mua đạo cụ bất kỳ trong cửa tiệm 1 lần,"[20,1]","[[100,5,2,0]]"
 107,Tăng cấp Idol,Ít nhất 4 Idol lên cấp 80,"[16,0,4,80]","[[1,1,300000,0]]"
 108,Tăng cấp Idol,Ít nhất 5 Idol lên cấp 80,"[16,0,5,80]","[[1,3,300000,0]]"
 109,Tăng cấp Idol,Ít nhất 6 Idol lên cấp 80,"[16,0,6,80]","[[1,3,300000,0]]"

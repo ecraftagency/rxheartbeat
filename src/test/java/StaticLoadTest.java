@@ -123,6 +123,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       GiftCardData.loadJson(giftCard);
 
+      String shop = new String(Files.readAllBytes(Paths.get("data/json/shop.json")),
+              StandardCharsets.UTF_8);
+      ShopData.loadJson(shop);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {

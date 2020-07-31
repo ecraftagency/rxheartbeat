@@ -147,6 +147,9 @@ public class Session {
       userRollCall.reBalance();
     }
 
+    userIdol.reBalance();
+    userGameInfo.reBalance();
+
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;
     lastHearBeatTime        = second;
@@ -261,7 +264,7 @@ public class Session {
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
-            userGameInfo.useTime(Constant.GROUP.CREATE_GROUP_TIME_COST);
+            userGameInfo.useTime(this, Constant.GROUP.CREATE_GROUP_TIME_COST);
             handler.handle(Future.succeededFuture("ok"));
           }
           else{
@@ -284,7 +287,7 @@ public class Session {
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());
-                    userGameInfo.useTime(Constant.GROUP.CREATE_GROUP_TIME_COST);
+                    userGameInfo.useTime(this, Constant.GROUP.CREATE_GROUP_TIME_COST);
                     handler.handle(Future.succeededFuture("ok"));
                   }
                   else{

@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 import static com.heartbeat.common.Constant.USER_GAME_INFO.INIT_TIME_GIFT;
+import static com.heartbeat.common.Constant.USER_GAME_INFO.INIT_TIME_GIFT_LV;
 
 public class ProfileController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileController.class);
@@ -27,6 +29,9 @@ public class ProfileController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          case "buyShopItem":
+            resp = processBuyShopItem(session, ctx);
+            break;
           case "addVipExp":
             resp = processAddVipExp(session, ctx);
             break;
@@ -61,11 +66,25 @@ public class ProfileController implements Handler<RoutingContext> {
     }
   }
 
+  private ExtMessage processBuyShopItem(Session session, RoutingContext ctx) {
+    int shopItemId      = ctx.getBodyAsJson().getInteger("shopItemId");
+    ExtMessage resp     = ExtMessage.profile();
+    resp.msg            = session.userGameInfo.buyShopItem(session, shopItemId);
+    resp.data.gameInfo  = session.userGameInfo;
+    resp.data.inventory = session.userInventory;
+    resp.effectResults  = session.effectResults;
+    return resp;
+  }
+
   private ExtMessage processAddVipExp(Session session, RoutingContext ctx) {
     int amount = ctx.getBodyAsJson().getInteger("amount");
     ExtMessage resp = ExtMessage.profile();
     session.userGameInfo.addVipExp(session, amount);
     resp.data.gameInfo = session.userGameInfo;
+
+    if (resp.msg.equals("ok")) {
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.STORE_ACHIEVEMENT, 1);
+    }
     return resp;
   }
 
@@ -90,8 +109,10 @@ public class ProfileController implements Handler<RoutingContext> {
 
     session.userGameInfo.exp -= nextLV.exp;
     session.userGameInfo.titleId = nextLV.officeLV;
-    session.userGameInfo.addTime(INIT_TIME_GIFT);
     session.userGameInfo.maxMedia++;
+    if (session.userGameInfo.titleId == INIT_TIME_GIFT_LV) {
+      session.userGameInfo.addTime(INIT_TIME_GIFT);
+    }
 
     resp.msg = "ok";
     resp.data.gameInfo    = session.userGameInfo;

@@ -68,6 +68,7 @@ public class UserMission extends Mission {
         case Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.TRAVEL_ACHIEVEMENT:
         case Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT:
+        case Constant.ACHIEVEMENT.STORE_ACHIEVEMENT:
         case 2*100: //hợp đồng truyền thông
         case 67*100: //cuộn cường hóa
           this.target       = (long)(dto.queryFormat.get(1));
