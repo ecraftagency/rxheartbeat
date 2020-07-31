@@ -82,7 +82,7 @@ public class UserRollCall extends RollCall {
       }
 
       //todo critical
-      int nDays = Utilities.dayDiff(entry.getValue().boughtTime, second);
+      int nDays = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().boughtTime, second);
       if (nDays > giftDto.expireDay) {
         entry.getValue().boughtTime     = 0;
         entry.getValue().remainDay      = 0;
@@ -92,7 +92,7 @@ public class UserRollCall extends RollCall {
       }
 
       entry.getValue().remainDay  = giftDto.expireDay - nDays;
-      int giftClaimDayDiff = Utilities.dayDiff(entry.getValue().lastClaimTime, second);
+      int giftClaimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().lastClaimTime, second);
       entry.getValue().todayClaim = giftClaimDayDiff <= 0;
     }
   }
@@ -173,8 +173,8 @@ public class UserRollCall extends RollCall {
       return "gift_card_data_not_found";
 
     int second  = (int)(curMs/1000);
-    int nDays = Utilities.dayDiff(giftInfo.boughtTime, second);
-    int claimDayDiff = Utilities.dayDiff(giftInfo.lastClaimTime, second);
+    int nDays = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.boughtTime, second);
+    int claimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.lastClaimTime, second);
 
     if (nDays > giftDto.expireDay) {
       return "gift_card_expire";
