@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -12,9 +11,7 @@ import com.transport.model.RollCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 /*
 open daily gift UI  -> req DailyGiftInfo
 click claim gift    -> req claimDailyGift
@@ -95,6 +92,8 @@ public class UserRollCall extends RollCall {
       int giftClaimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().lastClaimTime, second);
       entry.getValue().todayClaim = giftClaimDayDiff <= 0;
     }
+
+    giftCards.entrySet().removeIf(e -> e.getValue().remainDay == 0);
   }
 
   public String claimDailyGift(Session session, long curMs) {

@@ -1,7 +1,6 @@
 package com.statics;
 
 import java.util.List;
-import java.util.Map;
 
 public class GiftCardData {
   public static class GiftCardDto implements Common.hasKey<Integer> {
