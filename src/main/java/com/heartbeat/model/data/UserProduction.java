@@ -100,6 +100,46 @@ public class UserProduction extends com.transport.model.Production{
     return "wrong_product_type";
   }
 
+  public String multiProduce(Session session) {
+    long curMs = System.currentTimeMillis();
+    updateProduction(session, curMs);
+    if (currentGoldClaimCount <= 0 && currentViewClaimCount <= 0 && currentFanClaimCount <= 0)
+      return "claim_product_timeout";
+
+    //pre checking
+    long    totalFanAdd          = 0;
+    boolean shouldDoFanProduce   = true;
+    if (currentFanClaimCount > 0) {
+      totalFanAdd = currentFanClaimCount*session.userIdol.getTotalAttractive();
+      if (session.userGameInfo.view + currentViewClaimCount*session.userIdol.getTotalPerformance() < totalFanAdd)
+        shouldDoFanProduce = false;
+    }
+
+    //gold
+    if (currentGoldClaimCount > 0) {
+      session.userGameInfo.money += currentGoldClaimCount*session.userIdol.getTotalCreativity();
+      lastGoldClaim               = (int)(curMs/1000);
+      currentGoldClaimCount       = 0;
+    }
+
+    //view
+    if (currentViewClaimCount > 0) {
+      session.userGameInfo.view  += currentViewClaimCount*session.userIdol.getTotalPerformance();
+      lastViewClaim               = (int)(curMs/1000);
+      currentViewClaimCount       = 0;
+    }
+
+    //fan
+    if (currentFanClaimCount > 0 && shouldDoFanProduce) {
+      session.userGameInfo.fan   += totalFanAdd;
+      session.userGameInfo.view  -= totalFanAdd;
+      lastFanClaim                = (int)(curMs/1000);
+      currentFanClaimCount        = 0;
+    }
+
+    return "ok";
+  }
+
   public void addProduction(int productType, int amount) {
     switch (productType){
       case PRODUCE_GOLD:

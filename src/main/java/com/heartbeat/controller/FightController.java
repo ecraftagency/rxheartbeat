@@ -170,7 +170,7 @@ public class FightController implements Handler<RoutingContext> {
         if (Constant.GROUP.missionStart > 0) {
           UserGroup group = GroupPool.getGroupFromPool(session.groupID);
           if (group != null)
-            group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAMESHOW_MISSION_ID);
+            group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAMESHOW_MISSION_ID, 1);
         }
         session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAMESHOW_ACHIEVEMENT, 1);

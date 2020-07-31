@@ -157,7 +157,7 @@ public class UserGroup extends Group {
     return "set_inform_fail";
   }
 
-  public void addRecord(Session session, int cas, int missionId) {
+  public void addRecord(Session session, int cas, int missionId, int amount) {
     Member member = members.get(session.id);
     if (member == null) {
       LOGGER.error("member_not_found");
@@ -173,7 +173,7 @@ public class UserGroup extends Group {
       member.cas = cas;
       mission.resetMission();
     }
-    mission.count++;
+    mission.count += amount;
     isChange = true;
   }
 

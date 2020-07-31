@@ -27,6 +27,9 @@ public class ProductionController implements Handler<RoutingContext> {
         long curMs = System.currentTimeMillis();
         ExtMessage resp;
         switch (cmd) {
+          case "claimMultiProduct":
+            resp = processClaimMultiProduct(session);
+            break;
           case "productInfo":
             resp = processGetProductInfo(session, curMs);
             break;
@@ -56,6 +59,45 @@ public class ProductionController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processClaimMultiProduct(Session session) {
+    int goldCntBef = session.userProduction.currentGoldClaimCount;
+    int viewCntBef = session.userProduction.currentViewClaimCount;
+    int fanCntBef  = session.userProduction.currentFanClaimCount;
+
+    ExtMessage resp       = ExtMessage.production();
+    resp.msg              = session.userProduction.multiProduce(session);
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.production  = session.userProduction;
+    resp.data.idols       = session.userIdol;
+
+    if (resp.msg.equals("ok")) {
+      int deltaGold = goldCntBef - session.userProduction.currentGoldClaimCount;
+      int deltaView = viewCntBef - session.userProduction.currentViewClaimCount;
+      int deltaFan  = fanCntBef  - session.userProduction.currentFanClaimCount;
+
+      if (Constant.GROUP.missionStart > 0) {
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        if (group != null && (goldCntBef - deltaGold) > 0)
+          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID, deltaGold);
+      }
+
+      if (deltaGold > 0) {
+        session.userDailyMission.addRecord(UserProduction.PRODUCE_GOLD, deltaGold);
+        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.CRT_ACHIEVEMENT, deltaGold);
+      }
+      if (deltaView > 0) {
+        session.userDailyMission.addRecord(UserProduction.PRODUCE_VIEW, deltaView);
+        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIEW_ACHIEVEMENT, deltaView);
+      }
+      if (deltaFan > 0) {
+        session.userDailyMission.addRecord(UserProduction.PRODUCE_FAN, deltaFan);
+        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, deltaFan);
+      }
+    }
+
+    return resp;
   }
 
   private ExtMessage addProductCount(Session session, long curMs, RoutingContext ctx) {
@@ -88,11 +130,12 @@ public class ProductionController implements Handler<RoutingContext> {
     resp.data.gameInfo    = session.userGameInfo;
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
+
     if (resp.msg.equals("ok")) {
       if (Constant.GROUP.missionStart > 0) {
         UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-        if (group != null)
-          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID);
+        if (group != null && productType == UserProduction.PRODUCE_GOLD)
+          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID, 1);
       }
 
       session.userDailyMission.addRecord(productType);

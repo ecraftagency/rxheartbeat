@@ -174,8 +174,8 @@ public class UserRollCall extends RollCall {
     if (giftDto == null || giftDto.dailyReward == null)
       return "gift_card_data_not_found";
 
-    int nDays = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.boughtTime, second);
-    int claimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.lastClaimTime, second);
+    int nDays = (second - giftInfo.lastClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.boughtTime, second);
+    int claimDayDiff = (second - giftInfo.lastClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.lastClaimTime, second);
 
 
     if (nDays > giftDto.expireDay) {
@@ -196,7 +196,11 @@ public class UserRollCall extends RollCall {
   }
 
   public String addGiftCard(Session session, long curMs, int type) {
-    GiftCardData.GiftCardDto giftDto = GiftCardData.giftCardDtoMap.get(type);
+    GiftCardData.GiftCardDto giftDto = GiftCardData.giftCardDtoMap.stream()
+            .filter(e -> e.type == type)
+            .findAny()
+            .orElse(null);
+
     if (giftDto == null || giftDto.initReward == null)
       return "gift_card_data_not_found";
 
