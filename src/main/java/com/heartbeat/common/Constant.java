@@ -100,6 +100,12 @@ public class Constant {
     public static final int INIT_TIME_GIFT            = 86400*7; //milis
   }
 
+  public static class USER_ROLL_CALL {
+    public static final int WEEKLY_GIFT_TYPE          = 1;
+    public static final int MONTHLY_GIFT_TYPE         = 2;
+    public static final int YEARLY_GIFT_TYPE          = 3;
+  }
+
   public static void serverStartUp() {
     try {
       GROUP.missionStart =

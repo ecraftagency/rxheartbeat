@@ -40,8 +40,4 @@ public class UserIndexer {
     userProfile.lastLogin = (int)(System.currentTimeMillis()/1000) - Constant.DAY_SECONDS;
     return userProfile;
   }
-
-  public String toJson() {
-    return Utilities.gson.toJson(this);
-  }
 }

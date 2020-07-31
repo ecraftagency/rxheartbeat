@@ -112,10 +112,6 @@ public class UserFight extends Fight {
             || (curMs >= secondOpenTime && curMs <= secondCloseTime);
   }
 
-  public String toJson() {
-    return Utilities.gson.toJson(this);
-  }
-
   /*GAME SHOW**********************************************************************************************************/
 
   public String handleFight(Session session, int idolId) {

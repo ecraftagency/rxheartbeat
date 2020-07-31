@@ -23,6 +23,12 @@ public class RollCallController implements Handler<RoutingContext> {
         ExtMessage resp;
         long curMs = System.currentTimeMillis();
         switch (cmd) {
+          case "buyGiftCard":
+            resp = processBuyGiftCard(session, curMs, ctx);
+            break;
+          case "claimGiftCardDaily":
+            resp = processClaimGiftCardDaily(session, curMs, ctx);
+            break;
           case "getRollCallInfo":
             resp = processGetRollCallInfo(session, curMs);
             break;
@@ -54,11 +60,30 @@ public class RollCallController implements Handler<RoutingContext> {
     }
   }
 
+  private ExtMessage processBuyGiftCard(Session session, long curMs, RoutingContext ctx) {
+    int giftType        = ctx.getBodyAsJson().getInteger("giftType");
+    ExtMessage resp     = ExtMessage.rollCall();
+    resp.msg            = session.userRollCall.addGiftCard(session,curMs, giftType);
+    resp.data.rollCall  = session.userRollCall;
+    resp.effectResults  = session.effectResults;
+    return resp;
+  }
+
+  private ExtMessage processClaimGiftCardDaily(Session session, long curMs, RoutingContext ctx) {
+    int giftType        = ctx.getBodyAsJson().getInteger("giftType");
+    ExtMessage resp     = ExtMessage.rollCall();
+    resp.msg            = session.userRollCall.claimGiftCardDailyGift(session,curMs, giftType);
+    resp.data.rollCall  = session.userRollCall;
+    resp.effectResults  = session.effectResults;
+    return resp;
+  }
+
   private ExtMessage processClaimVipGift(Session session, long curMs, RoutingContext ctx) {
     int claimLevel      = ctx.getBodyAsJson().getInteger("claimLevel");
     ExtMessage resp     = ExtMessage.rollCall();
     resp.msg            = session.userRollCall.claimVipGift(session, curMs, claimLevel);
     resp.data.rollCall  = session.userRollCall;
+    resp.effectResults  = session.effectResults;
     return resp;
   }
 
@@ -66,6 +91,7 @@ public class RollCallController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.rollCall();
     resp.msg            = session.userRollCall.claimDailyGift(session,curMs);
     resp.data.rollCall  = session.userRollCall;
+    resp.effectResults  = session.effectResults;
     return resp;
   }
 

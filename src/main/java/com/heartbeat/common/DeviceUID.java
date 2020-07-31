@@ -51,10 +51,6 @@ public class DeviceUID {
     return info;
   }
 
-  public String toJson()
-  {
-    return Utilities.gson.toJson(this);
-  }
   public static class DeviceUIDUpdateInfo {
     public int dayDiff;
     public boolean isFirstActive;

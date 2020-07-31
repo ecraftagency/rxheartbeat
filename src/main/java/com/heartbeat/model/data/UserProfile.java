@@ -57,10 +57,6 @@ public class UserProfile {
     return deviceUIDs.add(deviceUID);
   }
 
-  public String toJson() {
-    return Utilities.gson.toJson(this);
-  }
-
   public static UserProfile ofDefault() {
     UserProfile defaultUserProfile = new UserProfile();
     defaultUserProfile.registerAt = (int)(System.currentTimeMillis()/1000);

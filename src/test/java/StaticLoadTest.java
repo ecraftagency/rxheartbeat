@@ -119,6 +119,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       VipGiftData.loadJson(vipGift);
 
+      String giftCard = new String(Files.readAllBytes(Paths.get("data/json/giftCard.json")),
+              StandardCharsets.UTF_8);
+      GiftCardData.loadJson(giftCard);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {
