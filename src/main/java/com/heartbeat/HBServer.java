@@ -64,7 +64,7 @@ public class HBServer extends AbstractVerticle {
     super.init(vertx, context);
 
     Scheduler scheduler = RxHelper.scheduler(vertx);
-    CronObservable.cronspec(scheduler, "0 0 0 * * ? *", "Asia/Ho_Chi_Minh")
+    CronObservable.cronspec(scheduler, "0 0 0 * * ? *", Constant.SCHEDULE.timeZone)
             .subscribe(
                     timed -> {
                       SessionPool.dailyReset.run();
@@ -73,7 +73,12 @@ public class HBServer extends AbstractVerticle {
                     fault -> LOGGER.error("error new day task")
             );
 
-    CronObservable.cronspec(scheduler, "0 8 14,19 * * ? *", "Asia/Ho_Chi_Minh")
+    String gameShowOpenCron = String.format("%d %d %d,%d * * ? *",
+            Constant.SCHEDULE.gameShowOneOpenSec,
+            Constant.SCHEDULE.gameShowOneOpenMin,
+            Constant.SCHEDULE.gameShowOneOpenHour,
+            Constant.SCHEDULE.gameShowTwoOpenHour);
+    CronObservable.cronspec(scheduler, gameShowOpenCron, Constant.SCHEDULE.timeZone)
             .subscribe(
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = true;
@@ -84,7 +89,12 @@ public class HBServer extends AbstractVerticle {
                     fault -> LOGGER.error("error open game show task")
             );
 
-    CronObservable.cronspec(scheduler, "0 0 14,21 * * ? *", "Asia/Ho_Chi_Minh")
+    String gameShowCloseCron = String.format("%d %d %d,%d * * ? *",
+            Constant.SCHEDULE.gameShowOneCloseSec,
+            Constant.SCHEDULE.gameShowOneCloseMin,
+            Constant.SCHEDULE.gameShowOneCloseHour,
+            Constant.SCHEDULE.gameShowTwoCloseHour);
+    CronObservable.cronspec(scheduler, gameShowCloseCron, Constant.SCHEDULE.timeZone)
             .subscribe(
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = false;

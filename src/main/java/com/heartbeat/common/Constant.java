@@ -7,11 +7,27 @@ public class Constant {
   public static final int     DAY_SECONDS     = 24 * HOUR_SECONDS;
 
   public static class SCHEDULE {
+    public static final String timeZone = "Asia/Ho_Chi_Minh";
     public static boolean gameShowOpen            = false;
     public static int     gameShowOneOpenHour     = 12;
-    public static int     gameShowOneCloseHour    = 14;
     public static int     gameShowTwoOpenHour     = 19;
+
+    public static int     gameShowOneOpenSec      = 0;
+    public static int     gameShowTwoOpenSec      = 0;
+
+
+    public static int     gameShowOneOpenMin      = 0;
+    public static int     gameShowTwoOpenMin      = 0;
+
+    public static int     gameShowOneCloseHour    = 14;
     public static int     gameShowTwoCloseHour    = 21;
+
+    public static int     gameShowOneCloseSec      = 0;
+    public static int     gameShowTwoCloseSec      = 0;
+
+
+    public static int     gameShowOneCloseMin      = 0;
+    public static int     gameShowTwoCloseMin      = 0;
   }
 
   public static class GAME_INFO {
