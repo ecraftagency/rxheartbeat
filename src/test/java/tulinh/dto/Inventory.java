@@ -1,4 +1,4 @@
-package com.tulinh.dto;
+package tulinh.dto;
 
 public class Inventory {
   public int      type;

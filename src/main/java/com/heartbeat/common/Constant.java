@@ -7,43 +7,33 @@ public class Constant {
   public static final int     DAY_SECONDS     = 24 * HOUR_SECONDS;
 
   public static class SCHEDULE {
-    public static final String timeZone = "Asia/Ho_Chi_Minh";
-    public static boolean gameShowOpen            = false;
-    public static int     gameShowOneOpenHour     = 12;
-    public static int     gameShowTwoOpenHour     = 19;
-
-    public static int     gameShowOneOpenSec      = 0;
-    public static int     gameShowTwoOpenSec      = 0;
-
-
-    public static int     gameShowOneOpenMin      = 0;
-    public static int     gameShowTwoOpenMin      = 0;
-
-    public static int     gameShowOneCloseHour    = 14;
-    public static int     gameShowTwoCloseHour    = 21;
-
-    public static int     gameShowOneCloseSec      = 0;
-    public static int     gameShowTwoCloseSec      = 0;
-
-
-    public static int     gameShowOneCloseMin      = 0;
-    public static int     gameShowTwoCloseMin      = 0;
+    public static final String  TIME_ZONE               = "Asia/Ho_Chi_Minh";
+    public static boolean       gameShowOpen            = false;
+    public static int           gameShowOneOpenHour     = 12;
+    public static int           gameShowTwoOpenHour     = 19;
+    public static int           gameShowOneOpenSec      = 0;
+    public static int           gameShowOneOpenMin      = 0;
+    public static int           gameShowOneCloseHour    = 14;
+    public static int           gameShowTwoCloseHour    = 21;
+    public static int           gameShowOneCloseSec     = 0;
+    public static int           gameShowOneCloseMin     = 0;
   }
 
   public static class GAME_INFO {
-    public static int SERVER_VERSION = 150;
-    public static int MIN_AVAILABLE_VERSION = 147;
-    public static final int OS_SRC_KNOWN = 0;
-    public static final String OS_IOS = "ios";
-    public static final String OS_ANDROID = "android";
-    public static final String OS_WINDOWS = "windows";
-    public static final String DEFAULT_DEVICE_ID_ANDROID = "6962556a555d60555660593961555d600xff";
-    public static final String ANDROID_URL = "http://helloandroid.com";
-    public static final String IOS_URL = "http://helloios.com";
+    public static int           SERVER_VERSION            = 150;
+    public static int           MIN_AVAILABLE_VERSION     = 147;
+    public static final int     OS_SRC_KNOWN              = 0;
+    public static final String  OS_IOS                    = "ios";
+    public static final String  OS_ANDROID                = "android";
+    public static final String  OS_WINDOWS                = "windows";
+    public static final String  DEFAULT_DEVICE_ID_ANDROID = "6962556a555d60555660593961555d600xff";
+    public static final String  ANDROID_URL               = "http://helloandroid.com";
+    public static final String  IOS_URL                   = "http://helloios.com";
   }
 
   public static class SYSTEM_INFO {
-    public static boolean USE_POOL_MSG                = false;
+    public static boolean USE_POOL_MSG                    = false;
+    public static int     EVENT_LOOP_SLEEP_INV            = 1000; //millis
   }
 
   public static class ONLINE_INFO {

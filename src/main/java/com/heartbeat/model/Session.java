@@ -149,6 +149,7 @@ public class Session {
 
     userIdol.reBalance();
     userGameInfo.reBalance();
+    userInventory.reBalance();
 
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;
@@ -163,6 +164,7 @@ public class Session {
         userTravel.newDay();
         userDailyMission.newDay();
         userGameInfo.newDay();
+        userInventory.newDay();
 
         userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
       }

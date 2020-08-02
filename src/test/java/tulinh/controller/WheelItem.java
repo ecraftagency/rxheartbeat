@@ -1,4 +1,4 @@
-package com.tulinh.controller;
+package tulinh.controller;
 
 import io.vertx.ext.web.RoutingContext;
 

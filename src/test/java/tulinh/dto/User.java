@@ -1,4 +1,4 @@
-package com.tulinh.dto;
+package tulinh.dto;
 
 import java.util.List;
 

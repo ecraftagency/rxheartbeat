@@ -1,4 +1,4 @@
-package com.tulinh.controller;
+package tulinh.controller;
 
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -6,27 +6,24 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.RoutingContext;
 import redis.clients.jedis.Jedis;
 
-import static com.tulinh.TLS.redisPool;
+import java.util.List;
 
-public class WheelInventory implements Handler<RoutingContext> {
+import static tulinh.TLS.redisPool;
+
+public class WheelHistory implements Handler<RoutingContext> {
   private Jedis agent;
 
-  public WheelInventory() {
+  public WheelHistory() {
     agent = redisPool.getResource();
   }
   @Override
   public void handle(RoutingContext ctx) {
     String megaID = ctx.request().getParam("megaID");
-
+    List<String> history = agent.lrange("user:" + megaID + ":history", 0, -1);
     JsonArray resp = new JsonArray();
-    for (int i = 0; i < 10; i++) {
-      String key = "user:" + megaID + ":inventory:" + i;
-      String val = agent.get(key);
-      if (val == null)
-        val = "0";
-      resp.add(val);
+    if (history != null) {
+      history.forEach(resp::add);
     }
-
     ctx.response().putHeader("Content-Type", "text/json")
             .end(Json.encode(resp));
   }

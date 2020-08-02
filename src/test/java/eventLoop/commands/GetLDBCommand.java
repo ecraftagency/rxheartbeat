@@ -12,7 +12,7 @@ import java.util.List;
 public class GetLDBCommand implements EventLoop.Command {
   Handler<AsyncResult<List<ScoreObject>>> handler;
   LDB ldb;
-  ScoreObject so;
+
   public GetLDBCommand(LDB ldb, Handler<AsyncResult<List<ScoreObject>>> handler) {
     this.handler = handler;
     this.ldb = ldb;

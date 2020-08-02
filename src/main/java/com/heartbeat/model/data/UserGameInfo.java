@@ -11,6 +11,7 @@ import com.transport.model.GameInfo;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {
@@ -18,6 +19,9 @@ public class UserGameInfo extends GameInfo {
   public static final int MAX_GENDER                = 2;
   public static final int MEDIA_INTERVAL            = 1198;//20'
   public static final int CLAIM_MEDIA_COUNT_ITEM    = 2; //hợp đồng truyền thông
+
+  //shop data
+  public Map<Integer, Integer> shopping;
 
   public static UserGameInfo ofDefault() {
     UserGameInfo defaultInfo      = new UserGameInfo();

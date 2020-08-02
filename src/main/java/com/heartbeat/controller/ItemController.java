@@ -28,6 +28,9 @@ public class ItemController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          case "mergeItem":
+            resp = processMergeItem(session, ctx);
+            break;
           case "useSingleItem":
             resp = processUseEffectItem(session, ctx);
             break;
@@ -60,6 +63,15 @@ public class ItemController implements Handler<RoutingContext> {
       LOGGER.error(e.getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processMergeItem(Session session, RoutingContext ctx) {
+    int mergeId         = ctx.getBodyAsJson().getInteger("mergeId");
+    ExtMessage resp     = ExtMessage.item();
+    resp.msg            = session.userInventory.mergeItem(session, mergeId);
+    resp.data.inventory = session.userInventory;
+    resp.effectResults  = session.effectResults;
+    return resp;
   }
 
   private ExtMessage processTestEffect(Session session, RoutingContext ctx) {

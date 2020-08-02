@@ -1,8 +1,8 @@
-package com.tulinh.controller;
+package tulinh.controller;
 
 import com.heartbeat.common.Utilities;
-import com.tulinh.Const;
-import com.tulinh.dto.Item;
+import tulinh.Const;
+import tulinh.dto.Item;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
@@ -11,9 +11,8 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static com.tulinh.Const.*;
 
-import static com.tulinh.TLS.*;
+import static tulinh.TLS.*;
 public class SetUpHandler implements Handler<RoutingContext> {
   private Jedis userAgent;
   private Jedis cntAgent;
@@ -27,11 +26,11 @@ public class SetUpHandler implements Handler<RoutingContext> {
 
   @Override
   public void handle(RoutingContext ctx) {
-    nUSER           = ctx.getBodyAsJson().getInteger("nUser");
-    SYNC_INTERVAL   = ctx.getBodyAsJson().getInteger("syncInterval");
+    Const.nUSER           = ctx.getBodyAsJson().getInteger("nUser");
+    Const.SYNC_INTERVAL   = ctx.getBodyAsJson().getInteger("syncInterval");
     String strItems = ctx.getBodyAsJson().getJsonArray("items").toString();
-    staticItems     = Arrays.asList(Utilities.gson.fromJson(strItems, Item[].class));
-    SYNC_MODE       = ctx.getBodyAsJson().getBoolean("syncMode");
+    Const.staticItems     = Arrays.asList(Utilities.gson.fromJson(strItems, Item[].class));
+    Const.SYNC_MODE       = ctx.getBodyAsJson().getBoolean("syncMode");
 
     userAgent.flushAll();
     cntAgent.flushAll();
@@ -46,8 +45,8 @@ public class SetUpHandler implements Handler<RoutingContext> {
     cntAgent.mset(batch.toArray(new String[]{}));
     batch.clear();
 
-    if (!SYNC_MODE) {
-      for (int i = 0; i < nUSER; i++) {
+    if (!Const.SYNC_MODE) {
+      for (int i = 0; i < Const.nUSER; i++) {
         JsonObject json = new JsonObject();
         json.put("turn", 5000000);
         for (int j = 0; j < 10; j++) {
@@ -58,7 +57,7 @@ public class SetUpHandler implements Handler<RoutingContext> {
       }
     }
     else {
-      for (int i = 0; i < nUSER; i++) {
+      for (int i = 0; i < Const.nUSER; i++) {
         batch.add(Integer.toString(i));
         batch.add("5000000");
       }

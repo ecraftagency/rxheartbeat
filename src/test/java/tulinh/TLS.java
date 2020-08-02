@@ -1,6 +1,5 @@
-package com.tulinh;
+package tulinh;
 
-import com.tulinh.controller.*;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -9,6 +8,7 @@ import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.client.WebClient;
 import redis.clients.jedis.JedisPool;
+import tulinh.controller.*;
 
 import java.util.HashMap;
 import java.util.Map;

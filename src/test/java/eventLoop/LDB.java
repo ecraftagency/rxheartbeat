@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class LDB extends AbstractHeap<Integer, ScoreObject> {
-
-
   public LDB(int capacity) {
     super(capacity);
     sorter = new PriorityQueue<>((a, b) -> (int) (a.score - b.score));
@@ -38,9 +36,6 @@ public class LDB extends AbstractHeap<Integer, ScoreObject> {
 
   @Override
   public List<ScoreObject> get() {
-    System.out.println(indexer.size());
-    System.out.println(sorter.size());
-
     return new ArrayList<>(sorter);
   }
 }

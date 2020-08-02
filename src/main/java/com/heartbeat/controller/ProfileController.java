@@ -73,18 +73,19 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.gameInfo  = session.userGameInfo;
     resp.data.inventory = session.userInventory;
     resp.effectResults  = session.effectResults;
-    return resp;
-  }
-
-  private ExtMessage processAddVipExp(Session session, RoutingContext ctx) {
-    int amount = ctx.getBodyAsJson().getInteger("amount");
-    ExtMessage resp = ExtMessage.profile();
-    session.userGameInfo.addVipExp(session, amount);
-    resp.data.gameInfo = session.userGameInfo;
 
     if (resp.msg.equals("ok")) {
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.STORE_ACHIEVEMENT, 1);
     }
+
+    return resp;
+  }
+
+  private ExtMessage processAddVipExp(Session session, RoutingContext ctx) {
+    int amount          = ctx.getBodyAsJson().getInteger("amount");
+    ExtMessage resp     = ExtMessage.profile();
+    session.userGameInfo.addVipExp(session, amount);
+    resp.data.gameInfo  = session.userGameInfo;
     return resp;
   }
 

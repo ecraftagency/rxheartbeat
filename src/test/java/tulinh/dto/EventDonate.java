@@ -1,4 +1,4 @@
-package com.tulinh.dto;
+package tulinh.dto;
 
 public class EventDonate {
   public int type;

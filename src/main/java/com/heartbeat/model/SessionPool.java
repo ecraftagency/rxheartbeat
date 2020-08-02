@@ -109,6 +109,9 @@ public class SessionPool {
 
           //todo userGameInfo
           session.userGameInfo.newDay();
+
+          //todo userInventory
+          session.userInventory.newDay();
         }
       }
     }

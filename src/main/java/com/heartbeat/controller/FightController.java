@@ -7,7 +7,6 @@ import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
-import com.tulinh.Const;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import org.slf4j.Logger;

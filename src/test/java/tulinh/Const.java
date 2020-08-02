@@ -1,6 +1,6 @@
-package com.tulinh;
+package tulinh;
 
-import com.tulinh.dto.Item;
+import tulinh.dto.Item;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.time.Duration;

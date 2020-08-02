@@ -1,8 +1,15 @@
 package com.heartbeat.model.data;
 
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
+import com.heartbeat.model.Session;
+import com.statics.ItemMergeData;
 import com.statics.PropData;
 import com.transport.model.Inventory;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserInventory extends Inventory {
@@ -10,10 +17,22 @@ public class UserInventory extends Inventory {
     userItems = new ConcurrentHashMap<>();
   }
 
+  //shop data
+  public Map<Integer, Integer> dailyMerge;
+
   public static UserInventory ofDefault() {
     UserInventory userInventory = new UserInventory();
     PropData.propMap.values().forEach(prop -> userInventory.addItem(prop.propID, 1000));
     return userInventory;
+  }
+
+  public void newDay() {
+    dailyMerge.clear();
+  }
+
+  public void reBalance() {
+    if (dailyMerge == null)
+      dailyMerge = new HashMap<>();
   }
 
   public void addItem(int itemId, int amount) {
@@ -44,5 +63,51 @@ public class UserInventory extends Inventory {
     int remain = actualAmount - amount;
     userItems.put(itemId, remain);
     return true;
+  }
+
+  public /*synchronized*/ String mergeItem(Session session, int mergeId) {
+    ItemMergeData.ItemMergeDto dto = ItemMergeData.itemMergeDtoMap.get(mergeId);
+    if (       dto == null
+            || dto.materials == null
+            || dto.materials.size() == 0
+            || dto.product == null
+            || dto.product.size() != 4)
+      return "item_merge_data_not_found";
+
+    if (dailyMerge.getOrDefault(mergeId, 0) > dto.dailyLimit)
+      return "shop_limit";
+
+    try {
+      boolean able = true;
+      for (List<Integer> material : dto.materials) {
+        int mId = material.get(EffectHandler.PARAM1);
+        int mAmount = material.get(EffectHandler.PARAM2);
+
+        if (!haveItem(mId, mAmount)) {
+          able = false;
+          break;
+        }
+      }
+
+      if (able) {
+        for (List<Integer> material : dto.materials) {
+          int mId = material.get(EffectHandler.PARAM1);
+          int mAmount = material.get(EffectHandler.PARAM2);
+          useItem(mId, mAmount);
+        }
+
+        EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, dto.product);
+
+        int upt = dailyMerge.getOrDefault(mergeId, 0) + 1;
+        dailyMerge.put(mergeId, upt);
+        return "ok";
+      }
+      else {
+        return "insufficient_materials";
+      }
+    }
+    catch (Exception e) {
+      return "unknown_error";
+    }
   }
 }

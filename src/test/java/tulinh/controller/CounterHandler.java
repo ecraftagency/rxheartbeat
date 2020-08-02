@@ -1,6 +1,6 @@
-package com.tulinh.controller;
+package tulinh.controller;
 
-import com.tulinh.Const;
+import tulinh.Const;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -10,7 +10,7 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tulinh.TLS.redisPool;
+import static tulinh.TLS.redisPool;
 
 public class CounterHandler implements Handler<RoutingContext> {
   private Jedis agent;
