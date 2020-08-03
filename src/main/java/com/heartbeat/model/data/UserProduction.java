@@ -12,9 +12,9 @@ public class UserProduction extends com.transport.model.Production{
   public static final     int PRODUCE_VIEW                = 2;
   public static final     int PRODUCE_GOLD                = 3; //sáng tác
 
-  public transient        int curGoldRecInv               = 0; //current recovery interval
-  public transient        int curViewRecInv               = 0; //current recovery interval
-  public transient        int curFanRecInv                = 0; //current recovery interval
+//  public transient        int curGoldRecInv               = 0; //current recovery interval
+//  public transient        int curViewRecInv               = 0; //current recovery interval
+//  public transient        int curFanRecInv                = 0; //current recovery interval
 
   public static UserProduction ofDefault() {
     UserProduction defaultUserProduction  = new UserProduction();
@@ -24,19 +24,25 @@ public class UserProduction extends com.transport.model.Production{
     defaultUserProduction.maxFanClaim     = 3;
     defaultUserProduction.maxViewClaim    = 3;
     defaultUserProduction.maxGoldClaim    = 3;
-    defaultUserProduction.curGoldRecInv   = 0; //todo need reBalance at login and creation point
+    //defaultUserProduction.curGoldRecInv   = 0; //todo need reBalance at login and creation point
     return defaultUserProduction;
   }
 
   /********************************************************************************************************************/
 
   public void reBalance(long curTotalCrt) {
-    curGoldRecInv = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
-    curViewRecInv = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
-    curFanRecInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
-    curGoldRecInv = Math.min(curGoldRecInv, MAX_REC_INTERVAL);
-    curViewRecInv = Math.min(curViewRecInv, MAX_REC_INTERVAL);
-    curFanRecInv  = Math.min(curFanRecInv, MAX_REC_INTERVAL);
+//    curGoldRecInv = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
+//    curViewRecInv = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
+//    curFanRecInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
+//    curGoldRecInv = Math.min(curGoldRecInv, MAX_REC_INTERVAL);
+//    curViewRecInv = Math.min(curViewRecInv, MAX_REC_INTERVAL);
+//    curFanRecInv  = Math.min(curFanRecInv, MAX_REC_INTERVAL);
+    goldRecoverInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
+    viewRecoverInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
+    fanRecoverInv   = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
+    goldRecoverInv  = Math.min(goldRecoverInv, MAX_REC_INTERVAL);
+    viewRecoverInv  = Math.min(viewRecoverInv, MAX_REC_INTERVAL);
+    fanRecoverInv   = Math.min(fanRecoverInv, MAX_REC_INTERVAL);
   }
 
   public void updateProduction(Session session, long curMs) {
@@ -55,13 +61,13 @@ public class UserProduction extends com.transport.model.Production{
       maxGoldClaim  = currentLevelData.moneyMaxTimes;
     }
 
-    int newGoldProduceCount = goldDt/curGoldRecInv;
-    int newViewProduceCount = viewDt/curViewRecInv;
-    int newFanProduceCount  = fanDt/curFanRecInv;
+    int newGoldProduceCount = goldDt/goldRecoverInv;
+    int newViewProduceCount = viewDt/viewRecoverInv;
+    int newFanProduceCount  = fanDt/fanRecoverInv;
 
-    lastGoldClaim += newGoldProduceCount*curGoldRecInv;
-    lastViewClaim += newViewProduceCount*curViewRecInv;
-    lastFanClaim  += newFanProduceCount*curFanRecInv;
+    lastGoldClaim += newGoldProduceCount*goldRecoverInv;
+    lastViewClaim += newViewProduceCount*viewRecoverInv;
+    lastFanClaim  += newFanProduceCount*fanRecoverInv;
 
     currentFanClaimCount  += newFanProduceCount;
     currentGoldClaimCount += newGoldProduceCount;
@@ -73,11 +79,11 @@ public class UserProduction extends com.transport.model.Production{
 
     //update ivn after claim increase
     if (newGoldProduceCount >= 1)
-      curGoldRecInv = newInv;
+      goldRecoverInv = newInv;
     if (newViewProduceCount >= 1)
-      curViewRecInv = newInv;
+      viewRecoverInv = newInv;
     if (newFanProduceCount >= 1)
-      curFanRecInv  = newInv;
+      fanRecoverInv  = newInv;
   }
 
   /*public void updateProduction(Session session, long curMs) {
