@@ -233,7 +233,7 @@ public class UserGameInfo extends GameInfo {
     if (vipDto == null)
       return "vip_data_not_found";
 
-    if (dto.vipCond < vipDto.level)
+    if (vipDto.level < dto.vipCond)
       return "vip_condition_mismatch";
 
     if (useTime(session, dto.timeCost)) {
