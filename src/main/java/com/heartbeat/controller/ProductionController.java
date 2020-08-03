@@ -116,7 +116,7 @@ public class ProductionController implements Handler<RoutingContext> {
 
     session.userProduction.updateProduction(session, curMs);
     session.userInventory.useItem(UserProduction.CLAIM_ITEM, amount);
-    session.userProduction.addProduction(productType, amount);
+    session.userProduction.addProduction(session, productType, amount, curMs);
     resp.data.production = session.userProduction;
     resp.msg = "ok";
     return resp;

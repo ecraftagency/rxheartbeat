@@ -201,7 +201,8 @@ public class UserProduction extends com.transport.model.Production{
     return "ok";
   }
 
-  public void addProduction(int productType, int amount) {
+  public void addProduction(Session session, int productType, int amount, long curMs) {
+    updateProduction(session, curMs);
     switch (productType){
       case PRODUCE_GOLD:
         currentGoldClaimCount += amount;
