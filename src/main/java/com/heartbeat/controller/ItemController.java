@@ -67,8 +67,10 @@ public class ItemController implements Handler<RoutingContext> {
 
   private ExtMessage processMergeItem(Session session, RoutingContext ctx) {
     int mergeId         = ctx.getBodyAsJson().getInteger("mergeId");
+    int mergeCount      = ctx.getBodyAsJson().getInteger("mergeCount");
+
     ExtMessage resp     = ExtMessage.item();
-    resp.msg            = session.userInventory.mergeItem(session, mergeId);
+    resp.msg            = session.userInventory.mergeItem(session, mergeId, mergeCount);
     resp.data.inventory = session.userInventory;
     resp.effectResults  = session.effectResults;
     return resp;

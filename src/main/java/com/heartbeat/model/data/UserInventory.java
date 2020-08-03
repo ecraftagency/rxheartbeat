@@ -65,7 +65,7 @@ public class UserInventory extends Inventory {
     return true;
   }
 
-  public /*synchronized*/ String mergeItem(Session session, int mergeId) {
+  public /*synchronized*/ String mergeItem(Session session, int mergeId, int mergeCount) {
     ItemMergeData.ItemMergeDto dto = ItemMergeData.itemMergeDtoMap.get(mergeId);
     if (       dto == null
             || dto.materials == null
@@ -77,11 +77,14 @@ public class UserInventory extends Inventory {
     if (dailyMerge.getOrDefault(mergeId, 0) > dto.dailyLimit)
       return "shop_limit";
 
+    if (mergeCount <= 0)
+      return "mission_impossible";
+
     try {
       boolean able = true;
       for (List<Integer> material : dto.materials) {
-        int mId = material.get(EffectHandler.PARAM1);
-        int mAmount = material.get(EffectHandler.PARAM2);
+        int mId     = material.get(EffectHandler.PARAM1);
+        int mAmount = mergeCount*material.get(EffectHandler.PARAM2);
 
         if (!haveItem(mId, mAmount)) {
           able = false;
@@ -91,14 +94,15 @@ public class UserInventory extends Inventory {
 
       if (able) {
         for (List<Integer> material : dto.materials) {
-          int mId = material.get(EffectHandler.PARAM1);
-          int mAmount = material.get(EffectHandler.PARAM2);
-          useItem(mId, mAmount);
+          int mId           = material.get(EffectHandler.PARAM1);
+          int consumeAmount = mergeCount*material.get(EffectHandler.PARAM2);
+          useItem(mId, consumeAmount);
         }
 
-        EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, dto.product);
+        for (int i = 0; i < mergeCount; i++)
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, dto.product);
 
-        int upt = dailyMerge.getOrDefault(mergeId, 0) + 1;
+        int upt = dailyMerge.getOrDefault(mergeId, 0) + mergeCount;
         dailyMerge.put(mergeId, upt);
         return "ok";
       }

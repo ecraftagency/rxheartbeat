@@ -47,6 +47,7 @@ public class UserProduction extends com.transport.model.Production{
 
   public void updateProduction(Session session, long curMs) {
     int newInv        = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+    newInv            = Math.min(newInv, MAX_REC_INTERVAL);
 
     int second        = (int)(curMs/1000);
     int goldDt        = second - lastGoldClaim;
@@ -202,16 +203,21 @@ public class UserProduction extends com.transport.model.Production{
   }
 
   public void addProduction(Session session, int productType, int amount, long curMs) {
-    updateProduction(session, curMs);
     switch (productType){
       case PRODUCE_GOLD:
-        currentGoldClaimCount += amount;
+        currentGoldClaimCount  += amount;
+        goldRecoverInv          = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+        goldRecoverInv          = Math.min(goldRecoverInv, MAX_REC_INTERVAL);
         break;
       case PRODUCE_FAN:
         currentFanClaimCount += amount;
+        fanRecoverInv          = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+        fanRecoverInv          = Math.min(fanRecoverInv, MAX_REC_INTERVAL);
         break;
       case PRODUCE_VIEW:
         currentViewClaimCount += amount;
+        viewRecoverInv          = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+        viewRecoverInv          = Math.min(viewRecoverInv, MAX_REC_INTERVAL);
         break;
       default:
         break;
