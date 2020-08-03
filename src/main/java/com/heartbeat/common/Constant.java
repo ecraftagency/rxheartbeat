@@ -101,6 +101,8 @@ public class Constant {
     public static final int IDOL_MULTI_QUERY          = 0;
     public static final int GROUP_JOIN                = 19;
     public static final int STORE_ACHIEVEMENT         = 20;
+    public static final int TIME_SPENT_ACHIEVEMENT    = 21;
+    public static final int APT_BUFF_ITEM_ACHIEVEMENT = 67*100;
 
   }
 

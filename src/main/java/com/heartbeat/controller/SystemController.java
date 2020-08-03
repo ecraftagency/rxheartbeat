@@ -51,6 +51,9 @@ public class SystemController implements Handler<RoutingContext> {
     int deltaTime = second - session.lastHearBeatTime;
     session.userGameInfo.time -= deltaTime;
 
+    //todo delta time is always >= real time consume, but just let it be
+    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, deltaTime);
+
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
     session.updateOnline(System.currentTimeMillis());

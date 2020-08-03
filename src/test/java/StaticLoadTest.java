@@ -131,6 +131,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       ItemMergeData.loadJson(itemMerge);
 
+      String event = new String(Files.readAllBytes(Paths.get("data/json/event.json")),
+              StandardCharsets.UTF_8);
+      EventData.loadJson(event);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {

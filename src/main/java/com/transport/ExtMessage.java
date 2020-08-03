@@ -28,6 +28,7 @@ public class ExtMessage {
     public Achievement  achievement;
     public Mission      mission;
     public RollCall     rollCall;
+    public Event        event;
     public int          currentGroupState;
     public String       extObj;
   }
@@ -46,6 +47,15 @@ public class ExtMessage {
     result.cmd = "";
     result.msg = "ok";
     result.group = "mission";
+    result.data = new Data();
+    return result;
+  }
+
+  public static ExtMessage event() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "event";
     result.data = new Data();
     return result;
   }

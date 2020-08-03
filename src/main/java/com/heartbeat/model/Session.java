@@ -68,6 +68,7 @@ public class Session {
   public UserAchievement    userAchievement;
   public UserMission        userMission;
   public UserRollCall       userRollCall;
+  public UserEvent          userEvent;
 
   public List<EffectResult> effectResults;
 
@@ -84,6 +85,7 @@ public class Session {
     userAchievement       = UserAchievement.ofDefault();
     userMission           = UserMission.ofDefault();
     userRollCall          = UserRollCall.ofDefault();
+    userEvent             = UserEvent.ofDefault();
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
@@ -150,6 +152,10 @@ public class Session {
       userRollCall.reBalance();
     }
 
+    if (userEvent == null) {
+      userEvent = UserEvent.ofDefault();
+    }
+
     userIdol.reBalance();
     userGameInfo.reBalance();
     userInventory.reBalance();
@@ -179,6 +185,8 @@ public class Session {
       //todo critical
       int deltaTime = second - userProfile.lastLogin;
       userGameInfo.time -= deltaTime;
+      userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, deltaTime);
+
       if (userGameInfo.time < 0)
         userGameInfo.time = 0;
     }

@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
@@ -201,6 +202,9 @@ public class UserGameInfo extends GameInfo {
     if (this.time < 0)
       this.time = 0;
     timeChange = true;
+
+    //todo delta time is always >= real time consume, but just let it be
+    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, amount);
     return true;
   }
 
@@ -213,10 +217,12 @@ public class UserGameInfo extends GameInfo {
     int second    = (int)(System.currentTimeMillis()/1000);
     int deltaTime = second - session.lastHearBeatTime;
     session.userGameInfo.time -= deltaTime;
-
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
     session.lastHearBeatTime = second;
+
+    //todo delta time is always >= real time consume, but just let it be
+    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, deltaTime);
   }
 
   /*SHOPPING***********************************************************************************************************/

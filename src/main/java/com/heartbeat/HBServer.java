@@ -117,6 +117,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/achievement").handler(new AchievementController());
         router.post("/api/mission").handler(new MissionController());
         router.post("/api/rollcall").handler(new RollCallController());
+        router.post("/api/event").handler(new EventController());
 
         router.post("/gm/inject").handler(new InjectController());
 
@@ -328,6 +329,10 @@ public class HBServer extends AbstractVerticle {
     String itemMerge = new String(Files.readAllBytes(Paths.get("data/json/itemMerge.json")),
             StandardCharsets.UTF_8);
     ItemMergeData.loadJson(itemMerge);
+
+    String event = new String(Files.readAllBytes(Paths.get("data/json/event.json")),
+            StandardCharsets.UTF_8);
+    EventData.loadJson(event);
 
     WordFilter.loadJson("");
   }

@@ -125,7 +125,8 @@ public class IdolController implements Handler<RoutingContext> {
     resp.msg            = session.userIdol.addAptByItem(session, idolId, speciality, step);
     resp.data.inventory = session.userInventory;
     if (resp.msg.equals("ok")) {
-      session.userAchievement.addAchieveRecord(67*100, 1);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
+      session.userEvent.addEventRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
     }
     return resp;
   }
