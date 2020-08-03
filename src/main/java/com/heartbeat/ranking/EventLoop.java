@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import static com.heartbeat.common.Constant.*;
 
+/*simple event loop implement in java[/-script-/]*/
 public class EventLoop implements Runnable{
   private static final Logger LOGGER = LoggerFactory.getLogger(AchievementController.class);
   private ConcurrentLinkedQueue<Command> incomingCommands;

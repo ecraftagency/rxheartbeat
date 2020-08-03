@@ -222,9 +222,9 @@ public class UserGroup extends Group {
       return "mission_not_found";
 
     if (GROUP.missionStart <= 0     ||
-        GROUP.messionEnd <= 0       ||
+        GROUP.missionEnd <= 0       ||
         second < GROUP.missionStart ||
-        second > GROUP.messionEnd   ||
+        second > GROUP.missionEnd ||
         mission.claim) {
       return "claim_reward_time_out";
     }

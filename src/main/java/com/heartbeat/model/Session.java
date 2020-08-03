@@ -9,6 +9,7 @@ import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
+import com.statics.EventInfo;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
 import com.transport.model.Group;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import static com.heartbeat.common.Constant.*;
 
 /*
 group ref count I/O
@@ -155,6 +157,9 @@ public class Session {
     if (userEvent == null) {
       userEvent = UserEvent.ofDefault();
     }
+    else {
+      userEvent.reBalance();
+    }
 
     userIdol.reBalance();
     userGameInfo.reBalance();
@@ -184,9 +189,12 @@ public class Session {
 
       //todo critical
       int deltaTime = second - userProfile.lastLogin;
-      userGameInfo.time -= deltaTime;
-      userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, deltaTime);
 
+      //record time spent event
+      long timeSpent = deltaTime > userGameInfo.time ? userGameInfo.time : deltaTime;
+      userEvent.addEventRecord(ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, timeSpent, second);
+
+      userGameInfo.time -= deltaTime;
       if (userGameInfo.time < 0)
         userGameInfo.time = 0;
     }

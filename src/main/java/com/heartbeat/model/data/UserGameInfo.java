@@ -204,7 +204,9 @@ public class UserGameInfo extends GameInfo {
     timeChange = true;
 
     //todo delta time is always >= real time consume, but just let it be
-    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, amount);
+    int second    = (int)(System.currentTimeMillis()/1000);
+    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, amount, second);
+
     return true;
   }
 
@@ -216,13 +218,15 @@ public class UserGameInfo extends GameInfo {
   private void reBalanceTime(Session session) {
     int second    = (int)(System.currentTimeMillis()/1000);
     int deltaTime = second - session.lastHearBeatTime;
+
+    //todo delta time is always >= real time consume, but just let it be
+    long timeSpent = deltaTime > time ? time : deltaTime;
+    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, timeSpent, second);
+
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
     session.lastHearBeatTime = second;
-
-    //todo delta time is always >= real time consume, but just let it be
-    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, deltaTime);
   }
 
   /*SHOPPING***********************************************************************************************************/

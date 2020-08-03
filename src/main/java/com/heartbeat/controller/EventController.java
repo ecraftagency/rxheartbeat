@@ -1,7 +1,9 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.sun.tools.internal.jxc.ap.Const;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -55,7 +57,8 @@ public class EventController implements Handler<RoutingContext> {
     int milestoneId         = ctx.getBodyAsJson().getInteger("milestoneId");
     ExtMessage resp         = ExtMessage.achievement();
 
-    resp.msg                = session.userEvent.claimEventReward(session, eventType, milestoneId);
+    int second              = (int)(System.currentTimeMillis()/1000);
+    resp.msg                = session.userEvent.claimEventReward(session, eventType, milestoneId, second);
     resp.effectResults      = session.effectResults;
     resp.data.event         = session.userEvent;
 
@@ -65,6 +68,7 @@ public class EventController implements Handler<RoutingContext> {
   private ExtMessage processGetAchievement(Session session) {
     ExtMessage resp         = ExtMessage.achievement();
     resp.data.event         = session.userEvent;
+    resp.data.extObj        = Json.encode(Constant.EVENT.eventInfoMap);
     return resp;
   }
 }

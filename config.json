@@ -1,5 +1,5 @@
 {
-  "HTTP.PORT" :                           8080,
+  "HTTP.PORT":                            8080,
   "DB.HOST":                              "18.140.197.136",
   "DB.PORT":                              "8091",
   "DB.USER":                              "Administrator",

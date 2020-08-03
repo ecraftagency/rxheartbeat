@@ -270,7 +270,7 @@ public class GroupController implements Handler<RoutingContext> {
       group.strEndDate      = Constant.GROUP.EVENT_END;
       group.missions        = GroupMissionData.missionMap;
       group.missionStartDate = Constant.GROUP.missionStart;
-      group.missionEndDate = Constant.GROUP.messionEnd;
+      group.missionEndDate = Constant.GROUP.missionEnd;
       resp.data.group       = group;
       resp.msg              = "ok";
     }

@@ -1,5 +1,10 @@
 package com.heartbeat.common;
 
+import com.statics.EventInfo;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Constant {
   public static final String  EMPTY_STRING    = "";
   public static final int     MINUTE_SECONDS  = 60;
@@ -60,7 +65,7 @@ public class Constant {
     public static String        EVENT_START             = "01/07/2020 23:00:00";
     public static String        EVENT_END               = "31/08/2020 23:00:00";
     public static int           missionStart            = -1;
-    public static int           messionEnd              = -1;
+    public static int           missionEnd              = -1;
     public static int           CREATE_GROUP_TIME_COST  = 5*86400; //5 days
     public static int           PRODUCTION_MISSION_ID   = 1;
     public static int           GAMESHOW_MISSION_ID     = 2;
@@ -75,6 +80,26 @@ public class Constant {
     public static int IDOL_APT_MISSION_TYPE     = 9;
     public static int RUN_SHOW_MISSION_TYPE     = 11;
     public static int SHOPPING_MISSION_TYPE     = 12;
+  }
+
+  public static class EVENT {
+    public static final int TIME_SPEND_EVT_ID   = 21;
+    public static final int APT_BUFF_USE_EVT_ID = 6700;
+    public static final Map<Integer, EventInfo> eventInfoMap;
+
+    static {
+      eventInfoMap = new HashMap<>();
+      eventInfoMap.put(TIME_SPEND_EVT_ID,
+              EventInfo.of(TIME_SPEND_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(APT_BUFF_USE_EVT_ID,
+              EventInfo.of(TIME_SPEND_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+    }
   }
 
   public static class ACHIEVEMENT {
@@ -111,22 +136,17 @@ public class Constant {
     public static final int INIT_TIME_GIFT_LV         = 2;
   }
 
-  public static class USER_ROLL_CALL {
-    public static final int WEEKLY_GIFT_TYPE          = 1;
-    public static final int MONTHLY_GIFT_TYPE         = 2;
-    public static final int YEARLY_GIFT_TYPE          = 3;
-  }
 
   public static void serverStartUp() {
     try {
       GROUP.missionStart =
               (int)(Utilities.getMillisFromDateString(GROUP.EVENT_START, GROUP.DATE_PATTERN)/1000);
-      GROUP.messionEnd =
+      GROUP.missionEnd =
               (int)(Utilities.getMillisFromDateString(GROUP.EVENT_END, GROUP.DATE_PATTERN)/1000);
     }
     catch (Exception e) {
       GROUP.missionStart = -1;
-      GROUP.messionEnd = -1;
+      GROUP.missionEnd = -1;
     }
   }
 }

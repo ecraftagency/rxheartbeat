@@ -4,6 +4,7 @@ import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserIdol;
+import com.statics.EventInfo;
 import com.transport.ExtMessage;
 import com.transport.model.Idols;
 import io.vertx.core.Handler;
@@ -38,7 +39,7 @@ public class IdolController implements Handler<RoutingContext> {
             resp = processIdolAptAddByExp(session, ctx);
             break;
           case "addAptByItem":
-            resp = processAptUpByItem(session, ctx);
+            resp = processAptUpByItem(session, ctx, System.currentTimeMillis());
             break;
           case "haloLevelUp":
             resp = processHaloLevelUp(session, ctx);
@@ -117,7 +118,7 @@ public class IdolController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processAptUpByItem(Session session, RoutingContext ctx) {
+  private ExtMessage processAptUpByItem(Session session, RoutingContext ctx, long curMs) {
     ExtMessage resp     = ExtMessage.idol();
     int idolId          = ctx.getBodyAsJson().getInteger("idolId");
     int speciality      = ctx.getBodyAsJson().getInteger("speciality");
@@ -126,7 +127,9 @@ public class IdolController implements Handler<RoutingContext> {
     resp.data.inventory = session.userInventory;
     if (resp.msg.equals("ok")) {
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
-      session.userEvent.addEventRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
+
+      int second = (int)(curMs/1000);
+      session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, 1, second);
     }
     return resp;
   }
