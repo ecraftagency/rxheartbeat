@@ -85,6 +85,9 @@ public class Session {
     userMission           = UserMission.ofDefault();
     userRollCall          = UserRollCall.ofDefault();
 
+    //todo reBalance
+    userProduction.reBalance(userIdol.getTotalCreativity());
+
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
     userGameInfo.updateUserMedia(curMs);
@@ -150,6 +153,7 @@ public class Session {
     userIdol.reBalance();
     userGameInfo.reBalance();
     userInventory.reBalance();
+    userProduction.reBalance(this.userIdol.getTotalCreativity());
 
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;
