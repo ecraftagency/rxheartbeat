@@ -65,6 +65,7 @@ public class EventController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processGetEvents(Session session) {
+    session.userEvent.reBalance();
     ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
     resp.data.extObj        = Json.encode(Constant.EVENT.eventInfoMap);

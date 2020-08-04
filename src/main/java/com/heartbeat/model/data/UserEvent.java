@@ -34,6 +34,10 @@ public class UserEvent extends Event {
       records.putIfAbsent(eventType, 0L);
       claimed.putIfAbsent(eventType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
       evt2cas.putIfAbsent(eventType, 0);
+
+      EventInfo ei = Constant.EVENT.eventInfoMap.get(eventType);
+      if (invalidCas(eventType, ei.startTime))
+        resetEventData(eventType);
     }
   }
 
