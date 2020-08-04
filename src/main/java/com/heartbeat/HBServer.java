@@ -24,6 +24,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
 import io.vertx.reactivex.RxHelper;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -78,10 +79,6 @@ public class HBServer extends AbstractVerticle {
     try {
       loadStaticData();
 
-      String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
-      localConfig             = new JsonObject(conf);
-
-      updateConst();
       SessionPool.checkHeartBeat.run();
       GroupPool.groupSyncTask.run();
 
@@ -135,7 +132,12 @@ public class HBServer extends AbstractVerticle {
     });
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
+
+    String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
+    localConfig             = new JsonObject(conf);
+    updateConst();
+
     rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
     rxSessionBucket = HBServer.rxCluster.bucket("sessions");
     rxIndexBucket   = HBServer.rxCluster.bucket("index");
@@ -161,6 +163,7 @@ public class HBServer extends AbstractVerticle {
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");
     ONLINE_INFO.ONLINE_HEARTBEAT_TIME      = localConfig.getInteger("ONLINE_INFO.ONLINE_HEARTBEAT_TIME");
+    SCHEDULE.TIME_ZONE                     = localConfig.getString("SCHEDULE.TIMEZONE");
   }
 
   private static void startCronTask(Vertx vertx) {

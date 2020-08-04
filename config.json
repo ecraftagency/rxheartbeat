@@ -1,9 +1,9 @@
 {
   "HTTP.PORT":                            8080,
-  "DB.HOST":                              "18.140.197.136",
+  "DB.HOST":                              "localhost",
   "DB.PORT":                              "8091",
   "DB.USER":                              "Administrator",
   "DB.PWD":                               "n5t5lnsct",
-  "ONLINE_INFO.ONLINE_HEARTBEAT_TIME":    3600,
+  "ONLINE_INFO.ONLINE_HEARTBEAT_TIME":    30,
   "SCHEDULE.TIMEZONE":                    "Asia/Ho_Chi_Minh"
 }

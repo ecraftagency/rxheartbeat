@@ -12,7 +12,7 @@ public class Constant {
   public static final int     DAY_SECONDS     = 24 * HOUR_SECONDS;
 
   public static class SCHEDULE {
-    public static final String  TIME_ZONE               = "Asia/Ho_Chi_Minh";
+    public static String        TIME_ZONE               = "Asia/Ho_Chi_Minh";
     public static boolean       gameShowOpen            = false;
     public static int           gameShowOneOpenHour     = 12;
     public static int           gameShowTwoOpenHour     = 19;
@@ -88,6 +88,10 @@ public class Constant {
     public static final int MONEY_SPEND_EVT_ID  = 6;
     public static final int VIEW_SPEND_EVT_ID   = 7;
     public static final int FAN_SPEND_EVT_ID    = 8;
+    public static final int CRT_PROD_EVT_ID     = 9;
+    public static final int VIEW_PROD_EVT_ID    = 10;
+    public static final int FAN_PROD_EVT_ID     = 11;
+    public static final int GAME_SHOW_EVT_ID    = 12;
 
     public static final Map<Integer, EventInfo> eventInfoMap;
 
@@ -115,6 +119,21 @@ public class Constant {
                       true));
       eventInfoMap.put(FAN_SPEND_EVT_ID,
               EventInfo.of(FAN_SPEND_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(CRT_PROD_EVT_ID,
+              EventInfo.of(CRT_PROD_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(VIEW_PROD_EVT_ID,
+              EventInfo.of(VIEW_PROD_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(FAN_PROD_EVT_ID,
+              EventInfo.of(FAN_PROD_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
                       true));

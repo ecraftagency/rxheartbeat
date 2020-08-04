@@ -86,14 +86,17 @@ public class ProductionController implements Handler<RoutingContext> {
       if (deltaGold > 0) {
         session.userDailyMission.addRecord(UserProduction.PRODUCE_GOLD, deltaGold);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.CRT_ACHIEVEMENT, deltaGold);
+        session.userEvent.addEventRecord(Constant.EVENT.CRT_PROD_EVT_ID, deltaGold);
       }
       if (deltaView > 0) {
         session.userDailyMission.addRecord(UserProduction.PRODUCE_VIEW, deltaView);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIEW_ACHIEVEMENT, deltaView);
+        session.userEvent.addEventRecord(Constant.EVENT.VIEW_PROD_EVT_ID, deltaView);
       }
       if (deltaFan > 0) {
         session.userDailyMission.addRecord(UserProduction.PRODUCE_FAN, deltaFan);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, deltaFan);
+        session.userEvent.addEventRecord(Constant.EVENT.FAN_PROD_EVT_ID, deltaFan);
       }
     }
 
@@ -143,12 +146,15 @@ public class ProductionController implements Handler<RoutingContext> {
       switch (productType) {
         case UserProduction.PRODUCE_GOLD:
           session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.CRT_ACHIEVEMENT, 1);
+          session.userEvent.addEventRecord(Constant.EVENT.CRT_PROD_EVT_ID, 1);
           break;
         case UserProduction.PRODUCE_FAN:
           session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, 1);
+          session.userEvent.addEventRecord(Constant.EVENT.FAN_PROD_EVT_ID, 1);
           break;
         case UserProduction.PRODUCE_VIEW:
           session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIEW_ACHIEVEMENT, 1);
+          session.userEvent.addEventRecord(Constant.EVENT.VIEW_PROD_EVT_ID, 1);
           break;
         default:
           break;

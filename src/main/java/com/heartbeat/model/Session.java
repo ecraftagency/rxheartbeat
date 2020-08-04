@@ -614,8 +614,7 @@ public class Session {
   public static void addUpdateSession(Session session) {
     if(session != null && !session.isClose) {
       updateQueue.add(session);
-      updateOnlineTask.run();
-      System.out.println(Thread.currentThread().getName());
+      //updateOnlineTask.run();
       GlobalVariable.exeThreadPool.execute(updateOnlineTask);
     }
   }
