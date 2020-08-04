@@ -13,6 +13,7 @@ import com.transport.model.GameInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static com.heartbeat.common.Constant.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {
@@ -205,7 +206,7 @@ public class UserGameInfo extends GameInfo {
 
     //todo delta time is always >= real time consume, but just let it be
     int second    = (int)(System.currentTimeMillis()/1000);
-    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, amount, second);
+    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, amount, second);
 
     return true;
   }
@@ -221,7 +222,7 @@ public class UserGameInfo extends GameInfo {
 
     //todo delta time is always >= real time consume, but just let it be
     long timeSpent = deltaTime > time ? time : deltaTime;
-    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, timeSpent, second);
+    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent, second);
 
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)

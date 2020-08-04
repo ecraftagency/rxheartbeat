@@ -22,7 +22,7 @@ public class EventInfo {
       ei.startTime  = (int)(Utilities.getMillisFromDateString(ei.strStart, DATE_PATTERN)/1000);
       ei.endTime    = (int)(Utilities.getMillisFromDateString(ei.strEnd, DATE_PATTERN)/1000);
 
-      if (ei.startTime - ei.endTime <= 0)
+      if (ei.endTime - ei.startTime <= 0)
         throw new IllegalArgumentException();
     }
     catch (Exception e) {

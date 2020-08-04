@@ -129,7 +129,7 @@ public class IdolController implements Handler<RoutingContext> {
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
 
       int second = (int)(curMs/1000);
-      session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, 1, second);
+      session.userEvent.addEventRecord(Constant.EVENT.APT_BUFF_USE_EVT_ID, 1, second);
     }
     return resp;
   }

@@ -95,7 +95,7 @@ public class Constant {
                       "31/08/2020 23:00:00",
                       true));
       eventInfoMap.put(APT_BUFF_USE_EVT_ID,
-              EventInfo.of(TIME_SPEND_EVT_ID,
+              EventInfo.of(APT_BUFF_USE_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
                       true));

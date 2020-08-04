@@ -53,7 +53,7 @@ public class SystemController implements Handler<RoutingContext> {
 
     //todo delta time is always >= real time consume, but just let it be
     long timeSpent = deltaTime > session.userGameInfo.time ? session.userGameInfo.time : deltaTime;
-    session.userEvent.addEventRecord(Constant.ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, timeSpent, second);
+    session.userEvent.addEventRecord(Constant.EVENT.TIME_SPEND_EVT_ID, timeSpent, second);
 
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)

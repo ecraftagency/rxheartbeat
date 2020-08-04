@@ -192,7 +192,7 @@ public class Session {
 
       //record time spent event
       long timeSpent = deltaTime > userGameInfo.time ? userGameInfo.time : deltaTime;
-      userEvent.addEventRecord(ACHIEVEMENT.TIME_SPENT_ACHIEVEMENT, timeSpent, second);
+      userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent, second);
 
       userGameInfo.time -= deltaTime;
       if (userGameInfo.time < 0)

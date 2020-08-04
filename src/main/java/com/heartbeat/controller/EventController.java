@@ -55,7 +55,7 @@ public class EventController implements Handler<RoutingContext> {
   private ExtMessage processClaimAchievement(Session session, RoutingContext ctx) {
     int eventType           = ctx.getBodyAsJson().getInteger("eventType");
     int milestoneId         = ctx.getBodyAsJson().getInteger("milestoneId");
-    ExtMessage resp         = ExtMessage.achievement();
+    ExtMessage resp         = ExtMessage.event();
 
     int second              = (int)(System.currentTimeMillis()/1000);
     resp.msg                = session.userEvent.claimEventReward(session, eventType, milestoneId, second);
@@ -66,7 +66,7 @@ public class EventController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processGetAchievement(Session session) {
-    ExtMessage resp         = ExtMessage.achievement();
+    ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
     resp.data.extObj        = Json.encode(Constant.EVENT.eventInfoMap);
     return resp;
