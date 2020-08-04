@@ -3,7 +3,6 @@ package com.heartbeat.controller;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
-import com.sun.tools.internal.jxc.ap.Const;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -28,7 +27,7 @@ public class EventController implements Handler<RoutingContext> {
             resp = processClaimAchievement(session, ctx);
             break;
           case "getEvents":
-            resp = processGetAchievement(session);
+            resp = processGetEvents(session);
             break;
           default:
             resp = ExtMessage.event();
@@ -65,10 +64,11 @@ public class EventController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processGetAchievement(Session session) {
+  private ExtMessage processGetEvents(Session session) {
     ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
     resp.data.extObj        = Json.encode(Constant.EVENT.eventInfoMap);
+    resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }
 }
