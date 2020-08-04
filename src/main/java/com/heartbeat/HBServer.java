@@ -119,7 +119,8 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/rollcall").handler(new RollCallController());
         router.post("/api/event").handler(new EventController());
 
-        router.post("/gm/inject").handler(new InjectController());
+        router.post("/gm/session_inject").handler(new SessionInjectController());
+        router.post("/gm/constant_inject").handler(new ConstantInjectController());
 
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));

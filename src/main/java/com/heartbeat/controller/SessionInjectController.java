@@ -9,10 +9,10 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
-public class InjectController implements Handler<RoutingContext> {
+public class SessionInjectController implements Handler<RoutingContext> {
   SessionInjector sessionInjector;
 
-  public InjectController() {
+  public SessionInjectController() {
     sessionInjector = new EvilInjector();
   }
 

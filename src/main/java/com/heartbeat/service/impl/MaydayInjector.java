@@ -1,7 +1,6 @@
 package com.heartbeat.service.impl;
 
-import com.heartbeat.model.Session;
-import com.heartbeat.service.SessionInjector;
+import com.heartbeat.service.ConstantInjector;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -15,30 +14,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class EvilInjector implements SessionInjector {
+public class MaydayInjector implements ConstantInjector {
   @Override
-  public void inject(Session session, String path, String value) throws Exception {
-    EvilExecutor evil = new EvilExecutor();
+  public void inject(String path, String value) throws Exception {
+    MaydayExecutor mayday = new MaydayExecutor();
 
-    String source = String.format("import com.heartbeat.model.Session;\n" +
+    String source = String.format(
+            "import static com.heartbeat.common.Constant.*;\n" +
             "public class Injector {\n" +
-            "  public static void inject(Session session) {\n" +
+            "  public static void inject() {\n" +
             "    %s\n" +
             "  }\n" +
             "}", value);
 
-
-    Path javaFile   = evil.saveSource(source);
-    Path classFile  = evil.compileSource(javaFile);
-    Class<?> clazz  = evil.getClass(classFile);
-    Method inject   = clazz.getMethod("inject", Session.class);
-    inject.invoke(null, session);
+    Path javaFile   = mayday.saveSource(source);
+    Path classFile  = mayday.compileSource(javaFile);
+    Class<?> clazz  = mayday.getClass(classFile);
+    Method inject   = clazz.getMethod("inject");
+    inject.invoke(null);
   }
 
-  public static class EvilExecutor {
+  public static class MaydayExecutor {
     private Path saveSource(String source) throws IOException {
-      String tmpProperty = System.getProperty("java.io.tmpdir");
-      Path sourcePath = Paths.get(tmpProperty, "Injector.java");
+      String tmpProperty  = System.getProperty("java.io.tmpdir");
+      Path sourcePath     = Paths.get(tmpProperty, "Injector.java");
       Files.write(sourcePath, source.getBytes(StandardCharsets.UTF_8));
       return sourcePath;
     }

@@ -1,3 +1,4 @@
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.data.UserAchievement;
 import com.statics.*;
 
@@ -140,6 +141,9 @@ public class StaticLoadTest {
     catch (Exception ioe) {
       //
     }
+
+
+    Constant.EVENT.eventInfoMap.get(6700).updateEventTime("01/07/2020 23:00:00", "06/08/2020 23:00:00");
 
     UserAchievement ac = UserAchievement.ofDefault();
     ac.recordClaim(4, 1);
