@@ -104,17 +104,17 @@ public class Constant {
                       "31/08/2020 23:00:00",
                       true));
       eventInfoMap.put(MONEY_SPEND_EVT_ID,
-              EventInfo.of(APT_BUFF_USE_EVT_ID,
+              EventInfo.of(MONEY_SPEND_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
                       true));
       eventInfoMap.put(VIEW_SPEND_EVT_ID,
-              EventInfo.of(APT_BUFF_USE_EVT_ID,
+              EventInfo.of(VIEW_SPEND_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
                       true));
       eventInfoMap.put(FAN_SPEND_EVT_ID,
-              EventInfo.of(APT_BUFF_USE_EVT_ID,
+              EventInfo.of(FAN_SPEND_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
                       true));
