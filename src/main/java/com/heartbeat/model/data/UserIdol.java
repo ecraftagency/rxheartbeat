@@ -108,7 +108,7 @@ public class UserIdol extends Idols {
     if (idol.level >= curHonor.maxServantLV)
       return "idol_honor_max_level";
 
-    session.userGameInfo.money -= nextLevel.exp;
+    session.userGameInfo.spendMoney(session, nextLevel.exp);
     idol.level += 1;
     onPropertiesChange(idol);
     return "ok";

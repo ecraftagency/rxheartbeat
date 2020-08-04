@@ -4,7 +4,6 @@ import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserIdol;
-import com.statics.EventInfo;
 import com.transport.ExtMessage;
 import com.transport.model.Idols;
 import io.vertx.core.Handler;
@@ -128,8 +127,7 @@ public class IdolController implements Handler<RoutingContext> {
     if (resp.msg.equals("ok")) {
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
 
-      int second = (int)(curMs/1000);
-      session.userEvent.addEventRecord(Constant.EVENT.APT_BUFF_USE_EVT_ID, 1, second);
+      session.userEvent.addEventRecord(Constant.EVENT.APT_BUFF_USE_EVT_ID, 1);
     }
     return resp;
   }

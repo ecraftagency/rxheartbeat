@@ -9,7 +9,6 @@ import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
-import com.statics.EventInfo;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
 import com.transport.model.Group;
@@ -192,7 +191,7 @@ public class Session {
 
       //record time spent event
       long timeSpent = deltaTime > userGameInfo.time ? userGameInfo.time : deltaTime;
-      userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent, second);
+      userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent);
 
       userGameInfo.time -= deltaTime;
       if (userGameInfo.time < 0)

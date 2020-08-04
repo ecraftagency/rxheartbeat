@@ -130,7 +130,7 @@ public class UserFight extends Fight {
     long expectedConsume  = (int)(currentFightLV.fanNPC* currentFightLV.aptNPC/totalTalent) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
-      session.userGameInfo.fan -= expectedConsume;
+      session.userGameInfo.spendFan(session, expectedConsume);
 
       //reward
       session.effectResults.clear();
@@ -288,7 +288,7 @@ public class UserFight extends Fight {
     long expectedConsume  = (currentRunShow.randFanNPC*currentRunShow.randAptNPC/totalTalent) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
-      session.userGameInfo.fan -= expectedConsume;
+      session.userGameInfo.spendFan(session, expectedConsume);
 
       //reward
       session.effectResults.clear();
@@ -344,7 +344,7 @@ public class UserFight extends Fight {
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
     if (session.userGameInfo.fan >= totalExpectConsume) {
-      session.userGameInfo.fan -= totalExpectConsume;
+      session.userGameInfo.spendFan(session, totalExpectConsume);
 
       for (int i = 0; i < time; i++) {
         RunShowData.RunShow rs = RunShowData.of(i + currentRunShow.id);
@@ -390,9 +390,7 @@ public class UserFight extends Fight {
       moneyConsume = (long)(currentShopping.moneyNPC*SHOPPING_MONEY_SCL);
     }
 
-    if (session.userGameInfo.money >= moneyConsume) {
-      session.userGameInfo.money -= moneyConsume;
-
+    if (session.userGameInfo.spendMoney(session, moneyConsume)) {
       //reward
       session.effectResults.clear();
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
@@ -441,9 +439,7 @@ public class UserFight extends Fight {
       totalMoneyConsume += moneyConsume;
     }
 
-    if (session.userGameInfo.money >= totalMoneyConsume) {
-      session.userGameInfo.money -= totalMoneyConsume;
-
+    if (session.userGameInfo.spendMoney(session, totalMoneyConsume)) {
       //reward
       session.effectResults.clear();
       List<Integer> rewardFormat = Arrays.asList(100,0,1,0);

@@ -85,6 +85,10 @@ public class Constant {
   public static class EVENT {
     public static final int TIME_SPEND_EVT_ID   = 21;
     public static final int APT_BUFF_USE_EVT_ID = 6700;
+    public static final int MONEY_SPEND_EVT_ID  = 6;
+    public static final int VIEW_SPEND_EVT_ID   = 7;
+    public static final int FAN_SPEND_EVT_ID    = 8;
+
     public static final Map<Integer, EventInfo> eventInfoMap;
 
     static {
@@ -95,6 +99,21 @@ public class Constant {
                       "31/08/2020 23:00:00",
                       true));
       eventInfoMap.put(APT_BUFF_USE_EVT_ID,
+              EventInfo.of(APT_BUFF_USE_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(MONEY_SPEND_EVT_ID,
+              EventInfo.of(APT_BUFF_USE_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(VIEW_SPEND_EVT_ID,
+              EventInfo.of(APT_BUFF_USE_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+      eventInfoMap.put(FAN_SPEND_EVT_ID,
               EventInfo.of(APT_BUFF_USE_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
@@ -126,9 +145,7 @@ public class Constant {
     public static final int IDOL_MULTI_QUERY          = 0;
     public static final int GROUP_JOIN                = 19;
     public static final int STORE_ACHIEVEMENT         = 20;
-    public static final int TIME_SPENT_ACHIEVEMENT    = 21;
     public static final int APT_BUFF_ITEM_ACHIEVEMENT = 67*100;
-
   }
 
   public static class USER_GAME_INFO {

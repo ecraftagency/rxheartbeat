@@ -134,7 +134,7 @@ public class UserProduction extends com.transport.model.Production{
         if (currentFanClaimCount > 0 && session.userGameInfo.view >= totalFanAdd) {
           currentFanClaimCount -= 1;
           session.userGameInfo.fan  += totalFanAdd;
-          session.userGameInfo.view -= totalFanAdd;
+          session.userGameInfo.spendView(session, totalFanAdd);
           lastFanClaim = (int)(curMs/1000);
           return "ok";
         }
@@ -194,9 +194,9 @@ public class UserProduction extends com.transport.model.Production{
     //fan
     if (currentFanClaimCount > 0 && shouldDoFanProduce) {
       session.userGameInfo.fan   += totalFanAdd;
-      session.userGameInfo.view  -= totalFanAdd;
       lastFanClaim                = (int)(curMs/1000);
       currentFanClaimCount        = 0;
+      session.userGameInfo.spendView(session, totalFanAdd);
     }
 
     return "ok";

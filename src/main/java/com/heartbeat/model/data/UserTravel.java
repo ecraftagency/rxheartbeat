@@ -145,7 +145,7 @@ public class UserTravel extends Travel {
     if (session.userGameInfo.view < viewConsume)
       return "insufficient_view";
 
-    session.userGameInfo.view -= viewConsume;
+    session.userGameInfo.spendView(session, viewConsume);
     dailyTravelAdd++;
     currentTravelClaimCount++;
     currentTravelClaimCount  = Math.min(currentTravelClaimCount, maxTravelClaim);
@@ -164,7 +164,7 @@ public class UserTravel extends Travel {
     if (session.userGameInfo.view < viewConsume)
       return "insufficient_view";
 
-    session.userGameInfo.view -= viewConsume;
+    session.userGameInfo.spendView(session, viewConsume);
     dailyTravelAdd += count;
     currentTravelClaimCount += count;
     currentTravelClaimCount  = Math.min(currentTravelClaimCount, maxTravelClaim);

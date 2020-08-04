@@ -1,7 +1,6 @@
 package com.heartbeat.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
@@ -50,6 +49,45 @@ public class UserGameInfo extends GameInfo {
   }
 
   /********************************************************************************************************************/
+
+  public boolean spendMoney(Session session, long amount) {
+    if (money < amount)
+      return false;
+    money -= amount;
+    try {
+      session.userEvent.addEventRecord(EVENT.MONEY_SPEND_EVT_ID, amount);
+    }
+    catch (Exception e) {
+      //
+    }
+    return true;
+  }
+
+  public boolean spendView(Session session, long amount) {
+    if (view < amount)
+      return false;
+    view -= amount;
+    try {
+      session.userEvent.addEventRecord(EVENT.VIEW_SPEND_EVT_ID, amount);
+    }
+    catch (Exception e){
+      //
+    }
+    return true;
+  }
+
+  public boolean spendFan(Session session, long amount) {
+    if (fan < amount)
+      return false;
+    fan -= amount;
+    try {
+      session.userEvent.addEventRecord(EVENT.FAN_SPEND_EVT_ID, amount);
+    }
+    catch (Exception e) {
+      //
+    }
+    return true;
+  }
 
   public void newDay() {
     crazyDegree = 0;
@@ -206,7 +244,7 @@ public class UserGameInfo extends GameInfo {
 
     //todo delta time is always >= real time consume, but just let it be
     int second    = (int)(System.currentTimeMillis()/1000);
-    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, amount, second);
+    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, amount);
 
     return true;
   }
@@ -222,7 +260,7 @@ public class UserGameInfo extends GameInfo {
 
     //todo delta time is always >= real time consume, but just let it be
     long timeSpent = deltaTime > time ? time : deltaTime;
-    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent, second);
+    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent);
 
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)

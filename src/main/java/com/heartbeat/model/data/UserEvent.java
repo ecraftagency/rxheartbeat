@@ -36,7 +36,7 @@ public class UserEvent extends Event {
       evt2cas.putIfAbsent(eventType, 0);
 
       EventInfo ei = Constant.EVENT.eventInfoMap.get(eventType);
-      if (invalidCas(eventType, ei.startTime))
+      if (ei != null && invalidCas(eventType, ei.startTime))
         resetEventData(eventType);
     }
   }
@@ -52,7 +52,7 @@ public class UserEvent extends Event {
     return oldCas != cas;
   }
 
-  public void addEventRecord(int eventType, long amount, int second) {
+  public void addEventRecord(int eventType, long amount) {
     if (!EventData.eventMap.containsKey(eventType))
       return;
 
@@ -64,6 +64,7 @@ public class UserEvent extends Event {
       resetEventData(eventType);
     }
 
+    int second    = (int)(System.currentTimeMillis()/1000);
     if (ei.startTime > 0 && ei.active && second >= ei.startTime && second <= ei.endTime) {
       long oldVal = records.getOrDefault(eventType, 0L);
       records.put(eventType, oldVal + amount);

@@ -22,9 +22,9 @@ public class EventInfo {
       ei.startTime  = (int)(Utilities.getMillisFromDateString(ei.strStart, DATE_PATTERN)/1000);
       ei.endTime    = (int)(Utilities.getMillisFromDateString(ei.strEnd, DATE_PATTERN)/1000);
 
-      int second    = (int)(System.currentTimeMillis()/1000);
-      if (second >= ei.startTime)
-        throw new IllegalArgumentException("event time < current time");
+//      int second    = (int)(System.currentTimeMillis()/1000);
+//      if (second >= ei.startTime)
+//        throw new IllegalArgumentException("event time < current time");
 
       if (ei.endTime - ei.startTime <= 0)
         throw new IllegalArgumentException("end time < start time");

@@ -142,9 +142,6 @@ public class StaticLoadTest {
       //
     }
 
-
-    Constant.EVENT.eventInfoMap.get(6700).updateEventTime("01/07/2020 23:00:00", "06/08/2020 23:00:00");
-
     UserAchievement ac = UserAchievement.ofDefault();
     ac.recordClaim(4, 1);
     System.out.println(ac.checkClaim(4, 33));

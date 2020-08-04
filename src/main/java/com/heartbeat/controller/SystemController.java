@@ -3,7 +3,6 @@ package com.heartbeat.controller;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
-import com.statics.EventInfo;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -53,7 +52,7 @@ public class SystemController implements Handler<RoutingContext> {
 
     //todo delta time is always >= real time consume, but just let it be
     long timeSpent = deltaTime > session.userGameInfo.time ? session.userGameInfo.time : deltaTime;
-    session.userEvent.addEventRecord(Constant.EVENT.TIME_SPEND_EVT_ID, timeSpent, second);
+    session.userEvent.addEventRecord(Constant.EVENT.TIME_SPEND_EVT_ID, timeSpent);
 
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)
