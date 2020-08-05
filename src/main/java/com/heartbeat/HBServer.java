@@ -16,7 +16,9 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.handler.CorsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -96,9 +98,17 @@ public class HBServer extends AbstractVerticle {
         systemConfig = ar.result();
         Router router = Router.router(vertx);
         AuthController authController = new AuthController(vertx);
+
+        router.route().handler(CorsHandler.create(".*.")
+                .allowCredentials(true)
+                .allowedHeader("Access-Control-Allow-Method")
+                .allowedHeader("Access-Control-Allow-Origin")
+                .allowedHeader("Access-Control-Allow-Credentials")
+                .allowedHeader("Content-Type")
+                .allowedMethod(HttpMethod.POST));
+
         router.route().handler(BodyHandler.create());
         router.route("/api/*").handler(JWTAuthHandler.create(authController.getJWTProvider(), "/api/auth"));
-
         router.post("/api/auth").handler(authController);
         router.post("/api/system").handler(new SystemController());
         router.post("/api/profile").handler(new ProfileController());
@@ -117,7 +127,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/event").handler(new EventController());
 
         router.post("/gm/session_inject").handler(new SessionInjectController());
-        router.post("/gm/constant_inject").handler(new ConstantInjectController());
+        router.post("/gm/constant").handler(new ConstantInjectController());
 
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
