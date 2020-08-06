@@ -51,14 +51,15 @@ public class RankingController implements Handler<RoutingContext> {
     int rankingType = ctx.getBodyAsJson().getInteger("rankingType");
     session.userRanking.getRanking(rankingType, ar -> {
       ExtMessage resp   = ExtMessage.ranking();
+      resp.cmd = cmd;
       if (ar.succeeded()) {
         resp.data.extObj = Json.encode(ar.result());
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
       else {
         resp.msg = ar.cause().getMessage();
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
-      resp.cmd = cmd;
-      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
     });
   }
 }
