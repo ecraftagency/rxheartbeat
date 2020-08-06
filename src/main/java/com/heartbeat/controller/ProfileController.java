@@ -149,6 +149,9 @@ public class ProfileController implements Handler<RoutingContext> {
       else {
         session.userGameInfo.displayName = "";
       }
+
+      session.userRanking.sessionId   = session.id;
+      session.userRanking.displayName = session.userGameInfo.displayName;
     }
     catch (Exception e) {
       result = "username_invalid";

@@ -123,8 +123,8 @@ public class UserIdol extends Idols {
     int totalAttrHLBuf = (int)(sumAttrHLBufRate *(idol.attrItemBuf + attrAptBuf));
 
     int newCrt        = crtAptBuf + idol.crtItemBuf + totalCrtHLBuf;
-    int newPerf       = perfAptBuf + idol.crtItemBuf + totalPerfHLBuf;
-    int newAttr       = attrAptBuf + idol.crtItemBuf + totalAttrHLBuf;
+    int newPerf       = perfAptBuf + idol.perfItemBuf + totalPerfHLBuf;
+    int newAttr       = attrAptBuf + idol.attrItemBuf + totalAttrHLBuf;
 
     if (newCrt - idol.creativity > 0) {
       if (userEvent != null)
@@ -147,7 +147,7 @@ public class UserIdol extends Idols {
         userEvent.addEventRecord(Constant.EVENT.TOTAL_TALENT_EVT_ID, newAttr - idol.attractive);
       if (userRanking != null)
         userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
-      idol.creativity = newAttr;
+      idol.attractive = newAttr;
     }
   }
 

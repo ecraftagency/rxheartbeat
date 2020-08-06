@@ -92,8 +92,10 @@ public class Session {
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
-    userIdol.userEvent    = userEvent;
-    userIdol.userRanking  = userRanking;
+    userIdol.userEvent      = userEvent;
+    userIdol.userRanking    = userRanking;
+    userRanking.sessionId   = id;
+    userRanking.displayName = userGameInfo.displayName;
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -172,6 +174,8 @@ public class Session {
     userProduction.reBalance(this.userIdol.getTotalCreativity());
     userIdol.userEvent      = userEvent;
     userIdol.userRanking    = userRanking;
+    userRanking.sessionId   = id;
+    userRanking.displayName = userGameInfo.displayName;
 
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;

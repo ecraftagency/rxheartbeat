@@ -33,6 +33,15 @@ public class ExtMessage {
     public String       extObj;
   }
 
+  public static ExtMessage ranking() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "ranking";
+    result.data = new Data();
+    return result;
+  }
+
   public static ExtMessage rollCall() {
     ExtMessage result = new ExtMessage();
     result.cmd = "";

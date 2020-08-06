@@ -1,21 +1,27 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.model.Session;
+import com.heartbeat.common.Constant;
 import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.ScoreObj;
 import com.heartbeat.ranking.impl.LeaderBoard;
+import com.heartbeat.ranking.impl.ListCommand;
 import com.heartbeat.ranking.impl.RecordCommand;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserRanking {
-  public static final LeaderBoard<Integer, ScoreObj>    talentRanking;
-  public static final EventLoop                         rankingEventLoop;
+  public static final EventLoop rankingEventLoop;
   public static final int LDB_CAPACITY = 100;
+  public static final Map<Integer, LeaderBoard<Integer, ScoreObj>> rankings;
 
   static {
-    talentRanking     = new LeaderBoard<>(LDB_CAPACITY);
+    rankings          = new HashMap<>();
+    rankings.putIfAbsent(Constant.RANKING.TOTAL_TALENT_RANK_ID, new LeaderBoard<>(LDB_CAPACITY));
     rankingEventLoop  = new EventLoop();
     rankingEventLoop.run();
   }
@@ -32,11 +38,25 @@ public class UserRanking {
     return ur;
   }
 
-  public void addEventRecord(int eventType, long amount) {
-    long oldVal = records.getOrDefault(eventType, 0L);
+  public void addEventRecord(int rankingType, long amount) {
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankingType);
+    if (ldb == null)
+      return;
+
+    long oldVal = records.getOrDefault(rankingType, 0L);
     long newVal = oldVal + amount;
-    EventLoop.Command record = new RecordCommand<>(talentRanking, ScoreObj.of(sessionId, newVal, displayName));
+
+    EventLoop.Command record = new RecordCommand<>(ldb, ScoreObj.of(sessionId, newVal, displayName));
     rankingEventLoop.addCommand(record);
-    records.put(eventType, newVal);
+    records.put(rankingType, newVal);
+  }
+
+  public void getRanking(int rankingType, Handler<AsyncResult<List<ScoreObj>>> ar) {
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankingType);
+    if (ldb == null)
+      ar.handle(Future.failedFuture("unknown_ranking_type"));
+
+    EventLoop.Command listCommand = new ListCommand<>(ldb, ar);
+    rankingEventLoop.addCommand(listCommand);
   }
 }
