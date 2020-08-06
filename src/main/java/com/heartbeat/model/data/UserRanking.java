@@ -2,7 +2,7 @@ package com.heartbeat.model.data;
 
 import com.heartbeat.common.Constant;
 import com.heartbeat.ranking.EventLoop;
-import com.heartbeat.ranking.ScoreObj;
+import com.statics.ScoreObj;
 import com.heartbeat.ranking.impl.LeaderBoard;
 import com.heartbeat.ranking.impl.ListCommand;
 import com.heartbeat.ranking.impl.RecordCommand;

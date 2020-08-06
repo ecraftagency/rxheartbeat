@@ -1,6 +1,4 @@
-package com.heartbeat.ranking;
-
-import com.statics.Common;
+package com.statics;
 
 public class ScoreObj implements Comparable<ScoreObj>, Common.hasKey<Integer> {
   public int    id;
