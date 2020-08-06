@@ -1,5 +1,6 @@
 package com.heartbeat.common;
 
+import com.heartbeat.ranking.ExtRankingInfo;
 import com.statics.EventInfo;
 
 import java.util.HashMap;
@@ -78,6 +79,18 @@ public class Constant {
 
   public static class RANKING {
     public static final int TOTAL_TALENT_RANK_ID  = 13;
+    public static final int FIGHT_RANK_ID         = 14;
+    public static final int MONEY_SPEND_RANK_ID   = 15;
+    public static final int VIEW_SPEND_RANK_ID    = 16;
+    public static final int FAN_SPEND_RANK_ID     = 17;
+    public static final int LDB_CAPACITY          = 100;
+    public static final int FLUSH_DELAY           = 10;//second
+
+    public static ExtRankingInfo rankingInfo;
+
+    static {
+      rankingInfo = ExtRankingInfo.of();
+    }
   }
 
   public static class EVENT {

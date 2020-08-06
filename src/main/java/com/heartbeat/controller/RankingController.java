@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -25,6 +26,9 @@ public class RankingController implements Handler<RoutingContext> {
           case "getRanking":
             processGetRanking(session, cmd, ctx);
             return;
+          case "getRankingInfo":
+            resp = processGetRankingInfo();
+            break;
           default:
             resp = ExtMessage.event();
             resp.msg = "unknown_cmd";
@@ -45,6 +49,13 @@ public class RankingController implements Handler<RoutingContext> {
       LOGGER.error(e.getCause().getMessage());
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private ExtMessage processGetRankingInfo() {
+    ExtMessage resp         = ExtMessage.ranking();
+    resp.data.extObj        = Json.encode(Constant.RANKING.rankingInfo);
+    resp.serverTime         = (int)(System.currentTimeMillis()/1000);
+    return resp;
   }
 
   private void processGetRanking(Session session, String cmd, RoutingContext ctx) {

@@ -52,5 +52,6 @@ public class LeaderBoard<K, V extends Comparable<V> & Common.hasKey<K>> implemen
   public void flush() {
     sorter.clear();
     indexer.clear();
+    System.out.println("im clear!");
   }
 }

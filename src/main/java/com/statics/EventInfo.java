@@ -2,6 +2,7 @@ package com.statics;
 
 import com.heartbeat.common.Utilities;
 
+@SuppressWarnings("unused")
 public class EventInfo {
   public static final String  DATE_PATTERN            = "dd/MM/yyyy HH:mm:ss";
   public int      eventId;

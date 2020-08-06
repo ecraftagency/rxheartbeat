@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
@@ -56,6 +57,7 @@ public class UserGameInfo extends GameInfo {
     money -= amount;
     try {
       session.userEvent.addEventRecord(EVENT.MONEY_SPEND_EVT_ID, amount);
+      session.userRanking.addEventRecord(RANKING.MONEY_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
       //
@@ -69,6 +71,7 @@ public class UserGameInfo extends GameInfo {
     view -= amount;
     try {
       session.userEvent.addEventRecord(EVENT.VIEW_SPEND_EVT_ID, amount);
+      session.userRanking.addEventRecord(RANKING.VIEW_SPEND_RANK_ID, amount);
     }
     catch (Exception e){
       //
@@ -82,6 +85,7 @@ public class UserGameInfo extends GameInfo {
     fan -= amount;
     try {
       session.userEvent.addEventRecord(EVENT.FAN_SPEND_EVT_ID, amount);
+      session.userRanking.addEventRecord(RANKING.FAN_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
       //
