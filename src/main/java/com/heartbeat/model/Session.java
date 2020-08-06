@@ -70,6 +70,7 @@ public class Session {
   public UserMission        userMission;
   public UserRollCall       userRollCall;
   public UserEvent          userEvent;
+  public UserRanking        userRanking;
 
   public List<EffectResult> effectResults;
 
@@ -87,9 +88,12 @@ public class Session {
     userMission           = UserMission.ofDefault();
     userRollCall          = UserRollCall.ofDefault();
     userEvent             = UserEvent.ofDefault();
+    userRanking           = UserRanking.ofDefault();
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
+    userIdol.userEvent    = userEvent;
+    userIdol.userRanking  = userRanking;
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -160,10 +164,14 @@ public class Session {
       userEvent.reBalance();
     }
 
-    userIdol.reBalance();
+    if (userRanking == null)
+      userRanking = UserRanking.ofDefault();
+
     userGameInfo.reBalance();
     userInventory.reBalance();
     userProduction.reBalance(this.userIdol.getTotalCreativity());
+    userIdol.userEvent      = userEvent;
+    userIdol.userRanking    = userRanking;
 
     userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;
@@ -614,8 +622,8 @@ public class Session {
   public static void addUpdateSession(Session session) {
     if(session != null && !session.isClose) {
       updateQueue.add(session);
-      //updateOnlineTask.run();
-      GlobalVariable.exeThreadPool.execute(updateOnlineTask);
+      updateOnlineTask.run();
+      //GlobalVariable.exeThreadPool.execute(updateOnlineTask);
     }
   }
 

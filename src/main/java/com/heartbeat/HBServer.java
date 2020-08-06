@@ -52,9 +52,8 @@ import static com.heartbeat.common.Constant.*;
 
 
 // AVAILABILITY > CONSISTENCY
-@SuppressWarnings("unused")
+
 public class HBServer extends AbstractVerticle {
-  private static final String     SRC_DIR = "/src/main/java/";
   private static final Logger     LOGGER = LoggerFactory.getLogger(HBServer.class);
 
   public  static Cruder<Session>  cruder;

@@ -27,17 +27,11 @@ public class Constant {
   public static class GAME_INFO {
     public static int           SERVER_VERSION            = 150;
     public static int           MIN_AVAILABLE_VERSION     = 147;
-    public static final int     OS_SRC_KNOWN              = 0;
-    public static final String  OS_IOS                    = "ios";
     public static final String  OS_ANDROID                = "android";
-    public static final String  OS_WINDOWS                = "windows";
     public static final String  DEFAULT_DEVICE_ID_ANDROID = "6962556a555d60555660593961555d600xff";
-    public static final String  ANDROID_URL               = "http://helloandroid.com";
-    public static final String  IOS_URL                   = "http://helloios.com";
   }
 
   public static class SYSTEM_INFO {
-    public static boolean USE_POOL_MSG                    = false;
     public static int     EVENT_LOOP_SLEEP_INV            = 1000; //millis
   }
 
@@ -82,6 +76,10 @@ public class Constant {
     public static int SHOPPING_MISSION_TYPE     = 12;
   }
 
+  public static class RANKING {
+    public static final int TOTAL_TALENT_RANK_ID  = 13;
+  }
+
   public static class EVENT {
     public static final int TIME_SPEND_EVT_ID   = 21;
     public static final int APT_BUFF_USE_EVT_ID = 6700;
@@ -92,6 +90,7 @@ public class Constant {
     public static final int VIEW_PROD_EVT_ID    = 10;
     public static final int FAN_PROD_EVT_ID     = 11;
     public static final int GAME_SHOW_EVT_ID    = 12;
+    public static final int TOTAL_TALENT_EVT_ID = 13;
 
     public static final Map<Integer, EventInfo> eventInfoMap;
 
@@ -134,6 +133,12 @@ public class Constant {
                       true));
       eventInfoMap.put(FAN_PROD_EVT_ID,
               EventInfo.of(FAN_PROD_EVT_ID,
+                      "01/07/2020 23:00:00",
+                      "31/08/2020 23:00:00",
+                      true));
+
+      eventInfoMap.put(TOTAL_TALENT_EVT_ID,
+              EventInfo.of(TOTAL_TALENT_EVT_ID,
                       "01/07/2020 23:00:00",
                       "31/08/2020 23:00:00",
                       true));

@@ -38,7 +38,7 @@ public class IdolController implements Handler<RoutingContext> {
             resp = processIdolAptAddByExp(session, ctx);
             break;
           case "addAptByItem":
-            resp = processAptUpByItem(session, ctx, System.currentTimeMillis());
+            resp = processAptUpByItem(session, ctx);
             break;
           case "haloLevelUp":
             resp = processHaloLevelUp(session, ctx);
@@ -78,10 +78,10 @@ public class IdolController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processIdolLevelUp(Session session, RoutingContext ctx) {
-    ExtMessage resp = ExtMessage.idol();
-    int idolID = ctx.getBodyAsJson().getInteger("idolID");
-    resp.msg = session.userIdol.levelUp(session, idolID);
-    resp.data.gameInfo = session.userGameInfo;
+    ExtMessage resp       = ExtMessage.idol();
+    int idolID            = ctx.getBodyAsJson().getInteger("idolID");
+    resp.msg              = session.userIdol.levelUp(session, idolID);
+    resp.data.gameInfo    = session.userGameInfo;
     resp.data.production = session.userProduction;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.IDOL_LV_MISSION_TYPE);
@@ -117,7 +117,7 @@ public class IdolController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processAptUpByItem(Session session, RoutingContext ctx, long curMs) {
+  private ExtMessage processAptUpByItem(Session session, RoutingContext ctx) {
     ExtMessage resp     = ExtMessage.idol();
     int idolId          = ctx.getBodyAsJson().getInteger("idolId");
     int speciality      = ctx.getBodyAsJson().getInteger("speciality");
