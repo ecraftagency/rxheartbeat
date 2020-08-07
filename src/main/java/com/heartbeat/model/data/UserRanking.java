@@ -35,7 +35,6 @@ public class UserRanking extends Ranking {
     rankingEventLoop.run();
   }
 
-  public Map<Integer, Long>       records;
   public transient int            sessionId;
   public transient String         displayName;
 
