@@ -28,7 +28,7 @@ public class ExtRankingInfo extends RankingInfo {
   }
 
   public void activeRanking(int rankingType, boolean active) {
-    activeRankings.putIfAbsent(rankingType, active);
+    activeRankings.computeIfPresent(rankingType, (k,v) -> v = active);
   }
 
   public void setRankingTime(String strStart, String strEnd) {
