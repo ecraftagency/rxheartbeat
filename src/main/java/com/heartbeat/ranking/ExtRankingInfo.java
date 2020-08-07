@@ -23,7 +23,7 @@ public class ExtRankingInfo extends RankingInfo {
     ri.activeRankings.put(15, false);
     ri.activeRankings.put(16, false);
     ri.activeRankings.put(17, false);
-
+    ri.flushDelay       = FLUSH_DELAY;
     return ri;
   }
 
@@ -49,9 +49,10 @@ public class ExtRankingInfo extends RankingInfo {
       if (newEnd - newStart <= 60) //end time must after start time as lease 60 seconds;
         throw new IllegalArgumentException("end time < start time");
 
-      startTime   = newStart;
-      endTime     = newEnd;
+      startTime     = newStart;
+      endTime       = newEnd;
       int flushTime = endTime + FLUSH_DELAY;
+      flushDelay    = FLUSH_DELAY;
 
       GlobalVariable.schThreadPool.schedule(UserRanking::openAllRanking,
               startTime - second, TimeUnit.SECONDS);

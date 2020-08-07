@@ -8,5 +8,6 @@ public class RankingInfo {
   public int      endTime;
   public String   strStart;
   public String   strEnd;
+  public int      flushDelay;
   public Map<Integer, Boolean> activeRankings;
 }

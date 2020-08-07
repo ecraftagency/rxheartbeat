@@ -84,7 +84,7 @@ public class Constant {
     public static final int VIEW_SPEND_RANK_ID    = 16;
     public static final int FAN_SPEND_RANK_ID     = 17;
     public static final int LDB_CAPACITY          = 100;
-    public static final int FLUSH_DELAY           = 10;//second
+    public static final int FLUSH_DELAY           = 60*5;//second
 
     public static ExtRankingInfo rankingInfo;
 
