@@ -23,6 +23,9 @@ public class RankingController implements Handler<RoutingContext> {
       if (session != null) {
         ExtMessage resp;
         switch (cmd) {
+          case "claimReward":
+            processClaimReward(session, cmd, ctx);
+            return;
           case "getRanking":
             processGetRanking(session, cmd, ctx);
             return;
@@ -51,6 +54,28 @@ public class RankingController implements Handler<RoutingContext> {
     }
   }
 
+  private void processClaimReward(Session session, String cmd, RoutingContext ctx) {
+    int rankingType = ctx.getBodyAsJson().getInteger("rankingType");
+    session.userRanking.claimReward(session, rankingType, ar -> {
+      ExtMessage resp     = ExtMessage.ranking();
+      resp.data.ranking   = session.userRanking;
+      resp.effectResults  = session.effectResults;
+
+      if (ar.succeeded()) {
+        resp.msg          = ar.result();
+      }
+      else {
+        resp.msg = ar.cause().getMessage();
+      }
+
+      resp.cmd = cmd;
+      resp.timeChange = session.userGameInfo.timeChange;
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      session.effectResults.clear();
+      session.userGameInfo.timeChange = false;
+    });
+  }
+
   private ExtMessage processGetRankingInfo() {
     ExtMessage resp         = ExtMessage.ranking();
     resp.data.extObj        = Json.encode(Constant.RANKING.rankingInfo);
@@ -62,15 +87,21 @@ public class RankingController implements Handler<RoutingContext> {
     int rankingType = ctx.getBodyAsJson().getInteger("rankingType");
     session.userRanking.getRanking(rankingType, ar -> {
       ExtMessage resp   = ExtMessage.ranking();
-      resp.cmd = cmd;
+      resp.cmd          = cmd;
+      resp.data.ranking = session.userRanking;
+
       if (ar.succeeded()) {
         resp.data.extObj = Json.encode(ar.result());
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
       else {
         resp.msg = ar.cause().getMessage();
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
+
+      resp.cmd = cmd;
+      resp.timeChange = session.userGameInfo.timeChange;
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      session.effectResults.clear();
+      session.userGameInfo.timeChange = false;
     });
   }
 }

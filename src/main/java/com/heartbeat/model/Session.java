@@ -168,6 +168,9 @@ public class Session {
 
     if (userRanking == null)
       userRanking = UserRanking.ofDefault();
+    else {
+      userRanking.reBalance();
+    }
 
     userGameInfo.reBalance();
     userInventory.reBalance();

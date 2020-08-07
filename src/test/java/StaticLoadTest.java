@@ -136,10 +136,14 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       EventData.loadJson(event);
 
+      String rank = new String(Files.readAllBytes(Paths.get("data/json/rankingReward.json")),
+              StandardCharsets.UTF_8);
+      RankingData.loadJson(rank);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {
-      //
+      System.out.println(ioe.getMessage());
     }
 
     UserAchievement ac = UserAchievement.ofDefault();

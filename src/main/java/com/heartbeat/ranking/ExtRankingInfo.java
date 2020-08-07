@@ -40,19 +40,23 @@ public class ExtRankingInfo extends RankingInfo {
       int newEnd     = (int)(Utilities.getMillisFromDateString(strEnd, DATE_PATTERN)/1000);
 
       int second    = (int)(System.currentTimeMillis()/1000);
-      if (second >= newStart)
+      if (newStart - second <= 60) //start time must after current as lease 60 seconds;
         throw new IllegalArgumentException("new start time is after current time");
 
       if (newStart <= endTime + FLUSH_DELAY)
         throw new IllegalArgumentException("new start time is before flush time");
 
-      if (newEnd - newStart <= 0)
+      if (newEnd - newStart <= 60) //end time must after start time as lease 60 seconds;
         throw new IllegalArgumentException("end time < start time");
 
       startTime   = newStart;
       endTime     = newEnd;
       int flushTime = endTime + FLUSH_DELAY;
 
+      GlobalVariable.schThreadPool.schedule(UserRanking::openAllRanking,
+              startTime - second, TimeUnit.SECONDS);
+      GlobalVariable.schThreadPool.schedule(UserRanking::closeAllRanking,
+              endTime - second, TimeUnit.SECONDS);
       GlobalVariable.schThreadPool.schedule(UserRanking::flushAllRanking,
               flushTime - second, TimeUnit.SECONDS);
     }

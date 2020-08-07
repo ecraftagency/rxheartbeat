@@ -29,6 +29,7 @@ public class ExtMessage {
     public Mission      mission;
     public RollCall     rollCall;
     public Event        event;
+    public Ranking      ranking;
     public int          currentGroupState;
     public String       extObj;
   }
@@ -199,6 +200,8 @@ public class ExtMessage {
     data.achievement        = null;
     data.mission            = null;
     data.rollCall           = null;
+    data.event              = null;
+    data.ranking            = null;
     data.currentGroupState  = 0;
     data.extObj             = "";
   }
