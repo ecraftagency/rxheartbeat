@@ -90,13 +90,13 @@ public class UserIdol extends Idols {
       idol.attrItemBuf            = 0;
 
       //todo this one 1 first shot, move to props change
-      int crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
-      int perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
-      int attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
+      idol.crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
+      idol.perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
+      idol.attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
 
-      idol.creativity   = crtAptBuf + idol.crtItemBuf;
-      idol.performance  = perfAptBuf + idol.perfItemBuf;
-      idol.attractive   = attrAptBuf + idol.attrItemBuf;
+      idol.creativity   = idol.crtAptBuf + idol.crtItemBuf;
+      idol.performance  = idol.perfAptBuf + idol.perfItemBuf;
+      idol.attractive   = idol.attrAptBuf + idol.attrItemBuf;
       return idol;
     }
     else {
@@ -105,9 +105,9 @@ public class UserIdol extends Idols {
   }
 
   public void onPropertiesChange(Idol idol) {
-    int crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
-    int perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
-    int attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
+    idol.crtAptBuf    = idol.crtApt*10 + idol.crtApt*idol.level*(idol.level + 1)/10;
+    idol.perfAptBuf   = idol.perfApt*10 + idol.perfApt*idol.level*(idol.level + 1)/10;
+    idol.attrAptBuf   = idol.attrApt*10 + idol.attrApt*idol.level*(idol.level + 1)/10;
 
     float sumCrtHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.crtBufRate).sum() +
             idol.groupHalo.stream().mapToDouble(halo -> halo.crtBufRate).sum());
@@ -118,13 +118,13 @@ public class UserIdol extends Idols {
     float sumAttrHLBufRate = (float)(idol.personalHalos.stream().mapToDouble(halo -> halo.attrBufRate).sum() +
             idol.groupHalo.stream().mapToDouble(halo -> halo.attrBufRate).sum());
 
-    int totalCrtHLBuf = (int)(sumCrtHLBufRate *(idol.crtItemBuf + crtAptBuf));
-    int totalPerfHLBuf = (int)(sumPerfHLBufRate *(idol.perfItemBuf + perfAptBuf));
-    int totalAttrHLBuf = (int)(sumAttrHLBufRate *(idol.attrItemBuf + attrAptBuf));
+    idol.totalCrtHLBuf = (int)(sumCrtHLBufRate *(idol.crtItemBuf + idol.crtAptBuf));
+    idol.totalPerfHLBuf = (int)(sumPerfHLBufRate *(idol.perfItemBuf + idol.perfAptBuf));
+    idol.totalAttrHLBuf = (int)(sumAttrHLBufRate *(idol.attrItemBuf + idol.attrAptBuf));
 
-    int newCrt        = crtAptBuf + idol.crtItemBuf + totalCrtHLBuf;
-    int newPerf       = perfAptBuf + idol.perfItemBuf + totalPerfHLBuf;
-    int newAttr       = attrAptBuf + idol.attrItemBuf + totalAttrHLBuf;
+    int newCrt        = idol.crtAptBuf + idol.crtItemBuf + idol.totalCrtHLBuf;
+    int newPerf       = idol.perfAptBuf + idol.perfItemBuf + idol.totalPerfHLBuf;
+    int newAttr       = idol.attrAptBuf + idol.attrItemBuf + idol.totalAttrHLBuf;
 
     if (newCrt - idol.creativity > 0) {
       if (userEvent != null)

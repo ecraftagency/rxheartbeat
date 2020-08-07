@@ -23,16 +23,17 @@ public class Idols {
     public List<IdolHalo>             groupHalo;
     public List<IdolHalo>             personalHalos;    //todo add field
 
-//    public transient int              totalCrtHLBuf;
-//    public transient int              totalPerfHLBuf;
-//    public transient int              totalAttrHLBuf;
+    public int                        totalCrtHLBuf;
+    public int                        totalPerfHLBuf;
+    public int                        totalAttrHLBuf;
 
     public int                        crtApt;
     public int                        perfApt;
     public int                        attrApt;
-//    public transient int              crtAptBuf;
-//    public transient int              perfAptBuf;
-//    public transient int              attrAptBuf;
+
+    public int                        crtAptBuf;
+    public int                        perfAptBuf;
+    public int                        attrAptBuf;
 
     public int                        honorID;
   }
