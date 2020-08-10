@@ -352,7 +352,6 @@ public class HBServer extends AbstractVerticle {
             StandardCharsets.UTF_8);
     RankingData.loadJson(rank);
 
-
     WordFilter.loadJson("");
   }
 }

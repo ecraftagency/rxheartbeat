@@ -15,10 +15,9 @@ public class ScoreObj implements Comparable<ScoreObj>, Common.hasKey<Integer> {
 
   @Override
   public int compareTo(ScoreObj o) {
-    long c = score - o.score;
-    if (c > 0)
+    if (score > o.score)
       return 1;
-    else if (c < 0)
+    else if (score < o.score)
       return -1;
     return 0;
   }

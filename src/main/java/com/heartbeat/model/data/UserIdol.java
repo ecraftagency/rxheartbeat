@@ -4,6 +4,7 @@ import com.heartbeat.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
+import com.heartbeat.ranking.ServerLDB;
 import com.statics.*;
 import com.transport.model.Idols;
 
@@ -41,9 +42,10 @@ public class UserIdol extends Idols {
     APT_UP_RATE.add(23);
   }
 
-  private transient Map<Integer, List<Idol>>  halo2Idol; //group Idol by Halos
-  public  transient UserEvent                 userEvent; //ref;
-  public transient  UserRanking               userRanking; //ref;
+  private transient Map<Integer, List<Idol>>  halo2Idol;    //group Idol by Halos
+  public transient  UserEvent                 userEvent;    //ref;
+  public transient  UserRanking               userRanking;  //ref;
+  public transient  ServerLDB                 serverLDB;    //ref;
 
   public static UserIdol ofDefault() {
     UserIdol defaultUserIdol = new UserIdol();
@@ -149,6 +151,8 @@ public class UserIdol extends Idols {
         userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
       idol.attractive = newAttr;
     }
+
+    serverLDB.addLdbRecord(Constant.LEADER_BOARD.TALENT_LDB_ID, newCrt + newPerf + newAttr);
   }
 
   /********************************************************************************************************************/

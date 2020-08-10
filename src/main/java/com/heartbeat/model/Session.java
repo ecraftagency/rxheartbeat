@@ -9,6 +9,7 @@ import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
+import com.heartbeat.ranking.ServerLDB;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
 import com.transport.model.Group;
@@ -56,7 +57,8 @@ public class Session {
   transient public DeviceUID.DeviceUIDUpdateInfo deviceInfo;
 
   //runtime data
-  transient public int      groupID;
+  transient public int        groupID;
+  transient public ServerLDB  serverLDB;
   //persistent data
   public UserProfile        userProfile;
   public UserGameInfo       userGameInfo;
@@ -89,11 +91,15 @@ public class Session {
     userRollCall          = UserRollCall.ofDefault();
     userEvent             = UserEvent.ofDefault();
     userRanking           = UserRanking.ofDefault();
+    serverLDB             = ServerLDB.of(this);
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
-    userIdol.userEvent      = userEvent;
-    userIdol.userRanking    = userRanking;
+
+    userIdol.userEvent      = userEvent;        //ref
+    userIdol.userRanking    = userRanking;      //ref
+    userIdol.serverLDB      = this.serverLDB;   //refs
+
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;
 
@@ -175,14 +181,15 @@ public class Session {
     userGameInfo.reBalance();
     userInventory.reBalance();
     userProduction.reBalance(this.userIdol.getTotalCreativity());
-    userIdol.userEvent      = userEvent;
-    userIdol.userRanking    = userRanking;
+
+    serverLDB               = ServerLDB.of(this);
+    userIdol.userEvent      = userEvent;        //ref
+    userIdol.userRanking    = userRanking;      //ref
+    userIdol.serverLDB      = this.serverLDB;   //ref
+
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;
-
-    userProfile.lastLogin   = second;
     userTravel.chosenNPCId  = -1;
-    lastHearBeatTime        = second;
 
     int dayDiff;
     if (userProfile.lastLogin > 0) {
@@ -212,6 +219,9 @@ public class Session {
       if (userGameInfo.time < 0)
         userGameInfo.time = 0;
     }
+
+    userProfile.lastLogin   = second;
+    lastHearBeatTime        = second;
   }
 
   public void updateClientInfo(LoginRequest message) {

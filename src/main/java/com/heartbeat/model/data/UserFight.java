@@ -85,7 +85,7 @@ public class UserFight extends Fight {
     currentShopping     = ShoppingData.of(1);
   }
 
-  public void reLogin() { //update OFFLINE session, relogin on the sameday
+  public void reLogin() { //update OFFLINE session, reLogin on the same day
     long firstOpenTime    = Utilities.certainSecond(Constant.SCHEDULE.gameShowOneOpenHour, 0, 0);
     long firstCloseTime   = Utilities.certainSecond(Constant.SCHEDULE.gameShowOneCloseHour, 0, 0);
     long secondOpenTime   = Utilities.certainSecond(Constant.SCHEDULE.gameShowTwoOpenHour, 0, 0);

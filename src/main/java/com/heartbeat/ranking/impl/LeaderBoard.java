@@ -18,11 +18,21 @@ public class LeaderBoard<K, V extends Comparable<V> & Common.hasKey<K>> implemen
   private   boolean   recordLock;
 
   public LeaderBoard(int capacity) {
-    indexer       = new HashMap<>();
-    sorter        = new PriorityQueue<>(Comparable::compareTo);
-    achiever      = new ArrayList<>();
-    this.capacity = capacity;
+    indexer         = new HashMap<>();
+    sorter          = new PriorityQueue<>(Comparable::compareTo);
+    achiever        = new ArrayList<>();
+    this.capacity   = capacity;
     this.recordLock = true;
+  }
+
+  public LeaderBoard(int capacity, List<V> initValue, boolean recordLock) {
+    indexer         = new HashMap<>();
+    sorter          = new PriorityQueue<>(Comparable::compareTo);
+    achiever        = new ArrayList<>();
+    this.capacity   = capacity;
+    this.recordLock = recordLock;
+    for (V v : initValue)
+      record(v.mapKey(), v);
   }
 
   @Override

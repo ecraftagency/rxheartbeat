@@ -84,13 +84,21 @@ public class Constant {
     public static final int VIEW_SPEND_RANK_ID    = 16;
     public static final int FAN_SPEND_RANK_ID     = 17;
     public static final int LDB_CAPACITY          = 100;
-    public static final int FLUSH_DELAY           = 60*5;//second
+    public static final int FLUSH_DELAY           = 60*60*6;//second
 
     public static ExtRankingInfo rankingInfo;
 
     static {
       rankingInfo = ExtRankingInfo.of();
     }
+  }
+
+  public static class LEADER_BOARD {
+    public static final int TALENT_LDB_ID         = 0;
+    public static final int FIGHT_LDB_ID          = 1;
+    public static final String TALENT_LDB_KEY     = "talent_ldb";
+    public static final String FIGHT_LDB_KEY      = "fight_ldb";
+    public static final int LDB_CAPACITY          = 100;
   }
 
   public static class EVENT {
