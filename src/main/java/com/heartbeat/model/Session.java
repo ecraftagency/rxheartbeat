@@ -9,7 +9,7 @@ import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
-import com.heartbeat.ranking.ServerLDB;
+import com.heartbeat.model.data.UserLDB;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
 import com.transport.model.Group;
@@ -58,7 +58,7 @@ public class Session {
 
   //runtime data
   transient public int        groupID;
-  transient public ServerLDB  serverLDB;
+  transient public UserLDB    userLDB;
   //persistent data
   public UserProfile        userProfile;
   public UserGameInfo       userGameInfo;
@@ -91,14 +91,14 @@ public class Session {
     userRollCall          = UserRollCall.ofDefault();
     userEvent             = UserEvent.ofDefault();
     userRanking           = UserRanking.ofDefault();
-    serverLDB             = ServerLDB.of(this);
+    userLDB = UserLDB.of(this);
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
 
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
-    userIdol.serverLDB      = this.serverLDB;   //refs
+    userIdol.userLDB = this.userLDB;   //refs
 
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;
@@ -182,10 +182,10 @@ public class Session {
     userInventory.reBalance();
     userProduction.reBalance(this.userIdol.getTotalCreativity());
 
-    serverLDB               = ServerLDB.of(this);
+    userLDB = UserLDB.of(this);
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
-    userIdol.serverLDB      = this.serverLDB;   //ref
+    userIdol.userLDB = this.userLDB;   //ref
 
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;

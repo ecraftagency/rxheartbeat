@@ -11,6 +11,7 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserFight;
+import com.heartbeat.model.data.UserLDB;
 import com.statics.*;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
@@ -85,6 +86,9 @@ public class HBServer extends AbstractVerticle {
 
       UserFight.serverStartup();
       Constant.serverStartUp();
+
+      UserLDB.loadLDBFromDB(LEADER_BOARD.TALENT_LDB_ID);
+      UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
     }
     catch (Exception ioe) {
       LOGGER.error(ioe.getMessage());
@@ -125,6 +129,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/rollcall").handler(new RollCallController());
         router.post("/api/event").handler(new EventController());
         router.post("/api/ranking").handler(new RankingController());
+        router.post("/api/leaderboard").handler(new LeaderBoardController());
 
         router.post("/gm/session_inject").handler(new SessionInjectController());
         router.post("/gm/constant").handler(new ConstantInjectController());
@@ -162,6 +167,8 @@ public class HBServer extends AbstractVerticle {
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();
       GroupPool.removeAll();
+      UserLDB.syncLDBToDB(LEADER_BOARD.TALENT_LDB_ID);
+      UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
       LOGGER.info("HBServer shutdown hook");
     }));
 

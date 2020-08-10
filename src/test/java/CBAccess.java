@@ -28,16 +28,17 @@ public class CBAccess {
 //        }
 //      });
 
-    Mono<ReactiveQueryResult> result = HBServer.rxCluster
-            .query("select * from `index`");
-
-    result.flatMapMany(ReactiveQueryResult::rowsAsObject)
-          .subscribe(row -> {
-            System.out.println("Found row: " + row.toString());
-          });
-    Thread.sleep(40000);
+//    Mono<ReactiveQueryResult> result = HBServer.rxCluster
+//            .query("select * from `index`");
+//
+//    result.flatMapMany(ReactiveQueryResult::rowsAsObject)
+//          .subscribe(row -> {
+//            System.out.println("Found row: " + row.toString());
+//          });
+//    Thread.sleep(40000);
 //      if (ra != null)
 //        System.out.println(ra.toString().contains("SUCCESS"));
+
 
   }
 

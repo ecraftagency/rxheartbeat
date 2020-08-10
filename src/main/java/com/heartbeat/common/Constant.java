@@ -96,9 +96,14 @@ public class Constant {
   public static class LEADER_BOARD {
     public static final int TALENT_LDB_ID         = 0;
     public static final int FIGHT_LDB_ID          = 1;
-    public static final String TALENT_LDB_KEY     = "talent_ldb";
-    public static final String FIGHT_LDB_KEY      = "fight_ldb";
     public static final int LDB_CAPACITY          = 100;
+    public static final Map<Integer, String>        id2key;
+
+    static {
+      id2key = new HashMap<>();
+      id2key.put(TALENT_LDB_ID, "talent_ldb");
+      id2key.put(FIGHT_LDB_ID, "fight_ldb");
+    }
   }
 
   public static class EVENT {
