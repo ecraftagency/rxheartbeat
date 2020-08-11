@@ -59,7 +59,7 @@ public class AchievementController implements Handler<RoutingContext> {
 
     //start counting
     long totalTalent        = session.userIdol.getTotalCreativity() + session.userIdol.getTotalPerformance() + session.userIdol.getTotalAttractive();
-    VipData.Vip vipData     = VipData.getVipData(session.userGameInfo.vipExp);
+    VipData.VipDto vipData     = VipData.getVipData(session.userGameInfo.vipExp);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
     session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
@@ -75,7 +75,7 @@ public class AchievementController implements Handler<RoutingContext> {
     ExtMessage resp         = ExtMessage.achievement();
     //start counting
     long totalTalent        = session.userIdol.getTotalCreativity() + session.userIdol.getTotalPerformance() + session.userIdol.getTotalAttractive();
-    VipData.Vip vipData     = VipData.getVipData(session.userGameInfo.vipExp);
+    VipData.VipDto vipData     = VipData.getVipData(session.userGameInfo.vipExp);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
     session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);

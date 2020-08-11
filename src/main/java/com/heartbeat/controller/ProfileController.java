@@ -2,6 +2,8 @@ package com.heartbeat.controller;
 
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGameInfo;
@@ -108,12 +110,15 @@ public class ProfileController implements Handler<RoutingContext> {
       return resp;
     }
 
-    session.userGameInfo.exp -= nextLV.exp;
-    session.userGameInfo.titleId = nextLV.officeLV;
+    session.userGameInfo.exp      -= nextLV.exp;
+    session.userGameInfo.titleId   = nextLV.officeLV;
     session.userGameInfo.maxMedia++;
     if (session.userGameInfo.titleId == INIT_TIME_GIFT_LV) {
       session.userGameInfo.addTime(INIT_TIME_GIFT);
     }
+
+    if (nextLV.rewardFormat != null && nextLV.rewardFormat.size() == 4)
+      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, nextLV.rewardFormat);
 
     resp.msg = "ok";
     resp.data.gameInfo    = session.userGameInfo;

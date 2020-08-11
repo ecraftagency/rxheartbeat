@@ -43,6 +43,7 @@ public class Session {
   transient public String     nodeIp;
   transient public int        nodePort;
   transient public int        lastUpdateOnline;
+  transient public int        lastUpdateLDB;
   transient public int        lastHearBeatTime;
 
   //kpi transient data
@@ -91,14 +92,13 @@ public class Session {
     userRollCall          = UserRollCall.ofDefault();
     userEvent             = UserEvent.ofDefault();
     userRanking           = UserRanking.ofDefault();
-    userLDB = UserLDB.of(this);
+    userLDB               = UserLDB.ofDefault();
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
 
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
-    userIdol.userLDB = this.userLDB;   //refs
 
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;
@@ -182,10 +182,9 @@ public class Session {
     userInventory.reBalance();
     userProduction.reBalance(this.userIdol.getTotalCreativity());
 
-    userLDB = UserLDB.of(this);
+    userLDB                 = UserLDB.ofDefault();
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
-    userIdol.userLDB = this.userLDB;   //ref
 
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;
@@ -633,6 +632,22 @@ public class Session {
         lastUpdateOnline = second;
         addUpdateSession(this);
       }
+      if (second - lastUpdateLDB >= ONLINE_INFO.ONLINE_RECORD_LDB_TIME) {
+        lastUpdateLDB = second;
+        updateLDBScore();
+      }
+    }
+  }
+
+  private void updateLDBScore() {
+    long totalCrt = userIdol.getTotalCreativity();
+    long totalPerf = userIdol.getTotalPerformance();
+    long totalAttr = userIdol.getTotalCreativity();
+    long totalTalent = totalCrt + totalPerf + totalAttr;
+
+    if (userLDB != null) {
+      userLDB.addLdbRecord(this, Constant.LEADER_BOARD.TALENT_LDB_ID, totalTalent);
+      userLDB.addLdbRecord(this, Constant.LEADER_BOARD.FIGHT_LDB_ID, userFight.currentFightLV.id);
     }
   }
 

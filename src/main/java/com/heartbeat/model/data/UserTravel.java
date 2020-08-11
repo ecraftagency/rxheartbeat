@@ -32,7 +32,7 @@ public class UserTravel extends Travel {
 
   /********************************************************************************************************************/
   public void updateTravel(Session session, long curMs) {
-    VipData.Vip vip          = VipData.getVipData(session.userGameInfo.vipExp);
+    VipData.VipDto vip          = VipData.getVipData(session.userGameInfo.vipExp);
     maxTravelClaim           = vip.travelLimit;
     dailyTravelAddLimit      = vip.travelAddLimit;
 

@@ -1,7 +1,6 @@
 package com.heartbeat.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.heartbeat.common.Constant;
 import com.heartbeat.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
@@ -204,14 +203,22 @@ public class UserGameInfo extends GameInfo {
   public void addVipExp(Session session, int amount) {
     if (amount <= 0)
       return;
-    VipData.Vip oldVip  = VipData.getVipData(vipExp);
+    VipData.VipDto oldVip  = VipData.getVipData(vipExp);
     vipExp += amount;
 
-    VipData.Vip vip = VipData.getVipData(vipExp);
+    VipData.VipDto vip = VipData.getVipData(vipExp);
 
     if (vip.level > oldVip.level) { //level up
       session.userTravel.maxTravelClaim       = vip.travelLimit;
       session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
+
+      //reward idol
+      for (int lv = oldVip.level + 1; lv <= vip.level; lv++) {
+        VipData.VipDto v = VipData.vipMap.get(lv);
+        if (v != null && v.rewardFormat != null && v.rewardFormat.size() == 4) {
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, v.rewardFormat);
+        }
+      }
     }
   }
 
@@ -282,7 +289,7 @@ public class UserGameInfo extends GameInfo {
     if (shopping.getOrDefault(itemId, 0) > dto.dailyLimit)
       return "shop_limit";
 
-    VipData.Vip vipDto = VipData.getVipData(vipExp);
+    VipData.VipDto vipDto = VipData.getVipData(vipExp);
     if (vipDto == null)
       return "vip_data_not_found";
 

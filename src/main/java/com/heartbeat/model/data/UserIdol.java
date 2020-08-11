@@ -7,30 +7,26 @@ import com.heartbeat.model.Session;
 import com.statics.*;
 import com.transport.model.Idols;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("unused")
 public class UserIdol extends Idols {
-  public static final int     CREATIVITY              = 2; //trí lực
-  public static final int     PERFORMANCE             = 3; //chính trị
-  public static final int     ATTRACTIVE              = 4; //mị lực
-  public static final int     GROUP_HALO              = 1;
-  public static final int     PERSONAL_HALO           = 0;
+  public static final int               CREATIVITY              = 2; //trí lực
+  public static final int               PERFORMANCE             = 3; //chính trị
+  public static final int               ATTRACTIVE              = 4; //mị lực
+  public static final int               GROUP_HALO              = 1;
+  public static final int               PERSONAL_HALO           = 0;
 
-  public static final int     EXP_PER_UPGRADE         = 200;
-  public static final int     EXP_UP_STEP             = 1;
+  public static final int               EXP_PER_UPGRADE         = 200;
+  public static final int               EXP_UP_STEP             = 1;
 
-  public static final int     CRT_UP_ITEM             = 67;
-  public static final int     PERF_UP_ITEM            = 68;
-  public static final int     ATTR_UP_ITEM            = 69;
-  public static List<Integer> APT_UP_RATE             = new ArrayList<>();
-  public static final int     APT_UP_COST             = 1;
-  public static final int     DEFAULT_APT_EXP         = 2000;
-  public static final int     DEFAULT_IDOL_ID         = 1;
+  public static final int               CRT_UP_ITEM             = 67;
+  public static final int               PERF_UP_ITEM            = 68;
+  public static final int               ATTR_UP_ITEM            = 69;
+  public static List<Integer>           APT_UP_RATE             = new ArrayList<>();
+  public static final int               APT_UP_COST             = 1;
+  public static final int               DEFAULT_APT_EXP         = 2000;
+  public static final List<Integer>     DEFAULT_IDOLS;
 
   static {
     APT_UP_RATE.add(0);
@@ -39,19 +35,22 @@ public class UserIdol extends Idols {
     APT_UP_RATE.add(30);
     APT_UP_RATE.add(0);
     APT_UP_RATE.add(23);
+    DEFAULT_IDOLS = Arrays.asList(1,2,3,4);
   }
 
   private transient Map<Integer, List<Idol>>  halo2Idol;    //group Idol by Halos
   public  transient UserEvent                 userEvent;    //ref;
   public  transient UserRanking               userRanking;  //ref;
-  public  transient UserLDB                   userLDB;      //ref;
 
   public static UserIdol ofDefault() {
     UserIdol defaultUserIdol = new UserIdol();
     defaultUserIdol.idolMap = new HashMap<>();
-    Idol defaultIdol = buildIdol(DEFAULT_IDOL_ID);
-    if (defaultIdol != null)
-      defaultUserIdol.addIdol(defaultIdol);
+
+    for (Integer idolId : DEFAULT_IDOLS) {
+      Idol defaultIdol = buildIdol(idolId);
+      if (defaultIdol != null)
+        defaultUserIdol.addIdol(defaultIdol);
+    }
     return defaultUserIdol;
   }
 

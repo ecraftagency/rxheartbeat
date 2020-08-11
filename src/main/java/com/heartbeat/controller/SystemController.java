@@ -57,7 +57,7 @@ public class SystemController implements Handler<RoutingContext> {
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
-    session.updateOnline(System.currentTimeMillis());
+    session.updateOnline(curMs);
     resp.userRemainTime = session.userGameInfo.time;
     return resp;
   }

@@ -73,16 +73,15 @@ public class LeaderBoardController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processSubmitScore(Session session) {
-    long totalCrt = session.userIdol.getTotalCreativity();
-    long totalPerf = session.userIdol.getTotalPerformance();
-    long totalAttr = session.userIdol.getTotalCreativity();
-    long totalTalent = totalCrt + totalPerf + totalAttr;
-
-    if (session.userLDB != null) {
-      session.userLDB.addLdbRecord(Constant.LEADER_BOARD.TALENT_LDB_ID, totalTalent);
-      session.userLDB.addLdbRecord(Constant.LEADER_BOARD.FIGHT_LDB_ID, session.userFight.currentFightLV.id);
-    }
-
+//    long totalCrt = session.userIdol.getTotalCreativity();
+//    long totalPerf = session.userIdol.getTotalPerformance();
+//    long totalAttr = session.userIdol.getTotalCreativity();
+//    long totalTalent = totalCrt + totalPerf + totalAttr;
+//
+//    if (session.userLDB != null) {
+//      session.userLDB.addLdbRecord(Constant.LEADER_BOARD.TALENT_LDB_ID, totalTalent);
+//      session.userLDB.addLdbRecord(Constant.LEADER_BOARD.FIGHT_LDB_ID, session.userFight.currentFightLV.id);
+//    }
     return ExtMessage.leaderBoard();
   }
 }

@@ -19,7 +19,6 @@ import static com.heartbeat.common.Constant.LEADER_BOARD.*;
 public class UserLDB {
   private static final  EventLoop                                   ldbEventLoop;
   private static final  Map<Integer, LeaderBoard<Integer, LDBObj>>  leaderBoards;
-  public                Session                                     session; //ref;
 
   static {
     ldbEventLoop = new EventLoop();
@@ -54,13 +53,11 @@ public class UserLDB {
 
   /********************************************************************************************************************/
 
-  public static UserLDB of(Session session) {
-    UserLDB sLDB = new UserLDB();
-    sLDB.session = session;
-    return sLDB;
+  public static UserLDB ofDefault() {
+    return new UserLDB();
   }
 
-  public void addLdbRecord(int ldbType, long score) {
+  public void addLdbRecord(Session session, int ldbType, long score) {
     if (session == null)
       return;
     LeaderBoard<Integer, LDBObj> ldb = leaderBoards.get(ldbType);

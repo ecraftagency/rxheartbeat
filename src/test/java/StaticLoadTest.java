@@ -1,4 +1,3 @@
-import com.heartbeat.common.Constant;
 import com.heartbeat.model.data.UserAchievement;
 import com.statics.*;
 

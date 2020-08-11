@@ -52,7 +52,7 @@ public class UserRollCall extends RollCall {
     todayClaim = dayDiff <= 0;
 
     //vip info
-    VipData.Vip vipDto = VipData.getVipData(session.userGameInfo.vipExp);
+    VipData.VipDto vipDto = VipData.getVipData(session.userGameInfo.vipExp);
     currentVipLevel = (vipDto != null) ? vipDto.level : 0;
 
     //giftCard info
@@ -127,7 +127,7 @@ public class UserRollCall extends RollCall {
   }
 
   public String claimVipGift(Session session, long curMs, int claimLevel) {
-    VipData.Vip cur = VipData.getVipData(session.userGameInfo.vipExp);
+    VipData.VipDto cur = VipData.getVipData(session.userGameInfo.vipExp);
     if (cur == null)
       return "vip_data_not_found";
 

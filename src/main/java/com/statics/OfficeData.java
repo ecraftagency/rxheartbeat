@@ -19,6 +19,7 @@ public class OfficeData{
     public int imperialSpanMinutes;
     public int areaDemonSpanMinutes;
     public int areaImperialSpanMinutes;
+    public List<Integer> rewardFormat;
 
     @Override
     public Integer mapKey() {
