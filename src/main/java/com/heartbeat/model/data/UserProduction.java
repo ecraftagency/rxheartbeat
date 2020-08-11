@@ -12,10 +12,6 @@ public class UserProduction extends com.transport.model.Production{
   public static final     int PRODUCE_VIEW                = 2;
   public static final     int PRODUCE_GOLD                = 3; //sáng tác
 
-//  public transient        int curGoldRecInv               = 0; //current recovery interval
-//  public transient        int curViewRecInv               = 0; //current recovery interval
-//  public transient        int curFanRecInv                = 0; //current recovery interval
-
   public static UserProduction ofDefault() {
     UserProduction defaultUserProduction  = new UserProduction();
     defaultUserProduction.lastFanClaim    = 0;
@@ -31,12 +27,6 @@ public class UserProduction extends com.transport.model.Production{
   /********************************************************************************************************************/
 
   public void reBalance(long curTotalCrt) {
-//    curGoldRecInv = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
-//    curViewRecInv = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
-//    curFanRecInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
-//    curGoldRecInv = Math.min(curGoldRecInv, MAX_REC_INTERVAL);
-//    curViewRecInv = Math.min(curViewRecInv, MAX_REC_INTERVAL);
-//    curFanRecInv  = Math.min(curFanRecInv, MAX_REC_INTERVAL);
     goldRecoverInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
     viewRecoverInv  = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
     fanRecoverInv   = ((int)(curTotalCrt/RECOVERY_DENOMINATOR) + 1)*60;
@@ -86,44 +76,6 @@ public class UserProduction extends com.transport.model.Production{
     if (newFanProduceCount >= 1)
       fanRecoverInv  = newInv;
   }
-
-  /*public void updateProduction(Session session, long curMs) {
-    goldRecoverInv    = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
-    goldRecoverInv    = Math.min(goldRecoverInv, MAX_REC_INTERVAL);
-    fanRecoverInv     = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
-    fanRecoverInv     = Math.min(fanRecoverInv, MAX_REC_INTERVAL);
-    viewRecoverInv    = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
-    viewRecoverInv    = Math.min(viewRecoverInv, MAX_REC_INTERVAL);
-
-    int second        = (int)(curMs/1000);
-    int goldDt        = second - lastGoldClaim;
-    int viewDt        = second - lastViewClaim;
-    int fanDt         = second - lastFanClaim;
-
-    int currentTitleId = session.userGameInfo.titleId;
-    OfficeData.OfficeLV currentLevelData = OfficeData.officeLV.get(currentTitleId);
-    if (currentLevelData != null) {
-      maxViewClaim = currentLevelData.foodMaxTimes;
-      maxFanClaim = currentLevelData.soldierMaxTimes;
-      maxGoldClaim = currentLevelData.moneyMaxTimes;
-    }
-
-    int newGoldProduceCount = goldDt/goldRecoverInv;
-    int newViewProduceCount = viewDt/viewRecoverInv;
-    int newFanProduceCount  = fanDt/fanRecoverInv;
-
-    lastGoldClaim += newGoldProduceCount*goldRecoverInv;
-    lastViewClaim += newViewProduceCount*viewRecoverInv;
-    lastFanClaim  += newFanProduceCount*fanRecoverInv;
-
-    currentFanClaimCount  += newFanProduceCount;
-    currentGoldClaimCount += newGoldProduceCount;
-    currentViewClaimCount += newViewProduceCount;
-
-    currentViewClaimCount = Math.min(currentViewClaimCount, maxViewClaim);
-    currentGoldClaimCount = Math.min(currentGoldClaimCount, maxViewClaim);
-    currentFanClaimCount  = Math.min(currentFanClaimCount, maxViewClaim);
-  }*/
 
   public String produce(Session session, int produceType) {
     long curMs = System.currentTimeMillis();
