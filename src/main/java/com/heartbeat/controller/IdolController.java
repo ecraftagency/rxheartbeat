@@ -52,8 +52,10 @@ public class IdolController implements Handler<RoutingContext> {
             break;
         }
 
-        resp.data.idols = session.userIdol;
-        resp.cmd = cmd;
+        resp.data.idols     = session.userIdol;
+        resp.cmd            = cmd;
+        resp.userRemainTime = session.userGameInfo.time;
+
         resp.timeChange = session.userGameInfo.timeChange;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();

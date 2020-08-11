@@ -85,8 +85,10 @@ public class UserProduction extends com.transport.model.Production{
         long totalFanAdd = session.userIdol.getTotalAttractive();
         if (currentFanClaimCount > 0 && session.userGameInfo.view >= totalFanAdd) {
           currentFanClaimCount -= 1;
-          session.userGameInfo.fan  += totalFanAdd;
-          session.userGameInfo.spendView(session, totalFanAdd);
+          if (session.userGameInfo.time > 0) {
+            session.userGameInfo.fan += totalFanAdd;
+            session.userGameInfo.spendView(session, totalFanAdd);
+          }
           lastFanClaim = (int)(curMs/1000);
           return "ok";
         }
@@ -95,7 +97,9 @@ public class UserProduction extends com.transport.model.Production{
       case PRODUCE_GOLD:
         if (currentGoldClaimCount > 0) {
           currentGoldClaimCount -= 1;
-          session.userGameInfo.money += session.userIdol.getTotalCreativity();
+          if (session.userGameInfo.time > 0) {
+            session.userGameInfo.money += session.userIdol.getTotalCreativity();
+          }
           lastGoldClaim = (int)(curMs/1000);
           return "ok";
         }
@@ -104,7 +108,9 @@ public class UserProduction extends com.transport.model.Production{
       case PRODUCE_VIEW:
         if (currentViewClaimCount > 0) {
           currentViewClaimCount -= 1;
-          session.userGameInfo.view += session.userIdol.getTotalPerformance();
+          if (session.userGameInfo.time > 0) {
+            session.userGameInfo.view += session.userIdol.getTotalPerformance();
+          }
           lastViewClaim = (int)(curMs/1000);
           return "ok";
         }
@@ -116,6 +122,7 @@ public class UserProduction extends com.transport.model.Production{
 
   public String multiProduce(Session session) {
     long curMs = System.currentTimeMillis();
+
     updateProduction(session, curMs);
     if (currentGoldClaimCount <= 0 && currentViewClaimCount <= 0 && currentFanClaimCount <= 0)
       return "claim_product_timeout";
@@ -131,30 +138,37 @@ public class UserProduction extends com.transport.model.Production{
 
     //gold
     if (currentGoldClaimCount > 0) {
-      session.userGameInfo.money += currentGoldClaimCount*session.userIdol.getTotalCreativity();
+      if (session.userGameInfo.time > 0) {
+        session.userGameInfo.money += currentGoldClaimCount * session.userIdol.getTotalCreativity();
+      }
       lastGoldClaim               = (int)(curMs/1000);
       currentGoldClaimCount       = 0;
     }
 
     //view
     if (currentViewClaimCount > 0) {
-      session.userGameInfo.view  += currentViewClaimCount*session.userIdol.getTotalPerformance();
+      if (session.userGameInfo.time > 0) {
+        session.userGameInfo.view  += currentViewClaimCount*session.userIdol.getTotalPerformance();
+      }
       lastViewClaim               = (int)(curMs/1000);
       currentViewClaimCount       = 0;
     }
 
     //fan
     if (currentFanClaimCount > 0 && shouldDoFanProduce) {
-      session.userGameInfo.fan   += totalFanAdd;
+      if (session.userGameInfo.time > 0) {
+        session.userGameInfo.fan   += totalFanAdd;
+        session.userGameInfo.spendView(session, totalFanAdd);
+      }
+
       lastFanClaim                = (int)(curMs/1000);
       currentFanClaimCount        = 0;
-      session.userGameInfo.spendView(session, totalFanAdd);
     }
 
     return "ok";
   }
 
-  public void addProduction(Session session, int productType, int amount, long curMs) {
+  public void addProduction(Session session, int productType, int amount) {
     switch (productType){
       case PRODUCE_GOLD:
         currentGoldClaimCount  += amount;

@@ -45,8 +45,9 @@ public class ProductionController implements Handler<RoutingContext> {
             break;
         }
 
-        resp.cmd = cmd;
-        resp.timeChange = session.userGameInfo.timeChange;
+        resp.cmd            = cmd;
+        resp.timeChange     = session.userGameInfo.timeChange;
+        resp.userRemainTime = session.userGameInfo.time;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
         session.userGameInfo.timeChange = false;
@@ -119,7 +120,7 @@ public class ProductionController implements Handler<RoutingContext> {
 
     session.userProduction.updateProduction(session, curMs);
     session.userInventory.useItem(UserProduction.CLAIM_ITEM, amount);
-    session.userProduction.addProduction(session, productType, amount, curMs);
+    session.userProduction.addProduction(session, productType, amount);
     resp.data.production = session.userProduction;
     resp.msg = "ok";
     return resp;

@@ -170,7 +170,7 @@ public class UserGameInfo extends GameInfo {
       lastMediaClaim        = (int)(curMs/1000);
       MediaData.Media media = MediaData.mediaMap.get(nextQuestion);
 
-      if (media != null) {
+      if (media != null && time > 0) {
         List<List<Integer>> rewards;
         EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
@@ -280,6 +280,9 @@ public class UserGameInfo extends GameInfo {
 
   /*SHOPPING***********************************************************************************************************/
   public String buyShopItem(Session session, int itemId) {
+    if (time < 0)
+      return "ok";
+
     ShopData.ShopDto dto = ShopData.shopDtoMap.get(itemId);
 
     if (dto == null || dto.format == null || dto.format.size() == 0)

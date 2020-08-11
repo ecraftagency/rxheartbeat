@@ -133,9 +133,10 @@ public class UserFight extends Fight {
       session.userGameInfo.spendFan(session, expectedConsume);
 
       //reward
-      session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
-      EffectManager.inst().handleEffect(extArgs, session, currentFightLV.reward);
+      if (session.userGameInfo.time > 0) {
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
+        EffectManager.inst().handleEffect(extArgs, session, currentFightLV.reward);
+      }
 
       //next fight
       int nextFightId = currentFightLV.id + 1;
@@ -175,9 +176,10 @@ public class UserFight extends Fight {
     long damage       = totalAptBuf*idol.level*IDOL_DAMAGE_SCALE + totalProps;
 
     if (damage >= currentFightLV.boss.hp) {
-      session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
-      EffectManager.inst().handleEffect(extArgs, session, currentFightLV.boss.reward);
+      if (session.userGameInfo.time > 0) {
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
+        EffectManager.inst().handleEffect(extArgs, session, currentFightLV.boss.reward);
+      }
 
       int nextFightId = currentFightLV.id + 1;
       if (nextFightId >= FightData.fightMap.size())
@@ -221,6 +223,8 @@ public class UserFight extends Fight {
   /*GAME SHOW**********************************************************************************************************/
 
   public String handleGameShowFight(Session session, int idolId) {
+    if (session.userGameInfo.time <= 0)
+      return "time_out";
     if (gameShowUsedIdols.contains(idolId))
       return "idol_already_fought";
     Idols.Idol idol = session.userIdol.idolMap.get(idolId);
@@ -238,10 +242,10 @@ public class UserFight extends Fight {
     long damage       = totalAptBuf*idol.level*IDOL_DAMAGE_SCALE + totalProps;
 
     if (damage >= currentGameShow.bosshp) {
-      session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
-      for (List<Integer> r : currentGameShow.reward)
-        EffectManager.inst().handleEffect(extArgs, session, r);
+      if (session.userGameInfo.time > 0) {
+        for (List<Integer> r : currentGameShow.reward)
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
+      }
 
       int nextFightId = currentGameShow.id + 1;
       GameShowData.GameShow nextShow = GameShowData.of(nextFightId);
@@ -291,18 +295,19 @@ public class UserFight extends Fight {
       session.userGameInfo.spendFan(session, expectedConsume);
 
       //reward
-      session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
+      if (session.userGameInfo.time > 0) {
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
-      List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
-      for (Integer item : currentRunShow.reward) {
-        rewardFormat.set(1, item);
-        int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-        if (rand <= RUN_SHOW_DROP_RATE)
-          EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+        List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+        for (Integer item : currentRunShow.reward) {
+          rewardFormat.set(1, item);
+          int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+          if (rand <= RUN_SHOW_DROP_RATE)
+            EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+        }
+
+        EffectManager.inst().handleEffect(extArgs, session, RUN_SHOW_EXP_REWARD);
       }
-
-      EffectManager.inst().handleEffect(extArgs, session, RUN_SHOW_EXP_REWARD);
 
       //next fight
       int nextFightId = currentRunShow.id + 1;
@@ -339,7 +344,6 @@ public class UserFight extends Fight {
     }
 
     //reward
-    session.effectResults.clear();
     List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
@@ -351,14 +355,16 @@ public class UserFight extends Fight {
         if (rs.id == -1)
           return "run_show_invalid";
 
-        for (Integer item : rs.reward) {
-          rewardFormat.set(1, item);
-          int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-          if (rand <= RUN_SHOW_DROP_RATE)
-            EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
-        }
+        if (session.userGameInfo.time > 0) {
+          for (Integer item : rs.reward) {
+            rewardFormat.set(1, item);
+            int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+            if (rand <= RUN_SHOW_DROP_RATE)
+              EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+          }
 
-        EffectManager.inst().handleEffect(extArgs, session, RUN_SHOW_EXP_REWARD);
+          EffectManager.inst().handleEffect(extArgs, session, RUN_SHOW_EXP_REWARD);
+        }
       }
 
       //next fight
@@ -392,15 +398,16 @@ public class UserFight extends Fight {
 
     if (session.userGameInfo.spendMoney(session, moneyConsume)) {
       //reward
-      session.effectResults.clear();
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
+      if (session.userGameInfo.time > 0) {
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
-      List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
-      for (Integer item : currentShopping.reward) {
-        rewardFormat.set(1, item);
-        int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-        if (rand <= RUN_SHOW_DROP_RATE)
-          EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+        List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+        for (Integer item : currentShopping.reward) {
+          rewardFormat.set(1, item);
+          int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+          if (rand <= RUN_SHOW_DROP_RATE)
+            EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+        }
       }
 
       int nextFightId   = currentShopping.id + 1;
@@ -441,20 +448,21 @@ public class UserFight extends Fight {
 
     if (session.userGameInfo.spendMoney(session, totalMoneyConsume)) {
       //reward
-      session.effectResults.clear();
-      List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
+      if (session.userGameInfo.time > 0) {
+        List<Integer> rewardFormat = Arrays.asList(100,0,1,0);
+        EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
-      for (int i = 0; i < time; i++) {
-        ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);
-        if (sp.id == -1)
-          return "run_show_invalid";
+        for (int i = 0; i < time; i++) {
+          ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);
+          if (sp.id == -1)
+            return "run_show_invalid";
 
-        for (Integer item : sp.reward) {
-          rewardFormat.set(1, item);
-          int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-          if (rand <= RUN_SHOW_DROP_RATE)
-            EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+          for (Integer item : sp.reward) {
+            rewardFormat.set(1, item);
+            int rand = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+            if (rand <= RUN_SHOW_DROP_RATE)
+              EffectManager.inst().handleEffect(extArgs, session, rewardFormat);
+          }
         }
       }
 

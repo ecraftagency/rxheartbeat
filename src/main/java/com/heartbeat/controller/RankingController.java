@@ -38,8 +38,10 @@ public class RankingController implements Handler<RoutingContext> {
             break;
         }
 
-        resp.cmd = cmd;
-        resp.timeChange = session.userGameInfo.timeChange;
+        resp.cmd            = cmd;
+        resp.timeChange     = session.userGameInfo.timeChange;
+        resp.userRemainTime = session.userGameInfo.time;
+
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
         session.userGameInfo.timeChange = false;
@@ -56,24 +58,39 @@ public class RankingController implements Handler<RoutingContext> {
 
   private void processClaimReward(Session session, String cmd, RoutingContext ctx) {
     int rankingType = ctx.getBodyAsJson().getInteger("rankingType");
-    session.userRanking.claimReward(session, rankingType, ar -> {
+    if (session.userGameInfo.time > 0) {
+      session.userRanking.claimReward(session, rankingType, ar -> {
+        ExtMessage resp     = ExtMessage.ranking();
+        resp.data.ranking   = session.userRanking;
+        resp.effectResults  = session.effectResults;
+
+        if (ar.succeeded()) {
+          resp.msg          = ar.result();
+        }
+        else {
+          resp.msg = ar.cause().getMessage();
+        }
+
+        resp.cmd            = cmd;
+        resp.timeChange     = session.userGameInfo.timeChange;
+        resp.userRemainTime = session.userGameInfo.time;
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        session.effectResults.clear();
+        session.userGameInfo.timeChange = false;
+      });
+    }
+    else {
       ExtMessage resp     = ExtMessage.ranking();
       resp.data.ranking   = session.userRanking;
       resp.effectResults  = session.effectResults;
 
-      if (ar.succeeded()) {
-        resp.msg          = ar.result();
-      }
-      else {
-        resp.msg = ar.cause().getMessage();
-      }
-
-      resp.cmd = cmd;
-      resp.timeChange = session.userGameInfo.timeChange;
+      resp.cmd            = cmd;
+      resp.timeChange     = session.userGameInfo.timeChange;
+      resp.userRemainTime = session.userGameInfo.time;
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       session.effectResults.clear();
       session.userGameInfo.timeChange = false;
-    });
+    }
   }
 
   private ExtMessage processGetRankingInfo() {
@@ -97,7 +114,7 @@ public class RankingController implements Handler<RoutingContext> {
         resp.msg = ar.cause().getMessage();
       }
 
-      resp.cmd = cmd;
+      resp.cmd        = cmd;
       resp.timeChange = session.userGameInfo.timeChange;
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       session.effectResults.clear();

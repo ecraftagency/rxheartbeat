@@ -1,5 +1,6 @@
 import com.heartbeat.common.Constant;
 import com.heartbeat.common.GlobalVariable;
+import com.heartbeat.common.Utilities;
 import com.heartbeat.ranking.impl.LeaderBoard;
 import com.statics.ScoreObj;
 
@@ -41,5 +42,15 @@ public class UserTest {
     ldb.close();
 
     System.out.println(ldb.getRank(1008));
+
+    StringBuilder sb = new StringBuilder();
+    sideEffect(sb);
+    System.out.println(sb.toString());
+
+  }
+
+
+  public static void sideEffect(StringBuilder sb) {
+    sb.append("sideEffect");
   }
 }

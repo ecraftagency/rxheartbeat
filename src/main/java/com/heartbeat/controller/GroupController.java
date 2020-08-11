@@ -78,8 +78,10 @@ public class GroupController implements Handler<RoutingContext> {
             resp.msg = "unknown_cmd";
             break;
         }
-        resp.cmd = cmd;
-        resp.timeChange = session.userGameInfo.timeChange;
+        resp.cmd              = cmd;
+        resp.timeChange       = session.userGameInfo.timeChange;
+        resp.userRemainTime   = session.userGameInfo.time;
+
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
         session.userGameInfo.timeChange = false;
