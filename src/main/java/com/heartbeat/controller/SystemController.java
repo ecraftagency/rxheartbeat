@@ -3,6 +3,7 @@ package com.heartbeat.controller;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserInbox;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -57,8 +58,14 @@ public class SystemController implements Handler<RoutingContext> {
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)
       session.userGameInfo.time = 0;
+
     session.updateOnline(curMs);
     resp.userRemainTime = session.userGameInfo.time;
+
+    //check new inbox message
+    long cas = UserInbox.checkNewMessage(session.userInbox.lastMailCheckTime);
+    resp.newInbox = cas > 0;
+
     return resp;
   }
 }

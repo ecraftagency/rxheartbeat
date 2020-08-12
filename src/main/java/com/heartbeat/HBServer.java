@@ -132,6 +132,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/event").handler(new EventController());
         router.post("/api/ranking").handler(new RankingController());
         router.post("/api/leaderboard").handler(new LeaderBoardController());
+        router.post("/api/inbox").handler(new InboxController());
 
         router.post("/gm/session_inject").handler(new SessionInjectController());
         router.post("/gm/constant").handler(new ConstantInjectController());

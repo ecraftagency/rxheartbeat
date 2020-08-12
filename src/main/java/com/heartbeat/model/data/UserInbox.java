@@ -2,10 +2,14 @@ package com.heartbeat.model.data;
 
 import com.heartbeat.db.cb.CBInbox;
 import com.heartbeat.db.dao.PublicMailBoxDAO;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
+import com.heartbeat.model.Session;
 import com.transport.model.Inbox;
 import com.transport.model.MailObj;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class UserInbox extends Inbox {
@@ -52,6 +56,21 @@ public class UserInbox extends Inbox {
     syncInboxToDB();
   }
 
+  public static MailObj haveMessage(long id) {
+    for (MailObj obj : publicInbox) {
+      if (obj.id == id)
+        return obj;
+    }
+    return null;
+  }
+
+  public static long checkNewMessage(long lastCheck) {
+    MailObj obj = publicInbox.getLast();
+    if (obj == null || lastCheck >= obj.id)
+      return 0L;
+    return obj.id;
+  }
+
   /********************************************************************************************************************/
 
   public void reBalance(long curMs) {
@@ -59,5 +78,27 @@ public class UserInbox extends Inbox {
       claimedMsg = new HashMap<>();
     }
     claimedMsg.entrySet().removeIf(entry -> curMs - entry.getKey() > CLAIM_EXPIRE);
+  }
+
+  public String claimInboxReward(Session session, long cas, long curMs) {
+    if (claimedMsg.containsKey(cas))
+      return "msg_reward_already_claim";
+
+    MailObj obj = haveMessage(cas);
+    if (obj == null)
+      return "msg_not_exist";
+
+    if (obj.rewards == null)
+      return "msg_reward_invalid";
+
+    for (List<Integer> reward : obj.rewards) {
+      if (reward == null || reward.size() != 4)
+        continue;
+      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, reward);
+    }
+
+    claimedMsg.put(cas, curMs);
+
+    return "ok";
   }
 }

@@ -1,11 +1,12 @@
 package com.heartbeat.common;
 
+import com.google.gson.reflect.TypeToken;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.ranking.ExtRankingInfo;
 import com.statics.EventInfo;
 import com.transport.model.MailObj;
 
-import java.nio.charset.StandardCharsets;
+import java.lang.reflect.Type;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -221,15 +222,10 @@ public class Constant {
     }
   }
 
-  public static void addInbox() {
-    int n = (int)(System.currentTimeMillis()%1000000);
-
-    List<List<Integer>> rewards = new ArrayList<>();
-    rewards.add(Arrays.asList(100,1,0,0));
-    rewards.add(Arrays.asList(1,1,200,0));
-    rewards.add(Arrays.asList(1,2,300,0));
-
-    MailObj obj = MailObj.of("title " + n, "content " + n, rewards, MailObj.MSG_TYPE_PUBLIC);
-    UserInbox.addPublicMessage(obj);
+  public static void addInbox(String title, String msg, String reward) {
+    Type listOfListOfInt = new TypeToken<List<List<Integer>>>() {}.getType();
+    List<List<Integer>> r = Utilities.gson.fromJson(reward, listOfListOfInt);
+    MailObj mailObj = MailObj.of(title, msg, r, MailObj.MSG_TYPE_PUBLIC);
+    UserInbox.addPublicMessage(mailObj);
   }
 }

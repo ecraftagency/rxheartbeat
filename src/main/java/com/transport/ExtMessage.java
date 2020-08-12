@@ -12,7 +12,10 @@ public class ExtMessage {
   public int                serverTime;
   public long               userRemainTime;
   public boolean            timeChange;
+  public boolean            newInbox;
   public List<EffectResult> effectResults;
+
+
 
   public static class Data {
     public GameInfo     gameInfo;
@@ -30,8 +33,18 @@ public class ExtMessage {
     public RollCall     rollCall;
     public Event        event;
     public Ranking      ranking;
+    public Inbox        inbox;
     public int          currentGroupState;
     public String       extObj;
+  }
+
+  public static ExtMessage inbox() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.group = "inbox";
+    result.data = new Data();
+    return result;
   }
 
   public static ExtMessage leaderBoard() {
@@ -139,6 +152,7 @@ public class ExtMessage {
     result.msg = "ok";
     result.group = "system";
     result.data = new Data();
+    result.newInbox = false;
     return result;
   }
 
