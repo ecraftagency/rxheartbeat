@@ -1,4 +1,6 @@
-package com.statics;
+package com.transport.model;
+
+import com.statics.Common;
 
 public class ScoreObj implements Comparable<ScoreObj>, Common.hasKey<Integer> {
   public int    id;

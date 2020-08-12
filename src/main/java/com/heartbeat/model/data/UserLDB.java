@@ -7,7 +7,7 @@ import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.impl.LeaderBoard;
 import com.heartbeat.ranking.impl.ListCommand;
 import com.heartbeat.ranking.impl.RecordCommand;
-import com.statics.LDBObj;
+import com.transport.model.LDBObj;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

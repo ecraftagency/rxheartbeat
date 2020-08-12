@@ -280,8 +280,8 @@ public class UserGameInfo extends GameInfo {
 
   /*SHOPPING***********************************************************************************************************/
   public String buyShopItem(Session session, int itemId) {
-    if (time < 0)
-      return "ok";
+    if (time <= 0)
+      return "time_out";
 
     ShopData.ShopDto dto = ShopData.shopDtoMap.get(itemId);
 

@@ -7,7 +7,7 @@ import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.impl.*;
 import com.statics.RankingData;
 import com.statics.RankingInfo;
-import com.statics.ScoreObj;
+import com.transport.model.ScoreObj;
 import com.transport.model.Ranking;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;

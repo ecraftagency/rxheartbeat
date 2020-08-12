@@ -74,6 +74,7 @@ public class Session {
   public UserRollCall       userRollCall;
   public UserEvent          userEvent;
   public UserRanking        userRanking;
+  public UserInbox          userInbox;
 
   public List<EffectResult> effectResults;
 
@@ -93,6 +94,7 @@ public class Session {
     userEvent             = UserEvent.ofDefault();
     userRanking           = UserRanking.ofDefault();
     userLDB               = UserLDB.ofDefault();
+    userInbox             = UserInbox.ofDefault();
 
     //todo reBalance
     userProduction.reBalance(userIdol.getTotalCreativity());
@@ -176,6 +178,12 @@ public class Session {
       userRanking = UserRanking.ofDefault();
     else {
       userRanking.reBalance();
+    }
+
+    if (userInbox == null)
+      userInbox = UserInbox.ofDefault();
+    else {
+      userInbox.reBalance(curMs);
     }
 
     userGameInfo.reBalance();

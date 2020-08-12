@@ -1,5 +1,5 @@
 package com.heartbeat.db.dao;
-import com.statics.LDBObj;
+import com.transport.model.LDBObj;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,14 @@
 package com.heartbeat.common;
 
+import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.ranking.ExtRankingInfo;
 import com.statics.EventInfo;
+import com.transport.model.MailObj;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
+@SuppressWarnings("unused")
 public class Constant {
   public static final String  EMPTY_STRING    = "";
   public static final int     MINUTE_SECONDS  = 60;
@@ -216,5 +219,17 @@ public class Constant {
       GROUP.missionStart = -1;
       GROUP.missionEnd = -1;
     }
+  }
+
+  public static void addInbox() {
+    int n = (int)(System.currentTimeMillis()%1000000);
+
+    List<List<Integer>> rewards = new ArrayList<>();
+    rewards.add(Arrays.asList(100,1,0,0));
+    rewards.add(Arrays.asList(1,1,200,0));
+    rewards.add(Arrays.asList(1,2,300,0));
+
+    MailObj obj = MailObj.of("title " + n, "content " + n, rewards, MailObj.MSG_TYPE_PUBLIC);
+    UserInbox.addPublicMessage(obj);
   }
 }

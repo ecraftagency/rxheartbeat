@@ -11,6 +11,7 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserFight;
+import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.model.data.UserLDB;
 import com.statics.*;
 import io.reactivex.Scheduler;
@@ -89,6 +90,7 @@ public class HBServer extends AbstractVerticle {
 
       UserLDB.loadLDBFromDB(LEADER_BOARD.TALENT_LDB_ID);
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
+      UserInbox.loadInboxFromDB();
     }
     catch (Exception ioe) {
       LOGGER.error(ioe.getMessage());

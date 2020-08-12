@@ -1,6 +1,8 @@
-package com.statics;
+package com.transport.model;
 
-public class LDBObj implements Comparable<LDBObj>, Common.hasKey<Integer>{
+import com.statics.Common;
+
+public class LDBObj implements Comparable<LDBObj>, Common.hasKey<Integer> {
   public int    id;
   public String displayName;
   public int    titleId;

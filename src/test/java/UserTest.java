@@ -1,18 +1,23 @@
+import com.couchbase.client.java.ReactiveCluster;
+import com.couchbase.client.java.kv.GetResult;
+import com.heartbeat.HBServer;
 import com.heartbeat.common.Constant;
-import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.common.Utilities;
+import com.heartbeat.db.dao.PublicMailBoxDAO;
 import com.heartbeat.ranking.impl.LeaderBoard;
-import com.statics.ScoreObj;
+import com.transport.model.MailObj;
+import com.transport.model.ScoreObj;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UserTest {
   public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-  public static void main(String[] args) throws ParseException {
+  public static void main(String[] args) throws ParseException, InterruptedException {
 //    Calendar cal = Calendar.getInstance();
 //    cal.setTime(dateFormat.parse("06/08/2020 20:54:00"));
 //    int openTime  = (int) (cal.getTimeInMillis()/1000);
@@ -28,29 +33,68 @@ public class UserTest {
 //     */
 //  }
     //Constant.RANKING.rankingInfo.setRankingTime("06/08/2020 21:40:30", "06/08/2020 21:40:40");
-    LeaderBoard<Integer, ScoreObj> ldb = new LeaderBoard<>(20);
-    ldb.record(1000, ScoreObj.of(1000, 10, ""));
-    ldb.record(1001, ScoreObj.of(1001, 9, ""));
-    ldb.record(1002, ScoreObj.of(1002, 8, ""));
-    ldb.record(1003, ScoreObj.of(1003, 2, ""));
-    ldb.record(1004, ScoreObj.of(1004, 6, ""));
-    ldb.record(1005, ScoreObj.of(1005, 5, ""));
-    ldb.record(1006, ScoreObj.of(1006, 4, ""));
-    ldb.record(1007, ScoreObj.of(1007, 3, ""));
-    ldb.record(1008, ScoreObj.of(1008, 2, ""));
-    ldb.record(1009, ScoreObj.of(1009, 1, ""));
-    ldb.close();
+//    LeaderBoard<Integer, ScoreObj> ldb = new LeaderBoard<>(20);
+//    ldb.record(1000, ScoreObj.of(1000, 10, ""));
+//    ldb.record(1001, ScoreObj.of(1001, 9, ""));
+//    ldb.record(1002, ScoreObj.of(1002, 8, ""));
+//    ldb.record(1003, ScoreObj.of(1003, 2, ""));
+//    ldb.record(1004, ScoreObj.of(1004, 6, ""));
+//    ldb.record(1005, ScoreObj.of(1005, 5, ""));
+//    ldb.record(1006, ScoreObj.of(1006, 4, ""));
+//    ldb.record(1007, ScoreObj.of(1007, 3, ""));
+//    ldb.record(1008, ScoreObj.of(1008, 2, ""));
+//    ldb.record(1009, ScoreObj.of(1009, 1, ""));
+//    ldb.close();
+//
+//    System.out.println(ldb.getRank(1008));
+//
+//    StringBuilder sb = new StringBuilder();
+//    sideEffect(sb);
+//    System.out.println(sb.toString());
 
-    System.out.println(ldb.getRank(1008));
 
-    StringBuilder sb = new StringBuilder();
-    sideEffect(sb);
-    System.out.println(sb.toString());
-
+    HBServer.rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
+    HBServer.rxSessionBucket = HBServer.rxCluster.bucket("sessions");
+    HBServer.rxIndexBucket   = HBServer.rxCluster.bucket("index");
+    HBServer.rxPersistBucket = HBServer.rxCluster.bucket("persist");
+    //loadMail();
+    Thread.sleep(1000);
+    syncMail();
+    Thread.sleep(1000);
   }
-
 
   public static void sideEffect(StringBuilder sb) {
     sb.append("sideEffect");
+  }
+
+  public static void loadMail() {
+    ConcurrentLinkedDeque<MailObj> inbox =  new ConcurrentLinkedDeque<>();
+    GetResult gr = HBServer.rxIndexBucket.defaultCollection().get("halo").block();
+    if (gr != null) {
+      PublicMailBoxDAO dao = gr.contentAs(PublicMailBoxDAO.class);
+      if (dao.publicMessage != null)
+        for (MailObj mo : dao.publicMessage)
+          inbox.addLast(mo);
+      System.out.println(inbox.getLast().msg);
+    }
+  }
+
+  public static void syncMail() {
+    ConcurrentLinkedDeque<MailObj> inbox =  new ConcurrentLinkedDeque<>();
+    for (int i = 0; i < 10; i++) {
+      if (inbox.size() >= 5) {
+        inbox.removeFirst();
+      }
+      inbox.addLast(MailObj.of("hello " + i, new ArrayList<>(), MailObj.MSG_TYPE_PUBLIC));
+    }
+
+
+    System.out.println(inbox.getLast().msg);
+
+
+    PublicMailBoxDAO dao = new PublicMailBoxDAO();
+    dao.lastSync = System.currentTimeMillis();
+    dao.publicMessage = inbox;
+    HBServer.rxIndexBucket.defaultCollection().upsert("halo", dao).block();
   }
 }
