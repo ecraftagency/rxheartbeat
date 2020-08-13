@@ -110,6 +110,7 @@ public class SessionPool {
           session.userInventory.newDay();
           session.userTravel.newDay();
           session.userProduction.newDay();
+          session.userIdol.newDay();
         }
       }
     }

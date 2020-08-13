@@ -101,6 +101,7 @@ public class ProductionController implements Handler<RoutingContext> {
       }
     }
 
+    resp.effectResults = session.effectResults;
     return resp;
   }
 
@@ -161,6 +162,8 @@ public class ProductionController implements Handler<RoutingContext> {
           break;
       }
     }
+
+    resp.effectResults = session.effectResults;
     return resp;
   }
 

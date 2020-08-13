@@ -84,10 +84,11 @@ public class IdolController implements Handler<RoutingContext> {
     int idolID            = ctx.getBodyAsJson().getInteger("idolID");
     resp.msg              = session.userIdol.levelUp(session, idolID);
     resp.data.gameInfo    = session.userGameInfo;
-    resp.data.production = session.userProduction;
+    resp.data.production  = session.userProduction;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.IDOL_LV_MISSION_TYPE);
     }
+    resp.effectResults    = session.effectResults;
     return resp;
   }
 

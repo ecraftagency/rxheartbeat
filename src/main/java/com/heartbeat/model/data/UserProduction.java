@@ -3,6 +3,7 @@ package com.heartbeat.model.data;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
+import com.statics.VipData;
 import com.transport.EffectResult;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,8 +16,8 @@ public class UserProduction extends com.transport.model.Production{
   public static final     int PRODUCE_FAN                 = 1;
   public static final     int PRODUCE_VIEW                = 2;
   public static final     int PRODUCE_GOLD                = 3; //sáng tác
-  public static final     int RAMPAGE_BUFF_PERCENT        = 15; //sáng tác
-  public static final     int RAMPAGE_BUFF_SCALE          = 9; //sáng tác
+  public static final     int RAMPAGE_BUFF_PERCENT        = 15;
+  public static final     int RAMPAGE_BUFF_SCALE          = 9;
 
   public int dailyRampage;
   public int maxDailyRampage;

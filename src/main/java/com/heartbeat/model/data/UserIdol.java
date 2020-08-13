@@ -5,10 +5,12 @@ import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.statics.*;
+import com.transport.EffectResult;
 import com.transport.model.Idols;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import static com.heartbeat.common.Constant.*;
 
 public class UserIdol extends Idols {
   public static final int               CREATIVITY              = 2; //trí lực
@@ -28,6 +30,14 @@ public class UserIdol extends Idols {
   public static final int               DEFAULT_APT_EXP         = 2000;
   public static final List<Integer>     DEFAULT_IDOLS;
 
+  public static final int               RAMPAGE_BUFF_PERCENT    = 15;
+  public static final int               RAMPAGE_BUFF_LV_CNT     = 1;
+
+  public static List<Integer>           EXCLUDE_RAMPAGE_LEVEL;
+  public static final int               MAX_RAMPAGE_ALLOW_LV    = 197;
+
+  public int dailyRampage;
+  public int maxDailyRampage;
 
   static {
     APT_UP_RATE.add(0);
@@ -37,6 +47,7 @@ public class UserIdol extends Idols {
     APT_UP_RATE.add(0);
     APT_UP_RATE.add(23);
     DEFAULT_IDOLS = Arrays.asList(1,2,3,4);
+    EXCLUDE_RAMPAGE_LEVEL = Arrays.asList(98,99,100,148,149,150);
   }
 
   private transient Map<Integer, List<Idol>>  halo2Idol;    //group Idol by Halos
@@ -52,6 +63,8 @@ public class UserIdol extends Idols {
       if (defaultIdol != null)
         defaultUserIdol.addIdol(defaultIdol);
     }
+
+    defaultUserIdol.maxDailyRampage = 1;
     return defaultUserIdol;
   }
 
@@ -103,6 +116,12 @@ public class UserIdol extends Idols {
     else {
       return null;
     }
+  }
+
+  /********************************************************************************************************************/
+
+  public void newDay() {
+    dailyRampage = 0;
   }
 
   public void onPropertiesChange(Idol idol) {
@@ -199,6 +218,19 @@ public class UserIdol extends Idols {
 
     if (idol.level >= curHonor.maxServantLV)
       return "idol_honor_max_level";
+
+    //calc rampage level buff
+    if (        idol.level <= MAX_RAMPAGE_ALLOW_LV
+            &&  dailyRampage < maxDailyRampage
+            &&  !EXCLUDE_RAMPAGE_LEVEL.contains(idol.level)) {
+
+      int r = ThreadLocalRandom.current().nextInt(0, 101);
+      if (r <= RAMPAGE_BUFF_PERCENT) {
+        dailyRampage++;
+        idol.level += RAMPAGE_BUFF_LV_CNT;
+        session.effectResults.add(EffectResult.of(EFFECT_RESULT.RAMPAGE_EFFECT_RESULT, 1,0));
+      }
+    }
 
     session.userGameInfo.spendMoney(session, nextLevel.exp);
     idol.level += 1;

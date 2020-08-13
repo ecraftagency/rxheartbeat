@@ -11,15 +11,11 @@ import com.transport.model.GameInfo;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import static com.heartbeat.common.Constant.*;
 import static com.heartbeat.common.Constant.USER_GAME_INFO.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {
-  //shop data
-  public Map<Integer, Integer> shopping;
-
   public static UserGameInfo ofDefault() {
     UserGameInfo defaultInfo      = new UserGameInfo();
     defaultInfo.avatar            = -1;
@@ -207,7 +203,8 @@ public class UserGameInfo extends GameInfo {
     if (vip.level > oldVip.level) { //level up
       session.userTravel.maxTravelClaim       = vip.travelLimit;
       session.userTravel.dailyTravelAddLimit  = vip.travelAddLimit;
-
+      session.userIdol.maxDailyRampage        = vip.idolLevelUpLimit;
+      session.userProduction.maxDailyRampage  = vip.createLimit;
       //reward idol
       for (int lv = oldVip.level + 1; lv <= vip.level; lv++) {
         VipData.VipDto v = VipData.vipMap.get(lv);
@@ -299,7 +296,7 @@ public class UserGameInfo extends GameInfo {
       return "shop_data_not_found";
 
     if (shopping.getOrDefault(itemId, 0) > dto.dailyLimit)
-      return "shop_limit";
+      return "shop_daily_limit";
 
     VipData.VipDto vipDto = VipData.getVipData(vipExp);
     if (vipDto == null)

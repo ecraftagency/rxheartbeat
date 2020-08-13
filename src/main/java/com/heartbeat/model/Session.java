@@ -214,6 +214,7 @@ public class Session {
         userInventory.newDay();
         userTravel.newDay();
         userProduction.newDay();
+        userIdol.newDay();
 
         userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
       }

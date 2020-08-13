@@ -25,6 +25,8 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public int      nextQuestion    = 1;
   public boolean  timeChange      = false;
 
+  //shopping data
+  public Map<Integer, Integer> shopping;
   //mission data
   public Map<Integer, Boolean> crazyRewardClaim;
 }

@@ -213,11 +213,10 @@ public class Constant {
   }
 
   public static class EFFECT_RESULT {
-    public static final int ITEM_EFFECT_RESULT        = 1000;
-    public static final int IDOL_EFFECT_RESULT        = 2000;
-    public static final int RAMPAGE_EFFECT_RESULT     = 3000;
+    public static final int ITEM_EFFECT_RESULT        = 1000; // item [1000, id, count]
+    public static final int IDOL_EFFECT_RESULT        = 2000; // idol [2000, field, change]
+    public static final int RAMPAGE_EFFECT_RESULT     = 3000; // rampage [3000, count, 0];
   }
-
 
   public static void serverStartUp() {
     try {

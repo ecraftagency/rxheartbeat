@@ -38,7 +38,7 @@ public class VipData {
   }
 
   public static VipDto ofNullObject() {
-    VipDto vip               = new VipDto();
+    VipDto vip            = new VipDto();
     vip.level             = 15;
     vip.exp               = 2000000;
     vip.travelLimit       = 20;
