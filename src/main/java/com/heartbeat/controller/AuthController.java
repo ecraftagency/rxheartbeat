@@ -12,8 +12,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AuthController implements Handler<RoutingContext> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
   public static final int TOKEN_EXPIRE_TIME       = 24*60; //minutes
   private AuthService authService;
 

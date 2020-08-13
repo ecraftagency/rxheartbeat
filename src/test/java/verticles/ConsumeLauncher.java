@@ -10,12 +10,12 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 public class ConsumeLauncher {
   public static ClusterManager mgr;
   public static void main(String[] args) {
-    Config hazelcastConfig = new Config();
+//    Config hazelcastConfig = new Config();
+//
+//    hazelcastConfig.getNetworkConfig().getJoin().getTcpIpConfig().addMember("127.0.0.1").setEnabled(true);
+//    hazelcastConfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
 
-    hazelcastConfig.getNetworkConfig().getJoin().getTcpIpConfig().addMember("127.0.0.1").setEnabled(true);
-    hazelcastConfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-
-    mgr = new HazelcastClusterManager(hazelcastConfig);
+    mgr = new HazelcastClusterManager();
     VertxOptions options = new VertxOptions().setClusterManager(mgr);
     Vertx.clusteredVertx(options, res -> {
       if (res.succeeded()) {

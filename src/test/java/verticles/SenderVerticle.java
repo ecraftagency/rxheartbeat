@@ -29,6 +29,6 @@ public class SenderVerticle extends AbstractVerticle {
           });
         }
       });
-    }).listen(8080);
+    }).listen(3000);
   }
 }

@@ -85,7 +85,7 @@ public class UserTest {
       if (inbox.size() >= 5) {
         inbox.removeFirst();
       }
-      inbox.addLast(MailObj.of("hello " + i, new ArrayList<>(), MailObj.MSG_TYPE_PUBLIC));
+      //inbox.addLast(MailObj.of("hello " + i, new ArrayList<>(), MailObj.MSG_TYPE_PUBLIC), );
     }
 
 
