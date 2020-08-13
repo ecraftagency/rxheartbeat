@@ -57,9 +57,11 @@ public class InboxController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processClaimInboxReward(Session session, RoutingContext ctx, long curMs) {
-    ExtMessage resp = ExtMessage.inbox();
-    long msgId      = ctx.getBodyAsJson().getLong("messageId");
-    resp.msg        = session.userInbox.claimInboxReward(session, msgId, curMs);
+    ExtMessage resp     = ExtMessage.inbox();
+    long msgId          = ctx.getBodyAsJson().getLong("messageId");
+    resp.msg            = session.userInbox.claimInboxReward(session, msgId, curMs);
+    resp.effectResults  = session.effectResults;
+    resp.data.inbox     = session.userInbox;
     return resp;
   }
 
