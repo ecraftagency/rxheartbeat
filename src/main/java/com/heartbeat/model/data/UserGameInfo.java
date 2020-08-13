@@ -13,14 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static com.heartbeat.common.Constant.*;
+import static com.heartbeat.common.Constant.USER_GAME_INFO.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {
-  public static final int MAX_AVATAR                = 10;
-  public static final int MAX_GENDER                = 2;
-  public static final int MEDIA_INTERVAL            = 1198;//20'
-  public static final int CLAIM_MEDIA_COUNT_ITEM    = 2; //hợp đồng truyền thông
-
   //shop data
   public Map<Integer, Integer> shopping;
 
@@ -262,6 +258,20 @@ public class UserGameInfo extends GameInfo {
   public void addTime(long amount) {
     this.time += amount;
     timeChange = true;
+  }
+
+  public void subtractTime(long delta) {
+    this.time -= delta;
+    if (this.time < 0)
+      this.time = 0;
+  }
+
+  public boolean isActiveTime() {
+    return time > 0 || titleId < TIME_ACTIVE_LEVEL;
+  }
+
+  public long remainTime() {
+    return time;
   }
 
   private void reBalanceTime(Session session) {

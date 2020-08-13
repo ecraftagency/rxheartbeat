@@ -6,7 +6,6 @@ import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
-import com.heartbeat.model.data.UserGameInfo;
 import com.statics.OfficeData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
@@ -14,9 +13,7 @@ import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
-
-import static com.heartbeat.common.Constant.USER_GAME_INFO.INIT_TIME_GIFT;
-import static com.heartbeat.common.Constant.USER_GAME_INFO.INIT_TIME_GIFT_LV;
+import static com.heartbeat.common.Constant.*;
 
 public class ProfileController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileController.class);
@@ -54,7 +51,7 @@ public class ProfileController implements Handler<RoutingContext> {
 
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
-        resp.userRemainTime = session.userGameInfo.time;
+        resp.userRemainTime = session.userGameInfo.remainTime();
 
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
@@ -115,8 +112,8 @@ public class ProfileController implements Handler<RoutingContext> {
     session.userGameInfo.exp      -= nextLV.exp;
     session.userGameInfo.titleId   = nextLV.officeLV;
     session.userGameInfo.maxMedia++;
-    if (session.userGameInfo.titleId == INIT_TIME_GIFT_LV) {
-      session.userGameInfo.addTime(INIT_TIME_GIFT);
+    if (session.userGameInfo.titleId == USER_GAME_INFO.TIME_ACTIVE_LEVEL) {
+      session.userGameInfo.addTime(USER_GAME_INFO.INIT_TIME_GIFT);
     }
 
     if (nextLV.rewardFormat != null && nextLV.rewardFormat.size() == 4)
@@ -144,8 +141,8 @@ public class ProfileController implements Handler<RoutingContext> {
     String newDisplayName   = ctx.getBodyAsJson().getString("displayName");
 
 
-    if (newGender < 0 || newGender > UserGameInfo.MAX_GENDER - 1) newGender = 0;
-    if (newAvatar < 1 || newAvatar > UserGameInfo.MAX_AVATAR) newAvatar = 1;
+    if (newGender < 0 || newGender > USER_GAME_INFO.MAX_GENDER - 1) newGender = 0;
+    if (newAvatar < 1 || newAvatar > USER_GAME_INFO.MAX_AVATAR) newAvatar = 1;
 
     String result;
     try {

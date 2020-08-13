@@ -10,6 +10,7 @@ import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
+import static com.heartbeat.common.Constant.*;
 
 public class MediaController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
@@ -42,7 +43,7 @@ public class MediaController implements Handler<RoutingContext> {
 
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
-        resp.userRemainTime = session.userGameInfo.time;
+        resp.userRemainTime = session.userGameInfo.remainTime();
 
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
@@ -66,18 +67,18 @@ public class MediaController implements Handler<RoutingContext> {
       return resp;
     }
 
-    if (!session.userInventory.haveItem(UserGameInfo.CLAIM_MEDIA_COUNT_ITEM, amount)) {
+    if (!session.userInventory.haveItem(USER_GAME_INFO.CLAIM_MEDIA_COUNT_ITEM, amount)) {
       resp.msg = "insufficient_item";
       return resp;
     }
 
     session.userGameInfo.updateUserMedia(curMs);
-    session.userInventory.useItem(UserGameInfo.CLAIM_MEDIA_COUNT_ITEM, amount);
+    session.userInventory.useItem(USER_GAME_INFO.CLAIM_MEDIA_COUNT_ITEM, amount);
     session.userGameInfo.addMediaClaim(amount);
     resp.data.gameInfo = session.userGameInfo;
     resp.msg = "ok";
     //record
-    session.userAchievement.addAchieveRecord(UserGameInfo.CLAIM_MEDIA_COUNT_ITEM*100, amount);
+    session.userAchievement.addAchieveRecord(USER_GAME_INFO.CLAIM_MEDIA_COUNT_ITEM*100, amount);
     return resp;
   }
 

@@ -47,25 +47,24 @@ public class SystemController implements Handler<RoutingContext> {
 
   private ExtMessage processHeartBeat(Session session, long curMs) {
     ExtMessage resp = ExtMessage.system();
-    resp.serverTime = (int)(curMs/1000);
-    int second    = (int)(curMs/1000);
-    int deltaTime = second - session.lastHearBeatTime;
+    int second      = (int)(curMs/1000);
+    int deltaTime   = second - session.lastHearBeatTime;
 
     //todo delta time is always >= real time consume, but just let it be
-    long timeSpent = deltaTime > session.userGameInfo.time ? session.userGameInfo.time : deltaTime;
+    long remainTime = session.userGameInfo.remainTime();
+    long timeSpent = deltaTime > remainTime ? remainTime : deltaTime;
     session.userEvent.addEventRecord(Constant.EVENT.TIME_SPEND_EVT_ID, timeSpent);
 
-    session.userGameInfo.time -= deltaTime;
-    if (session.userGameInfo.time < 0)
-      session.userGameInfo.time = 0;
+    session.userGameInfo.subtractTime(deltaTime);
 
     session.updateOnline(curMs);
-    resp.userRemainTime = session.userGameInfo.time;
+    resp.userRemainTime = session.userGameInfo.remainTime();
 
     //check new inbox message
     long cas = UserInbox.checkNewMessage(session.userInbox.lastMailCheckTime);
     resp.newInbox = cas > 0;
 
+    resp.serverTime = second;
     return resp;
   }
 }

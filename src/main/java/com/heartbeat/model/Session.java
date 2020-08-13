@@ -138,6 +138,10 @@ public class Session {
     return userProfile.banTo > (int)(System.currentTimeMillis()/1000);
   }
 
+  private void newDay() {
+
+  }
+
   public void updateLogin() {
     long curMs = System.currentTimeMillis();
     int second = (int)(curMs/1000);
@@ -203,11 +207,13 @@ public class Session {
       userProfile.loginCount++;
       dayDiff = Utilities.dayDiff(second, userProfile.lastLogin);
       if (dayDiff > 0) {
+        userProfile.newDay();
         userFight.newDay();
-        userTravel.newDay();
         userDailyMission.newDay();
         userGameInfo.newDay();
         userInventory.newDay();
+        userTravel.newDay();
+        userProduction.newDay();
 
         userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
       }
@@ -219,12 +225,10 @@ public class Session {
       int deltaTime = second - userProfile.lastLogin;
 
       //record time spent event
-      long timeSpent = deltaTime > userGameInfo.time ? userGameInfo.time : deltaTime;
+      long remainTime = userGameInfo.remainTime();
+      long timeSpent  = deltaTime > remainTime ? remainTime : deltaTime;
       userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent);
-
-      userGameInfo.time -= deltaTime;
-      if (userGameInfo.time < 0)
-        userGameInfo.time = 0;
+      userGameInfo.subtractTime(deltaTime);
     }
 
     userProfile.lastLogin   = second;
@@ -298,7 +302,7 @@ public class Session {
   }
 
   public void createGroup(int groupType, String name, String externalInform, String internalInform, Handler<AsyncResult<String>> handler) {
-    if (userGameInfo.time < Constant.GROUP.CREATE_GROUP_TIME_COST) {
+    if (userGameInfo.remainTime() < Constant.GROUP.CREATE_GROUP_TIME_COST) {
       handler.handle(Future.failedFuture("insufficient_time"));
       return;
     }

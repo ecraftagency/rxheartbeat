@@ -1,5 +1,6 @@
 package com.heartbeat.effect;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.statics.PropData;
 import com.transport.EffectResult;
@@ -17,7 +18,7 @@ public class InventoryEffectHandler implements EffectHandler{
     if (amount <= 0)
       return "zero or negative amount";
     session.userInventory.addItem(propId, amount);
-    session.effectResults.add(EffectResult.of(1000,propId, amount));
+    session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.ITEM_EFFECT_RESULT,propId, amount));
     return EffectHandler.SUCCESS;
   }
 

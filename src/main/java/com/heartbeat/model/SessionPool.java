@@ -98,20 +98,18 @@ public class SessionPool {
         Integer sessionId = e.nextElement();
         Session session = pool.get(sessionId);
         if (session != null) {
-          //todo userfight
+          session.userProfile.newDay();
+
           session.userFight.usedIdols.clear();
           session.userFight.restoreIdols.clear();
           session.userFight.currentRunShow = RunShowData.of(1);
           session.userFight.currentShopping = ShoppingData.of(1);
 
-          //todo userMission;
           session.userDailyMission.newDay();
-
-          //todo userGameInfo
           session.userGameInfo.newDay();
-
-          //todo userInventory
           session.userInventory.newDay();
+          session.userTravel.newDay();
+          session.userProduction.newDay();
         }
       }
     }

@@ -1,7 +1,11 @@
 package com.heartbeat.model.data;
 
+import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
+import com.transport.EffectResult;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class UserProduction extends com.transport.model.Production{
   public static transient int RECOVERY_DENOMINATOR        = 10000;
@@ -11,6 +15,11 @@ public class UserProduction extends com.transport.model.Production{
   public static final     int PRODUCE_FAN                 = 1;
   public static final     int PRODUCE_VIEW                = 2;
   public static final     int PRODUCE_GOLD                = 3; //sáng tác
+  public static final     int RAMPAGE_BUFF_PERCENT        = 15; //sáng tác
+  public static final     int RAMPAGE_BUFF_SCALE          = 9; //sáng tác
+
+  public int dailyRampage;
+  public int maxDailyRampage;
 
   public static UserProduction ofDefault() {
     UserProduction defaultUserProduction  = new UserProduction();
@@ -20,7 +29,8 @@ public class UserProduction extends com.transport.model.Production{
     defaultUserProduction.maxFanClaim     = 3;
     defaultUserProduction.maxViewClaim    = 3;
     defaultUserProduction.maxGoldClaim    = 3;
-    //defaultUserProduction.curGoldRecInv   = 0; //todo need reBalance at login and creation point
+    defaultUserProduction.dailyRampage    = 0;
+    defaultUserProduction.maxDailyRampage = 1;
     return defaultUserProduction;
   }
 
@@ -33,6 +43,10 @@ public class UserProduction extends com.transport.model.Production{
     goldRecoverInv  = Math.min(goldRecoverInv, MAX_REC_INTERVAL);
     viewRecoverInv  = Math.min(viewRecoverInv, MAX_REC_INTERVAL);
     fanRecoverInv   = Math.min(fanRecoverInv, MAX_REC_INTERVAL);
+  }
+
+  public void newDay() {
+    dailyRampage = 0;
   }
 
   public void updateProduction(Session session, long curMs) {
@@ -85,7 +99,7 @@ public class UserProduction extends com.transport.model.Production{
         long totalFanAdd = session.userIdol.getTotalAttractive();
         if (currentFanClaimCount > 0 && session.userGameInfo.view >= totalFanAdd) {
           currentFanClaimCount -= 1;
-          if (session.userGameInfo.time > 0) {
+          if (session.userGameInfo.isActiveTime()) {
             session.userGameInfo.fan += totalFanAdd;
             session.userGameInfo.spendView(session, totalFanAdd);
           }
@@ -97,8 +111,20 @@ public class UserProduction extends com.transport.model.Production{
       case PRODUCE_GOLD:
         if (currentGoldClaimCount > 0) {
           currentGoldClaimCount -= 1;
-          if (session.userGameInfo.time > 0) {
-            session.userGameInfo.money += session.userIdol.getTotalCreativity();
+          if (session.userGameInfo.isActiveTime()) {
+            long moneyAdd = session.userIdol.getTotalCreativity();
+
+            //todo calc rampage probability
+            if (dailyRampage < maxDailyRampage) {
+              int r = ThreadLocalRandom.current().nextInt(1, 101);
+              if (r <= RAMPAGE_BUFF_PERCENT) {
+                moneyAdd += RAMPAGE_BUFF_SCALE*moneyAdd;
+                session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.RAMPAGE_EFFECT_RESULT,1 ,0));
+              }
+              dailyRampage++;
+            }
+
+            session.userGameInfo.money += moneyAdd;
           }
           lastGoldClaim = (int)(curMs/1000);
           return "ok";
@@ -108,7 +134,7 @@ public class UserProduction extends com.transport.model.Production{
       case PRODUCE_VIEW:
         if (currentViewClaimCount > 0) {
           currentViewClaimCount -= 1;
-          if (session.userGameInfo.time > 0) {
+          if (session.userGameInfo.isActiveTime()) {
             session.userGameInfo.view += session.userIdol.getTotalPerformance();
           }
           lastViewClaim = (int)(curMs/1000);
@@ -138,8 +164,25 @@ public class UserProduction extends com.transport.model.Production{
 
     //gold
     if (currentGoldClaimCount > 0) {
-      if (session.userGameInfo.time > 0) {
-        session.userGameInfo.money += currentGoldClaimCount * session.userIdol.getTotalCreativity();
+      if (session.userGameInfo.isActiveTime()) {
+        int rampageCnt = 0;
+        for (int i = 0; i < currentFanClaimCount; i++) {
+          long moneyAdd = session.userIdol.getTotalCreativity();
+
+          //todo calc rampage probability
+          if (dailyRampage < maxDailyRampage) {
+            int r = ThreadLocalRandom.current().nextInt(1, 101);
+            if (r <= RAMPAGE_BUFF_PERCENT) {
+              moneyAdd += RAMPAGE_BUFF_SCALE*moneyAdd;
+              rampageCnt++;
+            }
+            dailyRampage++;
+          }
+          session.userGameInfo.money += moneyAdd;
+          if (rampageCnt > 0) {
+            session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.RAMPAGE_EFFECT_RESULT,rampageCnt ,0));
+          }
+        }
       }
       lastGoldClaim               = (int)(curMs/1000);
       currentGoldClaimCount       = 0;
@@ -147,7 +190,7 @@ public class UserProduction extends com.transport.model.Production{
 
     //view
     if (currentViewClaimCount > 0) {
-      if (session.userGameInfo.time > 0) {
+      if (session.userGameInfo.isActiveTime()) {
         session.userGameInfo.view  += currentViewClaimCount*session.userIdol.getTotalPerformance();
       }
       lastViewClaim               = (int)(curMs/1000);
@@ -156,7 +199,7 @@ public class UserProduction extends com.transport.model.Production{
 
     //fan
     if (currentFanClaimCount > 0 && shouldDoFanProduce) {
-      if (session.userGameInfo.time > 0) {
+      if (session.userGameInfo.isActiveTime()) {
         session.userGameInfo.fan   += totalFanAdd;
         session.userGameInfo.spendView(session, totalFanAdd);
       }

@@ -83,7 +83,7 @@ public class UserTravel extends Travel {
     lastTravelClaim               = (int)(curMs/1000);
 
     //reward
-    if (session.userGameInfo.time > 0) {
+    if (session.userGameInfo.isActiveTime()) {
       EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
     }
 
@@ -129,7 +129,7 @@ public class UserTravel extends Travel {
       currentTravelClaimCount      -= 1;
       lastTravelClaim               = (int)(curMs/1000);
 
-      if (session.userGameInfo.time > 0) {
+      if (session.userGameInfo.isActiveTime()) {
         EffectManager.inst().handleEffect(extArgs, session, chosen.reward);
       }
     }

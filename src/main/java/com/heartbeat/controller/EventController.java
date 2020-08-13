@@ -37,7 +37,7 @@ public class EventController implements Handler<RoutingContext> {
 
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
-        resp.userRemainTime = session.userGameInfo.time;
+        resp.userRemainTime = session.userGameInfo.remainTime();
 
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
@@ -59,7 +59,7 @@ public class EventController implements Handler<RoutingContext> {
     ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
 
-    if (session.userGameInfo.time > 0) {
+    if (session.userGameInfo.isActiveTime()) {
       int second              = (int)(System.currentTimeMillis()/1000);
       resp.msg                = session.userEvent.claimEventReward(session, eventType, milestoneId, second);
       resp.effectResults      = session.effectResults;

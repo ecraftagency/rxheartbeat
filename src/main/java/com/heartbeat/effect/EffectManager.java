@@ -54,7 +54,7 @@ public class EffectManager implements EffectHandler{
       int idolId = effectFormat.get(1);
       Idols.Idol idol = UserIdol.buildIdol(idolId);
       if (session.userIdol.addIdol(idol)) {
-        session.effectResults.add(EffectResult.of(2000, idolId, 0));
+        session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.IDOL_EFFECT_RESULT, idolId, 0));
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.IDOL_ACHIEVEMENT, 1);
         return "ok";
       }

@@ -40,7 +40,7 @@ public class InboxController implements Handler<RoutingContext> {
 
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
-        resp.userRemainTime = session.userGameInfo.time;
+        resp.userRemainTime = session.userGameInfo.remainTime();
 
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();

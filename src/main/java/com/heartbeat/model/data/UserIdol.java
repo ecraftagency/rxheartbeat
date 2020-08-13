@@ -28,6 +28,7 @@ public class UserIdol extends Idols {
   public static final int               DEFAULT_APT_EXP         = 2000;
   public static final List<Integer>     DEFAULT_IDOLS;
 
+
   static {
     APT_UP_RATE.add(0);
     APT_UP_RATE.add(100);

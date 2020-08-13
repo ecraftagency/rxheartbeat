@@ -40,7 +40,7 @@ public class RankingController implements Handler<RoutingContext> {
 
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
-        resp.userRemainTime = session.userGameInfo.time;
+        resp.userRemainTime = session.userGameInfo.remainTime();
 
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
@@ -58,7 +58,7 @@ public class RankingController implements Handler<RoutingContext> {
 
   private void processClaimReward(Session session, String cmd, RoutingContext ctx) {
     int rankingType = ctx.getBodyAsJson().getInteger("rankingType");
-    if (session.userGameInfo.time > 0) {
+    if (session.userGameInfo.isActiveTime()) {
       session.userRanking.claimReward(session, rankingType, ar -> {
         ExtMessage resp     = ExtMessage.ranking();
         resp.data.ranking   = session.userRanking;
@@ -73,7 +73,7 @@ public class RankingController implements Handler<RoutingContext> {
 
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
-        resp.userRemainTime = session.userGameInfo.time;
+        resp.userRemainTime = session.userGameInfo.remainTime();
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
         session.userGameInfo.timeChange = false;
@@ -86,7 +86,7 @@ public class RankingController implements Handler<RoutingContext> {
 
       resp.cmd            = cmd;
       resp.timeChange     = session.userGameInfo.timeChange;
-      resp.userRemainTime = session.userGameInfo.time;
+      resp.userRemainTime = session.userGameInfo.remainTime();
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       session.effectResults.clear();
       session.userGameInfo.timeChange = false;

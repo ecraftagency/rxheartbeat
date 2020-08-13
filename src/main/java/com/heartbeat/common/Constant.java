@@ -205,7 +205,17 @@ public class Constant {
 
   public static class USER_GAME_INFO {
     public static final int INIT_TIME_GIFT            = 86400*7; //milis
-    public static final int INIT_TIME_GIFT_LV         = 2;
+    public static final int TIME_ACTIVE_LEVEL         = 2;
+    public static final int MAX_AVATAR                = 10;
+    public static final int MAX_GENDER                = 2;
+    public static final int MEDIA_INTERVAL            = 1198; //unit second 20'
+    public static final int CLAIM_MEDIA_COUNT_ITEM    = 2;    //hợp đồng truyền thông
+  }
+
+  public static class EFFECT_RESULT {
+    public static final int ITEM_EFFECT_RESULT        = 1000;
+    public static final int IDOL_EFFECT_RESULT        = 2000;
+    public static final int RAMPAGE_EFFECT_RESULT     = 3000;
   }
 
 
