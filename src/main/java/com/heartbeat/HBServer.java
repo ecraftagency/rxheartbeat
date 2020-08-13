@@ -19,7 +19,9 @@ import io.reactivex.disposables.Disposable;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.JksOptions;
 import io.vertx.ext.web.handler.CorsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,7 +142,13 @@ public class HBServer extends AbstractVerticle {
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
 
-        vertx.createHttpServer().requestHandler(router).listen(localConfig.getInteger("HTTP.PORT", 8080));
+//        HttpServerOptions options = new HttpServerOptions().setSsl(true).setKeyStoreOptions(
+//                new JksOptions().
+//                        setPath("keystore.jks").
+//                        setPassword("changeit")
+//        );
+        vertx.createHttpServer()
+                .requestHandler(router).listen(localConfig.getInteger("HTTP.PORT", 8080));
 
         startPromise.complete();
       }
@@ -151,10 +159,9 @@ public class HBServer extends AbstractVerticle {
   }
 
   public static void main(String[] args) throws IOException {
-
     String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
     localConfig             = new JsonObject(conf);
-    updateConst();
+    overrideConstant();
 
     rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
     rxSessionBucket = HBServer.rxCluster.bucket("sessions");
@@ -178,7 +185,7 @@ public class HBServer extends AbstractVerticle {
     Vertx.vertx().deployVerticle(HBServer.class.getName());
   }
 
-  private static void updateConst() {
+  private static void overrideConstant() {
     DB.HOST                                = localConfig.getString("DB.HOST");
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");

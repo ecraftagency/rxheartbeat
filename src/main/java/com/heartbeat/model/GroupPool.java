@@ -65,7 +65,7 @@ public class GroupPool {
             });
           }
         }
-        LOGGER.info("Group online " + pool.size());
+        //LOGGER.info("Group online " + pool.size());
       }
       catch (Exception e) {
         LOGGER.error(e.getMessage());

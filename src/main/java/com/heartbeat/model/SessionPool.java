@@ -80,7 +80,7 @@ public class SessionPool {
             }
           }
         }
-        LOGGER.info("Session online " + pool.size());
+        //LOGGER.info("Session online " + pool.size());
       }
       catch(Exception ex) {
         LOGGER.error(ex.getMessage());
@@ -131,7 +131,6 @@ public class SessionPool {
           session.userFight.gameShowRestoreIdols.clear();
         }
       }
-      LOGGER.info("CCU " + pool.size());
     }
     catch(Exception ex) {
       LOGGER.error(ex.getMessage());
