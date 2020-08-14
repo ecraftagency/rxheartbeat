@@ -147,7 +147,7 @@ public class HBServer extends AbstractVerticle {
                         setPath("keystore.jks").
                         setPassword("changeit")
         );
-        vertx.createHttpServer()
+        vertx.createHttpServer(options)
                 .requestHandler(router).listen(localConfig.getInteger("HTTP.PORT", 8080));
 
         startPromise.complete();
