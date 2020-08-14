@@ -1,4 +1,4 @@
-package com.heartbeat.ranking;
+package com.heartbeat.event;
 
 import com.heartbeat.common.GlobalVariable;
 import com.heartbeat.common.Utilities;

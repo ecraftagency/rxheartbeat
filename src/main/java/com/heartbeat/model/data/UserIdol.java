@@ -31,7 +31,7 @@ public class UserIdol extends Idols {
   public static final List<Integer>     DEFAULT_IDOLS;
 
   public static final int               RAMPAGE_BUFF_PERCENT    = 15;
-  public static final int               RAMPAGE_BUFF_LV_CNT     = 1;
+  public static final int               RAMPAGE_BUFF_LV_CNT     = 2;
 
   public static List<Integer>           EXCLUDE_RAMPAGE_LEVEL;
   public static final int               MAX_RAMPAGE_ALLOW_LV    = 197;

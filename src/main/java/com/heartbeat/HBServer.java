@@ -142,11 +142,11 @@ public class HBServer extends AbstractVerticle {
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
 
-//        HttpServerOptions options = new HttpServerOptions().setSsl(true).setKeyStoreOptions(
-//                new JksOptions().
-//                        setPath("keystore.jks").
-//                        setPassword("changeit")
-//        );
+        HttpServerOptions options = new HttpServerOptions().setSsl(true).setKeyStoreOptions(
+                new JksOptions().
+                        setPath("keystore.jks").
+                        setPassword("changeit")
+        );
         vertx.createHttpServer()
                 .requestHandler(router).listen(localConfig.getInteger("HTTP.PORT", 8080));
 
@@ -215,7 +215,6 @@ public class HBServer extends AbstractVerticle {
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = true;
                       SessionPool.resetGameShowIdols.run();
-                      System.out.println("open game show");
                       LOGGER.info("open game show");
                     },
                     fault -> LOGGER.error("error open game show task")

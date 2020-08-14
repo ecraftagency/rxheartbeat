@@ -1,9 +1,9 @@
 package com.heartbeat.common;
 
 import com.google.gson.reflect.TypeToken;
+import com.heartbeat.event.ExtEventInfo;
 import com.heartbeat.model.data.UserInbox;
-import com.heartbeat.ranking.ExtRankingInfo;
-import com.statics.EventInfo;
+import com.heartbeat.event.ExtRankingInfo;
 import com.transport.model.MailObj;
 
 import java.lang.reflect.Type;
@@ -68,7 +68,7 @@ public class Constant {
     public static int           missionEnd              = -1;
     public static int           CREATE_GROUP_TIME_COST  = 5*86400; //5 days
     public static int           PRODUCTION_MISSION_ID   = 1;
-    public static int           GAMESHOW_MISSION_ID     = 2;
+    public static int           GAME_SHOW_MISSION_ID = 2;
   }
 
   public static class DAILY_MISSION {
@@ -111,6 +111,16 @@ public class Constant {
     }
   }
 
+  public static class IDOL_EVENT {
+    public static final int BLACK_PINK_IDOL_EVT_ID    = 0;
+    public static final int DAN_BAM_IDOL_EVT_ID    = 0;
+
+    public static final Map<Integer, ExtEventInfo> eventNameMap;
+    static {
+      eventNameMap = new HashMap<>();
+    }
+  }
+
   public static class EVENT {
     public static final int TIME_SPEND_EVT_ID   = 21;
     public static final int APT_BUFF_USE_EVT_ID = 6700;
@@ -123,56 +133,19 @@ public class Constant {
     public static final int GAME_SHOW_EVT_ID    = 12;
     public static final int TOTAL_TALENT_EVT_ID = 13;
 
-    public static final Map<Integer, EventInfo> eventInfoMap;
+    public static final Map<Integer, ExtEventInfo> eventInfoMap;
 
     static {
       eventInfoMap = new HashMap<>();
-      eventInfoMap.put(TIME_SPEND_EVT_ID,
-              EventInfo.of(TIME_SPEND_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(APT_BUFF_USE_EVT_ID,
-              EventInfo.of(APT_BUFF_USE_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(MONEY_SPEND_EVT_ID,
-              EventInfo.of(MONEY_SPEND_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(VIEW_SPEND_EVT_ID,
-              EventInfo.of(VIEW_SPEND_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(FAN_SPEND_EVT_ID,
-              EventInfo.of(FAN_SPEND_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(CRT_PROD_EVT_ID,
-              EventInfo.of(CRT_PROD_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(VIEW_PROD_EVT_ID,
-              EventInfo.of(VIEW_PROD_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-      eventInfoMap.put(FAN_PROD_EVT_ID,
-              EventInfo.of(FAN_PROD_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
-
-      eventInfoMap.put(TOTAL_TALENT_EVT_ID,
-              EventInfo.of(TOTAL_TALENT_EVT_ID,
-                      "01/07/2020 23:00:00",
-                      "31/08/2020 23:00:00",
-                      true));
+      eventInfoMap.put(TIME_SPEND_EVT_ID, ExtEventInfo.of(TIME_SPEND_EVT_ID));
+      eventInfoMap.put(APT_BUFF_USE_EVT_ID, ExtEventInfo.of(APT_BUFF_USE_EVT_ID));
+      eventInfoMap.put(MONEY_SPEND_EVT_ID, ExtEventInfo.of(MONEY_SPEND_EVT_ID));
+      eventInfoMap.put(VIEW_SPEND_EVT_ID, ExtEventInfo.of(VIEW_SPEND_EVT_ID));
+      eventInfoMap.put(FAN_SPEND_EVT_ID, ExtEventInfo.of(FAN_SPEND_EVT_ID));
+      eventInfoMap.put(CRT_PROD_EVT_ID, ExtEventInfo.of(CRT_PROD_EVT_ID));
+      eventInfoMap.put(VIEW_PROD_EVT_ID, ExtEventInfo.of(VIEW_PROD_EVT_ID));
+      eventInfoMap.put(FAN_PROD_EVT_ID, ExtEventInfo.of(FAN_PROD_EVT_ID));
+      eventInfoMap.put(TOTAL_TALENT_EVT_ID, ExtEventInfo.of(TOTAL_TALENT_EVT_ID));
     }
   }
 
