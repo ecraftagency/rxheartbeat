@@ -22,11 +22,6 @@ public class SessionLoginService implements AuthService {
   @Override
   public void processLogin(LoginRequest request, long curMs, Handler<AsyncResult<Profile>> handler) {
     int userID = Integer.parseInt(request.userID);
-    Session session = SessionPool.getSessionFromPool(userID);
-    if (session != null) {
-      handler.handle(Future.failedFuture("login_session_online"));
-      return;
-    }
 
     String clientVersion = request.clientVersion;
     String clientSource = request.clientSource;
@@ -72,20 +67,32 @@ public class SessionLoginService implements AuthService {
                                     String password,
                                     String snsToken, Handler<AsyncResult<Profile>> handler) {
 
-    CBSession.getInstance().load(strId, password, ar -> {
-      if (ar.succeeded()) {
-        Session session = ar.result();
-        if (session.isBan()) {
-          handler.handle(Future.failedFuture("login_ban"));
-        }
-        session.id = userID;
-        Profile profile = handleLoginResult("ok", session, snsToken, request);
+    Session oldSession = SessionPool.getSessionFromPool(userID);
+    if (oldSession != null) {
+      if (oldSession.id == userID && oldSession.userProfile.password.equals(password)) {
+        Profile profile = handleLoginResult("kick", oldSession, snsToken, request);
         handler.handle(Future.succeededFuture(profile));
       }
       else {
-        handler.handle(Future.failedFuture(ar.cause()));
+        handler.handle(Future.failedFuture("login_wrong_pwd"));
       }
-    });
+    }
+    else {
+      CBSession.getInstance().load(strId, password, ar -> {
+        if (ar.succeeded()) {
+          Session session = ar.result();
+          if (session.isBan()) {
+            handler.handle(Future.failedFuture("login_ban"));
+          }
+          session.id = userID;
+          Profile profile = handleLoginResult("ok", session, snsToken, request);
+          handler.handle(Future.succeededFuture(profile));
+        }
+        else {
+          handler.handle(Future.failedFuture(ar.cause()));
+        }
+      });
+    }
   }
 
   private static Profile handleLoginResult(String result, Session session,
@@ -112,32 +119,45 @@ public class SessionLoginService implements AuthService {
           notMsg = "hello";
         }
 
+        userName    = session.userGameInfo.displayName;
+        banTo       = session.userProfile.banTo;
+        banReason   = session.userProfile.banReason;
+        facebookID  = session.userProfile.facebookID;
+
         SessionPool.addSession(session);
-        userName = session.userGameInfo.displayName;
-        banTo = session.userProfile.banTo;
-        banReason = session.userProfile.banReason;
-        facebookID = session.userProfile.facebookID;
+        session.updateLogin();
+        session.loadSessionGroup(ar -> {});
+      }
+      else if (result.equals("kick")) {
+        int second                    = (int)(System.currentTimeMillis()/1000);
+        session.clientToken           = snsToken;
+        session.lastHearBeatTime      = second;
+        session.userProfile.lastLogin = second;
+        notMsg = "hello again";
+
+        userName    = session.userGameInfo.displayName;
+        banTo       = session.userProfile.banTo;
+        banReason   = session.userProfile.banReason;
+        facebookID  = session.userProfile.facebookID;
       }
 
-      session.updateLogin();
-      session.loadSessionGroup(ar -> {});
-
-      lr.result = result;
-      lr.strUserId = strUserId;
-      lr.userName  = userName;
-      lr.banTo = banTo;
-      lr.banReason = banReason;
-      lr.notMsg = notMsg;
-      lr.facebookId = facebookID;
-      lr.isRegister = session.isRegister;
-      lr.serverVersionInt = session.serverVersionInt;
-      lr.clientSource = session.clientSource;
-      lr.buildSource = session.buildSource;
-      lr.osPlatform = session.osPlatForm;
-      lr.clientVersion = request.clientVersion;
-      lr.displayName  = session.userGameInfo.displayName;
-      lr.gender = session.userGameInfo.gender;
-      lr.avatar = session.userGameInfo.avatar;
+      lr.result             = result;
+      lr.strUserId          = strUserId;
+      lr.userName           = userName;
+      lr.banTo              = banTo;
+      lr.banReason          = banReason;
+      lr.notMsg             = notMsg;
+      lr.facebookId         = facebookID;
+      lr.isRegister         = session.isRegister;
+      lr.serverVersionInt   = session.serverVersionInt;
+      lr.clientSource       = session.clientSource;
+      lr.buildSource        = session.buildSource;
+      lr.osPlatform         = session.osPlatForm;
+      lr.clientVersion      = request.clientVersion;
+      lr.displayName        = session.userGameInfo.displayName;
+      lr.gender             = session.userGameInfo.gender;
+      lr.avatar             = session.userGameInfo.avatar;
+      lr.lastLogin          = session.userProfile.lastLogin;
       return lr;
     }
 

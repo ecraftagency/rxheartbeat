@@ -40,15 +40,14 @@ public class AuthController implements Handler<RoutingContext> {
       if (ar.succeeded()) {
         Profile profile = ar.result();
         profile.jwtToken = jwt.generateToken(
-            new JsonObject()
-                    .put("username", profile.strUserId),
-            new JWTOptions()
-                    .setIssuer("Vert.x").setExpiresInMinutes(TOKEN_EXPIRE_TIME));
+            new JsonObject().put("username", profile.strUserId).put("issueTime", profile.lastLogin),
+            new JWTOptions().setIssuer("Vert.x").setExpiresInMinutes(TOKEN_EXPIRE_TIME));
         resp.data.profile = profile;
         resp.msg = "ok";
       }
       else {
         resp.msg = ar.cause().getMessage();
+        LOGGER.error(ar.cause().getMessage());
       }
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
     });

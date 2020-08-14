@@ -15,11 +15,12 @@ public class MissionController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
     try {
-      String cmd = ctx.getBodyAsJson().getString("cmd");
-      String strUserId = ctx.user().principal().getString("username");
-      Session session = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
+      String cmd        = ctx.getBodyAsJson().getString("cmd");
+      String strUserId  = ctx.user().principal().getString("username");
+      int lastIssued    = ctx.user().principal().getInteger("issueTime");
+      Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
 
-      if (session != null) {
+      if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
           case "missionInfo":

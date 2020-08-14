@@ -47,14 +47,14 @@ public class Session {
   transient public int        lastHearBeatTime;
 
   //kpi transient data
-  transient public String deviceUID     = Constant.EMPTY_STRING;
-  transient public String deviceName    = Constant.EMPTY_STRING;
-  transient public String clientVersion = Constant.EMPTY_STRING;
-  transient public String clientSource  = Constant.EMPTY_STRING;
-  transient public String osPlatForm    = Constant.EMPTY_STRING;
-  transient public String osVersion     = Constant.EMPTY_STRING;
-  transient public String buildSource   = "VI";
-  transient public int serverVersionInt = Constant.GAME_INFO.SERVER_VERSION;
+  transient public String deviceUID         = Constant.EMPTY_STRING;
+  transient public String deviceName        = Constant.EMPTY_STRING;
+  transient public String clientVersion     = Constant.EMPTY_STRING;
+  transient public String clientSource      = Constant.EMPTY_STRING;
+  transient public String osPlatForm        = Constant.EMPTY_STRING;
+  transient public String osVersion         = Constant.EMPTY_STRING;
+  transient public String buildSource       = "VI";
+  transient public int    serverVersionInt  = Constant.GAME_INFO.SERVER_VERSION;
   transient public DeviceUID.DeviceUIDUpdateInfo deviceInfo;
 
   //runtime data

@@ -19,4 +19,5 @@ public class Profile {
   public String       displayName;
   public int          avatar;
   public int          gender;
+  public int          lastLogin;
 }

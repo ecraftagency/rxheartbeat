@@ -18,9 +18,10 @@ public class LeaderBoardController implements Handler<RoutingContext> {
     try {
       String cmd        = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
+      int lastIssued    = ctx.user().principal().getInteger("issueTime");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
 
-      if (session != null) {
+      if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
           case "submitScore":
