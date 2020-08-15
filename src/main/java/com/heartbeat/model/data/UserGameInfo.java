@@ -47,7 +47,7 @@ public class UserGameInfo extends GameInfo {
       return false;
     money -= amount;
     try {
-      session.userEvent.addEventRecord(EVENT.MONEY_SPEND_EVT_ID, amount);
+      session.userEvent.addEventRecord(USER_EVENT.MONEY_SPEND_EVT_ID, amount);
       session.userRanking.addEventRecord(RANKING.MONEY_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
@@ -61,7 +61,7 @@ public class UserGameInfo extends GameInfo {
       return false;
     view -= amount;
     try {
-      session.userEvent.addEventRecord(EVENT.VIEW_SPEND_EVT_ID, amount);
+      session.userEvent.addEventRecord(USER_EVENT.VIEW_SPEND_EVT_ID, amount);
       session.userRanking.addEventRecord(RANKING.VIEW_SPEND_RANK_ID, amount);
     }
     catch (Exception e){
@@ -75,7 +75,7 @@ public class UserGameInfo extends GameInfo {
       return false;
     fan -= amount;
     try {
-      session.userEvent.addEventRecord(EVENT.FAN_SPEND_EVT_ID, amount);
+      session.userEvent.addEventRecord(USER_EVENT.FAN_SPEND_EVT_ID, amount);
       session.userRanking.addEventRecord(RANKING.FAN_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
@@ -247,7 +247,7 @@ public class UserGameInfo extends GameInfo {
     timeChange = true;
 
     //todo delta time is always >= real time consume, but just let it be
-    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, amount);
+    session.userEvent.addEventRecord(USER_EVENT.TIME_SPEND_EVT_ID, amount);
 
     return true;
   }
@@ -277,7 +277,7 @@ public class UserGameInfo extends GameInfo {
 
     //todo delta time is always >= real time consume, but just let it be
     long timeSpent = deltaTime > time ? time : deltaTime;
-    session.userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent);
+    session.userEvent.addEventRecord(USER_EVENT.TIME_SPEND_EVT_ID, timeSpent);
 
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)

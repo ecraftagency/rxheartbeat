@@ -148,7 +148,7 @@ public class UserIdol extends Idols {
 
     if (newCrt - idol.creativity > 0) {
       if (userEvent != null)
-        userEvent.addEventRecord(Constant.EVENT.TOTAL_TALENT_EVT_ID, newCrt - idol.creativity);
+        userEvent.addEventRecord(USER_EVENT.TOTAL_TALENT_EVT_ID, newCrt - idol.creativity);
       if (userRanking != null)
         userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newCrt - idol.creativity);
       idol.creativity = newCrt;
@@ -156,7 +156,7 @@ public class UserIdol extends Idols {
 
     if (newPerf - idol.performance > 0) {
       if (userEvent != null)
-        userEvent.addEventRecord(Constant.EVENT.TOTAL_TALENT_EVT_ID, newPerf - idol.performance);
+        userEvent.addEventRecord(USER_EVENT.TOTAL_TALENT_EVT_ID, newPerf - idol.performance);
       if (userRanking != null)
         userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newPerf - idol.performance);
       idol.performance = newPerf;
@@ -164,7 +164,7 @@ public class UserIdol extends Idols {
 
     if (newAttr - idol.attractive > 0) {
       if (userEvent != null)
-        userEvent.addEventRecord(Constant.EVENT.TOTAL_TALENT_EVT_ID, newAttr - idol.attractive);
+        userEvent.addEventRecord(USER_EVENT.TOTAL_TALENT_EVT_ID, newAttr - idol.attractive);
       if (userRanking != null)
         userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
       idol.attractive = newAttr;

@@ -54,7 +54,7 @@ public class SystemController implements Handler<RoutingContext> {
     //todo delta time is always >= real time consume, but just let it be
     long remainTime = session.userGameInfo.remainTime();
     long timeSpent = deltaTime > remainTime ? remainTime : deltaTime;
-    session.userEvent.addEventRecord(Constant.EVENT.TIME_SPEND_EVT_ID, timeSpent);
+    session.userEvent.addEventRecord(Constant.USER_EVENT.TIME_SPEND_EVT_ID, timeSpent);
 
     session.userGameInfo.subtractTime(deltaTime);
 

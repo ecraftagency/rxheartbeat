@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class ServantData {
   public static class Servant implements Common.hasKey<Integer> {
     public int servantID;

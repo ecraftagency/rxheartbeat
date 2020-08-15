@@ -177,7 +177,7 @@ public class FightController implements Handler<RoutingContext> {
         }
         session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAMESHOW_ACHIEVEMENT, 1);
-        session.userEvent.addEventRecord(Constant.EVENT.GAME_SHOW_EVT_ID, 1);
+        session.userEvent.addEventRecord(Constant.USER_EVENT.GAME_SHOW_EVT_ID, 1);
       }
     }
 

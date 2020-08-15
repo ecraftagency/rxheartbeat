@@ -131,7 +131,7 @@ public class IdolController implements Handler<RoutingContext> {
     if (resp.msg.equals("ok")) {
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
 
-      session.userEvent.addEventRecord(Constant.EVENT.APT_BUFF_USE_EVT_ID, 1);
+      session.userEvent.addEventRecord(Constant.USER_EVENT.APT_BUFF_USE_EVT_ID, 1);
     }
     return resp;
   }

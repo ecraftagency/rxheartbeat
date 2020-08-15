@@ -228,7 +228,7 @@ public class Session {
       //record time spent event
       long remainTime = userGameInfo.remainTime();
       long timeSpent  = deltaTime > remainTime ? remainTime : deltaTime;
-      userEvent.addEventRecord(EVENT.TIME_SPEND_EVT_ID, timeSpent);
+      userEvent.addEventRecord(USER_EVENT.TIME_SPEND_EVT_ID, timeSpent);
       userGameInfo.subtractTime(deltaTime);
     }
 

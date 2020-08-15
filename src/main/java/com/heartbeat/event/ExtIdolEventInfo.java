@@ -3,9 +3,25 @@ package com.heartbeat.event;
 import com.heartbeat.common.Utilities;
 import com.statics.IdolEventInfo;
 
+import java.util.HashMap;
+
 @SuppressWarnings("unused")
 public class ExtIdolEventInfo extends IdolEventInfo {
   public static int FLUSH_DELAY = 86400;
+
+  public static ExtIdolEventInfo of(int id, String name) {
+    ExtIdolEventInfo ei  = new ExtIdolEventInfo();
+    ei.eventId    = id;
+    ei.eventName  = name;
+    ei.strStart   = "";
+    ei.strEnd     = "";
+    ei.active     = false;
+    ei.startTime  = -1;
+    ei.endTime    = -1;
+    ei.flushDelay = FLUSH_DELAY;
+    ei.idolList   = new HashMap<>();
+    return ei;
+  }
 
   public void updateEventTime(String startDate, String endDate) {
     strStart  = startDate;
@@ -26,10 +42,16 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
+      idolList.clear();
     }
   }
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public void addIdol(IdolClaimInfo icp) {
+    if (icp != null)
+      idolList.put(icp.idolId, icp);
   }
 }

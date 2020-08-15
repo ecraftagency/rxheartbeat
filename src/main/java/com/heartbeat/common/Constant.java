@@ -2,8 +2,10 @@ package com.heartbeat.common;
 
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.event.ExtEventInfo;
+import com.heartbeat.event.ExtIdolEventInfo;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.event.ExtRankingInfo;
+import com.statics.IdolEventInfo;
 import com.transport.model.MailObj;
 
 import java.lang.reflect.Type;
@@ -112,16 +114,30 @@ public class Constant {
   }
 
   public static class IDOL_EVENT {
-    public static final int BLACK_PINK_IDOL_EVT_ID    = 0;
-    public static final int DAN_BAM_IDOL_EVT_ID    = 0;
+    public static final int BP_EVT_ID = 0;
+    public static final int DB_EVT_ID = 1;
 
-    public static final Map<Integer, ExtEventInfo> eventNameMap;
+    public static final Map<Integer, ExtIdolEventInfo> evtMap;
     static {
-      eventNameMap = new HashMap<>();
+      evtMap = new HashMap<>();
+      ExtIdolEventInfo bpEvt = ExtIdolEventInfo.of(BP_EVT_ID, "5 em hot girl Hàn");
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(48, 92, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(49, 92, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(50, 92, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(51, 92, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(52, 92, 10));
+
+      ExtIdolEventInfo dbEvt = ExtIdolEventInfo.of(DB_EVT_ID, "4 hot boy ngự lâm");
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(43, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(44, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(45, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(46, 93, 10));
+      evtMap.put(BP_EVT_ID, bpEvt);
+      evtMap.put(DB_EVT_ID, dbEvt);
     }
   }
 
-  public static class EVENT {
+  public static class USER_EVENT {
     public static final int TIME_SPEND_EVT_ID   = 21;
     public static final int APT_BUFF_USE_EVT_ID = 6700;
     public static final int MONEY_SPEND_EVT_ID  = 6;
@@ -133,19 +149,19 @@ public class Constant {
     public static final int GAME_SHOW_EVT_ID    = 12;
     public static final int TOTAL_TALENT_EVT_ID = 13;
 
-    public static final Map<Integer, ExtEventInfo> eventInfoMap;
+    public static final Map<Integer, ExtEventInfo> evtMap;
 
     static {
-      eventInfoMap = new HashMap<>();
-      eventInfoMap.put(TIME_SPEND_EVT_ID, ExtEventInfo.of(TIME_SPEND_EVT_ID));
-      eventInfoMap.put(APT_BUFF_USE_EVT_ID, ExtEventInfo.of(APT_BUFF_USE_EVT_ID));
-      eventInfoMap.put(MONEY_SPEND_EVT_ID, ExtEventInfo.of(MONEY_SPEND_EVT_ID));
-      eventInfoMap.put(VIEW_SPEND_EVT_ID, ExtEventInfo.of(VIEW_SPEND_EVT_ID));
-      eventInfoMap.put(FAN_SPEND_EVT_ID, ExtEventInfo.of(FAN_SPEND_EVT_ID));
-      eventInfoMap.put(CRT_PROD_EVT_ID, ExtEventInfo.of(CRT_PROD_EVT_ID));
-      eventInfoMap.put(VIEW_PROD_EVT_ID, ExtEventInfo.of(VIEW_PROD_EVT_ID));
-      eventInfoMap.put(FAN_PROD_EVT_ID, ExtEventInfo.of(FAN_PROD_EVT_ID));
-      eventInfoMap.put(TOTAL_TALENT_EVT_ID, ExtEventInfo.of(TOTAL_TALENT_EVT_ID));
+      evtMap = new HashMap<>();
+      evtMap.put(TIME_SPEND_EVT_ID, ExtEventInfo.of(TIME_SPEND_EVT_ID));
+      evtMap.put(APT_BUFF_USE_EVT_ID, ExtEventInfo.of(APT_BUFF_USE_EVT_ID));
+      evtMap.put(MONEY_SPEND_EVT_ID, ExtEventInfo.of(MONEY_SPEND_EVT_ID));
+      evtMap.put(VIEW_SPEND_EVT_ID, ExtEventInfo.of(VIEW_SPEND_EVT_ID));
+      evtMap.put(FAN_SPEND_EVT_ID, ExtEventInfo.of(FAN_SPEND_EVT_ID));
+      evtMap.put(CRT_PROD_EVT_ID, ExtEventInfo.of(CRT_PROD_EVT_ID));
+      evtMap.put(VIEW_PROD_EVT_ID, ExtEventInfo.of(VIEW_PROD_EVT_ID));
+      evtMap.put(FAN_PROD_EVT_ID, ExtEventInfo.of(FAN_PROD_EVT_ID));
+      evtMap.put(TOTAL_TALENT_EVT_ID, ExtEventInfo.of(TOTAL_TALENT_EVT_ID));
     }
   }
 

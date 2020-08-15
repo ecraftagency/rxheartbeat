@@ -40,7 +40,7 @@ public class ConstantInjectController implements Handler<RoutingContext> {
     String value        = ctx.getBodyAsJson().getString("value");
     switch (value) {
       case "event":
-        ctx.response().putHeader("Content-Type", "text/json").end(gson.toJson(new Constant.EVENT()));
+        ctx.response().putHeader("Content-Type", "text/json").end(gson.toJson(new Constant.USER_EVENT()));
         return;
       case "group":
         ctx.response().putHeader("Content-Type", "text/json").end(gson.toJson(new Constant.GROUP()));

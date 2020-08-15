@@ -23,12 +23,19 @@ public class EventController implements Handler<RoutingContext> {
 
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
+        long curMs = System.currentTimeMillis();
         switch (cmd) {
-          case "claimEventReward":
-            resp = processClaimAchievement(session, ctx);
+          case "claimUserEventReward":
+            resp = processClaimUserEvtRwd(session, ctx, curMs);
             break;
-          case "getEvents":
-            resp = processGetEvents(session);
+          case "getUserEvents":
+            resp = processGetUserEvt(session);
+            break;
+          case "getIdolEvents":
+            resp = processGetIdolEvt();
+            break;
+          case "claimIdolEventReward":
+            resp = processClaimIdolEvtRwd(session, ctx, curMs);
             break;
           default:
             resp = ExtMessage.event();
@@ -54,26 +61,43 @@ public class EventController implements Handler<RoutingContext> {
     }
   }
 
-  private ExtMessage processClaimAchievement(Session session, RoutingContext ctx) {
-    int eventType           = ctx.getBodyAsJson().getInteger("eventType");
-    int milestoneId         = ctx.getBodyAsJson().getInteger("milestoneId");
+  private ExtMessage processClaimIdolEvtRwd(Session session, RoutingContext ctx, long curMs) {
+    ExtMessage resp     = ExtMessage.group();
+    int idolId          = ctx.getBodyAsJson().getInteger("idolId");
+    int evtId           = ctx.getBodyAsJson().getInteger("eventId");
+    resp.msg            = session.userEvent.claimEventIdol(session, idolId, evtId, (int)(curMs/1000));
+    resp.effectResults  = session.effectResults;
+    resp.data.idols     = session.userIdol;
+    return resp;
+  }
+
+
+  private ExtMessage processGetIdolEvt() {
     ExtMessage resp         = ExtMessage.event();
-    resp.data.event         = session.userEvent;
+    resp.data.extObj        = Json.encode(Constant.IDOL_EVENT.evtMap);
+    resp.serverTime         = (int)(System.currentTimeMillis()/1000);
+    return resp;
+  }
+
+  private ExtMessage processClaimUserEvtRwd(Session session, RoutingContext ctx, long curMs) {
+    int eventType         = ctx.getBodyAsJson().getInteger("eventType");
+    int milestoneId       = ctx.getBodyAsJson().getInteger("milestoneId");
+    ExtMessage resp       = ExtMessage.event();
+    resp.data.event       = session.userEvent;
 
     if (session.userGameInfo.isActiveTime()) {
-      int second              = (int)(System.currentTimeMillis()/1000);
-      resp.msg                = session.userEvent.claimEventReward(session, eventType, milestoneId, second);
-      resp.effectResults      = session.effectResults;
+      resp.msg            = session.userEvent.claimEventReward(session, eventType, milestoneId, (int)(curMs/1000));
+      resp.effectResults  = session.effectResults;
     }
 
     return resp;
   }
 
-  private ExtMessage processGetEvents(Session session) {
+  private ExtMessage processGetUserEvt(Session session) {
     session.userEvent.reBalance();
     ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
-    resp.data.extObj        = Json.encode(Constant.EVENT.eventInfoMap);
+    resp.data.extObj        = Json.encode(Constant.USER_EVENT.evtMap);
     resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }
