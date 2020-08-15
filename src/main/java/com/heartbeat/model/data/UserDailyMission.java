@@ -55,8 +55,6 @@ public class UserDailyMission extends DailyMission {
     if (uMission.dailyCount < dto.target)
       return "mission_impossible";
 
-    session.effectResults.clear();
-
     for (List<Integer> reward : dto.reward) {
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
       EffectManager.inst().handleEffect(extArgs, session, reward);

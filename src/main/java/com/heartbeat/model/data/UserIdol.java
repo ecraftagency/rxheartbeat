@@ -338,17 +338,17 @@ public class UserIdol extends Idols {
   }
 
   @com.fasterxml.jackson.annotation.JsonIgnore
-  public long getTotalCreativity() {
+  public long totalCrt() {
     return idolMap.values().stream().mapToInt(e -> e.creativity).sum();
   }
 
   @com.fasterxml.jackson.annotation.JsonIgnore
-  public long getTotalPerformance() {
+  public long totalPerf() {
     return idolMap.values().stream().mapToInt(e -> e.performance).sum();
   }
 
   @com.fasterxml.jackson.annotation.JsonIgnore
-  public long getTotalAttractive() {
+  public long totalAttr() {
     return idolMap.values().stream().mapToInt(e -> e.attractive).sum();
   }
 

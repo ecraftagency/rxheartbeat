@@ -97,7 +97,7 @@ public class Session {
     userInbox             = UserInbox.ofDefault();
 
     //todo reBalance
-    userProduction.reBalance(userIdol.getTotalCreativity());
+    userProduction.reBalance(userIdol.totalCrt());
 
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
@@ -192,7 +192,7 @@ public class Session {
 
     userGameInfo.reBalance();
     userInventory.reBalance();
-    userProduction.reBalance(this.userIdol.getTotalCreativity());
+    userProduction.reBalance(this.userIdol.totalCrt());
 
     userLDB                 = UserLDB.ofDefault();
     userIdol.userEvent      = userEvent;        //ref
@@ -653,9 +653,9 @@ public class Session {
   }
 
   private void updateLDBScore() {
-    long totalCrt = userIdol.getTotalCreativity();
-    long totalPerf = userIdol.getTotalPerformance();
-    long totalAttr = userIdol.getTotalCreativity();
+    long totalCrt = userIdol.totalCrt();
+    long totalPerf = userIdol.totalPerf();
+    long totalAttr = userIdol.totalAttr();
     long totalTalent = totalCrt + totalPerf + totalAttr;
 
     if (userLDB != null) {

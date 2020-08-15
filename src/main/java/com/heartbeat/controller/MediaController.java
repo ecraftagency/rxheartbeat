@@ -3,7 +3,6 @@ package com.heartbeat.controller;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
-import com.heartbeat.model.data.UserGameInfo;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -68,18 +67,18 @@ public class MediaController implements Handler<RoutingContext> {
       return resp;
     }
 
-    if (!session.userInventory.haveItem(USER_GAME_INFO.CLAIM_MEDIA_COUNT_ITEM, amount)) {
+    if (!session.userInventory.haveItem(USER_GAME_INFO.MEDIA_CONTRACT_ITEM, amount)) {
       resp.msg = "insufficient_item";
       return resp;
     }
 
     session.userGameInfo.updateUserMedia(curMs);
-    session.userInventory.useItem(USER_GAME_INFO.CLAIM_MEDIA_COUNT_ITEM, amount);
+    session.userInventory.useItem(USER_GAME_INFO.MEDIA_CONTRACT_ITEM, amount);
     session.userGameInfo.addMediaClaim(amount);
     resp.data.gameInfo = session.userGameInfo;
     resp.msg = "ok";
     //record
-    session.userAchievement.addAchieveRecord(USER_GAME_INFO.CLAIM_MEDIA_COUNT_ITEM*100, amount);
+    session.userAchievement.addAchieveRecord(ACHIEVEMENT.MEDIA_CONTRACT_USE, amount);
     return resp;
   }
 

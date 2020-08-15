@@ -41,9 +41,9 @@ public class UserGroup extends Group {
     owner.role            = OWNER_ROLE;
     owner.joinTime        = re.createTime;
     owner.titleId         = session.userGameInfo.titleId;
-    owner.totalCrt        = session.userIdol.getTotalCreativity();
-    owner.totalPerf       = session.userIdol.getTotalPerformance();
-    owner.totalAttr       = session.userIdol.getTotalAttractive();
+    owner.totalCrt        = session.userIdol.totalCrt();
+    owner.totalPerf       = session.userIdol.totalPerf();
+    owner.totalAttr       = session.userIdol.totalAttr();
     owner.gender          = session.userGameInfo.gender;
     owner.avatarId        = session.userGameInfo.avatar;
     re.members.put(session.id, owner);
@@ -65,9 +65,9 @@ public class UserGroup extends Group {
   public synchronized String processJoinGroup(Session session) {
     Member member           = Member.of(session.id, session.userGameInfo.displayName);
     member.titleId          = session.userGameInfo.titleId;
-    member.totalCrt         = session.userIdol.getTotalCreativity();
-    member.totalPerf        = session.userIdol.getTotalPerformance();
-    member.totalAttr        = session.userIdol.getTotalAttractive();
+    member.totalCrt         = session.userIdol.totalCrt();
+    member.totalPerf        = session.userIdol.totalPerf();
+    member.totalAttr        = session.userIdol.totalAttr();
     member.avatarId         = session.userGameInfo.avatar;
     member.gender           = session.userGameInfo.gender;
 

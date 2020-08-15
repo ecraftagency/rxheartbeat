@@ -44,7 +44,6 @@ public class Idols {
     public float                      crtBufRate;
     public float                      perfBufRate;
     public float                      attrBufRate;
-    //public List<Integer>    updateItems;
 
     public static IdolHalo of(int id, int level, float crt, float perf, float attr) {
       IdolHalo pHalo    = new IdolHalo();
@@ -53,7 +52,6 @@ public class Idols {
       pHalo.crtBufRate  = crt;
       pHalo.perfBufRate = perf;
       pHalo.attrBufRate = attr;
-      //pHalo.updateItems = updateItems;
       return pHalo;
     }
   }

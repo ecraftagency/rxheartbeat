@@ -3,7 +3,6 @@ package com.heartbeat.model.data;
 import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
-import com.statics.VipData;
 import com.transport.EffectResult;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -51,7 +50,7 @@ public class UserProduction extends com.transport.model.Production{
   }
 
   public void updateProduction(Session session, long curMs) {
-    int newInv        = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+    int newInv        = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
     newInv            = Math.min(newInv, MAX_REC_INTERVAL);
 
     int second        = (int)(curMs/1000);
@@ -97,7 +96,7 @@ public class UserProduction extends com.transport.model.Production{
     updateProduction(session, curMs);
     switch (produceType) {
       case PRODUCE_FAN:
-        long totalFanAdd = session.userIdol.getTotalAttractive();
+        long totalFanAdd = session.userIdol.totalAttr();
         if (currentFanClaimCount > 0 && session.userGameInfo.view >= totalFanAdd) {
           currentFanClaimCount -= 1;
           if (session.userGameInfo.isActiveTime()) {
@@ -113,7 +112,7 @@ public class UserProduction extends com.transport.model.Production{
         if (currentGoldClaimCount > 0) {
           currentGoldClaimCount -= 1;
           if (session.userGameInfo.isActiveTime()) {
-            long moneyAdd = session.userIdol.getTotalCreativity();
+            long moneyAdd = session.userIdol.totalCrt();
 
             //todo calc rampage probability
             if (dailyRampage < maxDailyRampage) {
@@ -136,7 +135,7 @@ public class UserProduction extends com.transport.model.Production{
         if (currentViewClaimCount > 0) {
           currentViewClaimCount -= 1;
           if (session.userGameInfo.isActiveTime()) {
-            session.userGameInfo.view += session.userIdol.getTotalPerformance();
+            session.userGameInfo.view += session.userIdol.totalPerf();
           }
           lastViewClaim = (int)(curMs/1000);
           return "ok";
@@ -158,8 +157,8 @@ public class UserProduction extends com.transport.model.Production{
     long    totalFanAdd          = 0;
     boolean shouldDoFanProduce   = true;
     if (currentFanClaimCount > 0) {
-      totalFanAdd = currentFanClaimCount*session.userIdol.getTotalAttractive();
-      if (session.userGameInfo.view + currentViewClaimCount*session.userIdol.getTotalPerformance() < totalFanAdd)
+      totalFanAdd = currentFanClaimCount*session.userIdol.totalAttr();
+      if (session.userGameInfo.view + currentViewClaimCount*session.userIdol.totalPerf() < totalFanAdd)
         shouldDoFanProduce = false;
     }
 
@@ -168,7 +167,7 @@ public class UserProduction extends com.transport.model.Production{
       if (session.userGameInfo.isActiveTime()) {
         int rampageCnt = 0;
         for (int i = 0; i < currentFanClaimCount; i++) {
-          long moneyAdd = session.userIdol.getTotalCreativity();
+          long moneyAdd = session.userIdol.totalCrt();
 
           //todo calc rampage probability
           if (dailyRampage < maxDailyRampage) {
@@ -192,7 +191,7 @@ public class UserProduction extends com.transport.model.Production{
     //view
     if (currentViewClaimCount > 0) {
       if (session.userGameInfo.isActiveTime()) {
-        session.userGameInfo.view  += currentViewClaimCount*session.userIdol.getTotalPerformance();
+        session.userGameInfo.view  += currentViewClaimCount*session.userIdol.totalPerf();
       }
       lastViewClaim               = (int)(curMs/1000);
       currentViewClaimCount       = 0;
@@ -216,17 +215,17 @@ public class UserProduction extends com.transport.model.Production{
     switch (productType){
       case PRODUCE_GOLD:
         currentGoldClaimCount  += amount;
-        goldRecoverInv          = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+        goldRecoverInv          = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
         goldRecoverInv          = Math.min(goldRecoverInv, MAX_REC_INTERVAL);
         break;
       case PRODUCE_FAN:
         currentFanClaimCount += amount;
-        fanRecoverInv          = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+        fanRecoverInv          = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
         fanRecoverInv          = Math.min(fanRecoverInv, MAX_REC_INTERVAL);
         break;
       case PRODUCE_VIEW:
         currentViewClaimCount += amount;
-        viewRecoverInv          = ((int)(session.userIdol.getTotalCreativity()/RECOVERY_DENOMINATOR) + 1)*60;
+        viewRecoverInv          = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
         viewRecoverInv          = Math.min(viewRecoverInv, MAX_REC_INTERVAL);
         break;
       default:

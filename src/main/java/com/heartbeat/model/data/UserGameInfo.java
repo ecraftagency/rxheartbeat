@@ -225,7 +225,6 @@ public class UserGameInfo extends GameInfo {
         if (cr.reward == null)
           return "crazy_claim_fail";
         EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
-        session.effectResults.clear();
         for (List<Integer> re : cr.reward) {
           EffectManager.inst().handleEffect(extArgs, session, re);
         }

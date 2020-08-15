@@ -42,7 +42,6 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
-      idolList.clear();
     }
   }
 

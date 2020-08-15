@@ -124,9 +124,9 @@ public class UserFight extends Fight {
 
   private String handleNormalFight(Session session) {
     long fixConsume       = (int)(currentFightLV.fanNPC*0.01f);
-    long totalTalent      = session.userIdol.getTotalCreativity()
-            + session.userIdol.getTotalPerformance()
-            + session.userIdol.getTotalAttractive();
+    long totalTalent      = session.userIdol.totalCrt()
+            + session.userIdol.totalPerf()
+            + session.userIdol.totalAttr();
     long expectedConsume  = (int)(currentFightLV.fanNPC* currentFightLV.aptNPC/totalTalent) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
@@ -286,9 +286,9 @@ public class UserFight extends Fight {
       return "max_run_show";
 
     long fixConsume       = (int)(currentRunShow.randFanNPC*0.1f);
-    long totalTalent      = session.userIdol.getTotalCreativity()
-            + session.userIdol.getTotalPerformance()
-            + session.userIdol.getTotalAttractive();
+    long totalTalent      = session.userIdol.totalCrt()
+            + session.userIdol.totalPerf()
+            + session.userIdol.totalAttr();
     long expectedConsume  = (currentRunShow.randFanNPC*currentRunShow.randAptNPC/totalTalent) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
@@ -336,9 +336,9 @@ public class UserFight extends Fight {
       long avrFanNPC        = (rs.minFanNPC + rs.maxFanNPC)/2;
       long avrAptNPC        = (rs.minAptNPC + rs.maxAptNPC)/2;
       long fixConsume       = (long)(avrAptNPC*0.1f);
-      long totalTalent      = session.userIdol.getTotalCreativity()
-              + session.userIdol.getTotalPerformance()
-              + session.userIdol.getTotalAttractive();
+      long totalTalent      = session.userIdol.totalCrt()
+              + session.userIdol.totalPerf()
+              + session.userIdol.totalAttr();
       long expectedConsume  = (avrFanNPC*avrAptNPC/totalTalent) + fixConsume;
       totalExpectConsume   += expectedConsume;
     }
@@ -387,7 +387,7 @@ public class UserFight extends Fight {
 
     long moneyConsume;
     long base         = SHOPPING_COEFFICIENT*currentShopping.creativeNPC;
-    long totalCrt     = session.userIdol.getTotalCreativity();
+    long totalCrt     = session.userIdol.totalCrt();
 
     if (base >= totalCrt) {
       moneyConsume = currentShopping.moneyNPC*currentShopping.creativeNPC /totalCrt;
@@ -435,7 +435,7 @@ public class UserFight extends Fight {
 
       long moneyConsume;
       long base         = SHOPPING_COEFFICIENT*currentShopping.creativeNPC;
-      long totalCrt     = session.userIdol.getTotalCreativity();
+      long totalCrt     = session.userIdol.totalCrt();
 
       if (base >= totalCrt) {
         moneyConsume = currentShopping.moneyNPC*currentShopping.creativeNPC /totalCrt;

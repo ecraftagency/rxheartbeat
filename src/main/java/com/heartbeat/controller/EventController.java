@@ -62,7 +62,7 @@ public class EventController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processClaimIdolEvtRwd(Session session, RoutingContext ctx, long curMs) {
-    ExtMessage resp     = ExtMessage.group();
+    ExtMessage resp     = ExtMessage.event();
     int idolId          = ctx.getBodyAsJson().getInteger("idolId");
     int evtId           = ctx.getBodyAsJson().getInteger("eventId");
     resp.msg            = session.userEvent.claimEventIdol(session, idolId, evtId, (int)(curMs/1000));

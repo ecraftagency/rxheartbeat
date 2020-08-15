@@ -15,8 +15,6 @@ public class ExtMessage {
   public boolean            newInbox;
   public List<EffectResult> effectResults;
 
-
-
   public static class Data {
     public GameInfo     gameInfo;
     public Idols        idols;
@@ -42,8 +40,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "inbox";
     result.data = new Data();
+    result.group = "inbox";
     return result;
   }
 
@@ -51,8 +49,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "ldb";
     result.data = new Data();
+    result.group = "ldb";
     return result;
   }
 
@@ -60,8 +58,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "ranking";
     result.data = new Data();
+    result.group = "ranking";
     return result;
   }
 
@@ -69,8 +67,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "rollcall";
     result.data = new Data();
+    result.group = "rollcall";
     return result;
   }
 
@@ -78,8 +76,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "mission";
     result.data = new Data();
+    result.group = "mission";
     return result;
   }
 
@@ -87,8 +85,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "event";
     result.data = new Data();
+    result.group = "event";
     return result;
   }
 
@@ -96,8 +94,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "achievement";
     result.data = new Data();
+    result.group = "achievement";
     return result;
   }
 
@@ -105,8 +103,8 @@ public class ExtMessage {
     ExtMessage result = new ExtMessage();
     result.cmd = "";
     result.msg = "ok";
-    result.group = "daily_mission";
     result.data = new Data();
+    result.group = "daily_mission";
     return result;
   }
 
@@ -202,13 +200,14 @@ public class ExtMessage {
   }
 
   public void reset() {
-    cmd             = "";
-    msg             = "";
-    group           = "";
-    serverTime      = 0;
-    userRemainTime  = 0;
-    timeChange      = false;
-    effectResults   = null;
+    cmd                     = "";
+    msg                     = "ok";
+    group                   = "";
+    serverTime              = 0;
+    userRemainTime          = 0;
+    timeChange              = false;
+    newInbox                = false;
+    effectResults           = null;
 
     data.gameInfo           = null;
     data.idols              = null;
@@ -225,6 +224,7 @@ public class ExtMessage {
     data.rollCall           = null;
     data.event              = null;
     data.ranking            = null;
+    data.inbox              = null;
     data.currentGroupState  = 0;
     data.extObj             = "";
   }

@@ -128,10 +128,10 @@ public class Constant {
       bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(52, 92, 10));
 
       ExtIdolEventInfo dbEvt = ExtIdolEventInfo.of(DB_EVT_ID, "4 hot boy ngự lâm");
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(43, 93, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(44, 93, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(45, 93, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(46, 93, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(43, 93, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(44, 93, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(45, 93, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(46, 93, 10));
       evtMap.put(BP_EVT_ID, bpEvt);
       evtMap.put(DB_EVT_ID, dbEvt);
     }
@@ -183,6 +183,7 @@ public class Constant {
     public static final int VIP_ACHIEVEMENT           = 13;
     public static final int GAMESHOW_ACHIEVEMENT      = 14;
 
+    public static final int MEDIA_CONTRACT_USE        = 100*USER_GAME_INFO.MEDIA_CONTRACT_ITEM;
     public static final int IDOL_LEVEL                = 16;
     public static final int IDOL_TITLE                = 17;
     public static final int IDOL_SINGLE_QUERY         = 1;
@@ -198,7 +199,7 @@ public class Constant {
     public static final int MAX_AVATAR                = 10;
     public static final int MAX_GENDER                = 2;
     public static final int MEDIA_INTERVAL            = 1198; //unit second 20'
-    public static final int CLAIM_MEDIA_COUNT_ITEM    = 2;    //hợp đồng truyền thông
+    public static final int MEDIA_CONTRACT_ITEM       = 2;    //hợp đồng truyền thông
   }
 
   public static class EFFECT_RESULT {

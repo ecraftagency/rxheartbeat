@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.heartbeat.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -12,17 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-/*
-open daily gift UI  -> req DailyGiftInfo
-click claim gift    -> req claimDailyGift
-nếu get info ok thì show ngày hiện tại = nClaimedDay + 1, % số đó với mapSize đề lấy key rend quà
-
-getDailyGiftInfo (new acc)    -> ok    0 0           -> UI: day: (0+1)      gift:data.get(1),data.get(2)....11 entries
-claimDailyGift                -> ok    1 15992...    -> UI: day:1(claimed)  gift:claimed,data.get(2).....11 entries
-getDailyGiftInfo (same day)   -> delay 1 15992...    -> UI: day:1(claimed)  gift:claimed,data.get(2).....11 entries
-getDailyGiftInfo (next day)   -> ok    1 15992...    -> UI: day: (1+1)      gift:claimed,data.get(2).....11 entries
-.....
- */
 
 public class UserRollCall extends RollCall {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRollCall.class);
@@ -46,7 +36,7 @@ public class UserRollCall extends RollCall {
 
   public String getRollCallInfo(Session session, long curMs) {
     int second = (int)(curMs/1000);
-    int dayDiff   = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(lastDailyClaimTime, second);
+    int dayDiff   = Utilities.dayDiff(lastDailyClaimTime, second);
 
     //todo change to daydiff
     todayClaim = dayDiff <= 0;
