@@ -4,6 +4,9 @@ import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCluster;
 import com.diabolicallabs.vertx.cron.CronObservable;
 import com.common.Constant;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.JoinConfig;
+import com.hazelcast.config.NetworkConfig;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBSession;
@@ -109,11 +112,23 @@ public class HBServer extends AbstractVerticle {
       LOGGER.info("HBServer shutdown hook");
     }));
 
-    mgr = new HazelcastClusterManager();
-    VertxOptions options = new VertxOptions().setClusterManager(mgr);
+
+    Config cconf = new Config();
+    NetworkConfig network = cconf.getNetworkConfig();
+    JoinConfig join = network.getJoin();
+    join.getMulticastConfig().setEnabled(false);
+    join.getTcpIpConfig().addMember("172.31.37.156").setEnabled(true);
+    //network.getInterfaces().addInterface("172.31.38.195").addInterface("172.31.37.156").setEnabled(true);
+
+    mgr = new HazelcastClusterManager(cconf);
+
+    VertxOptions options = new VertxOptions().setClusterManager(mgr).setClusterHost("172.31.38.195");
+
     Vertx.clusteredVertx(options, res -> {
       if (res.succeeded()) {
-        res.result().deployVerticle(HBServer.class.getName());
+        Vertx vertx = res.result();
+        eventBus = vertx.eventBus();
+        vertx.deployVerticle(HBServer.class.getName());
         System.out.println("HB Server Deployed");
       }
     });
@@ -128,8 +143,6 @@ public class HBServer extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) {
     try {
-      assignEventBus();
-
       loadStaticData();
 
       SessionPool.checkHeartBeat.run();
@@ -212,6 +225,7 @@ public class HBServer extends AbstractVerticle {
     DB.HOST                                = localConfig.getString("DB.HOST");
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");
+    DB.BUCKET_PREFIX                       = localConfig.getString("DB.PREFIX");
     ONLINE_INFO.ONLINE_HEARTBEAT_TIME      = localConfig.getInteger("ONLINE_INFO.ONLINE_HEARTBEAT_TIME");
     SCHEDULE.TIME_ZONE                     = localConfig.getString("SCHEDULE.TIMEZONE");
     if (nodeId > 0) {
@@ -225,7 +239,6 @@ public class HBServer extends AbstractVerticle {
   }
 
   private static void scheduleTask(Vertx vertx) {
-
     gateWayPingTaskId = vertx.setPeriodic(SYSTEM_INFO.GATEWAY_NOTIFY_INTERVAL, id -> {
       JsonObject jsonMessage = new JsonObject().put("cmd", "ping");
       jsonMessage.put("cmd", "ping");
@@ -412,9 +425,5 @@ public class HBServer extends AbstractVerticle {
     RankingData.loadJson(rank);
 
     WordFilter.loadJson("");
-  }
-
-  private void assignEventBus() {
-    eventBus = vertx.eventBus();
   }
 }

@@ -1,15 +1,27 @@
 import com.couchbase.client.java.ReactiveCluster;
 import com.couchbase.client.java.kv.GetResult;
+import com.gateway.HBGateway;
 import com.heartbeat.HBServer;
 import com.common.Constant;
 import com.heartbeat.db.dao.PublicMailBoxDAO;
 import com.transport.model.MailObj;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class UserTest {
+  private static final Logger log = LoggerFactory.getLogger(HBGateway.class);
+
   public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
   public static void main(String[] args) throws ParseException, InterruptedException {
@@ -47,15 +59,55 @@ public class UserTest {
 //    sideEffect(sb);
 //    System.out.println(sb.toString());
 
+//
+//    HBServer.rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
+//    HBServer.rxSessionBucket = HBServer.rxCluster.bucket("sessions");
+//    HBServer.rxIndexBucket   = HBServer.rxCluster.bucket("index");
+//    HBServer.rxPersistBucket = HBServer.rxCluster.bucket("persist");
+//    //loadMail();
+//    Thread.sleep(1000);
+//    syncMail();
+//    Thread.sleep(1000);
 
-    HBServer.rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
-    HBServer.rxSessionBucket = HBServer.rxCluster.bucket("sessions");
-    HBServer.rxIndexBucket   = HBServer.rxCluster.bucket("index");
-    HBServer.rxPersistBucket = HBServer.rxCluster.bucket("persist");
-    //loadMail();
-    Thread.sleep(1000);
-    syncMail();
-    Thread.sleep(1000);
+    String defaultAddressNotLoopback = getDefaultAddressNotLoopback();
+    System.out.println(defaultAddressNotLoopback);
+  }
+
+  private static String getDefaultAddressNotLoopback() {
+    Enumeration<NetworkInterface> nets;
+    try {
+      nets = NetworkInterface.getNetworkInterfaces();
+    } catch (SocketException e) {
+      log.error("could not get the network interfaces " + e.getMessage());
+      return null;
+    }
+
+    NetworkInterface netinf;
+    List<InetAddress> usableInetAdresses = new ArrayList<>();
+    while (nets.hasMoreElements()) {
+      netinf = nets.nextElement();
+
+      Enumeration<InetAddress> addresses = netinf.getInetAddresses();
+
+      while (addresses.hasMoreElements()) {
+        InetAddress address = addresses.nextElement();
+        log.info("found InetAddress: " + address.toString() + " on interface: " + netinf.getName());
+        if (!address.isAnyLocalAddress() && !address.isMulticastAddress()
+                && !(address instanceof Inet6Address) &&!address.isLoopbackAddress()) {
+          usableInetAdresses.add(address);
+        }
+      }
+    }
+
+    if(usableInetAdresses.size() > 1) {
+      throw new IllegalStateException("don't know which InetAddress to use, there are more than one: " + usableInetAdresses);
+    } else if(usableInetAdresses.size() == 1) {
+      log.info("found a InetAddress which we can use as default address: " + usableInetAdresses.get(0).toString());
+      return usableInetAdresses.get(0).getHostAddress();
+    }
+
+    log.info("found no usable inet address");
+    return null;
   }
 
   public static void sideEffect(StringBuilder sb) {

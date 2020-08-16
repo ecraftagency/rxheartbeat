@@ -3,6 +3,9 @@ package com.gateway;
 import com.gateway.controller.InternalController;
 import com.common.Constant;
 import com.gateway.controller.NodeController;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.JoinConfig;
+import com.hazelcast.config.NetworkConfig;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -23,18 +26,27 @@ public class HBGateway extends AbstractVerticle {
   public static void main(String[] args) {
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 
-    mgr = new HazelcastClusterManager();
-    VertxOptions options = new VertxOptions().setClusterManager(mgr);
+    Config conf = new Config();
+    NetworkConfig network = conf.getNetworkConfig();
+    JoinConfig join = network.getJoin();
+    join.getMulticastConfig().setEnabled(false);
+    join.getTcpIpConfig().addMember("172.31.38.195").setEnabled(true);
+    //network.getInterfaces().setEnabled(true).addInterface("172.31.*.*");
+
+    mgr = new HazelcastClusterManager(conf);
+    VertxOptions options = new VertxOptions().setClusterManager(mgr).setClusterHost("172.31.37.156");
+
     Vertx.clusteredVertx(options, res -> {
       if (res.succeeded()) {
-        res.result().deployVerticle(HBGateway.class.getName());
-        System.out.println("HB Server Deployed");
+        Vertx vertx = res.result();
+        eventBus = vertx.eventBus();
+        vertx.deployVerticle(HBGateway.class.getName());
+        System.out.println("HB Gateway Deployed");
+      }
+      else {
+        LOGGER.error(res.cause().getMessage());
       }
     });
-  }
-
-  private void assignEventBus() {
-    eventBus = vertx.eventBus();
   }
 
   @Override
@@ -44,18 +56,15 @@ public class HBGateway extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
-    assignEventBus();
-    registerHandler();
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
-    router.get("/getNodes").handler(new NodeController());
+    router.get("/nodes").handler(new NodeController());
     vertx.createHttpServer().requestHandler(router).listen(80);
-    startPromise.complete();
-  }
 
-  private void registerHandler() {
     String address = Constant.SYSTEM_INFO.GATEWAY_EVT_BUS;
     MessageConsumer<JsonObject> messageConsumer = eventBus.consumer(address);
     messageConsumer.handler(new InternalController());
+
+    startPromise.complete();
   }
 }

@@ -64,6 +64,7 @@ public class Constant {
     public static int           ID_INIT         = 100000;
     public static final String  GID_INCR_KEY    = "HeartBeatGroupID";
     public static int           GID_INIT        = 10000;
+    public static String        BUCKET_PREFIX   = "VN";
   }
 
   public static class GROUP {
