@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.heartbeat.common.Constant.RANKING.*;
+import static com.common.Constant.RANKING.*;
 
 public class UserRanking extends Ranking {
   public static final EventLoop rankingEventLoop;

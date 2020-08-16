@@ -1,6 +1,6 @@
 package eventLoop;
 
-import com.heartbeat.common.GlobalVariable;
+import com.common.GlobalVariable;
 import eventLoop.commands.GetLDBCommand;
 import eventLoop.commands.RecordCommand;
 

@@ -3,7 +3,7 @@ package com.heartbeat;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCluster;
 import com.diabolicallabs.vertx.cron.CronObservable;
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBSession;
@@ -18,11 +18,14 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
+import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -36,7 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 /*
  * RXServer = reactive server, a server that try not to waiting on anything, hope so!!
@@ -54,33 +57,79 @@ import static com.heartbeat.common.Constant.*;
 //  */X means "every X"
 //  ? ("no specific value")
 
-
 // AVAILABILITY > CONSISTENCY
+// don't share data by communication, communication by sharing data
+@SuppressWarnings("unused")
 public class HBServer extends AbstractVerticle {
   private static final Logger     LOGGER = LoggerFactory.getLogger(HBServer.class);
 
-  public  static Cruder<Session>  cruder;
-  public  static ReactiveCluster  rxCluster;
-  public  static ReactiveBucket   rxSessionBucket;
-  public  static ReactiveBucket   rxIndexBucket;
-  public  static ReactiveBucket   rxPersistBucket;
+  public static Cruder<Session>  cruder;
+  public static ReactiveCluster  rxCluster;
+  public static ReactiveBucket   rxSessionBucket;
+  public static ReactiveBucket   rxIndexBucket;
+  public static ReactiveBucket   rxPersistBucket;
 
-  public  static JsonObject       systemConfig;
-  public  static JsonObject       localConfig;
+  public static JsonObject       systemConfig;
+  public static JsonObject       localConfig;
 
-  public  static Disposable        gsOpenTask;
-  public  static Disposable        gsCloseTask;
-  public  static Disposable        newDayTask;
+  public static Disposable        gsOpenTask;
+  public static Disposable        gsCloseTask;
+  public static Disposable        newDayTask;
+  public static ClusterManager    mgr;
+  public static EventBus          eventBus;
+  public static long              gateWayPingTaskId;
+
+  public static String  nodeIp    = "";
+  public static int     nodePort  = 0;
+  public static String  nodeBus   = "";
+  public static int     nodeId    = 0;
+  public static String  nodeName  = "";
+
+  public static void main(String[] args) throws IOException {
+    String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
+    localConfig             = new JsonObject(conf);
+    overrideConstant();
+
+    rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
+    rxSessionBucket = HBServer.rxCluster.bucket("sessions");
+    rxIndexBucket   = HBServer.rxCluster.bucket("index");
+    rxPersistBucket = HBServer.rxCluster.bucket("persist");
+
+    //for logging backend
+    System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
+
+    //for faster startup, fucking couchbase java sdk T___T
+    cruder = CBSession.getInstance();
+
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      SessionPool.removeAll();
+      GroupPool.removeAll();
+      UserLDB.syncLDBToDB(LEADER_BOARD.TALENT_LDB_ID);
+      UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
+      LOGGER.info("HBServer shutdown hook");
+    }));
+
+    mgr = new HazelcastClusterManager();
+    VertxOptions options = new VertxOptions().setClusterManager(mgr);
+    Vertx.clusteredVertx(options, res -> {
+      if (res.succeeded()) {
+        res.result().deployVerticle(HBServer.class.getName());
+        System.out.println("HB Server Deployed");
+      }
+    });
+  }
 
   @Override
   public void init(Vertx vertx, Context context) {
     super.init(vertx, context);
-    startCronTask(vertx);
+    scheduleTask(vertx);
   }
 
   @Override
   public void start(Promise<Void> startPromise) {
     try {
+      assignEventBus();
+
       loadStaticData();
 
       SessionPool.checkHeartBeat.run();
@@ -142,12 +191,10 @@ public class HBServer extends AbstractVerticle {
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
 
         HttpServerOptions options = new HttpServerOptions().setSsl(true).setKeyStoreOptions(
-                new JksOptions().
-                        setPath("keystore.jks").
-                        setPassword("changeit")
+                new JksOptions().setPath("keystore.jks").setPassword("changeit")
         );
         vertx.createHttpServer()
-                .requestHandler(router).listen(localConfig.getInteger("HTTP.PORT", 8080));
+                .requestHandler(router).listen(nodePort);
 
         startPromise.complete();
       }
@@ -157,42 +204,39 @@ public class HBServer extends AbstractVerticle {
     });
   }
 
-  public static void main(String[] args) throws IOException {
-    String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
-    localConfig             = new JsonObject(conf);
-    overrideConstant();
-
-    rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
-    rxSessionBucket = HBServer.rxCluster.bucket("sessions");
-    rxIndexBucket   = HBServer.rxCluster.bucket("index");
-    rxPersistBucket = HBServer.rxCluster.bucket("persist");
-
-    //for logging backend
-    System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
-
-    //for faster startup, fucking couchbase java sdk T___T
-    cruder = CBSession.getInstance();
-
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      SessionPool.removeAll();
-      GroupPool.removeAll();
-      UserLDB.syncLDBToDB(LEADER_BOARD.TALENT_LDB_ID);
-      UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
-      LOGGER.info("HBServer shutdown hook");
-    }));
-
-    Vertx.vertx().deployVerticle(HBServer.class.getName());
-  }
-
   private static void overrideConstant() {
+    nodeId                                 = localConfig.getInteger("NODE.ID");
+    nodeIp                                 = localConfig.getString("NODE.IP");
+    nodePort                               = localConfig.getInteger("NODE.PORT");
+    nodeName                               = localConfig.getString("NODE.NAME");
     DB.HOST                                = localConfig.getString("DB.HOST");
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");
     ONLINE_INFO.ONLINE_HEARTBEAT_TIME      = localConfig.getInteger("ONLINE_INFO.ONLINE_HEARTBEAT_TIME");
     SCHEDULE.TIME_ZONE                     = localConfig.getString("SCHEDULE.TIMEZONE");
+    if (nodeId > 0) {
+      DB.ID_INIT                           = nodeId*1000000;
+      DB.GID_INIT                          = nodeId*1000;
+      nodeBus                              = String.format("%d.%s.bus", nodeId, nodeName);
+    }
+    else {
+      LOGGER.error(String.format("critical invalid node id: %d", nodeId));
+    }
   }
 
-  private static void startCronTask(Vertx vertx) {
+  private static void scheduleTask(Vertx vertx) {
+
+    gateWayPingTaskId = vertx.setPeriodic(SYSTEM_INFO.GATEWAY_NOTIFY_INTERVAL, id -> {
+      JsonObject jsonMessage = new JsonObject().put("cmd", "ping");
+      jsonMessage.put("cmd", "ping");
+      jsonMessage.put("nodeId", nodeId);
+      jsonMessage.put("nodeIp", nodeIp);
+      jsonMessage.put("nodePort", nodePort);
+      jsonMessage.put("nodeName", nodeName);
+      jsonMessage.put("nodeBus", nodeBus);
+      jsonMessage.put("nodeCcu", SessionPool.getCCU());
+      eventBus.send(SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
+    });
 
     Scheduler scheduler = RxHelper.scheduler(vertx);
     newDayTask          = CronObservable.cronspec(scheduler, "0 0 0 * * ? *", Constant.SCHEDULE.TIME_ZONE)
@@ -368,5 +412,9 @@ public class HBServer extends AbstractVerticle {
     RankingData.loadJson(rank);
 
     WordFilter.loadJson("");
+  }
+
+  private void assignEventBus() {
+    eventBus = vertx.eventBus();
   }
 }

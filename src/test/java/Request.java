@@ -2,7 +2,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.heartbeat.common.Utilities;
 import com.transport.ExtMessage;
 import com.transport.LoginRequest;
 import io.vertx.core.AbstractVerticle;
@@ -12,10 +11,16 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
 
+import javax.net.ssl.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.Properties;
+
 @SuppressWarnings("unused")
 public class Request extends AbstractVerticle {
   private static WebClient client;
-  private static String HOST = "localhost";
+  private static String HOST = "https://127.0.0.1";
   private static int    PORT = 8080;
 
   @Override
@@ -32,30 +37,30 @@ public class Request extends AbstractVerticle {
   public void start() throws Exception {
     super.start();
 
-    String cat = "{\"turns\":0,\"histories\":[{\"type\":1,\"name\":\"abc\",\"date\":1594906761548}]}" + "getItem" + "NPW7S4EFSS";
+//    String cat = "{\"turns\":0,\"histories\":[{\"type\":1,\"name\":\"abc\",\"date\":1594906761548}]}" + "getItem" + "NPW7S4EFSS";
+//
+//    client.get("http://68.183.180.71:3000/api/v1/log/add")
+//            .addQueryParam("type", "getItem")
+//            .addQueryParam("name", "tylinh01")
+//            .addQueryParam("data", "{\"turns\":0,\"histories\":[{\"type\":1,\"name\":\"abc\",\"date\":1594906761548}]}")
+//            .addQueryParam("hash", Utilities.md5Encode(cat)).send(ar -> {
+//              if (ar.succeeded())
+//                System.out.println(ar.result().bodyAsString());
+//    });
 
-    client.get("http://68.183.180.71:3000/api/v1/log/add")
-            .addQueryParam("type", "getItem")
-            .addQueryParam("name", "tylinh01")
-            .addQueryParam("data", "{\"turns\":0,\"histories\":[{\"type\":1,\"name\":\"abc\",\"date\":1594906761548}]}")
-            .addQueryParam("hash", Utilities.md5Encode(cat)).send(ar -> {
-              if (ar.succeeded())
-                System.out.println(ar.result().bodyAsString());
-    });
 
-
-//    client.post(PORT, "localhost", "/api/auth")
-//            .putHeader("Content-Type", "text/json")
-//            .sendJson(loginRequest, ar -> {
-//              if (ar.succeeded()) {
-//                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, heartbeat, "/api/system");
-//                //authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, userGameInfo, "/api/profile");
-//                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, updateInfo, "/api/profile");
-//              }
-//              else {
-//                System.out.println(ar.cause().getMessage());
-//              }
-//            });
+    client.post(PORT, HOST, "/api/auth")
+            .putHeader("Content-Type", "text/json")
+            .sendJson(loginRequest, ar -> {
+              if (ar.succeeded()) {
+                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, heartbeat, "/api/system");
+                //authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, userGameInfo, "/api/profile");
+                authRequest(client, ar.result().bodyAsJson(ExtMessage.class).data.profile.jwtToken, updateInfo, "/api/profile");
+              }
+              else {
+                System.out.println(ar.cause().getMessage());
+              }
+            });
   }
 
   private static LoginRequest loginRequest;
@@ -67,8 +72,8 @@ public class Request extends AbstractVerticle {
   static {
     gson = new GsonBuilder().setPrettyPrinting().create();
     loginRequest = new LoginRequest();
-    loginRequest.userID         = "100001";
-    loginRequest.password       = "100001";
+    loginRequest.userID         = "100009";
+    loginRequest.password       = "100009";
     loginRequest.clientVersion  = "150";
     loginRequest.buildSource    = "VN";
 
@@ -86,12 +91,14 @@ public class Request extends AbstractVerticle {
   }
 
   public static void main(String[] args) {
+    final Properties props = System.getProperties();
+    props.setProperty("jdk.internal.httpclient.disableHostnameVerification", Boolean.TRUE.toString());
     Vertx.vertx().deployVerticle("Request");
   }
 
   public static void authRequest(WebClient client, String token, JsonObject body, String endpoint) {
     System.out.println("request " + endpoint + " with token: " + token);
-    client.post(8080, HOST, endpoint)
+    client.post(PORT, HOST, endpoint)
     .putHeader("Content-Type", "text/json")
     .putHeader("Authorization", "Bearer " + token)
     .sendJsonObject(body, ar -> {
@@ -104,5 +111,38 @@ public class Request extends AbstractVerticle {
         System.out.println(ar.cause().getMessage());
       }
     });
+  }
+
+  static {
+    disableSslVerification();
+  }
+
+  private static void disableSslVerification() {
+    try {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+          return null;
+        }
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+        }
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+        }
+      }
+      };
+
+      // Install the all-trusting trust manager
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+      // Create all-trusting host name verifier
+      HostnameVerifier allHostsValid = (hostname, session) -> true;
+
+      // Install the all-trusting host verifier
+      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    } catch (NoSuchAlgorithmException | KeyManagementException e) {
+      e.printStackTrace();
+    }
   }
 }

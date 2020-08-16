@@ -1,29 +1,18 @@
 package group;
 
-import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.ReactiveCluster;
 import com.couchbase.client.java.json.JsonObject;
-import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.GlobalVariable;
-import com.heartbeat.common.Utilities;
-import com.heartbeat.db.cb.CBMapper;
+import com.common.Constant;
+import com.common.GlobalVariable;
+import com.common.Utilities;
 import com.heartbeat.model.Session;
-import com.heartbeat.model.data.UserGameInfo;
-import com.heartbeat.model.data.UserGroup;
-import com.transport.model.Group;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.rxjava.sqlclient.Row;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static com.couchbase.client.java.query.QueryOptions.queryOptions;
 
 public class Main {
   public static void main(String[] args) {

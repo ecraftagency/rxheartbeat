@@ -1,13 +1,13 @@
 package com.heartbeat.ranking;
 
-import com.heartbeat.common.GlobalVariable;
+import com.common.GlobalVariable;
 import com.heartbeat.controller.AchievementController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 /*simple event loop implement in java[/-script-/]*/
 public class EventLoop implements Runnable{

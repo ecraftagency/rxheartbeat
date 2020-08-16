@@ -32,3 +32,24 @@ public class SenderVerticle extends AbstractVerticle {
     }).listen(3000);
   }
 }
+
+/*
+//      mgr.<Integer, Node>getAsyncMap("nodePool", ar -> {
+//        if (ar.succeeded()) {
+//          AsyncMap<Integer, Node> nodePool = ar.result();
+//          Node node     = Node.of();
+//          node.ccu      = SessionPool.getCCU();
+//          node.nodeIp   = nodeIp;
+//          node.nodePort = nodePort;
+//          node.nodeId   = nodeId;
+//          nodePool.put(nodeId, node, sar -> {
+//            if (sar.failed()) {
+//              LOGGER.error(String.format("Fail to sync node info, nodeId %d, %s", nodeId, sar.cause()));
+//            }
+//          });
+//        }
+//        else {
+//          LOGGER.error(String.format("Fail to load nodePool, nodeId: %d", nodeId));
+//        }
+//      });
+ */

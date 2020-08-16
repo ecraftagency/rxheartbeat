@@ -1,6 +1,6 @@
 package com.heartbeat.event;
 
-import com.heartbeat.common.Utilities;
+import com.common.Utilities;
 import com.statics.IdolEventInfo;
 
 import java.util.HashMap;

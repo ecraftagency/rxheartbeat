@@ -1,6 +1,6 @@
 package com.heartbeat.effect;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.model.Session;
 import com.statics.PropData;
 import com.transport.EffectResult;

@@ -1,7 +1,6 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.Utilities;
+import com.common.Constant;
 
 @SuppressWarnings("unused")
 public class UserIndexer {

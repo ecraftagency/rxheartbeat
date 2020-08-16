@@ -5,8 +5,7 @@
 
 package com.statics;
 
-import com.google.gson.JsonObject;
-import com.heartbeat.common.Utilities;
+import com.common.Utilities;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

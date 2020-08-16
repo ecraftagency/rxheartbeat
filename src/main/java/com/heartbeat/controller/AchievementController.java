@@ -1,6 +1,6 @@
 package com.heartbeat.controller;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.statics.VipData;

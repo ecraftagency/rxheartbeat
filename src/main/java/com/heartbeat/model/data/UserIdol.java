@@ -1,6 +1,6 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -10,7 +10,7 @@ import com.transport.model.Idols;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 public class UserIdol extends Idols {
   public static final int               CREATIVITY              = 2; //trí lực

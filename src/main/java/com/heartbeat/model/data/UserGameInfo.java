@@ -1,7 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.heartbeat.common.Utilities;
+import com.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -11,8 +11,8 @@ import com.transport.model.GameInfo;
 
 import java.util.HashMap;
 import java.util.List;
-import static com.heartbeat.common.Constant.*;
-import static com.heartbeat.common.Constant.USER_GAME_INFO.*;
+import static com.common.Constant.*;
+import static com.common.Constant.USER_GAME_INFO.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {

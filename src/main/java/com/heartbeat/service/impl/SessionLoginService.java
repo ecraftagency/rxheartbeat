@@ -1,7 +1,7 @@
 package com.heartbeat.service.impl;
 
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.Utilities;
+import com.common.Constant;
+import com.common.Utilities;
 import com.heartbeat.db.cb.CBCounter;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;

@@ -1,6 +1,6 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.statics.GroupMissionData.*;
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 public class UserGroup extends Group {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserGroup.class);

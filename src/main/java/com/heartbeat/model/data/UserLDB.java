@@ -14,7 +14,7 @@ import io.vertx.core.Handler;
 
 import java.util.*;
 
-import static com.heartbeat.common.Constant.LEADER_BOARD.*;
+import static com.common.Constant.LEADER_BOARD.*;
 
 public class UserLDB {
   private static final  EventLoop                                   ldbEventLoop;

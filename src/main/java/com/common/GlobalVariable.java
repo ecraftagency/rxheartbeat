@@ -1,4 +1,4 @@
-package com.heartbeat.common;
+package com.common;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;

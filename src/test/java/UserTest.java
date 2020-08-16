@@ -1,18 +1,13 @@
 import com.couchbase.client.java.ReactiveCluster;
 import com.couchbase.client.java.kv.GetResult;
 import com.heartbeat.HBServer;
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.Utilities;
+import com.common.Constant;
 import com.heartbeat.db.dao.PublicMailBoxDAO;
-import com.heartbeat.ranking.impl.LeaderBoard;
 import com.transport.model.MailObj;
-import com.transport.model.ScoreObj;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UserTest {
   public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

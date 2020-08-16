@@ -1,10 +1,10 @@
 package com.heartbeat.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.DeviceUID;
-import com.heartbeat.common.GlobalVariable;
-import com.heartbeat.common.Utilities;
+import com.common.Constant;
+import com.common.DeviceUID;
+import com.common.GlobalVariable;
+import com.common.Utilities;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 /*
 group ref count I/O

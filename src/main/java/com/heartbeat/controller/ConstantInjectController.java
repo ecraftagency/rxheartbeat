@@ -2,7 +2,7 @@ package com.heartbeat.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.service.ConstantInjector;
 import com.heartbeat.service.impl.MaydayInjector;
 import com.transport.ExtMessage;

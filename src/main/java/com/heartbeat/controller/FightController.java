@@ -1,7 +1,7 @@
 package com.heartbeat.controller;
 
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.Utilities;
+import com.common.Constant;
+import com.common.Utilities;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;

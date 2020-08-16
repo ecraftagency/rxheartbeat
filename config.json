@@ -1,7 +1,9 @@
 {
-  "HTTP.PORT":                            8080,
+  "NODE.ID" :                             1,
+  "NODE.IP" :                             "127.0.0.1",
+  "NODE.PORT":                            8080,
+  "NODE.NAME":                            "adam",
   "DB.HOST":                              "localhost",
-  "DB.PORT":                              "8091",
   "DB.USER":                              "Administrator",
   "DB.PWD":                               "n5t5lnsct",
   "ONLINE_INFO.ONLINE_HEARTBEAT_TIME":    30,

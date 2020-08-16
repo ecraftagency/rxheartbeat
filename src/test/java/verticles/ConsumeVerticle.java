@@ -11,10 +11,9 @@ public class ConsumeVerticle extends AbstractVerticle {
   private EventBus eventBus;
 
   @Override
-  public void start() throws Exception {
+  public void start() {
     assignEventBus();
     registerHandler();
-    SharedData sharedData = vertx.sharedData();
   }
 
   private void assignEventBus() {
@@ -42,3 +41,26 @@ public class ConsumeVerticle extends AbstractVerticle {
     });
   }
 }
+
+/*
+    syncMapTaskID = vertx.setPeriodic(Constant.SYSTEM_INFO.GATEWAY_NOTIFY_INTERVAL, id -> {
+      mgr.<Integer,Node>getAsyncMap("nodePool", ar -> {
+        if (ar.succeeded()) {
+          AsyncMap<Integer, Node> nodePool = ar.result();
+          nodePool.entries(ear -> {
+            if (ear.succeeded()) {
+              Map<Integer, Node> pool = ear.result();
+              for (Node node : pool.values())
+                System.out.println(node.nodeIp);
+            }
+            else {
+              LOGGER.error("error fetching entries from NodePool");
+            }
+          });
+        }
+        else {
+          LOGGER.error("error fetching NodePool");
+        }
+      });
+    });
+ */

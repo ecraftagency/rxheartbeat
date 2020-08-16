@@ -1,6 +1,6 @@
 package com.heartbeat.controller;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -9,7 +9,7 @@ import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 public class MediaController implements Handler<RoutingContext> {
   private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);

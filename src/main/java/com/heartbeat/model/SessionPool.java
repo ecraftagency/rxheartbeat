@@ -1,7 +1,7 @@
 package com.heartbeat.model;
 
-import com.heartbeat.common.Constant;
-import com.heartbeat.common.GlobalVariable;
+import com.common.Constant;
+import com.common.GlobalVariable;
 import com.statics.GameShowData;
 import com.statics.RunShowData;
 import com.statics.ShoppingData;

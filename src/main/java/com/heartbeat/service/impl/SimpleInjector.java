@@ -1,6 +1,6 @@
 package com.heartbeat.service.impl;
 
-import com.heartbeat.common.Utilities;
+import com.common.Utilities;
 import com.heartbeat.model.Session;
 import com.heartbeat.service.SessionInjector;
 

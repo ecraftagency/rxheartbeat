@@ -8,17 +8,17 @@ import com.transport.model.Idols;
 import com.transport.model.Mission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 import java.util.List;
 
-    @SuppressWarnings("unused")
-    public class UserMission extends Mission {
-      private static final Logger LOGGER = LoggerFactory.getLogger(UserMission.class);
+@SuppressWarnings("unused")
+public class UserMission extends Mission {
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserMission.class);
 
-      public static UserMission ofDefault() {
-        UserMission um      = new UserMission();
-        um.currentMissionId = 1;
+  public static UserMission ofDefault() {
+    UserMission um      = new UserMission();
+    um.currentMissionId = 1;
     um.currentCount     = 0;
     um.complete         = false;
     return um;
@@ -91,10 +91,10 @@ import java.util.List;
           if (queryType == ACHIEVEMENT.IDOL_SINGLE_QUERY) {
             int idolId  = dto.queryFormat.get(2);
             int cmpVal  = dto.queryFormat.get(3);
+            this.target = cmpVal;
             for (Idols.Idol idol : idols.idolMap.values())
               if (idol.id == idolId && idol.level >= cmpVal) {
                 this.currentCount = idol.level;
-                this.target = cmpVal;
                 return true;
               }
           }

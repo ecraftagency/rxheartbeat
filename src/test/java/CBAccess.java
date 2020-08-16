@@ -1,13 +1,11 @@
 import com.couchbase.client.java.ReactiveCluster;
-import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.Mapper;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBTitle;
 import com.transport.model.Title;
-import reactor.core.publisher.Mono;
 
 public class CBAccess {
   public static void main(String[] args) throws InterruptedException {

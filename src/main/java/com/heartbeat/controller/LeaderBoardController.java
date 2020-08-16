@@ -1,6 +1,5 @@
 package com.heartbeat.controller;
 
-import com.heartbeat.common.Constant;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;

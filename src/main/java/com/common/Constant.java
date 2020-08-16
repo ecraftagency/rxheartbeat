@@ -1,4 +1,4 @@
-package com.heartbeat.common;
+package com.common;
 
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.event.ExtEventInfo;
@@ -39,7 +39,11 @@ public class Constant {
   }
 
   public static class SYSTEM_INFO {
-    public static int     EVENT_LOOP_SLEEP_INV            = 1000; //millis
+    public static int     EVENT_LOOP_SLEEP_INV            = 1000;       //millis
+    public static String  GATEWAY_EVT_BUS                 = "gateway";
+    public static int     GATEWAY_NOTIFY_INTERVAL         = 1000;       //millis
+    public static int     NODE_HEARTBEAT_INTERVAL         = 5*1000;     //millis
+
   }
 
   public static class ONLINE_INFO {
@@ -57,9 +61,9 @@ public class Constant {
 
     // for anti IDLE drop
     public static final String  ID_INCR_KEY     = "HeartBeatOnlineUserID";
-    public static final int     ID_INIT         = 100000;
+    public static int           ID_INIT         = 100000;
     public static final String  GID_INCR_KEY    = "HeartBeatGroupID";
-    public static final int     GID_INIT        = 10000;
+    public static int           GID_INIT        = 10000;
   }
 
   public static class GROUP {

@@ -1,14 +1,14 @@
 package com.heartbeat.event;
 
-import com.heartbeat.common.GlobalVariable;
-import com.heartbeat.common.Utilities;
+import com.common.GlobalVariable;
+import com.common.Utilities;
 import com.heartbeat.model.data.UserRanking;
 import com.statics.RankingInfo;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import static com.heartbeat.common.Constant.RANKING.*;
+import static com.common.Constant.RANKING.*;
 
 public class ExtRankingInfo extends RankingInfo {
   public static ExtRankingInfo of() {

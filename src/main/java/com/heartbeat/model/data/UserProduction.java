@@ -1,6 +1,6 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
 import com.transport.EffectResult;

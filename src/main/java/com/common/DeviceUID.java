@@ -1,4 +1,4 @@
-package com.heartbeat.common;
+package com.common;
 
 import com.heartbeat.model.data.PaymentTransaction;
 

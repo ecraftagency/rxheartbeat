@@ -1,6 +1,6 @@
 package eventLoop;
 
-import com.heartbeat.common.GlobalVariable;
+import com.common.GlobalVariable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 

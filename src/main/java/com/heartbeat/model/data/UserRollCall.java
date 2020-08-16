@@ -1,6 +1,6 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Utilities;
+import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;

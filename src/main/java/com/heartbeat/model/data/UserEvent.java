@@ -1,6 +1,6 @@
 package com.heartbeat.model.data;
 
-import com.heartbeat.common.Constant;
+import com.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.event.ExtIdolEventInfo;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.heartbeat.common.Constant.*;
+import static com.common.Constant.*;
 
 public class UserEvent extends Event {
   public static UserEvent ofDefault() {
