@@ -116,7 +116,7 @@ public class HBServer extends AbstractVerticle {
     Config cconf = new Config();
     NetworkConfig network = cconf.getNetworkConfig();
     JoinConfig join = network.getJoin();
-    join.getMulticastConfig().setEnabled(false);
+    join.getMulticastConfig().setEnabled(false);//.setMulticastGroup("172.31.32.0").setMulticastPort(143);
     join.getTcpIpConfig().addMember("172.31.37.156").setEnabled(true);
     //network.getInterfaces().addInterface("172.31.38.195").addInterface("172.31.37.156").setEnabled(true);
 

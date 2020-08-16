@@ -29,7 +29,7 @@ public class HBGateway extends AbstractVerticle {
     Config conf = new Config();
     NetworkConfig network = conf.getNetworkConfig();
     JoinConfig join = network.getJoin();
-    join.getMulticastConfig().setEnabled(false);
+    join.getMulticastConfig().setEnabled(false);//.setMulticastGroup("172.31.32.0").setMulticastPort(143);
     join.getTcpIpConfig().addMember("172.31.38.195").setEnabled(true);
     //network.getInterfaces().setEnabled(true).addInterface("172.31.*.*");
 
