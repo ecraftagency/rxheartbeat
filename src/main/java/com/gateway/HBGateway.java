@@ -1,5 +1,6 @@
 package com.gateway;
 
+import com.common.LOG;
 import com.common.Utilities;
 import com.gateway.controller.InternalController;
 import com.common.Constant;
@@ -16,8 +17,6 @@ import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -26,8 +25,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class HBGateway extends AbstractVerticle {
-  private static final Logger LOGGER = LoggerFactory.getLogger(HBGateway.class);
-
   public static ClusterManager  mgr;
   public static EventBus        eventBus;
   public static List<String>    nodeIps;
@@ -62,7 +59,7 @@ public class HBGateway extends AbstractVerticle {
         System.out.println("HB Gateway Deployed, local IP: " + localIp);
       }
       else {
-        LOGGER.error(res.cause().getMessage());
+        LOG.globalException(res.cause());
       }
     });
   }

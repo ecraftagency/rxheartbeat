@@ -1,9 +1,8 @@
 package com.gateway;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.transport.model.Node;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -12,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class NodePool {
-  private static final Logger LOGGER = LoggerFactory.getLogger(NodePool.class);
   static ConcurrentHashMap<Integer, Node> pool = new ConcurrentHashMap<>();
 
   public static Node getNodeFromPool(int nodeId) {
@@ -42,7 +40,7 @@ public class NodePool {
         }
       }
       catch (Exception ex) {
-        LOGGER.error(ex.getMessage());
+        LOG.globalException(ex);
       }
     }
     return nodes;
