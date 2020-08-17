@@ -1,5 +1,6 @@
 package com.heartbeat;
 
+import com.common.Log;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCluster;
 import com.diabolicallabs.vertx.cron.CronObservable;
@@ -17,6 +18,7 @@ import com.heartbeat.model.data.UserFight;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.model.data.UserLDB;
 import com.statics.*;
+import com.transport.model.Event;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.vertx.config.ConfigRetriever;
@@ -87,6 +89,8 @@ public class HBServer extends AbstractVerticle {
   public static String  nodeBus   = "";
   public static int     nodeId    = 0;
   public static String  nodeName  = "";
+  public static String  gatewayIP = "";
+  public static String  localIP   = "";
 
   public static void main(String[] args) throws IOException {
     String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
@@ -113,21 +117,22 @@ public class HBServer extends AbstractVerticle {
     }));
 
 
-    Config cconf = new Config();
-    NetworkConfig network = cconf.getNetworkConfig();
+    Config clusterOption = new Config();
+    NetworkConfig network = clusterOption.getNetworkConfig();
     JoinConfig join = network.getJoin();
-    join.getMulticastConfig().setEnabled(false);//.setMulticastGroup("172.31.32.0").setMulticastPort(143);
-    join.getTcpIpConfig().addMember("172.31.37.156").setEnabled(true);
-    //network.getInterfaces().addInterface("172.31.38.195").addInterface("172.31.37.156").setEnabled(true);
+    join.getMulticastConfig().setEnabled(false);
+    join.getTcpIpConfig().addMember(gatewayIP).setEnabled(true);
 
-    mgr = new HazelcastClusterManager(cconf);
+    mgr = new HazelcastClusterManager(clusterOption);
 
-    VertxOptions options = new VertxOptions().setClusterManager(mgr).setClusterHost("172.31.38.195");
+    VertxOptions options = new VertxOptions().setClusterManager(mgr).setClusterHost(localIP);
 
     Vertx.clusteredVertx(options, res -> {
       if (res.succeeded()) {
         Vertx vertx = res.result();
         eventBus = vertx.eventBus();
+        System.out.println(eventBus);
+        scheduleTask(vertx);
         vertx.deployVerticle(HBServer.class.getName());
         System.out.println("HB Server Deployed");
       }
@@ -137,7 +142,6 @@ public class HBServer extends AbstractVerticle {
   @Override
   public void init(Vertx vertx, Context context) {
     super.init(vertx, context);
-    scheduleTask(vertx);
   }
 
   @Override
@@ -222,6 +226,8 @@ public class HBServer extends AbstractVerticle {
     nodeIp                                 = localConfig.getString("NODE.IP");
     nodePort                               = localConfig.getInteger("NODE.PORT");
     nodeName                               = localConfig.getString("NODE.NAME");
+    gatewayIP                              = localConfig.getString("GATEWAY_IP");
+    localIP                                = localConfig.getString("NODE.LOCAL_IP");
     DB.HOST                                = localConfig.getString("DB.HOST");
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");
@@ -230,7 +236,7 @@ public class HBServer extends AbstractVerticle {
     SCHEDULE.TIME_ZONE                     = localConfig.getString("SCHEDULE.TIMEZONE");
     if (nodeId > 0) {
       DB.ID_INIT                           = nodeId*1000000;
-      DB.GID_INIT                          = nodeId*1000;
+      DB.GID_INIT                          = nodeId*10000;
       nodeBus                              = String.format("%d.%s.bus", nodeId, nodeName);
     }
     else {
@@ -248,7 +254,13 @@ public class HBServer extends AbstractVerticle {
       jsonMessage.put("nodeName", nodeName);
       jsonMessage.put("nodeBus", nodeBus);
       jsonMessage.put("nodeCcu", SessionPool.getCCU());
-      eventBus.send(SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
+      try {
+        EventBus eb = vertx.eventBus();
+        eb.send(SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
+      }
+      catch (Exception e) {
+        Log.writeGlobalExceptionLog(e);
+      }
     });
 
     Scheduler scheduler = RxHelper.scheduler(vertx);

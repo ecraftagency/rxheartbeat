@@ -40,10 +40,13 @@ public class Constant {
 
   public static class SYSTEM_INFO {
     public static int     EVENT_LOOP_SLEEP_INV            = 1000;       //millis
-    public static String  GATEWAY_EVT_BUS                 = "gateway";
+    public static String  GATEWAY_EVT_BUS                 = "balancer";
     public static int     GATEWAY_NOTIFY_INTERVAL         = 1000;       //millis
     public static int     NODE_HEARTBEAT_INTERVAL         = 5*1000;     //millis
+  }
 
+  public static class GAME_FUNCTIONS {
+    public static boolean USE_GLOBAL_FILE_LOG             = true;
   }
 
   public static class ONLINE_INFO {

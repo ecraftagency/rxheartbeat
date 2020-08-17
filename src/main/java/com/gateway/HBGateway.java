@@ -1,8 +1,10 @@
 package com.gateway;
 
+import com.common.Utilities;
 import com.gateway.controller.InternalController;
 import com.common.Constant;
 import com.gateway.controller.NodeController;
+import com.google.gson.reflect.TypeToken;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.config.NetworkConfig;
@@ -17,31 +19,47 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 public class HBGateway extends AbstractVerticle {
   private static final Logger LOGGER = LoggerFactory.getLogger(HBGateway.class);
 
   public static ClusterManager  mgr;
   public static EventBus        eventBus;
+  public static List<String>    nodeIps;
+  public static String          localIp;
+  public static JsonObject      localConfig;
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
+    String config           = new String(Files.readAllBytes(Paths.get("nodes.json")));
+    localConfig             = new JsonObject(config);
+    Type listOfString       = new TypeToken<List<String>>() {}.getType();
+    nodeIps                 = Utilities.gson.fromJson(localConfig.getJsonArray("nodes").toString(), listOfString);
+    localIp                 = localConfig.getString("localIP");
+
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 
-    Config conf = new Config();
-    NetworkConfig network = conf.getNetworkConfig();
+    Config clusterOption = new Config();
+    NetworkConfig network = clusterOption.getNetworkConfig();
     JoinConfig join = network.getJoin();
     join.getMulticastConfig().setEnabled(false);//.setMulticastGroup("172.31.32.0").setMulticastPort(143);
-    join.getTcpIpConfig().addMember("172.31.38.195").setEnabled(true);
-    //network.getInterfaces().setEnabled(true).addInterface("172.31.*.*");
+    for (String node : nodeIps)
+      join.getTcpIpConfig().addMember(node);
+    join.getTcpIpConfig().setEnabled(true);
 
-    mgr = new HazelcastClusterManager(conf);
-    VertxOptions options = new VertxOptions().setClusterManager(mgr).setClusterHost("172.31.37.156");
+    mgr = new HazelcastClusterManager(clusterOption);
+    VertxOptions options = new VertxOptions().setClusterManager(mgr).setClusterHost(localIp);
 
     Vertx.clusteredVertx(options, res -> {
       if (res.succeeded()) {
         Vertx vertx = res.result();
         eventBus = vertx.eventBus();
         vertx.deployVerticle(HBGateway.class.getName());
-        System.out.println("HB Gateway Deployed");
+        System.out.println("HB Gateway Deployed, local IP: " + localIp);
       }
       else {
         LOGGER.error(res.cause().getMessage());
