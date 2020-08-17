@@ -2,6 +2,7 @@ package com.transport.model;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class Node implements Serializable {
   public int        id;
   public String     ip;
@@ -10,6 +11,34 @@ public class Node implements Serializable {
   public String     bus;
   public String     name;
   public long       lastSync;
+
+  public int getId() {
+    return id;
+  }
+
+  public int getCcu() {
+    return ccu;
+  }
+
+  public String getIp() {
+    return ip;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public String getBus() {
+    return bus;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public long getLastSync() {
+    return lastSync;
+  }
 
   public static Node of() {
     return new Node();
@@ -21,7 +50,7 @@ public class Node implements Serializable {
     node.ip       = ip;
     node.name     = name;
     node.bus      = bus;
-    node.ccu      = ccu;
+    node.ccu = ccu;
     node.lastSync = System.currentTimeMillis();
     return node;
   }

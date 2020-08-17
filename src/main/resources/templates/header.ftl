@@ -8,7 +8,7 @@
         rel="stylesheet"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
-  <title>${title} | A Sample Vert.x-powered Wiki</title>
+  <title>${title}</title>
 </head>
 <body>
 
