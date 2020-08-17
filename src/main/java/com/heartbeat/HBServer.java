@@ -18,7 +18,6 @@ import com.heartbeat.model.data.UserFight;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.model.data.UserLDB;
 import com.statics.*;
-import com.transport.model.Event;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.vertx.config.ConfigRetriever;
@@ -98,9 +97,9 @@ public class HBServer extends AbstractVerticle {
     overrideConstant();
 
     rxCluster       = ReactiveCluster.connect(Constant.DB.HOST, Constant.DB.USER, Constant.DB.PWD);
-    rxSessionBucket = HBServer.rxCluster.bucket("sessions");
-    rxIndexBucket   = HBServer.rxCluster.bucket("index");
-    rxPersistBucket = HBServer.rxCluster.bucket("persist");
+    rxSessionBucket = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.SESSION_BUCKET));
+    rxIndexBucket   = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.INDEX_BUCKET));
+    rxPersistBucket = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.PERSIST_BUCKET));
 
     //for logging backend
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
@@ -210,7 +209,7 @@ public class HBServer extends AbstractVerticle {
         HttpServerOptions options = new HttpServerOptions().setSsl(true).setKeyStoreOptions(
                 new JksOptions().setPath("keystore.jks").setPassword("changeit")
         );
-        vertx.createHttpServer()
+        vertx.createHttpServer(options)
                 .requestHandler(router).listen(nodePort);
 
         startPromise.complete();
@@ -231,7 +230,6 @@ public class HBServer extends AbstractVerticle {
     DB.HOST                                = localConfig.getString("DB.HOST");
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");
-    DB.BUCKET_PREFIX                       = localConfig.getString("DB.PREFIX");
     ONLINE_INFO.ONLINE_HEARTBEAT_TIME      = localConfig.getInteger("ONLINE_INFO.ONLINE_HEARTBEAT_TIME");
     SCHEDULE.TIME_ZONE                     = localConfig.getString("SCHEDULE.TIMEZONE");
     if (nodeId > 0) {

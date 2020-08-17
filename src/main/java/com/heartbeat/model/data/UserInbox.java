@@ -65,6 +65,8 @@ public class UserInbox extends Inbox {
   }
 
   public static long checkNewMessage(long lastCheck) {
+    if (publicInbox.size() == 0)
+      return 0L;
     MailObj obj = publicInbox.getLast();
     if (obj == null || lastCheck >= obj.id)
       return 0L;

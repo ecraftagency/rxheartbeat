@@ -1,14 +1,13 @@
 {
-  "NODE.ID" :                             1,
-  "NODE.IP" :                             "127.0.0.1",
-  "NODE.PORT":                            8080,
+  "NODE.ID" :                             2,
+  "NODE.IP" :                             "192.168.1.11",
+  "NODE.PORT":                            8002,
   "NODE.NAME":                            "adam",
-  "NODE.LOCAL_IP" :                       "127.0.0.1",
-  "GATEWAY_IP" :                          "127.0.0.1",
+  "NODE.LOCAL_IP" :                       "192.168.1.11",
+  "GATEWAY_IP" :                          "192.168.1.11",
   "DB.HOST":                              "localhost",
   "DB.USER":                              "Administrator",
   "DB.PWD":                               "n5t5lnsct",
-  "DB.PREFIX" :                           "VN",
   "ONLINE_INFO.ONLINE_HEARTBEAT_TIME":    30,
   "SCHEDULE.TIMEZONE":                    "Asia/Ho_Chi_Minh"
 }

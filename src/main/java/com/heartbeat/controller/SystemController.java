@@ -1,6 +1,7 @@
 package com.heartbeat.controller;
 
 import com.common.Constant;
+import com.common.Log;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
@@ -41,7 +42,7 @@ public class SystemController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      Log.writeGlobalExceptionLog(e);
       ctx.response().setStatusCode(404).end();
     }
   }
