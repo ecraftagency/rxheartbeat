@@ -1,10 +1,10 @@
 {
   "NODE.ID" :                             2,
-  "NODE.IP" :                             "192.168.1.11",
+  "NODE.IP" :                             "127.0.0.1",
   "NODE.PORT":                            8002,
   "NODE.NAME":                            "adam",
-  "NODE.LOCAL_IP" :                       "192.168.1.11",
-  "GATEWAY_IP" :                          "192.168.1.11",
+  "NODE.LOCAL_IP" :                       "127.0.0.1",
+  "GATEWAY_IP" :                          "127.0.0.1",
   "DB.HOST":                              "localhost",
   "DB.USER":                              "Administrator",
   "DB.PWD":                               "n5t5lnsct",

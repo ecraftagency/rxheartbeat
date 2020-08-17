@@ -43,10 +43,11 @@ public class Constant {
     public static String  GATEWAY_EVT_BUS                 = "balancer";
     public static int     GATEWAY_NOTIFY_INTERVAL         = 1000;       //millis
     public static int     NODE_HEARTBEAT_INTERVAL         = 5*1000;     //millis
-  }
-
-  public static class GAME_FUNCTIONS {
+    public static boolean USE_SSL                         = true;
     public static boolean USE_GLOBAL_FILE_LOG             = true;
+    public static boolean USE_CONSOLE_LOG                 = true;
+    public static boolean USE_POOL_LOG                    = true;
+
   }
 
   public static class ONLINE_INFO {

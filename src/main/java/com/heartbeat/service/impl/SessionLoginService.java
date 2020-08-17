@@ -1,6 +1,7 @@
 package com.heartbeat.service.impl;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.db.cb.CBCounter;
 import com.heartbeat.db.cb.CBSession;
@@ -12,12 +13,9 @@ import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("unused")
 public class SessionLoginService implements AuthService {
-  private static final Logger LOGGER = LoggerFactory.getLogger(SessionLoginService.class);
 
   @Override
   public void processLogin(LoginRequest request, long curMs, Handler<AsyncResult<Profile>> handler) {
@@ -70,7 +68,7 @@ public class SessionLoginService implements AuthService {
     Session oldSession = SessionPool.getSessionFromPool(userID);
     if (oldSession != null) {
       if (oldSession.id == userID && oldSession.userProfile.password.equals(password)) {
-        LOGGER.warn(String.format("Kick login. sessionId: %d", userID));
+        LOG.authException(String.format("Kick login. sessionId: %d", userID));
         Profile profile = handleLoginResult("kick", oldSession, snsToken, request);
         handler.handle(Future.succeededFuture(profile));
       }
@@ -203,7 +201,7 @@ public class SessionLoginService implements AuthService {
         if (!clientVersion.isEmpty())
           session.userProfile.clientVersion = Integer.parseInt(clientVersion);
 
-        LOGGER.info("createNewPlayer - userID: " + strUserID);
+        LOG.console("createNewPlayer - userID: " + strUserID);
 
         handler.handle(Future.succeededFuture(session));
       }

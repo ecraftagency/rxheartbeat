@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.common.LOG;
 import com.heartbeat.service.AuthService;
 import com.heartbeat.service.impl.SessionLoginService;
 import com.transport.ExtMessage;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AuthController implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
   public static final int TOKEN_EXPIRE_TIME       = 24*60; //minutes
   private AuthService authService;
 
@@ -47,7 +47,7 @@ public class AuthController implements Handler<RoutingContext> {
       }
       else {
         resp.msg = ar.cause().getMessage();
-        LOGGER.error(ar.cause().getMessage());
+        LOG.authException(ar.cause());
       }
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
     });

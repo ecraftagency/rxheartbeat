@@ -38,6 +38,21 @@
         </encoder>
     </appender>
 
+    <appender name="pool_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/pool_exception.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/pool_exception.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20MB</totalSizeCap>
+        </rollingPolicy>
+
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!--appender name="auth_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/auth_exception.log</file>
         <append>true</append>
@@ -58,16 +73,16 @@
         </encoder>
     </appender-->
 
-    <logger name="com.heartbeat.service.impl.SessionLoginService" level="error" additivity="true">
-        <appender-ref ref="auth_exception"/>
-    </logger>
-
-    <logger name="com.heartbeat.controller.AuthController" level="error" additivity="true">
+    <logger name="auth_exception" level="info" additivity="true">
         <appender-ref ref="auth_exception"/>
     </logger>
 
     <logger name="global_exception" level="info" additivity="true">
         <appender-ref ref="global_exception"/>
+    </logger>
+
+    <logger name="pool_exception" level="info" additivity="true">
+        <appender-ref ref="pool_exception"/>
     </logger>
 
     <root level="info">

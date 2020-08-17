@@ -1,6 +1,7 @@
 package com.heartbeat.controller;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -10,14 +11,10 @@ import com.statics.OfficeData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 import static com.common.Constant.*;
 
 public class ProfileController implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProfileController.class);
-
   @Override
   public void handle(RoutingContext ctx) {
     try {
@@ -63,7 +60,7 @@ public class ProfileController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
     }
   }

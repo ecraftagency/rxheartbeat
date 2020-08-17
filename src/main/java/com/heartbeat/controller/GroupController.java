@@ -1,9 +1,10 @@
 package com.heartbeat.controller;
 
+import com.common.LOG;
 import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
-import com.common.Constant;
+import static com.common.Constant.*;
 import com.common.GlobalVariable;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.model.GroupPool;
@@ -18,11 +19,8 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GroupController implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GroupController.class);
 
   @Override
   public void handle(RoutingContext ctx) {
@@ -92,7 +90,7 @@ public class GroupController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
     }
   }
@@ -205,21 +203,26 @@ public class GroupController implements Handler<RoutingContext> {
   }
 
   private static void fetchGroups(Handler<AsyncResult<String>> handler) {
-    HBServer.rxCluster.query("SELECT * from `persist` WHERE docType = \"group\"")
+    String bucket = String.format("%s%d_%s", DB.BUCKET_PREFIX, HBServer.nodeId, DB.PERSIST_BUCKET);
+    String query  = String.format("SELECT * from `%s` WHERE docType = \"group\"", bucket);
+    HBServer.rxCluster.query(query)
             .flatMapMany(ReactiveQueryResult::rowsAsObject).collectList().subscribe(
             ar -> {
               StringBuilder builder = GlobalVariable.stringBuilder.get();
               builder.append("[");
               for (int i = 0; i < ar.size(); i++) {
                 JsonObject row = ar.get(i);
-                builder.append(row.getObject("persist"));
+                builder.append(row.getObject(bucket));
                 if (i < ar.size() - 1)
                   builder.append(",");
               }
               builder.append("]");
               handler.handle(Future.succeededFuture(builder.toString()));
             },
-            er -> handler.handle(Future.succeededFuture("[]"))
+            er -> {
+              handler.handle(Future.succeededFuture("[]"));
+              LOG.globalException(er.getCause());
+            }
     );
   }
 
@@ -269,13 +272,13 @@ public class GroupController implements Handler<RoutingContext> {
     UserGroup group;
     if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
       group.calcMissionHitMember();
-      group.strStartDate    = Constant.GROUP.EVENT_START;
-      group.strEndDate      = Constant.GROUP.EVENT_END;
-      group.missions        = GroupMissionData.missionMap;
-      group.missionStartDate = Constant.GROUP.missionStart;
-      group.missionEndDate = Constant.GROUP.missionEnd;
-      resp.data.group       = group;
-      resp.msg              = "ok";
+      group.strStartDate      = GROUP.EVENT_START;
+      group.strEndDate        = GROUP.EVENT_END;
+      group.missions          = GroupMissionData.missionMap;
+      group.missionStartDate  = GROUP.missionStart;
+      group.missionEndDate    = GROUP.missionEnd;
+      resp.data.group         = group;
+      resp.msg                = "ok";
     }
     else if (session.groupID == Group.GROUP_ID_TYPE_KICK) {
       resp.msg        = "user_group_delay";

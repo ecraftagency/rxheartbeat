@@ -1,10 +1,7 @@
 package com.heartbeat.model;
 
+import com.common.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.common.Constant;
-import com.common.DeviceUID;
-import com.common.GlobalVariable;
-import com.common.Utilities;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
@@ -16,8 +13,6 @@ import com.transport.model.Group;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +27,6 @@ session close   -> --
  */
 @SuppressWarnings("unused")
 public class Session {
-  private static final Logger LOGGER = LoggerFactory.getLogger(Session.class);
   transient public int        id;
   transient public int        m_ping_count;
   transient public boolean    isClose;
@@ -129,7 +123,7 @@ public class Session {
   public void sync(CBSession cba) {
     cba.sync(Integer.toString(id), this, ar -> {
       if (ar.failed())
-        LOGGER.error(ar.cause().getMessage());
+        LOG.poolException(ar);
     });
   }
 
@@ -261,7 +255,7 @@ public class Session {
       }
     }
     catch(Exception ex) {
-      LOGGER.error(ex.getMessage());
+      LOG.authException(ex);
     }
   }
 
@@ -334,7 +328,7 @@ public class Session {
         // try for next login
         CBGroup.getInstance().load(oldGid, loadRes -> {
           if (loadRes.succeeded()) {
-            LOGGER.error("red alert: groupID zero but have sid_gid mapping and even a persistent group");
+            LOG.globalException("red alert: groupID zero but have sid_gid mapping and even a persistent group");
             handler.handle(Future.failedFuture("delay"));
           }
           else { //have sid_gid mapping but don't have persistent group, ok (mean member of last delete group)
@@ -401,7 +395,7 @@ public class Session {
           }
         }
         catch (Exception e) {
-          LOGGER.error(e.getMessage());
+          LOG.globalException(e);
           groupID = Group.GROUP_ID_TYPE_NONE;
           handler.handle(Future.succeededFuture("ok"));
         }
@@ -476,7 +470,7 @@ public class Session {
           handler.handle(Future.failedFuture("join_group_delay"));
         }
         else if (Group.isValidGid(oldGID)) { //fuck map say valid gid, but runtime gid == 0
-          LOGGER.error("alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
+          LOG.globalException("alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
           handler.handle(Future.failedFuture("join_group_fail runtime and persistent mismatch"));
         }
         else {
@@ -523,7 +517,7 @@ public class Session {
       UserGroup group = GroupPool.getGroupFromPool(groupID);
       if (group == null) { //todo critical
         String err = String.format("leave_group_fail_[sid:%d,gid:%d,runtime:%s,members:%s]",id, groupID, "no", "_");
-        LOGGER.error(err);
+        LOG.globalException(err);
         return err;
       }
 
@@ -540,7 +534,7 @@ public class Session {
       }
       else { //todo critical
         String err = String.format("leave_group_fail_[sid:%d,gid:%d,runtime:%s,members:%s]",id, groupID, "valid", "no");
-        LOGGER.error(err);
+        LOG.globalException(err);
         return err;
       }
     }
@@ -554,7 +548,7 @@ public class Session {
     UserGroup group = GroupPool.getGroupFromPool(this.groupID);
     if (group == null) {
       String err = String.format("user_have_no_group[sid:%d,gid:%d,runtime:%s]",id, groupID, "no");
-      LOGGER.error(err);
+      LOG.globalException(err);
       return err;
     }
 
@@ -589,7 +583,7 @@ public class Session {
       }
       catch (Exception e) {
         //malform
-        LOGGER.error(String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
+        LOG.globalException(String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
         CBMapper.getInstance().unmap(Integer.toString(memberId), ar -> {});
         group.removePendingMember(memberId);
         return "approve_fail_unknown";
@@ -683,7 +677,7 @@ public class Session {
         session.sync(cbAccess);
       }
       catch(Exception ex) {
-        LOGGER.error(ex.getMessage());
+        LOG.poolException(ex);
       }
     }
   };

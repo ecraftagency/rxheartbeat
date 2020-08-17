@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.common.LOG;
 import com.heartbeat.db.cb.CBTitle;
 import com.heartbeat.effect.TitleEffectHandler;
 import com.heartbeat.model.Session;
@@ -9,12 +10,8 @@ import com.transport.model.Title;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TitleController implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
-
   @Override
   public void handle(RoutingContext ctx) {
     try {
@@ -48,7 +45,7 @@ public class TitleController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
     }
   }

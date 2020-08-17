@@ -8,9 +8,6 @@ import com.heartbeat.model.Session;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import static com.couchbase.client.java.kv.LookupInSpec.get;
 
@@ -21,7 +18,6 @@ import static com.couchbase.client.java.kv.LookupInSpec.get;
 
 @SuppressWarnings("unused")
 public class CBSession implements Cruder<Session> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CBSession.class);
   private ReactiveBucket    rxSessionBucket;
   private CBSession() {
     rxSessionBucket = HBServer.rxSessionBucket;
@@ -43,20 +39,25 @@ public class CBSession implements Cruder<Session> {
   @Override
   public void load(String id, String password, Handler<AsyncResult<Session>> handler) {
     rxSessionBucket.defaultCollection().lookupIn(id,
-      Collections.singletonList(get("userProfile.password"))).subscribe(res -> {
-        String pwd = res.contentAs(0, String.class);
-        if (password.equals(pwd)) {
-          load(id, ar -> {
-            if (ar.succeeded())
-              handler.handle(Future.succeededFuture(ar.result()));
-            else
-              handler.handle(Future.failedFuture(ar.cause()));
-          });
+      Collections.singletonList(get("userProfile.password"))).subscribe(
+        res -> {
+          String pwd = res.contentAs(0, String.class);
+          if (password.equals(pwd)) {
+            load(id, ar -> {
+              if (ar.succeeded())
+                handler.handle(Future.succeededFuture(ar.result()));
+              else
+                handler.handle(Future.failedFuture(ar.cause()));
+            });
+          }
+          else {
+            handler.handle(Future.failedFuture("wrong_pwd"));
+          }
+        },
+        err -> {
+          handler.handle(Future.failedFuture("wrong_id"));
         }
-        else {
-          handler.handle(Future.failedFuture("wrong_pwd"));
-        }
-    });
+    );
   }
 
   @Override

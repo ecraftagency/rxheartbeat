@@ -1,6 +1,7 @@
 package com.heartbeat.controller;
 
 
+import com.common.LOG;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -16,8 +17,6 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.List;
 
 public class ItemController implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
-
   @Override
   public void handle(RoutingContext ctx) {
     try {
@@ -63,7 +62,7 @@ public class ItemController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
     }
   }

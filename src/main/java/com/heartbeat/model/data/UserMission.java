@@ -6,16 +6,11 @@ import com.heartbeat.model.Session;
 import com.statics.MissionData;
 import com.transport.model.Idols;
 import com.transport.model.Mission;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import static com.common.Constant.*;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class UserMission extends Mission {
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserMission.class);
-
   public static UserMission ofDefault() {
     UserMission um      = new UserMission();
     um.currentMissionId = 1;

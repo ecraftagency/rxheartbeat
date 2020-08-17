@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -8,8 +9,6 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.statics.GroupMissionData;
 import com.transport.model.Group;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,8 +19,6 @@ import static com.statics.GroupMissionData.*;
 import static com.common.Constant.*;
 
 public class UserGroup extends Group {
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserGroup.class);
-
   public static UserGroup of(int id, Session session, int joinType, String externalInform, String internalInform, String name) {
     UserGroup re          = new UserGroup();
     re.id                 = id;
@@ -160,12 +157,14 @@ public class UserGroup extends Group {
   public void addRecord(Session session, int cas, int missionId, int amount) {
     Member member = members.get(session.id);
     if (member == null) {
-      LOGGER.error("member_not_found");
+      LOG.globalException("group_mission: member not found,",
+              "memberID: ", session.id, "groupId: ", id);
       return;
     }
     Mission mission = member.missions.get(missionId);
     if (mission == null) {
-      LOGGER.error("mission_not_found");
+      LOG.globalException("group_mission: mission not found,",
+              "memberID: ", session.id, "groupId: ", id, "missionId ", missionId);
       return;
     }
 

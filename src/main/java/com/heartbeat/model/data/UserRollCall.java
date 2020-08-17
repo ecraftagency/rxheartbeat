@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -9,14 +10,9 @@ import com.statics.GiftCardData;
 import com.statics.VipData;
 import com.statics.VipGiftData;
 import com.transport.model.RollCall;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public class UserRollCall extends RollCall {
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserRollCall.class);
-
   public static UserRollCall ofDefault() {
     UserRollCall rollCall       = new UserRollCall();
     rollCall.nClaimedDays       = 0;
@@ -64,7 +60,7 @@ public class UserRollCall extends RollCall {
         entry.getValue().lastClaimTime  = 0;
         entry.getValue().todayClaim     = false;
         String err = String.format("data_inconsistency[sessionId:%d, giftType:%d]", session.id, entry.getKey());
-        LOGGER.error(err);
+        LOG.globalException(err);
         continue;
       }
 
@@ -125,7 +121,7 @@ public class UserRollCall extends RollCall {
       currentVipLevel = cur.level;
       if (cur.level > VipGiftData.vipGiftDtoMap.size()) {
         String err = String.format("data_inconsistency[curVipLevel:%d,vipGiftSize:%d]",cur.level, VipGiftData.vipGiftDtoMap.size());
-        LOGGER.error(err);
+        LOG.globalException(err);
       }
       return "mission_impossible";
     }

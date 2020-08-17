@@ -2,10 +2,9 @@ package com.heartbeat.model;
 
 import com.common.Constant;
 import com.common.GlobalVariable;
+import com.common.LOG;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.model.data.UserGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 // Group set is a subset of Session set
 @SuppressWarnings("unused")
 public class GroupPool {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GroupPool.class);
   static ConcurrentHashMap<Integer, UserGroup> pool = new ConcurrentHashMap<>();
 
   public static UserGroup getGroupFromPool(int groupID) {
@@ -42,7 +40,7 @@ public class GroupPool {
         }
       }
       catch (Exception ex) {
-        LOGGER.error(ex.getMessage());
+        LOG.poolException(ex);
       }
     }
   }
@@ -61,14 +59,14 @@ public class GroupPool {
             CBGroup.getInstance().sync(Integer.toString(group.id), group, ar -> {
               group.isChange = false;
               if (!ar.succeeded())
-                LOGGER.error(ar.cause().getMessage());
+                LOG.poolException(e);
             });
           }
         }
         //LOGGER.info("Group online " + pool.size());
       }
       catch (Exception e) {
-        LOGGER.error(e.getMessage());
+        LOG.poolException(e);
       }
       GlobalVariable.schThreadPool.schedule(this,
               Constant.ONLINE_INFO.SYNC_GROUP_INTERVAL, TimeUnit.MILLISECONDS);

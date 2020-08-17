@@ -1,6 +1,6 @@
 package com.heartbeat;
 
-import com.common.Log;
+import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCluster;
 import com.diabolicallabs.vertx.cron.CronObservable;
@@ -30,7 +30,6 @@ import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -65,7 +64,7 @@ import static com.common.Constant.*;
 // don't share data by communication, communication by sharing data
 @SuppressWarnings("unused")
 public class HBServer extends AbstractVerticle {
-  private static final Logger     LOGGER = LoggerFactory.getLogger(HBServer.class);
+  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HBServer.class);
 
   public static Cruder<Session>  cruder;
   public static ReactiveCluster  rxCluster;
@@ -257,7 +256,7 @@ public class HBServer extends AbstractVerticle {
         eb.send(SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
       }
       catch (Exception e) {
-        Log.writeGlobalExceptionLog(e);
+        LOG.globalException(e);
       }
     });
 

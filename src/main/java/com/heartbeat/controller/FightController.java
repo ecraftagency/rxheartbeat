@@ -1,6 +1,7 @@
 package com.heartbeat.controller;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
@@ -14,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 public class FightController implements Handler<RoutingContext> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(FightController.class);
-
   @Override
   public void handle(RoutingContext ctx) {
     try {
@@ -74,7 +73,7 @@ public class FightController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
     }
   }

@@ -2,12 +2,10 @@ package com.heartbeat.model;
 
 import com.common.Constant;
 import com.common.GlobalVariable;
+import com.common.LOG;
 import com.statics.GameShowData;
 import com.statics.RunShowData;
 import com.statics.ShoppingData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class SessionPool {
-  private static final Logger LOGGER = LoggerFactory.getLogger(SessionPool.class);
   static ConcurrentHashMap<Integer, Session> pool = new ConcurrentHashMap<>();
   private static int maxCCU;
   public static int maxTime;
@@ -57,7 +54,7 @@ public class SessionPool {
           session.close();
       }
       catch (Exception ex) {
-        LOGGER.error(ex.getMessage());
+        LOG.poolException(ex);
       }
     }
   }
@@ -83,7 +80,7 @@ public class SessionPool {
         //LOGGER.info("Session online " + pool.size());
       }
       catch(Exception ex) {
-        LOGGER.error(ex.getMessage());
+        LOG.poolException(ex);
       }
       GlobalVariable.schThreadPool.schedule(this,
               Constant.ONLINE_INFO.ONLINE_HEARTBEAT_CHECK_INTERVAL, TimeUnit.MILLISECONDS);
@@ -115,7 +112,7 @@ public class SessionPool {
       }
     }
     catch(Exception ex) {
-      LOGGER.error(ex.getMessage());
+      LOG.poolException(ex);
     }
   };
 
@@ -133,7 +130,7 @@ public class SessionPool {
       }
     }
     catch(Exception ex) {
-      LOGGER.error(ex.getMessage());
+      LOG.poolException(ex);
     }
   };
 }
