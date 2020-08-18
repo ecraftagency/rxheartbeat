@@ -1,6 +1,7 @@
 package com.heartbeat.event;
 
 import com.common.GlobalVariable;
+import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.model.data.UserRanking;
 import com.statics.RankingInfo;
@@ -66,6 +67,7 @@ public class ExtRankingInfo extends RankingInfo {
       endTime       = -1;
       this.strStart = "";
       this.strEnd   = "";
+      LOG.globalException(" Đua top cá nhân: event time invalid");
     }
   }
 }

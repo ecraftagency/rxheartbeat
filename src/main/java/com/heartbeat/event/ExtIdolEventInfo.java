@@ -1,5 +1,6 @@
 package com.heartbeat.event;
 
+import com.common.LOG;
 import com.common.Utilities;
 import com.statics.IdolEventInfo;
 
@@ -42,6 +43,7 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
+      LOG.globalException(" Nhóm Idol Đặt Biệt: event time invalid");
     }
   }
 

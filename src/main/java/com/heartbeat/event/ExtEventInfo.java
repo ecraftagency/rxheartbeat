@@ -1,5 +1,6 @@
 package com.heartbeat.event;
 
+import com.common.LOG;
 import com.common.Utilities;
 import com.statics.EventInfo;
 
@@ -38,6 +39,7 @@ public class ExtEventInfo extends EventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
+      LOG.globalException(" Thưởng hạn giờ: event time invalid");
     }
   }
 
