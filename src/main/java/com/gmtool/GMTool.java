@@ -2,6 +2,7 @@ package com.gmtool;
 
 import com.common.LOG;
 import com.gmtool.handler.IndexHandler;
+import com.gmtool.handler.UserHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.config.NetworkConfig;
@@ -9,6 +10,7 @@ import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.spi.cluster.ClusterManager;
+import io.vertx.ext.auth.User;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -69,6 +71,7 @@ public class GMTool extends AbstractVerticle {
     router.route().handler(BodyHandler.create());
     router.route().handler(StaticHandler.create());
     router.get("/").handler(new IndexHandler());
+    router.get("/user").handler(new UserHandler());
 
     vertx.createHttpServer().requestHandler(router).listen(3000);
     startPromise.complete();

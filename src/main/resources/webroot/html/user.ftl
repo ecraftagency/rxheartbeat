@@ -15,5 +15,13 @@
     </nav>
 </div>
 
+<div class="row">
+  <div class="col-md-12 mt-1">
+    <div class="float-right">
+          <input type="text" class="form-control" id="name" name="name" placeholder="user id">
+    </div>
+  </div>
+</div>
+
 <script src="js/user.js"></script>
 <#include "footer.ftl">

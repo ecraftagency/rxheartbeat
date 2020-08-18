@@ -168,8 +168,8 @@ public class UserRanking extends Ranking {
     rankingEventLoop.addCommand(listCommand);
   }
 
-  public void getAllRanking(Session session, Handler<AsyncResult<Map<Integer, Integer>>> ar) {
-    EventLoop.Command getAllRankCmd = new GetAllRankCommand<>(session.id, rankings, ar);
+  public void getAllRanking(Session session, Handler<AsyncResult<Map<Integer, List<ScoreObj>>>> ar) {
+    EventLoop.Command getAllRankCmd = new ListAllRankCommand<>(session.id, rankings, ar);
     rankingEventLoop.addCommand(getAllRankCmd);
   }
 }

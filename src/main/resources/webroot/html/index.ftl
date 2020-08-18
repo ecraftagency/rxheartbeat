@@ -6,8 +6,8 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="/user">Server<span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="#">User</a>
+          <a class="nav-item nav-link active" href="#">Server<span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="/user">User</a>
           <a class="nav-item nav-link" href="#">Event</a>
           <a class="nav-item nav-link" href="#">Config</a>
         </div>
