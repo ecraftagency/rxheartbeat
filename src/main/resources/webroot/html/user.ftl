@@ -21,27 +21,57 @@
     </nav>
 </div>
 
-<div class="row>
-
+<div v-if="isLoaded == true" class="row">
+    <table id="gameInfo" class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Thuộc Tính</th>
+          <th scope="col">Giá Trị</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(key, value) in session.userGameInfo">
+            <td>{{ value }}</td>
+            <td>{{ key }}</td>
+          </tr>
+      </tbody>
+    </table>
 </div>
 
-<div class="row">
-   {{ userId }}
+<div v-if="isLoaded == true" class="row">
+    <table id="inventory" class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Đạo Cụ</th>
+          <th scope="col">Số Lượng</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(key, value) in session.userInventory">
+            <td>{{ value }}</td>
+            <td>{{ key }}</td>
+          </tr>
+      </tbody>
+    </table>
 </div>
+
 <#include "footer.ftl">
 
 <script>
 var app = new Vue({
   el: '#app',
-  data: {
-    userId: '',
-    session: undefined
+  data() {
+    return {
+        userId: '',
+        session: undefined,
+        isLoaded: false
+    }
   },
   methods: {
     fetchUser: function (event){
        let data = { cmd:"getUser", username: this.userId };
 
-       fetch('http://localhost:3000/api/user', {
+       fetch('http://18.141.216.52:3000/api/user', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -50,12 +80,13 @@ var app = new Vue({
        })
        .then(response => response.json())
        .then(data => {
-         console.log('Success:', data);
+         this.session = data;
+         this.isLoaded = true;
        })
        .catch((error) => {
          console.error('Error:', error);
        });
     }
   }
-})
+});
 </script>

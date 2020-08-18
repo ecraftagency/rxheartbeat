@@ -314,7 +314,7 @@ public class HBServer extends AbstractVerticle {
             );
   }
 
-  private static void loadStaticData() throws Exception {
+  public static void loadStaticData() throws Exception {
 
     String servantJson = new String(Files.readAllBytes(Paths.get("data/json/servants.json")),
             StandardCharsets.UTF_8);

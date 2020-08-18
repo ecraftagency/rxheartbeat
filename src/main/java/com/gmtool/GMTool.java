@@ -7,13 +7,15 @@ import com.gmtool.handler.UserHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.config.NetworkConfig;
+import com.heartbeat.HBServer;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.spi.cluster.ClusterManager;
-import io.vertx.ext.auth.User;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.templ.freemarker.FreeMarkerTemplateEngine;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
@@ -65,10 +67,19 @@ public class GMTool extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startPromise) {
+  public void start(Promise<Void> startPromise) throws Exception {
     templateEngine = FreeMarkerTemplateEngine.create(vertx);
-
+    HBServer.loadStaticData();
     Router router = Router.router(vertx);
+
+    router.route().handler(CorsHandler.create(".*.")
+            .allowCredentials(true)
+            .allowedHeader("Access-Control-Allow-Method")
+            .allowedHeader("Access-Control-Allow-Origin")
+            .allowedHeader("Access-Control-Allow-Credentials")
+            .allowedHeader("Content-Type")
+            .allowedMethod(HttpMethod.POST));
+
     router.route().handler(BodyHandler.create());
     router.route().handler(StaticHandler.create());
     router.get("/").handler(new IndexHandler());
