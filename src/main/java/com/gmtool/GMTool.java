@@ -1,6 +1,7 @@
 package com.gmtool;
 
 import com.common.LOG;
+import com.gmtool.controller.UserController;
 import com.gmtool.handler.IndexHandler;
 import com.gmtool.handler.UserHandler;
 import com.hazelcast.config.Config;
@@ -72,6 +73,7 @@ public class GMTool extends AbstractVerticle {
     router.route().handler(StaticHandler.create());
     router.get("/").handler(new IndexHandler());
     router.get("/user").handler(new UserHandler());
+    router.post("/api/user").handler(new UserController());
 
     vertx.createHttpServer().requestHandler(router).listen(3000);
     startPromise.complete();

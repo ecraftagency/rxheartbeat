@@ -11,6 +11,8 @@ import com.hazelcast.config.NetworkConfig;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.event.ExtEventInfo;
+import com.heartbeat.event.ExtIdolEventInfo;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -157,6 +159,16 @@ public class HBServer extends AbstractVerticle {
       UserLDB.loadLDBFromDB(LEADER_BOARD.TALENT_LDB_ID);
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
       UserInbox.loadInboxFromDB();
+
+      Constant.RANKING.rankingInfo.setRankingTime("18/08/2020 15:24:00", "20/08/2020 16:00:00");
+      for (ExtIdolEventInfo eventInfo : Constant.IDOL_EVENT.evtMap.values()) {
+        eventInfo.setActive(true);
+        eventInfo.updateEventTime("18/08/2020 15:24:00", "20/08/2020 16:00:00");
+      }
+      for (ExtEventInfo eventInfo : Constant.USER_EVENT.evtMap.values()) {
+        eventInfo.setActive(true);
+        eventInfo.updateEventTime("18/08/2020 15:24:00", "20/08/2020 16:00:00");
+      }
     }
     catch (Exception ioe) {
       LOGGER.error(ioe.getMessage());
