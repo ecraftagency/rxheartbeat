@@ -10,8 +10,6 @@ import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 public class FightController implements Handler<RoutingContext> {
@@ -101,7 +99,7 @@ public class FightController implements Handler<RoutingContext> {
     resp.effectResults  = session.effectResults;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.RUN_SHOW_MISSION_TYPE, time);
-      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT, time);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.RUN_SHOW_ACHIEVEMENT, time);
     }
     return resp;
   }
@@ -175,7 +173,7 @@ public class FightController implements Handler<RoutingContext> {
             group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAME_SHOW_MISSION_ID, 1);
         }
         session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
-        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAMESHOW_ACHIEVEMENT, 1);
+        session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAME_SHOW_ACHIEVEMENT, 1);
         session.userEvent.addEventRecord(Constant.USER_EVENT.GAME_SHOW_EVT_ID, 1);
       }
     }
@@ -208,7 +206,7 @@ public class FightController implements Handler<RoutingContext> {
     resp.effectResults  = session.effectResults;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.RUN_SHOW_MISSION_TYPE);
-      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.RUNSHOW_ACHIEVEMENT, 1);
+      session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.RUN_SHOW_ACHIEVEMENT, 1);
     }
     return resp;
   }

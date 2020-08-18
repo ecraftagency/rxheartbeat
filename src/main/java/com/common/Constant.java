@@ -189,20 +189,22 @@ public class Constant {
     public static final int VIEW_ACHIEVEMENT          = 7;
     public static final int FAN_ACHIEVEMENT           = 8;
     public static final int MEDIA_ACHIEVEMENT         = 9;
-    public static final int RUNSHOW_ACHIEVEMENT       = 10;
+    public static final int RUN_SHOW_ACHIEVEMENT      = 10;
     public static final int SHOPPING_ACHIEVEMENT      = 11;
     public static final int TRAVEL_ACHIEVEMENT        = 12;
     public static final int VIP_ACHIEVEMENT           = 13;
-    public static final int GAMESHOW_ACHIEVEMENT      = 14;
+    public static final int GAME_SHOW_ACHIEVEMENT     = 14;
 
     public static final int MEDIA_CONTRACT_USE        = 100*USER_GAME_INFO.MEDIA_CONTRACT_ITEM;
     public static final int IDOL_LEVEL                = 16;
     public static final int IDOL_TITLE                = 17;
-    public static final int IDOL_SINGLE_QUERY         = 1;
-    public static final int IDOL_MULTI_QUERY          = 0;
+    public static final int ROLL_CALL_ACHIEVEMENT     = 18;
     public static final int GROUP_JOIN                = 19;
     public static final int STORE_ACHIEVEMENT         = 20;
     public static final int APT_BUFF_ITEM_ACHIEVEMENT = 67*100;
+
+    public static final int IDOL_SINGLE_QUERY         = 1;
+    public static final int IDOL_MULTI_QUERY          = 0;
   }
 
   public static class USER_GAME_INFO {

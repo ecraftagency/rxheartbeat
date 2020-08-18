@@ -148,7 +148,6 @@ public class ProfileController implements Handler<RoutingContext> {
       if ((result = session.userGameInfo.updateDisplayName(session, newDisplayName)).equals("ok")) {
         session.userGameInfo.avatar = newAvatar;
         session.userGameInfo.gender = newGender;
-        session.sync(CBSession.getInstance());
       }
       else {
         session.userGameInfo.displayName = "";

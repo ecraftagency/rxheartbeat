@@ -7,6 +7,7 @@ import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
+import static com.common.Constant.*;
 
 public class RollCallController implements Handler<RoutingContext> {
   @Override
@@ -92,6 +93,9 @@ public class RollCallController implements Handler<RoutingContext> {
     resp.msg            = session.userRollCall.claimDailyGift(session,curMs);
     resp.data.rollCall  = session.userRollCall;
     resp.effectResults  = session.effectResults;
+    if (resp.msg.equals("ok")) {
+      session.userAchievement.addAchieveRecord(ACHIEVEMENT.ROLL_CALL_ACHIEVEMENT, 1);
+    }
     return resp;
   }
 
