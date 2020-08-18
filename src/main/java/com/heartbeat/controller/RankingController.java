@@ -21,6 +21,9 @@ public class RankingController implements Handler<RoutingContext> {
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
+          case "getAllRank":
+            processGetAllRank(session, cmd, ctx);
+            return;
           case "claimReward":
             processClaimReward(session, cmd, ctx);
             return;
@@ -52,6 +55,27 @@ public class RankingController implements Handler<RoutingContext> {
       LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
     }
+  }
+
+  private void processGetAllRank(Session session, String cmd, RoutingContext ctx) {
+    session.userRanking.getAllRanking(session, ar -> {
+      ExtMessage resp     = ExtMessage.ranking();
+      resp.data.ranking   = session.userRanking;
+
+      if (ar.succeeded()) {
+        resp.data.extObj          = Json.encode(ar.result());
+      }
+      else {
+        resp.msg = ar.cause().getMessage();
+      }
+
+      resp.cmd            = cmd;
+      resp.timeChange     = session.userGameInfo.timeChange;
+      resp.userRemainTime = session.userGameInfo.remainTime();
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      session.effectResults.clear();
+      session.userGameInfo.timeChange = false;
+    });
   }
 
   private void processClaimReward(Session session, String cmd, RoutingContext ctx) {

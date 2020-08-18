@@ -11,6 +11,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.templ.freemarker.FreeMarkerTemplateEngine;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
@@ -66,6 +67,7 @@ public class GMTool extends AbstractVerticle {
 
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
+    router.route().handler(StaticHandler.create());
     router.get("/").handler(new IndexHandler());
 
     vertx.createHttpServer().requestHandler(router).listen(3000);

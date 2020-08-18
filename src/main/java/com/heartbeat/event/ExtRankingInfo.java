@@ -24,6 +24,20 @@ public class ExtRankingInfo extends RankingInfo {
     ri.activeRankings.put(16, false);
     ri.activeRankings.put(17, false);
     ri.flushDelay       = FLUSH_DELAY;
+
+    int second    = (int)(System.currentTimeMillis()/1000);
+    int leap      = 60;
+    int duration  = 86400;
+    ri.startTime  = second + leap;
+    ri.endTime    = ri.startTime + duration;
+    int flushTime = ri.endTime + FLUSH_DELAY;
+
+    GlobalVariable.schThreadPool.schedule(UserRanking::openAllRanking,
+            ri.startTime - second, TimeUnit.SECONDS);
+    GlobalVariable.schThreadPool.schedule(UserRanking::closeAllRanking,
+            ri.endTime - second, TimeUnit.SECONDS);
+    GlobalVariable.schThreadPool.schedule(UserRanking::flushAllRanking,
+            flushTime - second, TimeUnit.SECONDS);
     return ri;
   }
 

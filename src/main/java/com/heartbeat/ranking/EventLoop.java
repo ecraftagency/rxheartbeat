@@ -1,6 +1,7 @@
 package com.heartbeat.ranking;
 
 import com.common.GlobalVariable;
+import com.common.LOG;
 import com.heartbeat.controller.AchievementController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import static com.common.Constant.*;
 
 /*simple event loop implement in java[/-script-/]*/
 public class EventLoop implements Runnable{
-  private static final Logger LOGGER = LoggerFactory.getLogger(AchievementController.class);
   private ConcurrentLinkedQueue<Command> incomingCommands;
 
   public EventLoop() {
@@ -27,7 +27,7 @@ public class EventLoop implements Runnable{
           command.execute();
       }
       catch (Exception e) {
-        LOGGER.error(e.getMessage());
+        LOG.globalException(e);
       }
     }
     GlobalVariable.schThreadPool.schedule(this, SYSTEM_INFO.EVENT_LOOP_SLEEP_INV, TimeUnit.MILLISECONDS);

@@ -167,4 +167,9 @@ public class UserRanking extends Ranking {
     EventLoop.Command listCommand = new ListCommand<>(ldb, ar);
     rankingEventLoop.addCommand(listCommand);
   }
+
+  public void getAllRanking(Session session, Handler<AsyncResult<List<Integer>>> ar) {
+    EventLoop.Command getAllRankCmd = new GetAllRankCommand<>(session.id, rankings, ar);
+    rankingEventLoop.addCommand(getAllRankCmd);
+  }
 }

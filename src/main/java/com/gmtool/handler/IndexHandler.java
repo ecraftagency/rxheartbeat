@@ -26,7 +26,7 @@ public class IndexHandler implements Handler<RoutingContext> {
 
         ctx.put("title", "GMTool");
         ctx.put("nodes", nodes);
-        templateEngine.render(ctx.data(), "templates/index.ftl", rar -> {
+        templateEngine.render(ctx.data(), "webroot/html/index.ftl", rar -> {
           if (rar.succeeded()) {
             ctx.response().putHeader("Content-Type", "text/html");
             ctx.response().end(rar.result());
