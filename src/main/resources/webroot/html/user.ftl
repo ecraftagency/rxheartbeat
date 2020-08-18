@@ -21,6 +21,10 @@
     </nav>
 </div>
 
+<div class="row>
+
+</div>
+
 <div class="row">
    {{ userId }}
 </div>
@@ -30,7 +34,8 @@
 var app = new Vue({
   el: '#app',
   data: {
-    userId: ''
+    userId: '',
+    session: undefined
   },
   methods: {
     fetchUser: function (event){

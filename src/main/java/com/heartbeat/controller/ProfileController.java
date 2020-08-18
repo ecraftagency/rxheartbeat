@@ -3,6 +3,7 @@ package com.heartbeat.controller;
 import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
+import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -147,6 +148,7 @@ public class ProfileController implements Handler<RoutingContext> {
       if ((result = session.userGameInfo.updateDisplayName(session, newDisplayName)).equals("ok")) {
         session.userGameInfo.avatar = newAvatar;
         session.userGameInfo.gender = newGender;
+        session.sync(CBSession.getInstance());
       }
       else {
         session.userGameInfo.displayName = "";

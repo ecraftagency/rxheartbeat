@@ -24,8 +24,9 @@ public class IndexHandler implements Handler<RoutingContext> {
         Type listOdNode     = new TypeToken<List<Node>>() {}.getType();
         List<Node> nodes    = Utilities.gson.fromJson(resp.getJsonArray("nodes").toString(), listOdNode);
 
-        ctx.put("title", "GMTool");
+        ctx.put("title", "lolol");
         ctx.put("nodes", nodes);
+
         templateEngine.render(ctx.data(), "webroot/html/index.ftl", rar -> {
           if (rar.succeeded()) {
             ctx.response().putHeader("Content-Type", "text/html");
