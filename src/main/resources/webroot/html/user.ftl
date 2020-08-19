@@ -17,18 +17,17 @@
 
            <div class="float-left" class="col-xl-4">
               <input v-model="codeVal" type="text" class="form-control" id="codeValue" name="codeValue"
-              placeholder="Great power comes with great responsibility nha thím" v-on:keyup.enter="injectUser">
+              placeholder="Great power comes with great responsibility..." v-on:keyup.enter="injectUser">
            </div>
       </div>
     </nav>
 </div>
 
-
 <div v-if="isLoaded == true" class="row top-buffer">
     <table id="gameInfo" class="table table-dark">
       <thead>
         <tr>
-          <th scope="col">Thuộc Tính</th>
+          <th scope="col">Thuộc Tính [{{ state }}]</th>
           <th scope="col">Giá Trị</th>
         </tr>
       </thead>
@@ -61,7 +60,7 @@
 <#include "footer.ftl">
 
 <script>
-const host = 'http://localhost:3000/api/user'
+const host = 'http://18.141.216.52:3000/api/user'
 var app = new Vue({
   el: '#app',
   data() {
@@ -69,6 +68,7 @@ var app = new Vue({
         sessionId: '',
         codeVal: '',
         session: undefined,
+        state: '',
         isLoaded: false
     }
   },
@@ -88,15 +88,16 @@ var app = new Vue({
          if (data.msg == "ok") {
            this.session = data;
            this.isLoaded = true;
+           this.state = data.ctx;
          }
          else {
             this.isLoaded = false;
-            alert(data.msg);
-            console.log(data.msg);
          }
+         this.codeVal = '';
        })
        .catch((error) => {
          this.isLoaded = false;
+         this.codeVal = '';
        });
     },
     injectUser: function (event){
@@ -114,15 +115,19 @@ var app = new Vue({
          if (data.msg == "ok") {
            this.session = data;
            this.isLoaded = true;
+           this.state = data.ctx;
+
          }
          else {
             this.isLoaded = false;
             alert(data.msg);
             console.log(data.msg);
          }
+         this.codeVal = '';
        })
        .catch((error) => {
          this.isLoaded = false;
+         this.codeVal = '';
        });
     }
   }

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+// A FAST AND FURIOUS GM TOOL
 public class GMTool extends AbstractVerticle {
   public static JsonObject                localConfig;
   public static String                    gatewayIP = "";

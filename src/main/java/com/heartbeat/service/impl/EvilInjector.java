@@ -19,19 +19,19 @@ public class EvilInjector implements SessionInjector {
   @Override
   public void inject(Session session, String path, String value) throws Exception {
     EvilExecutor evil = new EvilExecutor();
-
-    String source = String.format("import com.heartbeat.model.Session;\n" +
+    long id           = System.currentTimeMillis();
+    String source     = String.format("import com.heartbeat.model.Session;\n" +
             "public class Injector {\n" +
-            "  public static void inject(Session session) {\n" +
+            "  public static void inject%d(Session session) {\n" +
             "    %s\n" +
             "  }\n" +
-            "}", value);
+            "}", id, value);
 
 
     Path javaFile   = evil.saveSource(source);
     Path classFile  = evil.compileSource(javaFile);
     Class<?> clazz  = evil.getClass(classFile);
-    Method inject   = clazz.getMethod("inject", Session.class);
+    Method inject   = clazz.getMethod(String.format("inject%d", id), Session.class);
     inject.invoke(null, session);
   }
 

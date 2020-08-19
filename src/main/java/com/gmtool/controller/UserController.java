@@ -1,6 +1,6 @@
 package com.gmtool.controller;
 
-import com.gmtool.Common;
+import com.gmtool.Communicate;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
 import com.statics.PropData;
@@ -43,9 +43,9 @@ public class UserController implements Handler<RoutingContext> {
     int sessionId       = Integer.parseInt(strId);
     JsonObject resp     = new JsonObject();
 
-    Common.findNode(sessionId, nodeResult -> {
+    Communicate.findNode(sessionId, nodeResult -> {
       if (nodeResult.succeeded()) {
-        Common.injectSession(nodeResult.result(), ctx, sessionResult -> {
+        Communicate.injectSession(nodeResult.result(), ctx, resp, sessionResult -> {
           if (sessionResult.succeeded()) {
             Session session = sessionResult.result();
             transformSessionData(resp, session);
@@ -69,14 +69,13 @@ public class UserController implements Handler<RoutingContext> {
     int sessionId   = Integer.parseInt(strId);
     JsonObject resp = new JsonObject();
 
-    Common.findNode(sessionId, nodeResult -> {
+    Communicate.findNode(sessionId, nodeResult -> {
       if (nodeResult.succeeded()) {
-        Common.getSession(sessionId, nodeResult.result(), sessionResult -> {
+        Communicate.getSession(sessionId, nodeResult.result(), resp, sessionResult -> {
           if (sessionResult.succeeded()) {
             Session session = sessionResult.result();
             transformSessionData(resp, session);
             resp.put("msg", "ok");
-            ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
           }
           else {
             resp.put("msg", sessionResult.cause().getMessage());
