@@ -10,6 +10,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -43,6 +44,32 @@ public class Common {
   public static void getSession(int sessionId, Node node, Handler<AsyncResult<Session>> sr) {
     String nodeEb           = node.bus;
     JsonObject jsonMessage  = new JsonObject().put("cmd", "getSession").put("sessionId", sessionId);
+    eventBus.request(nodeEb, jsonMessage, ar -> {
+      if (ar.succeeded()) {
+        JsonObject resp = (JsonObject) ar.result().body();
+        if (resp.getString("msg").equals("ok")) {
+          Session session = Json.decodeValue(resp.getString("session"), Session.class);
+          sr.handle(Future.succeededFuture(session));
+        }
+        else {
+          sr.handle(Future.failedFuture(resp.getString("msg")));
+        }
+      }
+      else {
+        sr.handle(Future.failedFuture(ar.cause().getMessage()));
+      }
+    });
+  }
+
+  public static void injectSession(Node node, RoutingContext ctx, Handler<AsyncResult<Session>> sr) {
+    String strId        = ctx.getBodyAsJson().getString("sessionId");
+    String path         = ctx.getBodyAsJson().getString("path");
+    String value        = ctx.getBodyAsJson().getString("value");
+    int sessionId       = Integer.parseInt(strId);
+
+    String nodeEb           = node.bus;
+    JsonObject jsonMessage  = new JsonObject().put("cmd", "inject")
+            .put("sessionId", sessionId).put("path", path).put("value", value);
     eventBus.request(nodeEb, jsonMessage, ar -> {
       if (ar.succeeded()) {
         JsonObject resp = (JsonObject) ar.result().body();

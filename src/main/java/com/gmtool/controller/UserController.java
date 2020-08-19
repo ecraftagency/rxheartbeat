@@ -2,7 +2,6 @@ package com.gmtool.controller;
 
 import com.gmtool.Common;
 import com.heartbeat.model.Session;
-import com.heartbeat.model.SessionPool;
 import com.statics.OfficeData;
 import com.statics.PropData;
 import com.statics.VipData;
@@ -40,54 +39,79 @@ public class UserController implements Handler<RoutingContext> {
   }
 
   private void injectUser(RoutingContext ctx) {
-    int id              = ctx.getBodyAsJson().getInteger("id");
-    String path         = ctx.getBodyAsJson().getString("path");
-    String value        = ctx.getBodyAsJson().getString("value");
-    Session session     = SessionPool.getSessionFromPool(id);
+    String strId        = ctx.getBodyAsJson().getString("sessionId");
+    int sessionId       = Integer.parseInt(strId);
+    JsonObject resp     = new JsonObject();
+
+    Common.findNode(sessionId, nodeResult -> {
+      if (nodeResult.succeeded()) {
+        Common.injectSession(nodeResult.result(), ctx, sessionResult -> {
+          if (sessionResult.succeeded()) {
+            Session session = sessionResult.result();
+            transformSessionData(resp, session);
+            resp.put("msg", "ok");
+          }
+          else {
+            resp.put("msg", sessionResult.cause().getMessage());
+          }
+          ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        });
+      }
+      else {
+        resp.put("msg", nodeResult.cause().getMessage());
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
   }
 
   public void getUserInfo(RoutingContext ctx) {
-    String strId  = ctx.getBodyAsJson().getString("username");
-    int sessionId = Integer.parseInt(strId);
-    JsonObject user = new JsonObject();
+    String strId    = ctx.getBodyAsJson().getString("sessionId");
+    int sessionId   = Integer.parseInt(strId);
+    JsonObject resp = new JsonObject();
 
     Common.findNode(sessionId, nodeResult -> {
       if (nodeResult.succeeded()) {
         Common.getSession(sessionId, nodeResult.result(), sessionResult -> {
           if (sessionResult.succeeded()) {
             Session session = sessionResult.result();
-            JsonObject gi = new JsonObject();
-            JsonObject it = new JsonObject();
-
-            gi.put("Tên",         session.userGameInfo.displayName);
-            gi.put("Giới Tính",   session.userGameInfo.gender == 0 ? "Nam" : "Nữ");
-            gi.put("EXP",         session.userGameInfo.exp);
-            gi.put("Điểm VIP",    session.userGameInfo.vipExp);
-            gi.put("Cấp VIP",     VipData.getVipData(session.userGameInfo.vipExp).level);
-            gi.put("Hạng Sao",    OfficeData.officeLV.get(session.userGameInfo.titleId).name);
-            gi.put("Money",       session.userGameInfo.money);
-            gi.put("View",        session.userGameInfo.view);
-            gi.put("Fan",         session.userGameInfo.fan);
-
-            for (Map.Entry<Integer, Integer> entry : session.userInventory.userItems.entrySet()) {
-              PropData.Prop prop = PropData.propMap.get(entry.getKey());
-              if (prop != null) {
-                it.put(prop.name, entry.getValue());
-              }
-            }
-            user.put("userGameInfo", gi);
-            user.put("userInventory", it);
-            user.put("msg", "ok");
-            ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(user));
+            transformSessionData(resp, session);
+            resp.put("msg", "ok");
+            ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
           }
           else {
-            ctx.response().setStatusCode(400).end(Json.encode(sessionResult.cause().getMessage()));
+            resp.put("msg", sessionResult.cause().getMessage());
           }
+          ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         });
       }
       else {
-        ctx.response().setStatusCode(400).end(Json.encode(nodeResult.cause().getMessage()));
+        resp.put("msg", nodeResult.cause().getMessage());
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
     });
+  }
+
+  private void transformSessionData(JsonObject resp, Session session) {
+    JsonObject gi = new JsonObject();
+    JsonObject it = new JsonObject();
+
+    gi.put("Tên",         session.userGameInfo.displayName);
+    gi.put("Giới Tính",   session.userGameInfo.gender == 0 ? "Nam" : "Nữ");
+    gi.put("EXP",         session.userGameInfo.exp);
+    gi.put("Điểm VIP",    session.userGameInfo.vipExp);
+    gi.put("Cấp VIP",     VipData.getVipData(session.userGameInfo.vipExp).level);
+    gi.put("Hạng Sao",    OfficeData.officeLV.get(session.userGameInfo.titleId).name);
+    gi.put("Money",       session.userGameInfo.money);
+    gi.put("View",        session.userGameInfo.view);
+    gi.put("Fan",         session.userGameInfo.fan);
+
+    for (Map.Entry<Integer, Integer> entry : session.userInventory.userItems.entrySet()) {
+      PropData.Prop prop = PropData.propMap.get(entry.getKey());
+      if (prop != null) {
+        it.put(prop.name, entry.getValue());
+      }
+    }
+    resp.put("userGameInfo", gi);
+    resp.put("userInventory", it);
   }
 }

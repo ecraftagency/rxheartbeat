@@ -43,7 +43,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
   }
 
   private void processInjectSession(Message<JsonObject> ctx) {
-    int id          = ctx.body().getInteger("id");
+    int id          = ctx.body().getInteger("sessionId");
     String path     = ctx.body().getString("path");
     String value    = ctx.body().getString("value");
     Session session = SessionPool.getSessionFromPool(id);
@@ -53,12 +53,16 @@ public class InternalController implements Handler<Message<JsonObject>> {
       try {
         sessionInjector.inject(session, path, value);
         resp.put("msg", "ok");
+        resp.put("session", Json.encode(session));
         ctx.reply(resp);
       }
       catch (Exception e) {
         resp.put("msg", e.getMessage());
         ctx.reply(resp);
       }
+    }
+    else {
+      resp.put("msg", "session not found");
     }
   }
 

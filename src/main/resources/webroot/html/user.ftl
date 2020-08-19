@@ -1,6 +1,4 @@
 <#include "header.ftl">
-
-</script>
 <div class="row">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,15 +11,20 @@
           <a class="nav-item nav-link" href="#">Event</a>
           <a class="nav-item nav-link" href="#">Config</a>
         </div>
-        <div class="float-right">
-              <input v-model="userId" type="text" class="form-control" id="name" name="name" placeholder="user id" v-on:keyup.enter="fetchUser">
-        </div>
+           <div class="float-left" class="col-sm-2">
+                 <input v-model="sessionId" type="text" class="form-control" id="sessionId" name="sessionId" placeholder="User Id" v-on:keyup.enter="fetchUser">
+           </div>
 
+           <div class="float-left" class="col-xl-4">
+              <input v-model="codeVal" type="text" class="form-control" id="codeValue" name="codeValue"
+              placeholder="Great power comes with great responsibility nha thím" v-on:keyup.enter="injectUser">
+           </div>
       </div>
     </nav>
 </div>
 
-<div v-if="isLoaded == true" class="row">
+
+<div v-if="isLoaded == true" class="row top-buffer">
     <table id="gameInfo" class="table table-dark">
       <thead>
         <tr>
@@ -38,7 +41,7 @@
     </table>
 </div>
 
-<div v-if="isLoaded == true" class="row">
+<div v-if="isLoaded == true" class="row top-buffer">
     <table id="inventory" class="table table-dark">
       <thead>
         <tr>
@@ -58,20 +61,22 @@
 <#include "footer.ftl">
 
 <script>
+const host = 'http://localhost:3000/api/user'
 var app = new Vue({
   el: '#app',
   data() {
     return {
-        userId: '',
+        sessionId: '',
+        codeVal: '',
         session: undefined,
         isLoaded: false
     }
   },
   methods: {
     fetchUser: function (event){
-       let data = { cmd:"getUserInfo", username: this.userId };
+       let data = { cmd:"getUserInfo", sessionId: this.sessionId };
 
-       fetch('http://18.141.216.52:3000/api/user', {
+       fetch(host, {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -80,14 +85,55 @@ var app = new Vue({
        })
        .then(response => response.json())
        .then(data => {
-         this.session = data;
-         this.isLoaded = true;
+         if (data.msg == "ok") {
+           this.session = data;
+           this.isLoaded = true;
+         }
+         else {
+            this.isLoaded = false;
+            alert(data.msg);
+            console.log(data.msg);
+         }
        })
        .catch((error) => {
-         alert(error)
+         this.isLoaded = false;
+       });
+    },
+    injectUser: function (event){
+       let data = { cmd:"inject", sessionId: this.sessionId,  path: "", value:this.codeVal};
+
+       fetch(host, {
+         method: 'POST',
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(data),
+       })
+       .then(response => response.json())
+       .then(data => {
+         if (data.msg == "ok") {
+           this.session = data;
+           this.isLoaded = true;
+         }
+         else {
+            this.isLoaded = false;
+            alert(data.msg);
+            console.log(data.msg);
+         }
+       })
+       .catch((error) => {
          this.isLoaded = false;
        });
     }
   }
 });
 </script>
+
+<style>
+#codeValue {
+  margin-left: 14px;
+  width: 450px;
+}
+
+.top-buffer { margin-top:15px; }
+</style>
