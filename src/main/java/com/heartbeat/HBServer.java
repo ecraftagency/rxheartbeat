@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
@@ -179,6 +180,10 @@ public class HBServer extends AbstractVerticle {
     retriever.getConfig(ar -> {
       if (ar.succeeded()) {
         systemConfig = ar.result();
+
+        MessageConsumer<JsonObject> messageConsumer = eventBus.consumer(nodeBus);
+        messageConsumer.handler(new InternalController());
+
         Router router = Router.router(vertx);
         AuthController authController = new AuthController(vertx);
 

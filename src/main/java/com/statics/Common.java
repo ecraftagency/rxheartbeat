@@ -5,6 +5,7 @@
 
 package com.statics;
 
+import com.common.LOG;
 import com.common.Utilities;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -35,17 +36,19 @@ public class Common {
   //dear god pls make this (parametric polymorphism) stop T____T
   public static <K, V extends hasKey<K>> HashMap<K, V> loadMap(String json, Class<V> object) {
     HashMap<K, V> result = new HashMap<>();
+    JSONObject j = null;
     try {
       JSONArray rows = new JSONArray(json);
       for (int i = 0; i < rows.length(); i++){
-        JSONObject row = rows.getJSONObject(i);
+        j= rows.getJSONObject(i);
         Common.arraySubstitute(rows.getJSONObject(i));
-        V v = Utilities.gson.fromJson(row.toString(), object);
+        V v = Utilities.gson.fromJson(j.toString(), object);
         result.put(v.mapKey(), v);
       }
     }
     catch (Exception e) {
-      System.out.println(e.getMessage());
+      System.out.println(j);
+      LOG.globalException(e);
       result.clear();
     }
     return result;

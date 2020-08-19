@@ -69,9 +69,9 @@ var app = new Vue({
   },
   methods: {
     fetchUser: function (event){
-       let data = { cmd:"getUser", username: this.userId };
+       let data = { cmd:"getUserInfo", username: this.userId };
 
-       fetch('http://18.141.216.52:3000/api/user', {
+       fetch('http://localhost:3000/api/user', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
