@@ -434,14 +434,14 @@ public class UserFight extends Fight {
         return "run_show_invalid";
 
       long moneyConsume;
-      long base         = SHOPPING_COEFFICIENT*currentShopping.creativeNPC;
+      long base         = SHOPPING_COEFFICIENT*sp.creativeNPC;
       long totalCrt     = session.userIdol.totalCrt();
 
       if (base >= totalCrt) {
-        moneyConsume = currentShopping.moneyNPC*currentShopping.creativeNPC /totalCrt;
+        moneyConsume = sp.moneyNPC*sp.creativeNPC /totalCrt;
       }
       else {
-        moneyConsume = (long)(currentShopping.moneyNPC*SHOPPING_MONEY_SCL);
+        moneyConsume = (long)(sp.moneyNPC*SHOPPING_MONEY_SCL);
       }
       totalMoneyConsume += moneyConsume;
     }
@@ -453,7 +453,7 @@ public class UserFight extends Fight {
         EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
         for (int i = 0; i < time; i++) {
-          ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + 1);
+          ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + i);
           if (sp.id == -1)
             return "run_show_invalid";
 

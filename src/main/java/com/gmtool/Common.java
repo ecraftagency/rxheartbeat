@@ -46,8 +46,13 @@ public class Common {
     eventBus.request(nodeEb, jsonMessage, ar -> {
       if (ar.succeeded()) {
         JsonObject resp = (JsonObject) ar.result().body();
-        Session session = Json.decodeValue(resp.toString(), Session.class);
-        sr.handle(Future.succeededFuture(session));
+        if (resp.getString("msg").equals("ok")) {
+          Session session = Json.decodeValue(resp.getString("session"), Session.class);
+          sr.handle(Future.succeededFuture(session));
+        }
+        else {
+          sr.handle(Future.failedFuture(resp.getString("msg")));
+        }
       }
       else {
         sr.handle(Future.failedFuture(ar.cause().getMessage()));

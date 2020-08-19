@@ -222,6 +222,10 @@ public class Constant {
     public static final int RAMPAGE_EFFECT_RESULT     = 3000; // rampage [3000, count, 0];
   }
 
+  public static class TITLE {
+    public static final int    EXPIRY = 60*24*30; //minutes
+  }
+
   public static void serverStartUp() {
     try {
       GROUP.missionStart =

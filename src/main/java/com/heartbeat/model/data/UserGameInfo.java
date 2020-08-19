@@ -294,7 +294,7 @@ public class UserGameInfo extends GameInfo {
     if (dto == null || dto.format == null || dto.format.size() == 0)
       return "shop_data_not_found";
 
-    if (shopping.getOrDefault(itemId, 0) > dto.dailyLimit)
+    if (shopping.getOrDefault(itemId, 0) >= dto.dailyLimit)
       return "shop_daily_limit";
 
     VipData.VipDto vipDto = VipData.getVipData(vipExp);

@@ -161,14 +161,14 @@ public class HBServer extends AbstractVerticle {
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
       UserInbox.loadInboxFromDB();
 
-      Constant.RANKING.rankingInfo.setRankingTime("18/08/2020 15:24:00", "20/08/2020 16:00:00");
+      Constant.RANKING.rankingInfo.setRankingTime("19/08/2020 14:30:00", "20/08/2020 16:00:00");
       for (ExtIdolEventInfo eventInfo : Constant.IDOL_EVENT.evtMap.values()) {
         eventInfo.setActive(true);
-        eventInfo.updateEventTime("18/08/2020 15:24:00", "20/08/2020 16:00:00");
+        eventInfo.updateEventTime("19/08/2020 14:30:00", "20/08/2020 16:00:00");
       }
       for (ExtEventInfo eventInfo : Constant.USER_EVENT.evtMap.values()) {
         eventInfo.setActive(true);
-        eventInfo.updateEventTime("18/08/2020 15:24:00", "20/08/2020 16:00:00");
+        eventInfo.updateEventTime("19/08/2020 14:30:00", "20/08/2020 16:00:00");
       }
     }
     catch (Exception ioe) {

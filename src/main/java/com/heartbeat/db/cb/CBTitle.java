@@ -1,5 +1,6 @@
 package com.heartbeat.db.cb;
 
+import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.InsertOptions;
@@ -10,14 +11,10 @@ import com.transport.model.Title;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static com.common.Constant.*;
 import java.time.Duration;
 
 public class CBTitle implements Cruder<Title> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CBTitle.class);
-  private static final int    EXPIRY = 2; //minutes
 
   private ReactiveBucket    rxIndexBucket;
 
@@ -87,12 +84,12 @@ public class CBTitle implements Cruder<Title> {
       MutationResult result = rxIndexBucket.defaultCollection()
               .insert(id, obj, InsertOptions
                       .insertOptions()
-                      .expiry(Duration.ofMinutes(EXPIRY)))
+                      .expiry(Duration.ofMinutes(TITLE.EXPIRY)))
               .block();
       return result != null;
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       return false;
     }
   }

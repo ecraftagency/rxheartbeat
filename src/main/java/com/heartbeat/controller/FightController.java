@@ -83,6 +83,7 @@ public class FightController implements Handler<RoutingContext> {
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
     resp.effectResults  = session.effectResults;
+
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.SHOPPING_MISSION_TYPE, time);
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.SHOPPING_ACHIEVEMENT, time);

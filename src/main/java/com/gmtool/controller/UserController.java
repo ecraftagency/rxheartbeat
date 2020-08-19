@@ -1,16 +1,11 @@
 package com.gmtool.controller;
 
-import com.common.Constant;
-import com.common.Utilities;
 import com.gmtool.Common;
-import com.google.gson.reflect.TypeToken;
 import com.heartbeat.model.Session;
+import com.heartbeat.model.SessionPool;
 import com.statics.OfficeData;
 import com.statics.PropData;
 import com.statics.VipData;
-import com.transport.model.Node;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -26,6 +21,9 @@ public class UserController implements Handler<RoutingContext> {
     JsonObject resp = new JsonObject();
     try {
       switch (cmd) {
+        case "inject":
+          injectUser(ctx);
+          return;
         case "getUserInfo":
           getUserInfo(ctx);
           return;
@@ -41,16 +39,23 @@ public class UserController implements Handler<RoutingContext> {
     ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
   }
 
+  private void injectUser(RoutingContext ctx) {
+    int id              = ctx.getBodyAsJson().getInteger("id");
+    String path         = ctx.getBodyAsJson().getString("path");
+    String value        = ctx.getBodyAsJson().getString("value");
+    Session session     = SessionPool.getSessionFromPool(id);
+  }
+
   public void getUserInfo(RoutingContext ctx) {
-    String strId  = ctx.getBodyAsString();
+    String strId  = ctx.getBodyAsJson().getString("username");
     int sessionId = Integer.parseInt(strId);
     JsonObject user = new JsonObject();
 
-    Common.findNode(sessionId, nr -> {
-      if (nr.succeeded()) {
-        Common.getSession(sessionId, nr.result(), sr -> {
-          if (sr.succeeded()) {
-            Session session = sr.result();
+    Common.findNode(sessionId, nodeResult -> {
+      if (nodeResult.succeeded()) {
+        Common.getSession(sessionId, nodeResult.result(), sessionResult -> {
+          if (sessionResult.succeeded()) {
+            Session session = sessionResult.result();
             JsonObject gi = new JsonObject();
             JsonObject it = new JsonObject();
 
@@ -76,14 +81,12 @@ public class UserController implements Handler<RoutingContext> {
             ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(user));
           }
           else {
-            user.put("msg", sr.cause().getMessage());
-            ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(user));
+            ctx.response().setStatusCode(400).end(Json.encode(sessionResult.cause().getMessage()));
           }
         });
       }
       else {
-        user.put("msg", nr.cause().getMessage());
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(user));
+        ctx.response().setStatusCode(400).end(Json.encode(nodeResult.cause().getMessage()));
       }
     });
   }
