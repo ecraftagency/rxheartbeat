@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -150,7 +149,7 @@ public class UserIdol extends Idols {
       if (userEvent != null)
         userEvent.addEventRecord(USER_EVENT.TOTAL_TALENT_EVT_ID, newCrt - idol.creativity);
       if (userRanking != null)
-        userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newCrt - idol.creativity);
+        userRanking.addEventRecord(RANK_EVENT.TOTAL_TALENT_RANK_ID, newCrt - idol.creativity);
       idol.creativity = newCrt;
     }
 
@@ -158,7 +157,7 @@ public class UserIdol extends Idols {
       if (userEvent != null)
         userEvent.addEventRecord(USER_EVENT.TOTAL_TALENT_EVT_ID, newPerf - idol.performance);
       if (userRanking != null)
-        userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newPerf - idol.performance);
+        userRanking.addEventRecord(RANK_EVENT.TOTAL_TALENT_RANK_ID, newPerf - idol.performance);
       idol.performance = newPerf;
     }
 
@@ -166,7 +165,7 @@ public class UserIdol extends Idols {
       if (userEvent != null)
         userEvent.addEventRecord(USER_EVENT.TOTAL_TALENT_EVT_ID, newAttr - idol.attractive);
       if (userRanking != null)
-        userRanking.addEventRecord(Constant.RANKING.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
+        userRanking.addEventRecord(RANK_EVENT.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
       idol.attractive = newAttr;
     }
   }

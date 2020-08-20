@@ -158,7 +158,7 @@ public class HBServer extends AbstractVerticle {
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
       UserInbox.loadInboxFromDB();
 
-      Constant.RANKING.rankingInfo.setRankingTime("19/08/2020 14:30:00", "20/08/2020 16:00:00");
+      RANK_EVENT.rankingInfo.setRankingTime("19/08/2020 14:30:00", "20/08/2020 16:00:00");
       for (ExtIdolEventInfo eventInfo : Constant.IDOL_EVENT.evtMap.values()) {
         eventInfo.setActive(true);
         eventInfo.updateEventTime("19/08/2020 14:30:00", "20/08/2020 16:00:00");

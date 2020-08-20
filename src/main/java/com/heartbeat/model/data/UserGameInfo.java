@@ -48,7 +48,7 @@ public class UserGameInfo extends GameInfo {
     money -= amount;
     try {
       session.userEvent.addEventRecord(USER_EVENT.MONEY_SPEND_EVT_ID, amount);
-      session.userRanking.addEventRecord(RANKING.MONEY_SPEND_RANK_ID, amount);
+      session.userRanking.addEventRecord(RANK_EVENT.MONEY_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
       //
@@ -62,7 +62,7 @@ public class UserGameInfo extends GameInfo {
     view -= amount;
     try {
       session.userEvent.addEventRecord(USER_EVENT.VIEW_SPEND_EVT_ID, amount);
-      session.userRanking.addEventRecord(RANKING.VIEW_SPEND_RANK_ID, amount);
+      session.userRanking.addEventRecord(RANK_EVENT.VIEW_SPEND_RANK_ID, amount);
     }
     catch (Exception e){
       //
@@ -76,7 +76,7 @@ public class UserGameInfo extends GameInfo {
     fan -= amount;
     try {
       session.userEvent.addEventRecord(USER_EVENT.FAN_SPEND_EVT_ID, amount);
-      session.userRanking.addEventRecord(RANKING.FAN_SPEND_RANK_ID, amount);
+      session.userRanking.addEventRecord(RANK_EVENT.FAN_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
       //

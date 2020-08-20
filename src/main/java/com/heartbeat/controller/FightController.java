@@ -153,7 +153,7 @@ public class FightController implements Handler<RoutingContext> {
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.FIGHT_MISSION_TYPE);
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FIGHT_ACHIEVEMENT, 1);
-      session.userRanking.addEventRecord(Constant.RANKING.FIGHT_RANK_ID, 1);
+      session.userRanking.addEventRecord(Constant.RANK_EVENT.FIGHT_RANK_ID, 1);
     }
     return resp;
   }

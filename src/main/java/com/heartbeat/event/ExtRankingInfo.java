@@ -9,7 +9,7 @@ import com.statics.RankingInfo;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import static com.common.Constant.RANKING.*;
+import static com.common.Constant.RANK_EVENT.*;
 
 public class ExtRankingInfo extends RankingInfo {
   public static ExtRankingInfo of() {
