@@ -33,7 +33,6 @@ import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
-import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
@@ -67,8 +66,6 @@ import static com.common.Constant.*;
 // don't share data by communication, communication by sharing data
 @SuppressWarnings("unused")
 public class HBServer extends AbstractVerticle {
-  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HBServer.class);
-
   public static Cruder<Session>  cruder;
   public static ReactiveCluster  rxCluster;
   public static ReactiveBucket   rxSessionBucket;
@@ -115,7 +112,7 @@ public class HBServer extends AbstractVerticle {
       GroupPool.removeAll();
       UserLDB.syncLDBToDB(LEADER_BOARD.TALENT_LDB_ID);
       UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
-      LOGGER.info("HBServer shutdown hook");
+      LOG.console("HBServer shutdown hook");
     }));
 
 
@@ -172,7 +169,7 @@ public class HBServer extends AbstractVerticle {
       }
     }
     catch (Exception ioe) {
-      LOGGER.error(ioe.getMessage());
+      LOG.globalException(ioe);
       startPromise.fail(ioe);
     }
 
@@ -255,7 +252,7 @@ public class HBServer extends AbstractVerticle {
       nodeBus                              = String.format("%d.%s.bus", nodeId, nodeName);
     }
     else {
-      LOGGER.error(String.format("critical invalid node id: %d", nodeId));
+      LOG.globalException(String.format("critical invalid node id: %d", nodeId));
     }
   }
 
@@ -283,9 +280,9 @@ public class HBServer extends AbstractVerticle {
             .subscribe(
                     timed -> {
                       SessionPool.dailyReset.run();
-                      LOGGER.info("execute new day task");
+                      LOG.console("execute new day task");
                     },
-                    fault -> LOGGER.error("error new day task")
+                    fault -> LOG.globalException("error new day task")
             );
 
     String gameShowOpenCron = String.format("%d %d %d,%d * * ? *",
@@ -298,9 +295,9 @@ public class HBServer extends AbstractVerticle {
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = true;
                       SessionPool.resetGameShowIdols.run();
-                      LOGGER.info("open game show");
+                      LOG.console("open game show");
                     },
-                    fault -> LOGGER.error("error open game show task")
+                    fault -> LOG.globalException("error open game show task")
             );
 
     String gameShowCloseCron = String.format("%d %d %d,%d * * ? *",
@@ -313,9 +310,9 @@ public class HBServer extends AbstractVerticle {
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = false;
                       SessionPool.resetGameShowIdols.run();
-                      LOGGER.info("close game show");
+                      LOG.console("close game show");
                     },
-                    fault -> LOGGER.error("error close game show task")
+                    fault -> LOG.globalException("error close game show task")
             );
   }
 

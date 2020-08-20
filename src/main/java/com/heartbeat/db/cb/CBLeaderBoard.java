@@ -1,5 +1,6 @@
 package com.heartbeat.db.cb;
 
+import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.GetResult;
 import com.heartbeat.HBServer;
@@ -7,11 +8,8 @@ import com.heartbeat.db.Cruder;
 import com.heartbeat.db.dao.LeaderBoardDAO;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CBLeaderBoard implements Cruder<LeaderBoardDAO> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CBLeaderBoard.class);
   private ReactiveBucket rxIndexBucket;
   private CBLeaderBoard() {
     rxIndexBucket = HBServer.rxIndexBucket;
@@ -72,7 +70,7 @@ public class CBLeaderBoard implements Cruder<LeaderBoardDAO> {
       return true;
     }
     catch (Exception e) {
-      LOGGER.error(e.getMessage());
+      LOG.globalException(e);
       return false;
     }
   }

@@ -51,8 +51,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       }
     }
     catch (Exception e) {
-
-      LOG.globalException(e.getMessage());
+      LOG.globalException(e);
     }
 
   }

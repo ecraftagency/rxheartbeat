@@ -1,5 +1,6 @@
 package com.heartbeat.db.cb;
 
+import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.MutationResult;
 import com.heartbeat.HBServer;
@@ -11,12 +12,9 @@ import com.heartbeat.model.data.UserGroup;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("unused")
 public class CBGroup implements Cruder<UserGroup> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CBGroup.class);
   private ReactiveBucket      rxPersistBucket;
   private static CBGroup      instance = new CBGroup();
   private static final String keyPrefix = "group";
@@ -104,13 +102,13 @@ public class CBGroup implements Cruder<UserGroup> {
                     handler.handle(Future.succeededFuture("ok"));
                   },
                   err -> {
-                    LOGGER.error("red alert: already unmap sid_gid but fail to delete group from db, gid: " + id + " sid: " + group.owner);
+                    LOG.globalException("red alert: already unmap sid_gid but fail to delete group from db, gid: " + id + " sid: " + group.owner);
                     handler.handle(Future.failedFuture(err.getMessage()));
                   }
           );
         }
         else {
-          LOGGER.error("red alert: sid_gid fail to unmap but have group instance online, gid: " + id + " sid: " + group.owner);
+          LOG.globalException("red alert: sid_gid fail to unmap but have group instance online, gid: " + id + " sid: " + group.owner);
           handler.handle(Future.failedFuture(unmapRes.cause().getMessage()));
         }
       });

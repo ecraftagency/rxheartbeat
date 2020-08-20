@@ -8,12 +8,9 @@ import com.heartbeat.db.Counter;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 //depend upon abstraction not implementation
-@SuppressWarnings("unused")
 public class CBCounter implements Counter {
-  private static final Logger LOGGER  = LoggerFactory.getLogger(CBCounter.class);
   private static CBCounter instance   = new CBCounter();
 
   private ReactiveBucket rxIndexBucket;

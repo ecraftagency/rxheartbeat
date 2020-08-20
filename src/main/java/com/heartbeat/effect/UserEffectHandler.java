@@ -1,11 +1,10 @@
 package com.heartbeat.effect;
 
+import com.common.LOG;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserGameInfo;
 import com.statics.HeadData;
 import com.transport.EffectResult;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -14,8 +13,6 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class UserEffectHandler implements EffectHandler{
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserEffectHandler.class);
-
   private static final int LINEAR_INCREASE                = 1;
   private static final int PRODUCTION_RATE_INCREASE_1000  = 2;
   private static final int BOUND_INCREASE                 = 3;
@@ -61,7 +58,8 @@ public class UserEffectHandler implements EffectHandler{
       return UserGameInfo.class.getField(fieldName);
     }
     catch (Exception e) {
-      LOGGER.error("UserGameInfo could not found field " + fieldName);
+      LOG.globalException(e);
+      LOG.globalException("UserGameInfo could not found field " + fieldName);
       return null;
     }
   }
@@ -83,7 +81,7 @@ public class UserEffectHandler implements EffectHandler{
           result = EffectHandler.SUCCESS;
 
         } catch (IllegalAccessException e) {
-          LOGGER.error(e.getMessage());
+          LOG.globalException(e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
@@ -137,7 +135,7 @@ public class UserEffectHandler implements EffectHandler{
 
           result = EffectHandler.SUCCESS;
         } catch (IllegalAccessException e) {
-          LOGGER.error(e.getMessage());
+          LOG.globalException(e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
@@ -160,7 +158,7 @@ public class UserEffectHandler implements EffectHandler{
           result = EffectHandler.SUCCESS;
 
         } catch (Exception e) {
-          LOGGER.error(e.getMessage());
+          LOG.globalException(e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
@@ -186,7 +184,7 @@ public class UserEffectHandler implements EffectHandler{
           }
 
         } catch (IllegalAccessException e) {
-          LOGGER.error(e.getMessage());
+          LOG.globalException(e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }

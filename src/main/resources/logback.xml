@@ -2,7 +2,6 @@
     <property name="LOG_PATH" value="logs" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -11,13 +10,14 @@
     <appender name="auth_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/auth_exception.log</file>
         <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/auth_exception.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>20MB</totalSizeCap>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/auth_exception%i.bak.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
         </rollingPolicy>
-
-        <withJansi>true</withJansi>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -26,13 +26,14 @@
     <appender name="global_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/global_exception.log</file>
         <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/global_exception.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>20MB</totalSizeCap>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/global_exception%i.bak.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
         </rollingPolicy>
-
-        <withJansi>true</withJansi>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -41,37 +42,34 @@
     <appender name="pool_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/pool_exception.log</file>
         <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/pool_exception.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>20MB</totalSizeCap>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/pool_exception%i.bak.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
         </rollingPolicy>
-
-        <withJansi>true</withJansi>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!--appender name="auth_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/auth_exception.log</file>
+    <appender name="payment_exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/payment_exception.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/logs/transformer-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/payment_exception%i.bak.log</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>10</maxIndex>
         </rollingPolicy>
-
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
             <maxFileSize>10MB</maxFileSize>
         </triggeringPolicy>
-
-        <withJansi>true</withJansi>
-
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
-    </appender-->
+    </appender>
 
     <logger name="auth_exception" level="info" additivity="true">
         <appender-ref ref="auth_exception"/>
@@ -83,6 +81,10 @@
 
     <logger name="pool_exception" level="info" additivity="true">
         <appender-ref ref="pool_exception"/>
+    </logger>
+
+    <logger name="payment_exception" level="info" additivity="true">
+        <appender-ref ref="payment_exception"/>
     </logger>
 
     <root level="info">

@@ -1,11 +1,9 @@
 package com.heartbeat.effect;
 
+import com.common.LOG;
 import com.heartbeat.model.Session;
-import com.heartbeat.model.data.UserIdol;
 import com.transport.EffectResult;
 import com.transport.model.Idols;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -15,8 +13,6 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class IdolEffectHandlerV2 implements EffectHandler{
-  private static final Logger LOGGER = LoggerFactory.getLogger(IdolEffectHandlerV2.class);
-
   @FunctionalInterface
   private interface SubHandler {
     String handleEffect(Session session, Idols.Idol idol, Map<Integer, Field> updateFields, final List<Integer> effectFormat);
@@ -47,7 +43,8 @@ public class IdolEffectHandlerV2 implements EffectHandler{
       return Idols.Idol.class.getField(fieldName);
     }
     catch (Exception e) {
-      LOGGER.error("UserGameInfo could not found field " + fieldName);
+      LOG.globalException(e);
+      LOG.globalException("UserGameInfo could not found field " + fieldName);
       return null;
     }
   }
@@ -69,7 +66,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), amount));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOGGER.error(e.getMessage());
+            LOG.globalException(e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -91,7 +88,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), (long)(oldVale*scl)));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOGGER.error(e.getMessage());
+            LOG.globalException(e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -113,7 +110,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), rangeIncrement));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOGGER.error(e.getMessage());
+            LOG.globalException(e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -135,7 +132,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), increment));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOGGER.error(e.getMessage());
+            LOG.globalException(e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -160,7 +157,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
               result = EffectHandler.SUCCESS;
             }
           } catch (IllegalAccessException e) {
-            LOGGER.error(e.getMessage());
+            LOG.globalException(e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
