@@ -1,17 +1,25 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
+import com.common.Utilities;
+import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.service.SessionInjector;
 import com.heartbeat.service.impl.EvilInjector;
+import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InternalController implements Handler<Message<JsonObject>> {
   SessionInjector sessionInjector;
@@ -32,8 +40,11 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getSession":
           processGetSession(ctx);
           return;
+        case "sendMail":
+          LOG.console("incomming send mail request");
+          processSendMail(ctx);
+          return;
         default:
-          resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
           break;
       }
@@ -44,6 +55,33 @@ public class InternalController implements Handler<Message<JsonObject>> {
       LOG.globalException(e);
     }
 
+  }
+
+  private void processSendMail(Message<JsonObject> ctx) {
+    String title     = ctx.body().getString("mailTitle");
+    String content   = ctx.body().getString("mailContent");
+    String item      = ctx.body().getString("mailItems");
+    JsonObject resp  = new JsonObject();
+
+    try {
+      addInbox(title, content, item);
+      resp.put("msg", "ok");
+      ctx.reply(resp);
+    }
+    catch (Exception e) {
+      resp.put("msg", e.getMessage());
+      ctx.reply(resp);
+    }
+  }
+
+  private void addInbox(String title, String msg, String reward) {
+    Type listOfListOfInt = new TypeToken<List<List<Integer>>>() {}.getType();
+    List<List<Integer>> r = Utilities.gson.fromJson(reward, listOfListOfInt);
+    if (r == null) {
+      r = new ArrayList<>();
+    }
+    MailObj mailObj = MailObj.of(title, msg, r, MailObj.MSG_TYPE_PUBLIC);
+    UserInbox.addPublicMessage(mailObj);
   }
 
   private void processInjectSession(Message<JsonObject> ctx) {

@@ -239,11 +239,4 @@ public class Constant {
       GROUP.missionEnd = -1;
     }
   }
-
-  public static void addInbox(String title, String msg, String reward) {
-    Type listOfListOfInt = new TypeToken<List<List<Integer>>>() {}.getType();
-    List<List<Integer>> r = Utilities.gson.fromJson(reward, listOfListOfInt);
-    MailObj mailObj = MailObj.of(title, msg, r, MailObj.MSG_TYPE_PUBLIC);
-    UserInbox.addPublicMessage(mailObj);
-  }
 }
