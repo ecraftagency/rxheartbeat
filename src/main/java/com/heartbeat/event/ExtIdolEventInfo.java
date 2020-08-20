@@ -43,7 +43,7 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
-      LOG.globalException(" Nhóm Idol Đặt Biệt: event time invalid");
+      LOG.console(" Nhóm Idol Đặt Biệt: event time invalid");
     }
   }
 

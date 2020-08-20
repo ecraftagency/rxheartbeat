@@ -39,7 +39,7 @@ public class ExtEventInfo extends EventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
-      LOG.globalException(" Thưởng hạn giờ: event time invalid");
+      LOG.console(" Thưởng hạn giờ: event time invalid");
     }
   }
 

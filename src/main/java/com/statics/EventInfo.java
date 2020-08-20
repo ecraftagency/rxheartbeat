@@ -11,4 +11,36 @@ public class EventInfo {
   public String   strStart;
   public String   strEnd;
   public boolean  active;
+
+  public int getEndTime() {
+    return endTime;
+  }
+
+  public int getEventId() {
+    return eventId;
+  }
+
+  public int getFlushDelay() {
+    return flushDelay;
+  }
+
+  public int getStartTime() {
+    return startTime;
+  }
+
+  public String getEventName() {
+    return eventName;
+  }
+
+  public String getStrEnd() {
+    return strEnd;
+  }
+
+  public String getStrStart() {
+    return strStart;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
 }

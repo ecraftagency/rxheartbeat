@@ -67,7 +67,7 @@ public class ExtRankingInfo extends RankingInfo {
       endTime       = -1;
       this.strStart = "";
       this.strEnd   = "";
-      LOG.globalException(" Đua top cá nhân: event time invalid");
+      LOG.console(" Đua top cá nhân: event time invalid");
     }
   }
 }

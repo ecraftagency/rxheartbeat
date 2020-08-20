@@ -145,7 +145,7 @@ public class Constant {
     public static final int         LDB_CAPACITY              = 100;
     public static final int         FLUSH_DELAY               = 60*60*6;//second
 
-    public static ExtRankingInfo rankingInfo;
+    public static ExtRankingInfo    rankingInfo;
     static {
       rankingInfo = ExtRankingInfo.of();
     }
@@ -199,6 +199,7 @@ public class Constant {
       evtMap.put(VIEW_PROD_EVT_ID,    ExtEventInfo.of(VIEW_PROD_EVT_ID));
       evtMap.put(FAN_PROD_EVT_ID,     ExtEventInfo.of(FAN_PROD_EVT_ID));
       evtMap.put(TOTAL_TALENT_EVT_ID, ExtEventInfo.of(TOTAL_TALENT_EVT_ID));
+      evtMap.put(GAME_SHOW_EVT_ID,    ExtEventInfo.of(GAME_SHOW_EVT_ID));
     }
   }
 
