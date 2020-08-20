@@ -3,6 +3,7 @@ package com.gmtool;
 import com.common.LOG;
 import com.gmtool.controller.MailController;
 import com.gmtool.controller.UserController;
+import com.gmtool.handler.EventHandler;
 import com.gmtool.handler.IndexHandler;
 import com.gmtool.handler.MailHandler;
 import com.gmtool.handler.UserHandler;
@@ -88,6 +89,8 @@ public class GMTool extends AbstractVerticle {
     router.get("/").handler(new IndexHandler());
     router.get("/user").handler(new UserHandler());
     router.get("/mail").handler(new MailHandler());
+    router.get("/event").handler(new EventHandler());
+
     router.post("/api/user").handler(new UserController());
     router.post("/api/mail").handler(new MailController());
 

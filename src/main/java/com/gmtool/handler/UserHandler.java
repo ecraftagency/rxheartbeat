@@ -21,7 +21,6 @@ public class UserHandler implements Handler<RoutingContext> {
   }
   @Override
   public void handle(RoutingContext ctx) {
-    ctx.put("title", "User");
     ctx.put("ver", ThreadLocalRandom.current().nextInt(0,100000));
     ctx.put("navList", navList);
     ctx.put("activeNav", navList.get(1));

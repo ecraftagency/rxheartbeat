@@ -6,6 +6,6 @@ var app = new Vue({
   methods: {
     enterClicked(){
        alert("Enter clicked");
-    }
+    },
   }
 })

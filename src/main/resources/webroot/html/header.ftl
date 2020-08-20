@@ -9,7 +9,7 @@
         rel="stylesheet"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
-  <title>${title}</title>
+  <title>A fast & furious GMTool</title>
 </head>
 <body>
 

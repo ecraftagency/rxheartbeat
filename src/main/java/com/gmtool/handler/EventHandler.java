@@ -17,15 +17,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.gmtool.GMTool.eventBus;
 import static com.gmtool.GMTool.templateEngine;
 
-public class MailHandler implements Handler<RoutingContext> {
+public class EventHandler implements Handler<RoutingContext> {
   public static List<NavEntry> navList = new ArrayList<>();
 
   static  {
     navList.add(NavEntry.ofDefault("Server", "/"));
     navList.add(NavEntry.ofDefault("User", "user"));
-    navList.add(NavEntry.ofActive("Mail"));
+    navList.add(NavEntry.ofDefault("Mail", "mail"));
     navList.add(NavEntry.ofDefault("Config", "config"));
-    navList.add(NavEntry.ofDefault("Event", "event"));
+    navList.add(NavEntry.ofActive("Event"));
   }
 
   @Override
@@ -39,12 +39,12 @@ public class MailHandler implements Handler<RoutingContext> {
 
         ctx.put("ver", ThreadLocalRandom.current().nextInt(0,100000));
         ctx.put("navList", navList);
-        ctx.put("activeNav", navList.get(2));
+        ctx.put("activeNav", navList.get(4));
         ctx.put("nodes", nodes);
 
         templateEngine.render(ctx.data(), "webroot/html/navbar.ftl", nar -> {
           if (nar.succeeded()) {
-            templateEngine.render(ctx.data(), "webroot/html/mail.ftl", rar -> {
+            templateEngine.render(ctx.data(), "webroot/html/event.ftl", rar -> {
               if (rar.succeeded()) {
                 ctx.response().putHeader("Content-Type", "text/html");
                 ctx.response().putHeader("Cache-Control", "no-store");

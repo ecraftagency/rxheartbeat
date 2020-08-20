@@ -19,7 +19,7 @@
                   placeholder="Great power comes with great responsibility..." v-on:keyup.enter="injectUser">
                </div>
         </#if>
-        <#if activeNav.name == "Mail">
+        <#if activeNav.name == "Mail" || activeNav.name == "Event">
             <select class="form-control" v-model:value="serverId" name="serverList" id="serverList">
                 <option value="0">Server</option>
                 <#list nodes as node>

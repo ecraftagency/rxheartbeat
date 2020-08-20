@@ -35,7 +35,6 @@ public class IndexHandler implements Handler<RoutingContext> {
         Type listOdNode     = new TypeToken<List<Node>>() {}.getType();
         List<Node> nodes    = Utilities.gson.fromJson(resp.getJsonArray("nodes").toString(), listOdNode);
 
-        ctx.put("title", "lolol");
         ctx.put("nodes", nodes);
         ctx.put("navList", navList);
         ctx.put("activeNav", navList.get(0));
