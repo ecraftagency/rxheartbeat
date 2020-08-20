@@ -62,7 +62,7 @@ public class AchievementController implements Handler<RoutingContext> {
     VipData.VipDto vipData     = VipData.getVipData(session.userGameInfo.vipExp);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
-    session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
 
     resp.msg                = session.userAchievement.claimAchievement(session, achievementType, milestoneId);
     resp.effectResults      = session.effectResults;
@@ -78,7 +78,7 @@ public class AchievementController implements Handler<RoutingContext> {
     VipData.VipDto vipData     = VipData.getVipData(session.userGameInfo.vipExp);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
     session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
-    session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
 
     resp.data.achievement   = session.userAchievement;
     return resp;

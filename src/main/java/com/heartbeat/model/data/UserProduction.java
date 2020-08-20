@@ -166,7 +166,7 @@ public class UserProduction extends com.transport.model.Production{
     if (currentGoldClaimCount > 0) {
       if (session.userGameInfo.isActiveTime()) {
         int rampageCnt = 0;
-        for (int i = 0; i < currentFanClaimCount; i++) {
+        for (int i = 0; i < currentGoldClaimCount; i++) {
           long moneyAdd = session.userIdol.totalCrt();
 
           //todo calc rampage probability

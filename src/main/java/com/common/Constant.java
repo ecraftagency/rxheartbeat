@@ -134,17 +134,17 @@ public class Constant {
     static {
       evtMap = new HashMap<>();
       ExtIdolEventInfo bpEvt = ExtIdolEventInfo.of(BP_EVT_ID, "5 em hot girl Hàn");
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(48, 92, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(49, 92, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(50, 92, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(51, 92, 10));
-      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(52, 92, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(48, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(49, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(50, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(51, 93, 10));
+      bpEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(52, 93, 10));
 
       ExtIdolEventInfo dbEvt = ExtIdolEventInfo.of(DB_EVT_ID, "4 hot boy ngự lâm");
-      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(43, 93, 10));
-      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(44, 93, 10));
-      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(45, 93, 10));
-      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(46, 93, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(43, 92, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(44, 92, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(45, 92, 10));
+      dbEvt.addIdol(IdolEventInfo.IdolClaimInfo.of(46, 92, 10));
       evtMap.put(BP_EVT_ID, bpEvt);
       evtMap.put(DB_EVT_ID, dbEvt);
     }

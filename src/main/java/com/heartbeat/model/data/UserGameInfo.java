@@ -206,12 +206,12 @@ public class UserGameInfo extends GameInfo {
       session.userIdol.maxDailyRampage        = vip.idolLevelUpLimit;
       session.userProduction.maxDailyRampage  = vip.createLimit;
       //reward idol
-      for (int lv = oldVip.level + 1; lv <= vip.level; lv++) {
-        VipData.VipDto v = VipData.vipMap.get(lv);
-        if (v != null && v.rewardFormat != null && v.rewardFormat.size() == 4) {
-          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, v.rewardFormat);
-        }
-      }
+//      for (int lv = oldVip.level + 1; lv <= vip.level; lv++) {
+//        VipData.VipDto v = VipData.vipMap.get(lv);
+//        if (v != null && v.rewardFormat != null && v.rewardFormat.size() == 4) {
+//          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, v.rewardFormat);
+//        }
+//      }
     }
   }
 
