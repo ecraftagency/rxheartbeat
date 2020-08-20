@@ -15,8 +15,9 @@ public class UserHandler implements Handler<RoutingContext> {
   static  {
     navList.add(NavEntry.ofDefault("Server", "/"));
     navList.add(NavEntry.ofActive("User"));
-    navList.add(NavEntry.ofDefault("Event", "event"));
+    navList.add(NavEntry.ofDefault("Mail", "mail"));
     navList.add(NavEntry.ofDefault("Config", "config"));
+    navList.add(NavEntry.ofDefault("Event", "event"));
   }
   @Override
   public void handle(RoutingContext ctx) {

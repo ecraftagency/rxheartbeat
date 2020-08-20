@@ -193,7 +193,7 @@ public class UserGroup extends Group {
           Mission mission = member.missions.get(gm.id);
           if (mission == null)
             continue;
-          if (mission.count > gm.hitCount)
+          if (mission.count >= gm.hitCount)
             hitMember++;
         }
         res.put(gm.id, hitMember);
