@@ -10,7 +10,7 @@ import io.vertx.ext.web.RoutingContext;
 import static com.gmtool.GMTool.eventBus;
 
 // client request -> determining node -> fwd request => process => transform => response -> response
-public class ForwardController implements Handler<RoutingContext> {
+public class Controller implements Handler<RoutingContext> {
   private static DeliveryOptions options = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
 
   @Override

@@ -87,8 +87,8 @@ public class GMTool extends AbstractVerticle {
 
     router.route().handler(BodyHandler.create());
     router.route().handler(StaticHandler.create());
-    router.post("/api/fwd").handler(new ForwardController());
-    router.get("/:path").handler(new PageRenderer());
+    router.post("/api/fwd").handler(new Controller());
+    router.get("/:path").handler(new Renderer());
     router.get("/").handler(c -> c.response().setStatusCode(303).putHeader("Location", "server").end());
 
     vertx.createHttpServer().requestHandler(router).listen(3000);

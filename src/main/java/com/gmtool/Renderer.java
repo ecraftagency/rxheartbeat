@@ -14,7 +14,7 @@ import java.util.List;
 import static com.gmtool.GMTool.eventBus;
 import static com.gmtool.GMTool.templateEngine;
 
-public class PageRenderer implements Handler<RoutingContext> {
+public class Renderer implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
     String path = ctx.request().getParam("path");

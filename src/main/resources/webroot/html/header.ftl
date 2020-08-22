@@ -9,7 +9,7 @@
         rel="stylesheet">
   <link href="./css/style.css"
         rel="stylesheet">
-  <title>A fast & furious GMTool</title>
+  <title>A simplest GMTool ever </title>
 </head>
 <body>
 
