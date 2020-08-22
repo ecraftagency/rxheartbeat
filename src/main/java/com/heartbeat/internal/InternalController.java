@@ -1,4 +1,4 @@
-package com.heartbeat.controller;
+package com.heartbeat.internal;
 
 import com.common.LOG;
 import com.common.Utilities;
@@ -9,12 +9,12 @@ import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.service.SessionInjector;
 import com.heartbeat.service.impl.EvilInjector;
+import com.transport.IntMessage;
 import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.lang.reflect.Type;
@@ -27,6 +27,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
   public InternalController() {
     sessionInjector = new EvilInjector();
   }
+
   @Override
   public void handle(Message<JsonObject> ctx) {
     JsonObject resp = new JsonObject();
@@ -34,14 +35,13 @@ public class InternalController implements Handler<Message<JsonObject>> {
       JsonObject json = ctx.body();
       String  cmd     = json.getString("cmd");
       switch (cmd) {
-        case "inject":
+        case "injectSession":
           processInjectSession(ctx);
           break;
         case "getSession":
           processGetSession(ctx);
           return;
         case "sendMail":
-          LOG.console("incomming send mail request");
           processSendMail(ctx);
           return;
         default:
@@ -54,7 +54,6 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException(e);
     }
-
   }
 
   private void processSendMail(Message<JsonObject> ctx) {
@@ -85,21 +84,21 @@ public class InternalController implements Handler<Message<JsonObject>> {
   }
 
   private void processInjectSession(Message<JsonObject> ctx) {
-    int sessionId     = ctx.body().getInteger("sessionId");
-    String path       = ctx.body().getString("path");
-    String value      = ctx.body().getString("value");
-    JsonObject resp   = new JsonObject();
+    String sessionId      = ctx.body().getString("sessionId");
+    String path           = ctx.body().getString("path");
+    String value          = ctx.body().getString("value");
+    JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
 
-    loadSession(sessionId, resp, sr -> {
+    loadSession(Integer.parseInt(sessionId), resp, sr -> {
       if (sr.succeeded()) {
         try {
           Session session = sr.result();
           sessionInjector.inject(session, path, value);
 
           resp.put("msg", "ok");
-          resp.put("session", Json.encode(sr.result()));
-          if (resp.getString("ctx").equals("offline")) {
-            CBSession.getInstance().sync(Integer.toString(sessionId), session, ar -> {});
+          resp.put("session", Transformer.transformSession(session));
+          if (resp.getString("state").equals("offline")) {
+            CBSession.getInstance().sync(sessionId, session, ar -> {});
           }
           ctx.reply(resp);
         }
@@ -116,12 +115,13 @@ public class InternalController implements Handler<Message<JsonObject>> {
   }
 
   private void processGetSession(Message<JsonObject> ctx) {
-    int         sessionId   = ctx.body().getInteger("sessionId");
-    JsonObject  resp        = new JsonObject();
-    loadSession(sessionId, resp, sr -> {
+    String   strSessionId   = ctx.body().getString("sessionId");
+    JsonObject  req         = ctx.body();
+    JsonObject  resp        = IntMessage.resp(req.getString("cmd"));
+    loadSession(Integer.parseInt(strSessionId), resp, sr -> {
       if (sr.succeeded()) {
         resp.put("msg", "ok");
-        resp.put("session", Json.encode(sr.result()));
+        resp.put("session", Transformer.transformSession(sr.result()));
       }
       else {
         resp.put("msg", "session not found");
@@ -130,16 +130,16 @@ public class InternalController implements Handler<Message<JsonObject>> {
     });
   }
 
-  private void loadSession(int sessionId, JsonObject ctx, Handler<AsyncResult<Session>> sr) {
+  private void loadSession(int sessionId, JsonObject resp, Handler<AsyncResult<Session>> sr) {
     Session session   = SessionPool.getSessionFromPool(sessionId);
     if (session != null) {
-      ctx.put("ctx", "online");
+      resp.put("state", "online");
       sr.handle(Future.succeededFuture(session));
     }
     else {
       CBSession.getInstance().load(Integer.toString(sessionId), ar -> {
         if (ar.succeeded()) {
-          ctx.put("ctx", "offline");
+          resp.put("state", "offline");
           sr.handle(Future.succeededFuture(ar.result()));
         }
         else {

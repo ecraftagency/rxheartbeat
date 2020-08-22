@@ -5,6 +5,7 @@ import com.heartbeat.HBServer;
 import com.common.Constant;
 import com.heartbeat.db.dao.PublicMailBoxDAO;
 import com.transport.model.MailObj;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +72,10 @@ public class UserTest {
 
     String defaultAddressNotLoopback = getDefaultAddressNotLoopback();
     System.out.println(defaultAddressNotLoopback);
+    JsonObject json = new JsonObject();
+    json.put("sessionId", 15);
+    Integer nodeId = json.getInteger("nodeId");
+    System.out.println(nodeId);
   }
 
   private static String getDefaultAddressNotLoopback() {

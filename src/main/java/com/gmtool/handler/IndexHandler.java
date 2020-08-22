@@ -2,7 +2,7 @@ package com.gmtool.handler;
 
 import com.common.Constant;
 import com.common.Utilities;
-import com.gmtool.model.NavEntry;
+import com.gmtool.NodeCache;
 import com.google.gson.reflect.TypeToken;
 import com.transport.model.Node;
 import io.vertx.core.Handler;
@@ -17,15 +17,6 @@ import static com.gmtool.GMTool.eventBus;
 import static com.gmtool.GMTool.templateEngine;
 
 public class IndexHandler implements Handler<RoutingContext> {
-  public static List<NavEntry> navList = new ArrayList<>();
-  static  {
-    navList.add(NavEntry.ofActive("Server"));
-    navList.add(NavEntry.ofDefault("User", "user"));
-    navList.add(NavEntry.ofDefault("Mail", "mail"));
-    navList.add(NavEntry.ofDefault("Config", "config"));
-    navList.add(NavEntry.ofDefault("Event", "event"));
-  }
-
   @Override
   public void handle(RoutingContext ctx) {
     JsonObject jsonMessage = new JsonObject().put("cmd", "getNodes");
@@ -36,8 +27,7 @@ public class IndexHandler implements Handler<RoutingContext> {
         List<Node> nodes    = Utilities.gson.fromJson(resp.getJsonArray("nodes").toString(), listOdNode);
 
         ctx.put("nodes", nodes);
-        ctx.put("navList", navList);
-        ctx.put("activeNav", navList.get(0));
+        NodeCache.inst().setNodes(nodes);
 
         templateEngine.render(ctx.data(), "webroot/html/navbar.ftl", nar -> {
           if (nar.succeeded()) {

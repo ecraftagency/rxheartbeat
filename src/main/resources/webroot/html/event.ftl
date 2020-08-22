@@ -1,7 +1,8 @@
 <#include "header.ftl">
 <#include "navbar.ftl">
+<#include "servers.ftl">
 
-<div class="row">
+<div class="row top-buffer">
 <table class="table table-dark">
   <thead>
     <tr>
@@ -21,3 +22,7 @@
 </div>
 
 <#include "footer.ftl">
+
+<style>
+.top-buffer { margin-top:15px; }
+</style>

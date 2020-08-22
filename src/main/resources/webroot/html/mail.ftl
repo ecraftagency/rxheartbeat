@@ -1,5 +1,6 @@
 <#include "header.ftl">
 <#include "navbar.ftl">
+<#include "servers.ftl">
 
 <div class="row top-buffer">
    <div class="float-left" class="col-xl-4">
@@ -31,7 +32,7 @@
 <#include "footer.ftl">
 
 <script>
-const host = 'http://18.141.216.52:3000/api/mail'
+const host = 'http://localhost:3000/api/mail'
 var app = new Vue({
   el: '#app',
   data() {
@@ -79,8 +80,5 @@ var app = new Vue({
 .float-left {
     width: 450px;
 }
-
-.top-buffer {
-    margin-top:15px;
-}
+.top-buffer { margin-top:15px; }
 </style>

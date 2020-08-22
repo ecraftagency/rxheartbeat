@@ -12,6 +12,16 @@ public class Node implements Serializable {
   public String     name;
   public long       lastSync;
 
+  private Node() {
+    id        = 0;
+    ip        = "blank_ip";
+    port      = 0;
+    ccu       = 0;
+    bus       = "null_bus";
+    name      = "blank_name";
+    lastSync  = 0;
+  }
+
   public int getId() {
     return id;
   }
@@ -40,7 +50,7 @@ public class Node implements Serializable {
     return lastSync;
   }
 
-  public static Node of() {
+  public static Node ofNullObject() {
     return new Node();
   }
   public static Node of(int id, String ip, int port, String name, String bus, int ccu) {
