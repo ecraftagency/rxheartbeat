@@ -3,12 +3,14 @@ package com.heartbeat.internal;
 import com.common.Constant;
 import com.heartbeat.event.ExtEventInfo;
 import com.heartbeat.model.Session;
+import com.statics.EventInfo;
 import com.statics.OfficeData;
 import com.statics.PropData;
 import com.statics.VipData;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,8 +25,8 @@ public class Transformer {
     id2Name.put(Constant.USER_EVENT.CRT_PROD_EVT_ID,       "Sáng tác");
     id2Name.put(Constant.USER_EVENT.FAN_PROD_EVT_ID,       "Fan metting");
     id2Name.put(Constant.USER_EVENT.FAN_SPEND_EVT_ID,      "Tiêu hao fan");
-    id2Name.put(Constant.USER_EVENT.GAME_SHOW_EVT_ID,      "Phụ bản game ");
-    id2Name.put(Constant.USER_EVENT.MONEY_SPEND_EVT_ID,    "Tiêu hao ");
+    id2Name.put(Constant.USER_EVENT.GAME_SHOW_EVT_ID,      "Phụ bản game show");
+    id2Name.put(Constant.USER_EVENT.MONEY_SPEND_EVT_ID,    "Tiêu hao gole");
     id2Name.put(Constant.USER_EVENT.TIME_SPEND_EVT_ID,     "Tiêu hao time");
     id2Name.put(Constant.USER_EVENT.TOTAL_TALENT_EVT_ID,   "Tăng tổng tài năng");
   }
@@ -59,8 +61,8 @@ public class Transformer {
 
   public static JsonArray transformUserEvent() {
     JsonArray res = new JsonArray();
-    SimpleDateFormat sdf  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH);
-    sdf.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+    DateFormat formatter = new SimpleDateFormat(EventInfo.DATE_PATTERN);
+    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
     for (ExtEventInfo ei : Constant.USER_EVENT.evtMap.values()){
       String  name        = id2Name.getOrDefault(ei.eventId, "");
@@ -68,10 +70,14 @@ public class Transformer {
       String  strEnd;
 
       try {
-        Date start  = new Date(System.currentTimeMillis());
-        strStart    = sdf.format(start);
-        Date end    = new Date(ei.endTime*1000);
-        strEnd      = sdf.format(end);
+        if (ei.startTime <= 0 || ei.endTime <= 0)
+          throw new IllegalArgumentException();
+
+        Date start  = new Date(ei.startTime*1000L);
+        strStart    = formatter.format(start);
+
+        Date end    = new Date(ei.endTime*1000L);
+        strEnd      = formatter.format(end);
       }
       catch (Exception e) {
         strEnd    = "";
@@ -81,7 +87,7 @@ public class Transformer {
       evt.put("eventId",    ei.eventId);
       evt.put("eventName",  name);
       evt.put("startDate",  strStart);
-      evt.put("endDate",     strEnd);
+      evt.put("endDate",    strEnd);
       evt.put("active",     ei.active ? "Active" : "InActive");
       res.add(evt);
     }

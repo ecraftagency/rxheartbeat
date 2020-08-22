@@ -1,9 +1,11 @@
+import com.common.Utilities;
 import com.couchbase.client.java.ReactiveCluster;
 import com.couchbase.client.java.kv.GetResult;
 import com.gateway.HBGateway;
 import com.heartbeat.HBServer;
 import com.common.Constant;
 import com.heartbeat.db.dao.PublicMailBoxDAO;
+import com.statics.EventInfo;
 import com.transport.model.MailObj;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -13,11 +15,10 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class UserTest {
@@ -25,7 +26,7 @@ public class UserTest {
 
   public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-  public static void main(String[] args) throws ParseException, InterruptedException {
+  public static void main(String[] args) throws Exception {
 //    Calendar cal = Calendar.getInstance();
 //    cal.setTime(dateFormat.parse("06/08/2020 20:54:00"));
 //    int openTime  = (int) (cal.getTimeInMillis()/1000);
@@ -72,10 +73,18 @@ public class UserTest {
 
     String defaultAddressNotLoopback = getDefaultAddressNotLoopback();
     System.out.println(defaultAddressNotLoopback);
-    JsonObject json = new JsonObject();
-    json.put("sessionId", 15);
-    Integer nodeId = json.getInteger("nodeId");
-    System.out.println(nodeId);
+//    JsonObject json = new JsonObject();
+//    json.put("sessionId", 15);
+//    Integer nodeId = json.getInteger("nodeId");
+//    System.out.println(nodeId);
+
+    long mills = Utilities.getMillisFromDateString("21/08/2020 11:05:00", EventInfo.DATE_PATTERN);
+
+    Date date = new Date(mills);
+    DateFormat formatter = new SimpleDateFormat(EventInfo.DATE_PATTERN);
+    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+    String dateFormatted = formatter.format(date);
+    System.out.println(dateFormatted);
   }
 
   private static String getDefaultAddressNotLoopback() {

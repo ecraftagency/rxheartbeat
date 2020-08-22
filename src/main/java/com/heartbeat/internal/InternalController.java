@@ -1,9 +1,11 @@
 package com.heartbeat.internal;
 
+import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.event.ExtEventInfo;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
@@ -47,6 +49,8 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getEvents":
           processGetEvents(ctx);
           return;
+        case "setUserEventTime":
+          processSetUserEventTime(ctx);
         default:
           ctx.reply(resp);
           break;
@@ -60,12 +64,32 @@ public class InternalController implements Handler<Message<JsonObject>> {
   }
 
   /*EVENTS*/
+  private void processSetUserEventTime(Message<JsonObject> ctx) {
+    String strEvt         = ctx.body().getString("eventList");
+    String strStart       = ctx.body().getString("startDate");
+    String strEnd         = ctx.body().getString("endDate");
+    Type listOfInt        = new TypeToken<List<Integer>>() {}.getType();
+    List<Integer> events  = Utilities.gson.fromJson(strEvt, listOfInt);
+
+    for (Integer eventId : events) {
+      ExtEventInfo ei = Constant.USER_EVENT.evtMap.get(eventId);
+      if (ei != null)
+        ei.updateEventTime(strStart, strEnd);
+    }
+
+    JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
+    JsonArray userEvent = Transformer.transformUserEvent();
+    resp.put("userEvents", userEvent);
+    ctx.reply(resp);
+  }
+
   private void processGetEvents(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
     JsonArray userEvent = Transformer.transformUserEvent();
     resp.put("userEvents", userEvent);
     ctx.reply(resp);
   }
+  /*EVENTS*/
 
   private void processSendMail(Message<JsonObject> ctx) {
     String title     = ctx.body().getString("mailTitle");

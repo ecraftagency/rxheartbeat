@@ -25,7 +25,7 @@
 
 <div class="row top-buffer">
    <div class="float-left" class="col-xl-4">
-      <button type="button" class="btn btn-primary btn-lg" v-on:click="sendMail">Gửi</button>
+      <button type="button" class="btn btn-primary" v-on:click="sendMail">Send</button>
    </div>
 </div>
 

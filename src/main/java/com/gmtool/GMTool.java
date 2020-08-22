@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-// A FAST AND FURIOUS GM TOOL
+// A SIMPLE YET FURIOUS GM TOOL
 @SuppressWarnings("unused")
 public class GMTool extends AbstractVerticle {
   public static JsonObject                localConfig;
