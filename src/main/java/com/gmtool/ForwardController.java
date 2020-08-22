@@ -1,4 +1,4 @@
-package com.gmtool.controller;
+package com.gmtool;
 
 import com.common.Constant;
 import com.gmtool.NodeCache;
@@ -40,7 +40,7 @@ public class ForwardController implements Handler<RoutingContext> {
 
     try {
       String strSessionId  = ctx.getBodyAsJson().getString("sessionId");
-      String strNodeId     = ctx.getBodyAsJson().getString("nodeId");
+      String strNodeId     = ctx.getBodyAsJson().getString("serverId");
 
       if (strSessionId != null) {
         sessionId      = Integer.parseInt(strSessionId);

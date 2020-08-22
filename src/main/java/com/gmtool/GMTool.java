@@ -1,9 +1,6 @@
 package com.gmtool;
 
 import com.common.LOG;
-import com.gmtool.controller.ForwardController;
-import com.gmtool.controller.MailController;
-import com.gmtool.controller.UserController;
 import com.gmtool.handler.EventHandler;
 import com.gmtool.handler.IndexHandler;
 import com.gmtool.handler.MailHandler;
@@ -91,9 +88,6 @@ public class GMTool extends AbstractVerticle {
     router.get("/user").handler(new UserHandler());
     router.get("/mail").handler(new MailHandler());
     router.get("/event").handler(new EventHandler());
-
-    router.post("/api/user").handler(new UserController());
-    router.post("/api/mail").handler(new MailController());
     router.post("/api/fwd").handler(new ForwardController());
 
     vertx.createHttpServer().requestHandler(router).listen(3000);

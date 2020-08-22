@@ -15,11 +15,11 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InternalController implements Handler<Message<JsonObject>> {
   SessionInjector sessionInjector;
@@ -44,6 +44,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "sendMail":
           processSendMail(ctx);
           return;
+        case "getEvents":
+          processGetEvents(ctx);
+          return;
         default:
           ctx.reply(resp);
           break;
@@ -54,6 +57,14 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException(e);
     }
+  }
+
+  /*EVENTS*/
+  private void processGetEvents(Message<JsonObject> ctx) {
+    JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
+    JsonArray userEvent = Transformer.transformUserEvent();
+    resp.put("userEvents", userEvent);
+    ctx.reply(resp);
   }
 
   private void processSendMail(Message<JsonObject> ctx) {

@@ -32,7 +32,7 @@
 <#include "footer.ftl">
 
 <script>
-const host = 'http://localhost:3000/api/mail'
+const host = 'http://localhost:3000/api/fwd'
 var app = new Vue({
   el: '#app',
   data() {
