@@ -5,7 +5,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/">Nodes</a>
+            <a class="nav-item nav-link" href="/server">Nodes</a>
             <a class="nav-item nav-link" href="/user">User</a>
             <a class="nav-item nav-link" href="/mail">Mail</a>
             <a class="nav-item nav-link" href="/config">Config</a>

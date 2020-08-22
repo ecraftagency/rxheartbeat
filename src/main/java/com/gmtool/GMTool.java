@@ -1,14 +1,12 @@
 package com.gmtool;
 
+import com.common.Constant;
 import com.common.LOG;
-import com.gmtool.handler.EventHandler;
-import com.gmtool.handler.IndexHandler;
-import com.gmtool.handler.MailHandler;
-import com.gmtool.handler.UserHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.config.NetworkConfig;
 import com.heartbeat.HBServer;
+import com.transport.model.Node;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpMethod;
@@ -24,8 +22,11 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 // A FAST AND FURIOUS GM TOOL
+@SuppressWarnings("unused")
 public class GMTool extends AbstractVerticle {
   public static JsonObject                localConfig;
   public static String                    gatewayIP = "";
@@ -33,12 +34,14 @@ public class GMTool extends AbstractVerticle {
   public static ClusterManager            mgr;
   public static EventBus                  eventBus;
   public static FreeMarkerTemplateEngine  templateEngine;
+  public static List<Node>                nodes;
 
   public static void main(String[] args) throws IOException {
     String config           = new String(Files.readAllBytes(Paths.get("gmtool.json")));
     localConfig             = new JsonObject(config);
     gatewayIP               = localConfig.getString("gatewayIP");
     localIP                 = localConfig.getString("localIP");
+    nodes                   = new ArrayList<>();
 
     Config clusterOption = new Config();
     NetworkConfig network = clusterOption.getNetworkConfig();
@@ -84,13 +87,37 @@ public class GMTool extends AbstractVerticle {
 
     router.route().handler(BodyHandler.create());
     router.route().handler(StaticHandler.create());
-    router.get("/").handler(new IndexHandler());
-    router.get("/user").handler(new UserHandler());
-    router.get("/mail").handler(new MailHandler());
-    router.get("/event").handler(new EventHandler());
     router.post("/api/fwd").handler(new ForwardController());
+    router.get("/:path").handler(new PageRenderer());
+    router.get("/").handler(c -> c.response().setStatusCode(303).putHeader("Location", "server").end());
 
     vertx.createHttpServer().requestHandler(router).listen(3000);
     startPromise.complete();
+  }
+
+  //nodes
+
+  public static void setNodes(List<Node> n) {
+    nodes.clear();
+    nodes.addAll(n);
+  }
+
+  public static List<Node> getNodes() {
+    return nodes;
+  }
+
+  public static Node getNodeById(int nodeId) {
+    for (Node node : nodes)
+      if (node.id == nodeId)
+        return node;
+    return Node.ofNullObject();
+  }
+
+  public static Node getNodeBySessionId(int sessionId) {
+    int nodeId = sessionId / Constant.SYSTEM_INFO.MAX_USER_PER_NODE;
+    for (Node node : nodes)
+      if (node.id == nodeId)
+        return node;
+    return Node.ofNullObject();
   }
 }

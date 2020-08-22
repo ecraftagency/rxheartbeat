@@ -19,8 +19,7 @@
     </thead>
     <tbody>
       <tr v-for="userEvent in resp.userEvents">
-          <!-->each javascript object is a hash map :)<-->
-          <td v-for="key in Object.keys(resp.userEvents[0])">{{ userEvent[key] }}</td>
+        <td v-for="key in Object.keys(resp.userEvents[0])">{{ userEvent[key] }}</td>
       </tr>
     </tbody>
   </table>

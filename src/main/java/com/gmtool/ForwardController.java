@@ -1,7 +1,6 @@
 package com.gmtool;
 
 import com.common.Constant;
-import com.gmtool.NodeCache;
 import com.transport.model.Node;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
@@ -17,7 +16,7 @@ public class ForwardController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
     int nodeId          = getNodeId(ctx);
-    Node node           = NodeCache.inst().getNodeById(nodeId);
+    Node node           = GMTool.getNodeById(nodeId);
     forwardRequest(node, ctx);
   }
 
