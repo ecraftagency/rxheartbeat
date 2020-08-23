@@ -61,6 +61,7 @@ public class Transformer {
     gi.put("Money",       session.userGameInfo.money);
     gi.put("View",        session.userGameInfo.view);
     gi.put("Fan",         session.userGameInfo.fan);
+    gi.put("Time",        session.userGameInfo.time);
 
     for (Map.Entry<Integer, Integer> entry : session.userInventory.userItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());

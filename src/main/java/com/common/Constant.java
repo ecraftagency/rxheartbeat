@@ -29,6 +29,8 @@ public class Constant {
     public static boolean           USE_GLOBAL_FILE_LOG             = true;
     public static boolean           USE_CONSOLE_LOG                 = true;
     public static boolean           USE_POOL_LOG                    = true;
+    public static boolean           USE_PAYMENT_LOG                 = true;
+
     public static long              EB_SEND_TIMEOUT                 = 5000L; //millis
     public static final int         MAX_USER_PER_NODE               = 1000000;
   }
@@ -39,6 +41,13 @@ public class Constant {
     public static int               ONLINE_HEARTBEAT_TIME           = 30; //second
     public static int               ONLINE_HEARTBEAT_CHECK_INTERVAL = 10000; //MILIS
     public static int               SYNC_GROUP_INTERVAL             = 10000; //MILIS
+  }
+
+  public static class PAYMENT {
+    public static final String      SECRET                          = "HVzl34e6vwspyTUAUMc8sutz/IaT";
+    public static final int         NOT_FOUND_STATUS_CODE           = 2;
+    public static final int         SIGN_WRONG_STATUS_CODE          = 3;
+    public static final int         EXPIRE_TIME_STATUS_CODE         = 4;
   }
 
   public static class DB {

@@ -2,6 +2,8 @@ package com.gateway;
 
 import com.common.LOG;
 import com.common.Utilities;
+import com.gateway.controller.MobiWebPayment;
+import com.gateway.controller.GetRoleController;
 import com.gateway.controller.InternalController;
 import com.common.Constant;
 import com.gateway.controller.NodeController;
@@ -74,6 +76,9 @@ public class HBGateway extends AbstractVerticle {
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
     router.get("/nodes").handler(new NodeController());
+    router.get("/api/getrole").handler(new GetRoleController());
+    router.get("/exchange").handler(new MobiWebPayment());
+
     vertx.createHttpServer().requestHandler(router).listen(80);
 
     String address = Constant.SYSTEM_INFO.GATEWAY_EVT_BUS;

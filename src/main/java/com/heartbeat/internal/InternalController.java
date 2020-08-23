@@ -2,6 +2,7 @@ package com.heartbeat.internal;
 
 import com.common.LOG;
 import com.common.Utilities;
+import com.gateway.model.Payload;
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
@@ -15,6 +16,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.lang.reflect.Type;
@@ -49,7 +51,15 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "setUserEventTime":
           processSetUserEventTime(ctx);
+          return;
+        case "getRole100D":
+          processGetRole100D(ctx);
+          return;
+        case "exchange":
+          processMobiWebPayment(ctx);
+          return;
         default:
+          resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
           break;
       }
@@ -59,6 +69,66 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException(e);
     }
+  }
+
+  /*100D Payment handle*/
+  private void processMobiWebPayment(Message<JsonObject> ctx) {
+    JsonObject resp   = new JsonObject();
+    try {
+      JsonObject req  = ctx.body();
+      Payload payload = Json.decodeValue(req.getString("payload"), Payload.class);
+      loadSession(payload.sessionId, resp, sar -> {
+        if (sar.succeeded()) {
+          try {
+            Session session = sar.result();
+            boolean online  = resp.getString("state").equals("online");
+            PaymentHandler.mobiPaymentSuccess(session, payload, online);
+            resp.put("code", 0).put("msg", "Success");
+          }
+          catch (Exception e) {
+            resp.put("code", -9).put("msg", "Exchange fail");
+            LOG.paymentException(e);
+          }
+        }
+        else {
+          resp.put("code", -8).put("msg", "Role name not exist");
+          LOG.paymentException(String.format("Role name not exist sessionId: %d", payload.sessionId));
+        }
+        ctx.reply(resp);
+      });
+    }
+    catch (Exception e) {
+      resp.put("code", -9).put("msg", "Exchange fail");
+      ctx.reply(resp);
+      LOG.paymentException(e);
+    }
+  }
+
+  /*GET ROLE 100D*/
+  /*100DID -> sessionID*/
+  private void processGetRole100D(Message<JsonObject> ctx) {
+    int sessionId   = 2000000; //todo hardcode [sessionId = 1002SessionId(ctx.getString("100DID"))]
+    JsonObject resp = new JsonObject();
+    loadSession(sessionId, resp, sar -> {
+      if (sar.succeeded()) {
+        try {
+          resp.put("msg", "ok");
+          Session session = sar.result();
+          resp.put("getRoleData", new      JsonObject()
+                  .put("ID",        Integer.toString(sessionId))
+                  .put("RoleName",  session.userGameInfo.displayName)
+                  .put("Level",     Integer.toString(session.userGameInfo.titleId)));
+          ctx.reply(resp);
+        }
+        catch (Exception e) {
+          resp.put("msg", e.getMessage());
+          ctx.reply(resp);
+        }
+      }
+      else {
+        resp.put("msg", sar.cause().getMessage());
+      }
+    });
   }
 
   /*EVENTS*/

@@ -8,7 +8,8 @@ import static com.common.Constant.*;
 public class LOG {
   private static final Logger GLOBAL_EXCEPTION  = LoggerFactory.getLogger("global_exception");
   private static final Logger AUTH_EXCEPTION    = LoggerFactory.getLogger("auth_exception");
-  private static final Logger POOL_EXCEPTION    = LoggerFactory.getLogger("auth_exception");
+  private static final Logger POOL_EXCEPTION    = LoggerFactory.getLogger("pool_exception");
+  private static final Logger PAYMENT_EXCEPTION = LoggerFactory.getLogger("payment_exception");
 
   private static final String EXCEPTION_LINE_HEADER = "\n\t";
 
@@ -84,6 +85,29 @@ public class LOG {
 
   public static void poolException(Object ... params) {
     if(SYSTEM_INFO.USE_POOL_LOG) {
+      if (params != null && params.length > 0) {
+        StringBuilder logContent = GlobalVariable.stringBuilder.get().append(';');
+        for (Object param : params)
+          logContent.append(param).append(EXCEPTION_LINE_HEADER);
+        POOL_EXCEPTION.info(logContent.toString());
+      }
+      else {
+        globalException(new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
+      }
+    }
+  }
+
+  public static void paymentException(Throwable cause) {
+    if(SYSTEM_INFO.USE_PAYMENT_LOG) {
+      StringBuilder builder = GlobalVariable.stringBuilder.get().append(cause.getMessage());
+      for (StackTraceElement ste : cause.getStackTrace())
+        builder.append(EXCEPTION_LINE_HEADER).append(ste.toString());
+      POOL_EXCEPTION.info(builder.toString());
+    }
+  }
+
+  public static void paymentException(Object ... params) {
+    if(SYSTEM_INFO.USE_PAYMENT_LOG) {
       if (params != null && params.length > 0) {
         StringBuilder logContent = GlobalVariable.stringBuilder.get().append(';');
         for (Object param : params)
