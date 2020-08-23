@@ -1,52 +1,59 @@
 <#include "header.ftl">
 <#include "navbar.ftl">
-
-<div class ="row top-buffer">
-    <select class="form-control" v-on:change="getEvents(event)" v-model:value="serverId" name="serverList" id="serverList">
-        <option value="0">Server</option>
-        <#list nodes as node>
-          <option value="${node.id}">${node.name}
-        </#list>
-    </select>
-</div>
+<#include "servers.ftl">
 
 <div v-if="isLoaded == true" class ="row top-buffer">
-   <div class="float-left" class="col-xl-4">
+    <div class ="col-ml-4">
+      <select class="form-control" v-model:value="eventType" name="eventType" id="eventType">
+        <option value="0">Thưởng hạn giờ</option>
+        <option value="1">Idol Đặc Biệt</option>
+        <option value="2">Đua top cá nhân</option>
+      </select>
+    </div>
+   <div class="float-left left-buffer" class="col-ml-4">
       <input v-model="userEventList" type="text" class="form-control" id="userEventList" name="userEventList"
       placeholder="Event list">
    </div>
-   <div class="float-left left-buffer" class="col-xl-4">
+   <div class="float-left left-buffer" class="col-ml-4">
       <input v-model="userEventStart" type="text" class="form-control" id="userEventStart" name="userEventStart"
       placeholder="Start Date">
    </div>
-   <div class="float-left left-buffer" class="col-xl-4">
+   <div class="float-left left-buffer" class="col-ml-4">
       <input v-model="userEventEnd" type="text" class="form-control" id="userEventEnd" name="userEventEnd"
       placeholder="End Date">
    </div>
-   <div class="float-left left-buffer" class="col-xl-4">
+   <div class="float-left left-buffer" class="col-ml-4">
       <button type="button" class="btn btn-primary" v-on:click="setUserEventTime">Set Time</button>
    </div>
 </div>
 
-<div v-if="isLoaded == true" class="row top-buffer">
-  <table class="table table-dark">
-    <thead>
-      <tr>
-        <th v-for="key in Object.keys(resp.userEvents[0])">{{ key }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="userEvent in resp.userEvents">
-        <td v-for="key in Object.keys(resp.userEvents[0])">{{ userEvent[key] }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<#list evtType as type>
+    <div v-if="isLoaded == true" class="row top-buffer">
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th v-for="key in Object.keys(resp.${type}[0])">{{ key }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="event in resp.${type}">
+            <td v-for="key in Object.keys(resp.${type}[0])">{{ event[key] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</#list>
 
 <script>
 
 const host = 'http://localhost:3000/api/fwd'
-
+const postOptions = function(data) {
+return {
+     method: 'POST',
+     headers: {'Content-Type': 'application/json',},
+     body: JSON.stringify(data),
+  }
+}
 var app = new Vue({
   el: '#app',
   data() {
@@ -56,60 +63,32 @@ var app = new Vue({
         resp: undefined,
         userEventList: '',
         userEventStart: '',
-        userEventEnd: ''
+        userEventEnd: '',
+        eventType: '0'
     }
   },
   methods: {
-    getEvents: function (event) {
+    serverSelect: function (event) {
        let data = { cmd:'getEvents', serverId: this.serverId};
-       fetch(host, {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(data),
-       })
-       .then(response => response.json())
-       .then(data => {
-         if (data.msg == "ok") {
-           this.resp = data;
-           this.isLoaded = true;
-         }
-         else {
-            alert(data.msg);
-            this.isLoaded = false;
-         }
-       })
-       .catch((error) => {
-         alert(error);
-         this.isLoaded = false;
-       });
+       fetch(host, postOptions(data)).then(response => response.json())
+       .then(data => this.success(data))
+       .catch((error) => this.isLoaded = false);
     },
     setUserEventTime: function(event) {
-       let data = { cmd:'setUserEventTime', serverId: this.serverId, eventList: this.userEventList, startDate: this.userEventStart, endDate: this.userEventEnd};
-       fetch(host, {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(data),
-       })
-       .then(response => response.json())
-       .then(data => {
-         if (data.msg == "ok") {
-           this.resp = data;
-           this.isLoaded = true;
-           alert(data.msg);
-         }
-         else {
-            alert(data.msg);
-            this.isLoaded = false;
-         }
-       })
-       .catch((error) => {
-         alert(error);
+       let data = { cmd:'setUserEventTime', eventType: this.eventType, serverId: this.serverId, eventList: this.userEventList, startDate: this.userEventStart, endDate: this.userEventEnd};
+       fetch(host, postOptions(data)).then(response => response.json())
+       .then(data => this.success(data))
+       .catch((error) => (error) => this.isLoaded = false);
+    },
+    success: function(data) {
+      if (data.msg == "ok") {
+        this.resp = data;
+        this.isLoaded = true;
+      }
+      else {
+         alert(data.msg);
          this.isLoaded = false;
-       });
+      }
     }
   }
 });

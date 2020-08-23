@@ -20,7 +20,7 @@ public class ExtEventInfo extends EventInfo {
     return ei;
   }
 
-  public void updateEventTime(String startDate, String endDate) {
+  public ExtEventInfo updateEventTime(String startDate, String endDate) {
     strStart  = startDate;
     strEnd    = endDate;
 
@@ -41,6 +41,8 @@ public class ExtEventInfo extends EventInfo {
       endTime    = -1;
       LOG.console(" Thưởng hạn giờ: event time invalid");
     }
+
+    return this;
   }
 
   public void setActive(boolean active) {

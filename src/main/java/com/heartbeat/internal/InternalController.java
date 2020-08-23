@@ -1,11 +1,9 @@
 package com.heartbeat.internal;
 
-import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBSession;
-import com.heartbeat.event.ExtEventInfo;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
@@ -19,9 +17,9 @@ import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-
 import java.lang.reflect.Type;
 import java.util.*;
+import static com.common.Constant.*;
 
 public class InternalController implements Handler<Message<JsonObject>> {
   SessionInjector sessionInjector;
@@ -68,25 +66,48 @@ public class InternalController implements Handler<Message<JsonObject>> {
     String strEvt         = ctx.body().getString("eventList");
     String strStart       = ctx.body().getString("startDate");
     String strEnd         = ctx.body().getString("endDate");
+    int eventType         = Integer.parseInt(ctx.body().getString("eventType"));
     Type listOfInt        = new TypeToken<List<Integer>>() {}.getType();
     List<Integer> events  = Utilities.gson.fromJson(strEvt, listOfInt);
+    JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
 
-    for (Integer eventId : events) {
-      ExtEventInfo ei = Constant.USER_EVENT.evtMap.get(eventId);
-      if (ei != null)
-        ei.updateEventTime(strStart, strEnd);
+    if (eventType < 0 || eventType > 2) {
+      resp.put("msg", "invalid event type");
+      ctx.reply(resp);
+      return;
     }
 
-    JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
+    if (eventType == 0) {
+      for (Integer eventId : events)
+        USER_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
+    }
+    else if (eventType == 1) {
+      for (Integer eventId : events)
+        IDOL_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
+    }
+    else {
+      RANK_EVENT.rankingInfo.setRankingTime(strStart, strEnd);
+    }
+
     JsonArray userEvent = Transformer.transformUserEvent();
+    JsonArray idolEvent = Transformer.transformIdolEvent();
+    JsonArray rankEvent = Transformer.transformRankingEvent();
     resp.put("userEvents", userEvent);
+    resp.put("idolEvents", idolEvent);
+    resp.put("rankEvents", rankEvent);
     ctx.reply(resp);
   }
 
   private void processGetEvents(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
     JsonArray userEvent = Transformer.transformUserEvent();
+    JsonArray idolEvent = Transformer.transformIdolEvent();
+    JsonArray rankEvent = Transformer.transformRankingEvent();
+
     resp.put("userEvents", userEvent);
+    resp.put("idolEvents", idolEvent);
+    resp.put("rankEvents", rankEvent);
+
     ctx.reply(resp);
   }
   /*EVENTS*/

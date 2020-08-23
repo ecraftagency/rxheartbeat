@@ -146,6 +146,7 @@ public class Constant {
     public static final int         FLUSH_DELAY               = 60*60*24;//second
 
     public static ExtRankingInfo    rankingInfo;
+
     static {
       rankingInfo = ExtRankingInfo.of();
     }

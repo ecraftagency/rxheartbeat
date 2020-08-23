@@ -67,6 +67,8 @@ var app = new Vue({
          alert(error);
          console.log(error);
        });
+    },
+    serverSelect: function(event) {
     }
   }
 });

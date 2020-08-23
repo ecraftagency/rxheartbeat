@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.gmtool.GMTool.eventBus;
@@ -35,6 +36,7 @@ public class Renderer implements Handler<RoutingContext> {
         return;
       case "event":
         ctx.put("nodes", GMTool.getNodes());
+        ctx.put("evtType", Arrays.asList("userEvents", "idolEvents", "rankEvents")); //todo double check template/controller
         render("webroot/html/event.ftl", ctx);
         return;
       default:

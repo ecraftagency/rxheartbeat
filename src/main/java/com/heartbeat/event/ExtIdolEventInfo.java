@@ -24,7 +24,7 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     return ei;
   }
 
-  public void updateEventTime(String startDate, String endDate) {
+  public ExtIdolEventInfo updateEventTime(String startDate, String endDate) {
     strStart  = startDate;
     strEnd    = endDate;
 
@@ -45,6 +45,8 @@ public class ExtIdolEventInfo extends IdolEventInfo {
       endTime    = -1;
       LOG.console(" Nhóm Idol Đặt Biệt: event time invalid");
     }
+
+    return this;
   }
 
   public void setActive(boolean active) {
