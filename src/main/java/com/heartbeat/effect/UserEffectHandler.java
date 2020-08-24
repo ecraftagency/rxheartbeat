@@ -154,7 +154,7 @@ public class UserEffectHandler implements EffectHandler{
           long    oldVale         = field.getLong(session.userGameInfo);
           int     increment       = step*level;
           field.setLong(session.userGameInfo, oldVale + increment);
-          session.effectResults.add(EffectResult.of(1,propertyId, increment));
+          session.effectResults.add(EffectResult.of(0,propertyId, increment));
           result = EffectHandler.SUCCESS;
 
         } catch (Exception e) {
