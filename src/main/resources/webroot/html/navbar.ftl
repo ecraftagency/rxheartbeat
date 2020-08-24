@@ -10,6 +10,7 @@
             <a class="nav-item nav-link" href="/mail">Mail</a>
             <a class="nav-item nav-link" href="/config">Config</a>
             <a class="nav-item nav-link" href="/event">Events</a>
+            <a class="nav-item nav-link" href="/ldb">LeaderBoard</a>
         </div>
       </div>
     </nav>

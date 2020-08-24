@@ -5,7 +5,6 @@ import com.common.Utilities;
 import com.google.gson.reflect.TypeToken;
 import com.transport.model.Node;
 import io.vertx.core.Handler;
-import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
@@ -17,9 +16,13 @@ import static com.gmtool.GMTool.eventBus;
 import static com.gmtool.GMTool.templateEngine;
 
 public class Renderer implements Handler<RoutingContext> {
+  //public static String host = "http://localhost:3000";
+  public static String host = "http://18.141.216.52:3000";
+
   @Override
   public void handle(RoutingContext ctx) {
     String path = ctx.request().getParam("path");
+    ctx.put("host", host);
     switch (path) {
       case "server":
         renderIndex(ctx);
@@ -33,7 +36,11 @@ public class Renderer implements Handler<RoutingContext> {
         return;
       case "config":
         ctx.put("nodes", GMTool.getNodes());
-        render("webroot/html/user.ftl", ctx);
+        render("webroot/html/config.ftl", ctx);
+        return;
+      case "ldb":
+        ctx.put("nodes", GMTool.getNodes());
+        render("webroot/html/leaderboard.ftl", ctx);
         return;
       case "event":
         ctx.put("nodes", GMTool.getNodes());

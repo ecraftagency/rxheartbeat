@@ -46,7 +46,7 @@
 
 <script>
 
-const host = 'http://localhost:3000/api/fwd'
+const host = '${host}/api/fwd'
 const postOptions = function(data) {
 return {
      method: 'POST',

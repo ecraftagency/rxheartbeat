@@ -13,7 +13,7 @@ public class ExtEventInfo extends EventInfo {
     ei.eventId    = id;
     ei.strStart   = "";
     ei.strEnd     = "";
-    ei.active     = false;
+    ei.active     = true;
     ei.startTime  = -1;
     ei.endTime    = -1;
     ei.flushDelay = FLUSH_DELAY;

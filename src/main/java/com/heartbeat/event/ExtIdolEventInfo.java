@@ -16,7 +16,7 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     ei.eventName  = name;
     ei.strStart   = "";
     ei.strEnd     = "";
-    ei.active     = false;
+    ei.active     = true;
     ei.startTime  = -1;
     ei.endTime    = -1;
     ei.flushDelay = FLUSH_DELAY;

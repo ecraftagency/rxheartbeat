@@ -8,8 +8,10 @@ import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
+import com.heartbeat.service.ConstantInjector;
 import com.heartbeat.service.SessionInjector;
 import com.heartbeat.service.impl.EvilInjector;
+import com.heartbeat.service.impl.MaydayInjector;
 import com.transport.IntMessage;
 import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
@@ -25,9 +27,10 @@ import static com.common.Constant.*;
 
 public class InternalController implements Handler<Message<JsonObject>> {
   SessionInjector sessionInjector;
-
+  ConstantInjector constantInjector;
   public InternalController() {
     sessionInjector = new EvilInjector();
+    constantInjector = new MaydayInjector();
   }
 
   @Override
@@ -58,6 +61,15 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "exchange":
           processMobiWebPayment(ctx);
           return;
+        case "getConfig":
+          processGetConfig(ctx);
+          return;
+        case "injectConstant":
+          processInjectConstant(ctx);
+          return;
+        case "getLDB":
+          processGetLDB(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -69,6 +81,41 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException(e);
     }
+  }
+
+  private void processGetLDB(Message<JsonObject> ctx) {
+    JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
+    Transformer.transformLDB(LEADER_BOARD.TALENT_LDB_ID, ar -> {
+      if (ar.succeeded()) {
+        resp.put("ldb", ar.result());
+        ctx.reply(resp);
+      }
+    });
+  }
+
+  private void processInjectConstant(Message<JsonObject> ctx) {
+    String path           = ctx.body().getString("path");
+    String value          = ctx.body().getString("value");
+    JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
+
+    try {
+      constantInjector.inject(path, value);
+
+      resp.put("msg", "ok");
+      resp.put("config", Transformer.transformConstant());
+      ctx.reply(resp);
+    }
+    catch (Exception e) {
+      resp.put("msg", e.getMessage());
+      ctx.reply(resp);
+      e.printStackTrace();
+    }
+  }
+
+  private void processGetConfig(Message<JsonObject> ctx) {
+    JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
+    resp.put("config", Transformer.transformConstant());
+    ctx.reply(resp);
   }
 
   /*100D Payment handle*/

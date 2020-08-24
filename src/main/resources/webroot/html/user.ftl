@@ -8,7 +8,7 @@
 
    <div class="float-left" class="col-xl-4">
       <input v-model="codeVal" type="text" class="form-control" id="codeValue" name="codeValue"
-      placeholder="Great power comes with great responsibility..." v-on:keyup.enter="injectUser">
+      placeholder="eg session.userGameInfo.exp += 200; (Great power comes with great responsibility...)" v-on:keyup.enter="injectUser">
    </div>
 </div>
 
@@ -25,6 +25,7 @@
             <td>{{ value }}</td>
             <td>{{ key }}</td>
           </tr>
+          <tr><td>Easy, more to come...</td></tr>
       </tbody>
     </table>
 </div>
@@ -49,7 +50,7 @@
 <#include "footer.ftl">
 
 <script>
-const host = 'http://localhost:3000/api/fwd'
+const host = '${host}/api/fwd'
 var app = new Vue({
   el: '#app',
   data() {
@@ -118,7 +119,7 @@ var app = new Vue({
 <style>
 #codeValue {
   margin-left: 14px;
-  width: 450px;
+  width: 800px;
 }
 .top-buffer { margin-top:15px; }
 </style>

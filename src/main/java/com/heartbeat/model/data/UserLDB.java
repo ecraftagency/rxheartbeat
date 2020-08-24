@@ -51,6 +51,15 @@ public class UserLDB {
     });
   }
 
+  public static void getLDB(int ldbType, Handler<AsyncResult<List<LDBObj>>> ar) {
+    LeaderBoard<Integer, LDBObj> ldb = leaderBoards.get(ldbType);
+    if (ldb == null)
+      ar.handle(Future.failedFuture("unknown_ranking_type"));
+
+    EventLoop.Command listCommand = new ListCommand<>(ldb, ar);
+    ldbEventLoop.addCommand(listCommand);
+  }
+
   /********************************************************************************************************************/
 
   public static UserLDB ofDefault() {

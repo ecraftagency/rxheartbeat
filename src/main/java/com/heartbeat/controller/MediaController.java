@@ -80,10 +80,11 @@ public class MediaController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processClaimMedia(Session session, RoutingContext ctx) {
-    int answer = ctx.getBodyAsJson().getInteger("answer");
-    ExtMessage resp = ExtMessage.media();
-    resp.msg = session.userGameInfo.claimMedia(session, answer);
-    resp.data.gameInfo = session.userGameInfo;
+    int answer          = ctx.getBodyAsJson().getInteger("answer");
+    ExtMessage resp     = ExtMessage.media();
+    resp.msg            = session.userGameInfo.claimMedia(session, answer);
+    resp.data.gameInfo  = session.userGameInfo;
+    resp.effectResults  = session.effectResults;
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.MEDIA_MISSION_TYPE);
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.MEDIA_ACHIEVEMENT, 1);

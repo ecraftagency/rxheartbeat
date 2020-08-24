@@ -18,26 +18,26 @@ public class MaydayInjector implements ConstantInjector {
   @Override
   public void inject(String path, String value) throws Exception {
     MaydayExecutor mayday = new MaydayExecutor();
-
-    String source = String.format(
-            "import static com.heartbeat.common.Constant.*;\n" +
-            "public class Injector {\n" +
-            "  public static void inject() {\n" +
+    long id               = System.currentTimeMillis();
+    String source         = String.format(
+            "import static com.common.Constant.*;\n" +
+            "public class ConstantInjector {\n" +
+            "  public static void inject%d() {\n" +
             "    %s\n" +
             "  }\n" +
-            "}", value);
+            "}", id, value);
 
     Path javaFile   = mayday.saveSource(source);
     Path classFile  = mayday.compileSource(javaFile);
     Class<?> clazz  = mayday.getClass(classFile);
-    Method inject   = clazz.getMethod("inject");
+    Method inject   = clazz.getMethod(String.format("inject%d", id));
     inject.invoke(null);
   }
 
   public static class MaydayExecutor {
     private Path saveSource(String source) throws IOException {
       String tmpProperty  = System.getProperty("java.io.tmpdir");
-      Path sourcePath     = Paths.get(tmpProperty, "Injector.java");
+      Path sourcePath     = Paths.get(tmpProperty, "ConstantInjector.java");
       Files.write(sourcePath, source.getBytes(StandardCharsets.UTF_8));
       return sourcePath;
     }
@@ -45,14 +45,14 @@ public class MaydayInjector implements ConstantInjector {
     private Path compileSource(Path javaFile) {
       JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
       compiler.run(null, null, null, javaFile.toFile().getAbsolutePath());
-      return javaFile.getParent().resolve("Injector.class");
+      return javaFile.getParent().resolve("ConstantInjector.class");
     }
 
     private Class<?> getClass(Path javaClass)
             throws MalformedURLException, ClassNotFoundException {
       URL classUrl = javaClass.getParent().toFile().toURI().toURL();
       URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classUrl});
-      return Class.forName("Injector", true, classLoader);
+      return Class.forName("ConstantInjector", true, classLoader);
     }
   }
 }
