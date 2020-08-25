@@ -31,7 +31,7 @@ public class ProfileController implements Handler<RoutingContext> {
             resp = processBuyShopItem(session, ctx);
             break;
           case "addVipExp":
-            resp = processAddVipExp(session, ctx);
+            resp = processAddVipExp(session, ctx  );
             break;
           case "userGameInfo":
             resp = processUserGameInfo(session);
@@ -90,6 +90,8 @@ public class ProfileController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processUserLevelUp(Session session) {
+    String a            = null;
+    boolean bug         = a.equals("bug");
     ExtMessage resp = ExtMessage.profile();
     int currentTitle = session.userGameInfo.titleId;
     if (currentTitle == OfficeData.officeLV.size()) {

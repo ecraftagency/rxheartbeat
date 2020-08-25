@@ -1,7 +1,15 @@
 package com.common;
 
+import org.fluentd.logger.FluentLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static com.common.Constant.*;
 
 @SuppressWarnings("unused")
@@ -10,6 +18,7 @@ public class LOG {
   private static final Logger AUTH_EXCEPTION    = LoggerFactory.getLogger("auth_exception");
   private static final Logger POOL_EXCEPTION    = LoggerFactory.getLogger("pool_exception");
   private static final Logger PAYMENT_EXCEPTION = LoggerFactory.getLogger("payment_exception");
+  private static FluentLogger FLUENT            = FluentLogger.getLogger("sbiz");
 
   private static final String EXCEPTION_LINE_HEADER = "\n\t";
 
@@ -19,6 +28,14 @@ public class LOG {
       for (StackTraceElement ste : cause.getStackTrace())
         builder.append(EXCEPTION_LINE_HEADER).append(ste.toString());
       GLOBAL_EXCEPTION.info(builder.toString());
+
+      //fluent LOG
+      Map<String, Object> data = new HashMap<>();
+      List<String> trace       = Arrays.stream(cause.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
+      trace.add(0, cause.getMessage());
+      data.put("type", "global_exception");
+      data.put("msg", trace);
+      FLUENT.log("exception", data);
     }
   }
 
@@ -29,6 +46,12 @@ public class LOG {
         for (Object param : params)
           logContent.append(param).append(EXCEPTION_LINE_HEADER);
         GLOBAL_EXCEPTION.info(logContent.toString());
+
+        //fluent LOG
+        Map<String, Object> data = new HashMap<>();
+        data.put("type", "global_exception");
+        data.put("msg", logContent.toString());
+        FLUENT.log("exception", data);
       }
       else {
         globalException(new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
