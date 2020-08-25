@@ -258,10 +258,14 @@ public class UserIdol extends Idols {
         if (idol.perfApt + EXP_UP_STEP > currentLimit)
           return "aptitude_limit";
         idol.perfApt += EXP_UP_STEP;
+        break;
       case ATTRACTIVE:
         if (idol.attrApt + EXP_UP_STEP > currentLimit)
           return "aptitude_limit";
         idol.attrApt += EXP_UP_STEP;
+        break;
+      default:
+        break;
     }
     idol.aptitudeExp -= EXP_PER_UPGRADE;
     onPropertiesChange(idol);

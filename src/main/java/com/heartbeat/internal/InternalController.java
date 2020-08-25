@@ -108,7 +108,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     catch (Exception e) {
       resp.put("msg", e.getMessage());
       ctx.reply(resp);
-      e.printStackTrace();
+      LOG.globalException(e);
     }
   }
 
@@ -278,6 +278,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
         catch (Exception e) {
           resp.put("msg", e.getMessage());
           ctx.reply(resp);
+          LOG.globalException(e);
         }
       }
       else {

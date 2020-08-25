@@ -21,7 +21,7 @@ public class EvilInjector implements SessionInjector {
     EvilExecutor evil = new EvilExecutor();
     long id           = System.currentTimeMillis();
     String source     = String.format("import com.heartbeat.model.Session;\n" +
-            "public class Injector {\n" +
+            "public class SessionInjector {\n" +
             "  public static void inject%d(Session session) {\n" +
             "    %s\n" +
             "  }\n" +
@@ -38,7 +38,7 @@ public class EvilInjector implements SessionInjector {
   public static class EvilExecutor {
     private Path saveSource(String source) throws IOException {
       String tmpProperty = System.getProperty("java.io.tmpdir");
-      Path sourcePath = Paths.get(tmpProperty, "Injector.java");
+      Path sourcePath = Paths.get(tmpProperty, "SessionInjector.java");
       Files.write(sourcePath, source.getBytes(StandardCharsets.UTF_8));
       return sourcePath;
     }
@@ -46,14 +46,14 @@ public class EvilInjector implements SessionInjector {
     private Path compileSource(Path javaFile) {
       JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
       compiler.run(null, null, null, javaFile.toFile().getAbsolutePath());
-      return javaFile.getParent().resolve("Injector.class");
+      return javaFile.getParent().resolve("SessionInjector.class");
     }
 
     private Class<?> getClass(Path javaClass)
             throws MalformedURLException, ClassNotFoundException {
       URL classUrl = javaClass.getParent().toFile().toURI().toURL();
       URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classUrl});
-      return Class.forName("Injector", true, classLoader);
+      return Class.forName("SessionInjector", true, classLoader);
     }
   }
 }

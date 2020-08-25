@@ -132,7 +132,8 @@ public class ProfileController implements Handler<RoutingContext> {
             session.userGameInfo.gender >= 0 ||
             session.userGameInfo.avatar >= 0) {
       resp.msg = "user_info_exist";
-      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      //ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      return resp;
     }
 
     int newGender           = ctx.getBodyAsJson().getInteger("gender");
