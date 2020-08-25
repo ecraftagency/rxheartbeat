@@ -15,23 +15,26 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     ei.active     = true;
     ei.startTime  = -1;
     ei.endTime    = -1;
-    ei.flushDelay = FLUSH_DELAY;
+    ei.flushDelay = 0;
     ei.idolList   = new HashMap<>();
     return ei;
   }
 
-  public ExtIdolEventInfo updateEventTime(String startDate, String endDate) {
+  public ExtIdolEventInfo updateEventTime(String startDate, String endDate, int flushDelay) {
     try {
-      startTime  = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
-      endTime    = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
-      flushDelay = FLUSH_DELAY;
+      int newStart     = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
+      int newEnd       = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
 
-      int second    = (int)(System.currentTimeMillis()/1000);
-      if (second >= startTime)
-        throw new IllegalArgumentException("event time < current time");
+      int second       = (int)(System.currentTimeMillis()/1000);
+      if (second >= newStart)
+        throw new IllegalArgumentException("[idol event] start time < current time");
 
-      if (endTime - startTime <= 0)
-        throw new IllegalArgumentException("end time < start time");
+      if (newEnd - newStart <= 0)
+        throw new IllegalArgumentException("[idol event] end time < start time");
+
+      startTime       = newStart;
+      endTime         = newEnd;
+      this.flushDelay = FLUSH_DELAY;
     }
     catch (Exception e) {
       startTime  = -1;

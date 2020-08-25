@@ -2,6 +2,10 @@
 <#include "navbar.ftl">
 <#include "servers.ftl">
 
+<script>
+
+</script>
+
 <div v-if="isLoaded == true" class ="row top-buffer">
     <div class ="col-ml-4">
       <select class="form-control" v-model:value="eventType" name="eventType" id="eventType">
@@ -10,19 +14,23 @@
         <option value="2">Đua top cá nhân</option>
       </select>
     </div>
-   <div class="float-left left-buffer" class="col-ml-4">
+   <div class="float-left left-buffer" class="col-sm-4">
       <input v-model="userEventList" type="text" class="form-control" id="userEventList" name="userEventList"
       placeholder="Event list">
    </div>
-   <div class="float-left left-buffer" class="col-ml-4">
-      <input v-model="userEventStart" type="text" class="form-control" id="userEventStart" name="userEventStart"
+   <div class="float-left left-buffer" class="col-sm-4">
+      <input v-model="userEventStart" type="datetime-local" class="form-control" id="userEventStart" name="userEventStart"
       placeholder="Start Date">
    </div>
-   <div class="float-left left-buffer" class="col-ml-4">
-      <input v-model="userEventEnd" type="text" class="form-control" id="userEventEnd" name="userEventEnd"
+   <div class="float-left left-buffer" class="col-sm-4">
+      <input v-model="userEventEnd" type="datetime-local" class="form-control" id="userEventEnd" name="userEventEnd"
       placeholder="End Date">
    </div>
-   <div class="float-left left-buffer" class="col-ml-4">
+   <div class="float-left left-buffer" class="col-sm-4">
+      <input v-model="flushDelay" type="text" class="form-control" id="flushDelay" name="flushDelay"
+      placeholder="TG đóng băng (giờ)">
+   </div>
+   <div class="float-left top-buffer" class="col-sm-4">
       <button type="button" class="btn btn-primary" v-on:click="setUserEventTime">Set Time</button>
    </div>
 </div>
@@ -45,7 +53,6 @@
 </#list>
 
 <script>
-
 const host = '${host}/api/fwd'
 const postOptions = function(data) {
 return {
@@ -64,6 +71,7 @@ var app = new Vue({
         userEventList: '',
         userEventStart: '',
         userEventEnd: '',
+        flushDelay: '',
         eventType: '0'
     }
   },
@@ -75,7 +83,9 @@ var app = new Vue({
        .catch((error) => this.isLoaded = false);
     },
     setUserEventTime: function(event) {
-       let data = { cmd:'setUserEventTime', eventType: this.eventType, serverId: this.serverId, eventList: this.userEventList, startDate: this.userEventStart, endDate: this.userEventEnd};
+       if(!confirm("Coi chừng sự kiện loại này mà id thì của loại kia nha :-w"))
+        return;
+       let data = { cmd:'setUserEventTime', eventType: this.eventType, serverId: this.serverId, eventList: this.userEventList, startDate: this.userEventStart, endDate: this.userEventEnd, flushDelay: this.flushDelay};
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))
        .catch((error) => (error) => this.isLoaded = false);

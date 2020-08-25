@@ -1,6 +1,7 @@
 package com.heartbeat.event;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.common.Utilities;
 import com.statics.EventInfo;
 
@@ -9,30 +10,34 @@ public class ExtEventInfo extends EventInfo {
   public static ExtEventInfo of(int id) {
     ExtEventInfo ei  = new ExtEventInfo();
     ei.eventId    = id;
+    ei.eventName  = "";
     ei.active     = true;
     ei.startTime  = -1;
     ei.endTime    = -1;
-    ei.flushDelay = FLUSH_DELAY;
+    ei.flushDelay = 0;
     return ei;
   }
 
-  public ExtEventInfo updateEventTime(String startDate, String endDate) {
+  public ExtEventInfo updateEventTime(String startDate, String endDate, int flushDelay) {
 
     try {
-      startTime  = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
-      endTime    = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
-      flushDelay = FLUSH_DELAY;
+      int newStart    = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
+      int newEnd      = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
 
-      int second    = (int)(System.currentTimeMillis()/1000);
-      if (second >= startTime)
-        throw new IllegalArgumentException("event time < current time");
+      int second      = (int)(System.currentTimeMillis()/1000);
+      if (second >= newStart)
+        throw new IllegalArgumentException("[user event] start time < current time");
 
-      if (endTime - startTime <= 0)
-        throw new IllegalArgumentException("end time < start time");
+      if (newEnd - newStart <= 0)
+        throw new IllegalArgumentException("[user event] end time < start time");
+
+      startTime       = newStart;
+      endTime         = newEnd;
+      this.flushDelay = flushDelay > 0 ? flushDelay*3600 : FLUSH_DELAY*3600;
+
     }
     catch (Exception e) {
-      startTime  = -1;
-      endTime    = -1;
+      LOG.globalException(e);
     }
 
     return this;

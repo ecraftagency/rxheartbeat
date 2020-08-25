@@ -183,6 +183,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     String strEvt         = ctx.body().getString("eventList");
     String strStart       = ctx.body().getString("startDate");
     String strEnd         = ctx.body().getString("endDate");
+    int flushDelay        = Integer.parseInt(ctx.body().getString("flushDelay"));
     int eventType         = Integer.parseInt(ctx.body().getString("eventType"));
     Type listOfInt        = new TypeToken<List<Integer>>() {}.getType();
     List<Integer> events  = Utilities.gson.fromJson(strEvt, listOfInt);
@@ -196,15 +197,15 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
     if (eventType == 0) {
       for (Integer eventId : events)
-        USER_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
+        USER_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd, flushDelay));
     }
     else if (eventType == 1) {
       for (Integer eventId : events)
-        IDOL_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
+        IDOL_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd, flushDelay));
     }
     else {
       for (Integer eventId : events)
-        RANK_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
+        RANK_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd, flushDelay));
     }
 
     JsonArray userEvent = Transformer.transformUserEvent();

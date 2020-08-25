@@ -153,11 +153,11 @@ public class Constant {
     public static final Map<Integer, ExtRankingInfo> evtMap;
     static {
       evtMap      = new HashMap<>();
+      evtMap.put(VIEW_SPEND_RANK_ID,    ExtRankingInfo.of(VIEW_SPEND_RANK_ID));
+      evtMap.put(FAN_SPEND_RANK_ID,     ExtRankingInfo.of(FAN_SPEND_RANK_ID));
       evtMap.put(TOTAL_TALENT_RANK_ID,  ExtRankingInfo.of(TOTAL_TALENT_RANK_ID));
       evtMap.put(FIGHT_RANK_ID,         ExtRankingInfo.of(FIGHT_RANK_ID));
       evtMap.put(MONEY_SPEND_RANK_ID,   ExtRankingInfo.of(MONEY_SPEND_RANK_ID));
-      evtMap.put(VIEW_SPEND_RANK_ID,    ExtRankingInfo.of(VIEW_SPEND_RANK_ID));
-      evtMap.put(FAN_SPEND_RANK_ID,     ExtRankingInfo.of(FAN_SPEND_RANK_ID));
     }
   }
 

@@ -52,6 +52,8 @@ var app = new Vue({
        .catch((error) => this.isLoaded = false);
     },
     injectConstant: function(event) {
+       if (!confirm("Chắc nha thím T___T"))
+            return;
        let data = { cmd:"injectConstant", serverId: this.serverId,  path: "", value:this.codeVal};
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))

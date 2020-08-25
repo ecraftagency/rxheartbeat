@@ -45,6 +45,8 @@ var app = new Vue({
   },
   methods: {
     sendMail: function (event){
+       if(!confirm("Hãy kiểm tra kỹ format quà nha bạn!"))
+            return;
        let data = { cmd:'sendMail', serverId: this.serverId , mailTitle: this.mailTitle, mailContent: this.mailContent, mailItems: this.mailItems};
 
        fetch(host, {

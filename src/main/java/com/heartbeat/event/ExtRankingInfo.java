@@ -2,11 +2,11 @@ package com.heartbeat.event;
 
 import com.common.Constant;
 import com.common.GlobalVariable;
+import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.model.data.UserRanking;
 import com.statics.EventInfo;
 import com.statics.RankingInfo;
-
 import java.util.concurrent.TimeUnit;
 
 public class ExtRankingInfo extends RankingInfo {
@@ -16,7 +16,7 @@ public class ExtRankingInfo extends RankingInfo {
     ri.eventName        = "";
     ri.startTime        = -1;
     ri.endTime          = -1;
-    ri.flushDelay       = EventInfo.FLUSH_DELAY;
+    ri.flushDelay       = 0;
     ri.active           = true;
     return ri;
   }
@@ -25,26 +25,27 @@ public class ExtRankingInfo extends RankingInfo {
     this.active = active;
   }
 
-  public ExtRankingInfo updateEventTime(String strStart, String strEnd) {
+  public ExtRankingInfo updateEventTime(String strStart, String strEnd, int flushDelay) {
 
     try {
-      int newStart   = (int)(Utilities.getMillisFromDateString(strStart, Constant.DATE_PATTERN)/1000);
-      int newEnd     = (int)(Utilities.getMillisFromDateString(strEnd, Constant.DATE_PATTERN)/1000);
+      int newStart    = (int)(Utilities.getMillisFromDateString(strStart, Constant.DATE_PATTERN)/1000);
+      int newEnd      = (int)(Utilities.getMillisFromDateString(strEnd, Constant.DATE_PATTERN)/1000);
 
       int second    = (int)(System.currentTimeMillis()/1000);
-      if (newStart - second <= 60) //start time must after current as lease 60 seconds;
-        throw new IllegalArgumentException("new start time is after current time");
+      if (newStart - second <= 60)
+        throw new IllegalArgumentException("[rank event] start time < current time");
 
-      if (newStart <= endTime + EventInfo.FLUSH_DELAY)
-        throw new IllegalArgumentException("new start time is before flush time");
+      if (newStart <= endTime + this.flushDelay)
+        throw new IllegalArgumentException("[rank event] start time < last flush time");
 
-      if (newEnd - newStart <= 60) //end time must after start time as lease 60 seconds;
-        throw new IllegalArgumentException("end time < start time");
+      if (newEnd - newStart <= 60)
+        throw new IllegalArgumentException("[rank event] end time < start time");
 
-      startTime     = newStart;
-      endTime       = newEnd;
-      int flushTime = endTime + EventInfo.FLUSH_DELAY;
-      flushDelay    = EventInfo.FLUSH_DELAY;
+
+      startTime       = newStart;
+      endTime         = newEnd;
+      this.flushDelay = flushDelay > 0 ? flushDelay*3600 : EventInfo.FLUSH_DELAY*3600;
+      int flushTime   = endTime + flushDelay;
 
       GlobalVariable.schThreadPool.schedule(() -> UserRanking.openRanking(this.eventId),
               startTime - second, TimeUnit.SECONDS);
@@ -54,8 +55,7 @@ public class ExtRankingInfo extends RankingInfo {
               flushTime - second, TimeUnit.SECONDS);
     }
     catch (Exception e) {
-      startTime     = -1;
-      endTime       = -1;
+      LOG.globalException(e);
     }
     return this;
   }

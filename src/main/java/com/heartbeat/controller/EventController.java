@@ -8,8 +8,6 @@ import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EventController implements Handler<RoutingContext> {
   @Override
@@ -55,8 +53,8 @@ public class EventController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
+      LOG.globalException(e);
     }
   }
 

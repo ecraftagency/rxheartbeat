@@ -34,7 +34,7 @@ public class Main {
   public static void main(String[] args) throws InterruptedException {
     LDB ldb = new LDB(10);
     EventLoop evt = new EventLoop();
-    GlobalVariable.exeThreadPool.execute(evt);
+    //GlobalVariable.exeThreadPool.execute(evt);
 
     RecordThread record1 = new RecordThread(evt, ldb, 20000);
     RecordThread record2 = new RecordThread(evt, ldb, 30000);

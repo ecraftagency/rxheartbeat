@@ -88,6 +88,9 @@ var app = new Vue({
        });
     },
     injectUser: function (event){
+       if (!confirm("Bạn có chắc ko? GMTool có log lại đó nha!"))
+            return;
+
        let data = { cmd:"injectSession", sessionId: this.sessionId,  path: "", value:this.codeVal};
 
        fetch(host, {

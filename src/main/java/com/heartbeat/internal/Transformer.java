@@ -110,6 +110,7 @@ public class Transformer {
       evt.put("eventName",  name);
       evt.put("startDate",  strStart);
       evt.put("endDate",    strEnd);
+      evt.put("flushDelay", ei.flushDelay/3600);
       evt.put("active",     ei.active ? "Active" : "InActive");
       res.add(evt);
     }
@@ -145,6 +146,7 @@ public class Transformer {
       evt.put("eventName",  name);
       evt.put("startDate",  strStart);
       evt.put("endDate",    strEnd);
+      evt.put("flushDelay", ei.flushDelay/3600);
       evt.put("active",     ei.active ? "Active" : "InActive");
       res.add(evt);
     }
@@ -180,6 +182,7 @@ public class Transformer {
       evt.put("eventName",  name);
       evt.put("startDate",  strStart);
       evt.put("endDate",    strEnd);
+      evt.put("flushDelay", ri.flushDelay/3600);
       evt.put("active",     ri.active ? "Active" : "InActive");
       res.add(evt);
     }

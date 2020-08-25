@@ -52,8 +52,8 @@ public class RankingController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
+      LOG.globalException(e);
     }
   }
 
