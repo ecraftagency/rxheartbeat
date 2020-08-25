@@ -3,7 +3,6 @@ package com.heartbeat.controller;
 import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
-import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -90,8 +89,6 @@ public class ProfileController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processUserLevelUp(Session session) {
-    String a            = null;
-    boolean bug         = a.equals("bug");
     ExtMessage resp = ExtMessage.profile();
     int currentTitle = session.userGameInfo.titleId;
     if (currentTitle == OfficeData.officeLV.size()) {
