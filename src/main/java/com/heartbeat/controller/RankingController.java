@@ -117,7 +117,7 @@ public class RankingController implements Handler<RoutingContext> {
 
   private ExtMessage processGetRankingInfo() {
     ExtMessage resp         = ExtMessage.ranking();
-    resp.data.extObj        = Json.encode(Constant.RANK_EVENT.rankingInfo);
+    resp.data.extObj        = Json.encode(Constant.RANK_EVENT.evtMap);
     resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }

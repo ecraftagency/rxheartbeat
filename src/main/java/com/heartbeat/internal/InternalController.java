@@ -42,7 +42,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       switch (cmd) {
         case "injectSession":
           processInjectSession(ctx);
-          break;
+          return;
         case "getSession":
           processGetSession(ctx);
           return;
@@ -203,7 +203,8 @@ public class InternalController implements Handler<Message<JsonObject>> {
         IDOL_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
     }
     else {
-      RANK_EVENT.rankingInfo.setRankingTime(strStart, strEnd);
+      for (Integer eventId : events)
+        RANK_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd));
     }
 
     JsonArray userEvent = Transformer.transformUserEvent();

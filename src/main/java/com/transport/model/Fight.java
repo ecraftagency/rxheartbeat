@@ -8,9 +8,9 @@ import com.statics.ShoppingData;
 import java.util.List;
 
 public class Fight {
-  public FightData.FightLV  currentFightLV;
-  public List<Integer>      usedIdols; //idolId - n restore
-  public List<Integer>      restoreIdols;
+  public FightData.FightLV      currentFightLV;
+  public List<Integer>          usedIdols; //idolId - n restore
+  public List<Integer>          restoreIdols;
 
   public GameShowData.GameShow  currentGameShow;
   public List<Integer>          gameShowUsedIdols;

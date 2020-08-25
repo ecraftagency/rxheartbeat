@@ -1,18 +1,14 @@
 package com.heartbeat.event;
 
-import com.common.LOG;
+import com.common.Constant;
 import com.common.Utilities;
 import com.statics.EventInfo;
 
 @SuppressWarnings("unused")
 public class ExtEventInfo extends EventInfo {
-  public static int FLUSH_DELAY = 86400;
-
   public static ExtEventInfo of(int id) {
     ExtEventInfo ei  = new ExtEventInfo();
     ei.eventId    = id;
-    ei.strStart   = "";
-    ei.strEnd     = "";
     ei.active     = true;
     ei.startTime  = -1;
     ei.endTime    = -1;
@@ -21,12 +17,10 @@ public class ExtEventInfo extends EventInfo {
   }
 
   public ExtEventInfo updateEventTime(String startDate, String endDate) {
-    strStart  = startDate;
-    strEnd    = endDate;
 
     try {
-      startTime  = (int)(Utilities.getMillisFromDateString(strStart, DATE_PATTERN)/1000);
-      endTime    = (int)(Utilities.getMillisFromDateString(strEnd, DATE_PATTERN)/1000);
+      startTime  = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
+      endTime    = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
       flushDelay = FLUSH_DELAY;
 
       int second    = (int)(System.currentTimeMillis()/1000);
@@ -39,7 +33,6 @@ public class ExtEventInfo extends EventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
-      LOG.console(" Thưởng hạn giờ: event time invalid");
     }
 
     return this;

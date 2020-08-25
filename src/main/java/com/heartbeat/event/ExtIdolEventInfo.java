@@ -1,6 +1,6 @@
 package com.heartbeat.event;
 
-import com.common.LOG;
+import com.common.Constant;
 import com.common.Utilities;
 import com.statics.IdolEventInfo;
 
@@ -8,14 +8,10 @@ import java.util.HashMap;
 
 @SuppressWarnings("unused")
 public class ExtIdolEventInfo extends IdolEventInfo {
-  public static int FLUSH_DELAY = 86400;
-
-  public static ExtIdolEventInfo of(int id, String name) {
+  public static ExtIdolEventInfo of(int id) {
     ExtIdolEventInfo ei  = new ExtIdolEventInfo();
     ei.eventId    = id;
-    ei.eventName  = name;
-    ei.strStart   = "";
-    ei.strEnd     = "";
+    ei.eventName  = "";
     ei.active     = true;
     ei.startTime  = -1;
     ei.endTime    = -1;
@@ -25,12 +21,9 @@ public class ExtIdolEventInfo extends IdolEventInfo {
   }
 
   public ExtIdolEventInfo updateEventTime(String startDate, String endDate) {
-    strStart  = startDate;
-    strEnd    = endDate;
-
     try {
-      startTime  = (int)(Utilities.getMillisFromDateString(strStart, DATE_PATTERN)/1000);
-      endTime    = (int)(Utilities.getMillisFromDateString(strEnd, DATE_PATTERN)/1000);
+      startTime  = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
+      endTime    = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
       flushDelay = FLUSH_DELAY;
 
       int second    = (int)(System.currentTimeMillis()/1000);
@@ -43,7 +36,6 @@ public class ExtIdolEventInfo extends IdolEventInfo {
     catch (Exception e) {
       startTime  = -1;
       endTime    = -1;
-      LOG.console(" Nhóm Idol Đặt Biệt: event time invalid");
     }
 
     return this;

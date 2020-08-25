@@ -6,9 +6,7 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
-@SuppressWarnings("unused")
 public class Utilities {
   public static Gson gson = new GsonBuilder().create();
 
@@ -71,15 +69,6 @@ public class Utilities {
       if(str == null || str.isEmpty())
         return false;
     return true;
-  }
-
-  public static int getRandomNumberInRange(int min, int max) {
-    if (min >= max) {
-      throw new IllegalArgumentException("max must be greater than min");
-    }
-
-    Random r = new Random();
-    return r.nextInt((max - min) + 1) + min;
   }
 
   public static long getMillisFromDateString(String dateString, String pattern) throws Exception {

@@ -48,14 +48,14 @@ public class UserEvent extends Event {
     }
   }
 
-  private void resetEventData(int eventType) {
-    records.computeIfPresent(eventType ,(k, v) -> v *= 0);
-    claimed.computeIfPresent(eventType, (k, v) -> v = Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
-    evt2cas.computeIfPresent(eventType, (k, v) -> v = 0); //reset cas to zero
+  private void resetEventData(int evtId) {
+    records.computeIfPresent(evtId ,(k, v) -> v *= 0);
+    claimed.computeIfPresent(evtId, (k, v) -> v = Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+    evt2cas.computeIfPresent(evtId, (k, v) -> v = 0); //reset cas to zero
   }
 
-  private boolean invalidCas(int eventType, int cas) {
-    int oldCas = evt2cas.getOrDefault(eventType, 0);
+  private boolean invalidCas(int evtId, int cas) {
+    int oldCas = evt2cas.getOrDefault(evtId, 0);
     return oldCas != cas;
   }
 

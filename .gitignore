@@ -6,6 +6,7 @@ logs/
 !**/src/main/**
 !**/src/test/**
 config.json
+archive
 
 ### STS ###
 .apt_generated

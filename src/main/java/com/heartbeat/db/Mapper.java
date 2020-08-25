@@ -3,6 +3,7 @@ package com.heartbeat.db;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
+@SuppressWarnings("unused")
 public interface Mapper {
   void    map(String id, String key, Handler<AsyncResult<String>> handler);
   void    mapOverride(String id, String key, int expiry, Handler<AsyncResult<String>> handler);

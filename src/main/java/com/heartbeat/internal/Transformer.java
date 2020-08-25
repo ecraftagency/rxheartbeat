@@ -1,10 +1,11 @@
 package com.heartbeat.internal;
 
+import com.common.Constant;
 import com.heartbeat.event.ExtEventInfo;
 import com.heartbeat.event.ExtIdolEventInfo;
+import com.heartbeat.event.ExtRankingInfo;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserLDB;
-import com.statics.EventInfo;
 import com.statics.OfficeData;
 import com.statics.PropData;
 import com.statics.VipData;
@@ -18,7 +19,6 @@ import io.vertx.core.json.JsonObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import static com.common.Constant.RANK_EVENT.*;
 import static com.common.Constant.*;
 
 @SuppressWarnings("unused")
@@ -83,7 +83,7 @@ public class Transformer {
 
   public static JsonArray transformUserEvent() {
     JsonArray res = new JsonArray();
-    DateFormat formatter = new SimpleDateFormat(EventInfo.DATE_PATTERN);
+    DateFormat formatter = new SimpleDateFormat(Constant.DATE_PATTERN);
     formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
     for (ExtEventInfo ei : USER_EVENT.evtMap.values()){
@@ -118,7 +118,7 @@ public class Transformer {
 
   public static JsonArray transformIdolEvent() {
     JsonArray res = new JsonArray();
-    DateFormat formatter = new SimpleDateFormat(EventInfo.DATE_PATTERN);
+    DateFormat formatter = new SimpleDateFormat(Constant.DATE_PATTERN);
     formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
     for (ExtIdolEventInfo ei : IDOL_EVENT.evtMap.values()){
@@ -152,22 +152,37 @@ public class Transformer {
   }
 
   public static JsonArray transformRankingEvent() {
-    DateFormat formatter  = new SimpleDateFormat(EventInfo.DATE_PATTERN);
+    JsonArray res         = new JsonArray();
+    DateFormat formatter  = new SimpleDateFormat(Constant.DATE_PATTERN);
     formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
-    Date start            = new Date(rankingInfo.startTime*1000L);
-    String strStart       = formatter.format(start);
-    Date end              = new Date(rankingInfo.endTime*1000L);
-    String strEnd         = formatter.format(end);
-    JsonArray res         = new JsonArray();
+    for (ExtRankingInfo ri : RANK_EVENT.evtMap.values()){
+      String  name        = rankEvtId2name.getOrDefault(ri.eventId, "");
+      String  strStart;
+      String  strEnd;
 
-    for (int i = TOTAL_TALENT_RANK_ID; i <= FAN_SPEND_RANK_ID; i++)
-      res.add(new JsonObject()
-              .put("eventId", i)
-              .put("eventName", rankEvtId2name.getOrDefault(i, ""))
-              .put("startDate", rankingInfo.startTime > 0 ? strStart : "")
-              .put("endDate", rankingInfo.startTime > 0 ? strEnd : "")
-              .put("active", rankingInfo.activeRankings.getOrDefault(i, false) ? "Active" : "InActive"));
+      try {
+        if (ri.startTime <= 0 || ri.endTime <= 0)
+          throw new IllegalArgumentException();
+
+        Date start  = new Date(ri.startTime*1000L);
+        strStart    = formatter.format(start);
+
+        Date end    = new Date(ri.endTime*1000L);
+        strEnd      = formatter.format(end);
+      }
+      catch (Exception e) {
+        strEnd    = "";
+        strStart  = "";
+      }
+      JsonObject evt =  new JsonObject();
+      evt.put("eventId",    ri.eventId);
+      evt.put("eventName",  name);
+      evt.put("startDate",  strStart);
+      evt.put("endDate",    strEnd);
+      evt.put("active",     ri.active ? "Active" : "InActive");
+      res.add(evt);
+    }
 
     return res;
   }

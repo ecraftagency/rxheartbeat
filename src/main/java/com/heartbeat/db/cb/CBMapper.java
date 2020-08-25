@@ -8,14 +8,9 @@ import com.heartbeat.db.Mapper;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.Duration;
 
-@SuppressWarnings("unused")
 public class CBMapper implements Mapper {
-  private static final Logger LOGGER    = LoggerFactory.getLogger(CBMapper.class);
   private static CBMapper instance      = new CBMapper();
   private ReactiveBucket rxIndexBucket;
 

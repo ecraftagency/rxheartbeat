@@ -4,10 +4,10 @@ import java.util.Map;
 
 public class DailyMission {
   public static class Mission {
-    public int id;
-    public int dailyCount;
-    public int type;
-    public boolean claim;
+    public int      id;
+    public int      dailyCount;
+    public int      type;
+    public boolean  claim;
 
     public static Mission of(int id, int count, int type) {
       Mission res = new Mission();

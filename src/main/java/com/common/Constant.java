@@ -6,12 +6,13 @@ import com.heartbeat.event.ExtRankingInfo;
 import static com.statics.IdolEventInfo.*;
 import java.util.*;
 
-@SuppressWarnings("unused")
 public class Constant {
   public static final String        EMPTY_STRING                    = "";
   public static final int           MINUTE_SECONDS                  = 60;
   public static final int           HOUR_SECONDS                    = 60 * MINUTE_SECONDS;
   public static final int           DAY_SECONDS                     = 24 * HOUR_SECONDS;
+  public static final String        DATE_PATTERN                    = "dd/MM/yyyy HH:mm:ss";
+  public static String              TIME_ZONE                       = "Asia/Ho_Chi_Minh";
 
   public static class GAME_INFO {
     public static int               SERVER_VERSION                  = 150;
@@ -25,7 +26,6 @@ public class Constant {
     public static String            GATEWAY_EVT_BUS                 = "balancer";
     public static int               GATEWAY_NOTIFY_INTERVAL         = 1000;       //millis
     public static int               NODE_HEARTBEAT_INTERVAL         = 5*1000;     //millis
-    public static boolean           USE_SSL                         = true;
     public static boolean           USE_GLOBAL_FILE_LOG             = true;
     public static boolean           USE_CONSOLE_LOG                 = true;
     public static boolean           USE_POOL_LOG                    = true;
@@ -65,7 +65,6 @@ public class Constant {
   }
 
   public static class SCHEDULE {
-    public static String            TIME_ZONE                 = "Asia/Ho_Chi_Minh";
     public static boolean           gameShowOpen              = false;
     public static int               gameShowOneOpenHour       = 12;
     public static int               gameShowTwoOpenHour       = 19;
@@ -78,7 +77,6 @@ public class Constant {
   }
 
   public static class GROUP {
-    public static final String      DATE_PATTERN              = "dd/MM/yyyy HH:mm:ss";
     public static String            EVENT_START               = "01/07/2020 23:00:00";
     public static String            EVENT_END                 = "31/08/2020 23:00:00";
     public static int               missionStart              = -1;
@@ -152,12 +150,14 @@ public class Constant {
     public static final int         VIEW_SPEND_RANK_ID        = 16;
     public static final int         FAN_SPEND_RANK_ID         = 17;
     public static final int         LDB_CAPACITY              = 100;
-    public static final int         FLUSH_DELAY               = 60*60*24;//second
-
-    public static ExtRankingInfo    rankingInfo;
-
+    public static final Map<Integer, ExtRankingInfo> evtMap;
     static {
-      rankingInfo = ExtRankingInfo.of();
+      evtMap      = new HashMap<>();
+      evtMap.put(TOTAL_TALENT_RANK_ID,  ExtRankingInfo.of(TOTAL_TALENT_RANK_ID));
+      evtMap.put(FIGHT_RANK_ID,         ExtRankingInfo.of(FIGHT_RANK_ID));
+      evtMap.put(MONEY_SPEND_RANK_ID,   ExtRankingInfo.of(MONEY_SPEND_RANK_ID));
+      evtMap.put(VIEW_SPEND_RANK_ID,    ExtRankingInfo.of(VIEW_SPEND_RANK_ID));
+      evtMap.put(FAN_SPEND_RANK_ID,     ExtRankingInfo.of(FAN_SPEND_RANK_ID));
     }
   }
 
@@ -168,14 +168,14 @@ public class Constant {
     public static final Map<Integer, ExtIdolEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
-      ExtIdolEventInfo bpEvt = ExtIdolEventInfo.of(BP_EVT_ID, "5 em hot girl Hàn");
+      ExtIdolEventInfo bpEvt = ExtIdolEventInfo.of(BP_EVT_ID);
       bpEvt.addIdol(IdolClaimInfo.of(48, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(49, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(50, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(51, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(52, 93, 10));
 
-      ExtIdolEventInfo dbEvt = ExtIdolEventInfo.of(DB_EVT_ID, "4 hot boy ngự lâm");
+      ExtIdolEventInfo dbEvt = ExtIdolEventInfo.of(DB_EVT_ID);
       dbEvt.addIdol(IdolClaimInfo.of(43, 92, 10));
       dbEvt.addIdol(IdolClaimInfo.of(44, 92, 10));
       dbEvt.addIdol(IdolClaimInfo.of(45, 92, 10));
@@ -235,9 +235,9 @@ public class Constant {
   public static void serverStartUp() {
     try {
       GROUP.missionStart =
-              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_START, GROUP.DATE_PATTERN)/1000);
+              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_START, DATE_PATTERN)/1000);
       GROUP.missionEnd =
-              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_END, GROUP.DATE_PATTERN)/1000);
+              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_END, DATE_PATTERN)/1000);
     }
     catch (Exception e) {
       GROUP.missionStart = -1;

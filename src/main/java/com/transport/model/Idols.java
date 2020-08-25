@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Idols {
-  public Map<Integer, Idol> idolMap;
+  public Map<Integer, Idol>           idolMap;
 
   public static class Idol {
     public int                        id;

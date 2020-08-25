@@ -1,50 +1,41 @@
 package com.heartbeat.event;
 
+import com.common.Constant;
 import com.common.GlobalVariable;
-import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.model.data.UserRanking;
+import com.statics.EventInfo;
 import com.statics.RankingInfo;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import static com.common.Constant.RANK_EVENT.*;
-
 public class ExtRankingInfo extends RankingInfo {
-  public static ExtRankingInfo of() {
+  public static ExtRankingInfo of(int id) {
     ExtRankingInfo ri   = new ExtRankingInfo();
-    ri.strEnd           = "";
-    ri.strStart         = "";
+    ri.eventId          = id;
+    ri.eventName        = "";
     ri.startTime        = -1;
     ri.endTime          = -1;
-    ri.activeRankings = new HashMap<>();
-    ri.activeRankings.put(13, true);
-    ri.activeRankings.put(14, true);
-    ri.activeRankings.put(15, true);
-    ri.activeRankings.put(16, true);
-    ri.activeRankings.put(17, true);
-    ri.flushDelay       = FLUSH_DELAY;
+    ri.flushDelay       = EventInfo.FLUSH_DELAY;
+    ri.active           = true;
     return ri;
   }
 
-  public void activeRanking(int rankingType, boolean active) {
-    activeRankings.computeIfPresent(rankingType, (k,v) -> v = active);
+  public void setActive(boolean active) {
+    this.active = active;
   }
 
-  public void setRankingTime(String strStart, String strEnd) {
-    this.strStart = strStart;
-    this.strEnd   = strEnd;
+  public ExtRankingInfo updateEventTime(String strStart, String strEnd) {
 
     try {
-      int newStart   = (int)(Utilities.getMillisFromDateString(strStart, DATE_PATTERN)/1000);
-      int newEnd     = (int)(Utilities.getMillisFromDateString(strEnd, DATE_PATTERN)/1000);
+      int newStart   = (int)(Utilities.getMillisFromDateString(strStart, Constant.DATE_PATTERN)/1000);
+      int newEnd     = (int)(Utilities.getMillisFromDateString(strEnd, Constant.DATE_PATTERN)/1000);
 
       int second    = (int)(System.currentTimeMillis()/1000);
       if (newStart - second <= 60) //start time must after current as lease 60 seconds;
         throw new IllegalArgumentException("new start time is after current time");
 
-      if (newStart <= endTime + FLUSH_DELAY)
+      if (newStart <= endTime + EventInfo.FLUSH_DELAY)
         throw new IllegalArgumentException("new start time is before flush time");
 
       if (newEnd - newStart <= 60) //end time must after start time as lease 60 seconds;
@@ -52,22 +43,20 @@ public class ExtRankingInfo extends RankingInfo {
 
       startTime     = newStart;
       endTime       = newEnd;
-      int flushTime = endTime + FLUSH_DELAY;
-      flushDelay    = FLUSH_DELAY;
+      int flushTime = endTime + EventInfo.FLUSH_DELAY;
+      flushDelay    = EventInfo.FLUSH_DELAY;
 
-      GlobalVariable.schThreadPool.schedule(UserRanking::openAllRanking,
+      GlobalVariable.schThreadPool.schedule(() -> UserRanking.openRanking(this.eventId),
               startTime - second, TimeUnit.SECONDS);
-      GlobalVariable.schThreadPool.schedule(UserRanking::closeAllRanking,
+      GlobalVariable.schThreadPool.schedule(() -> UserRanking.closeRanking(this.eventId),
               endTime - second, TimeUnit.SECONDS);
-      GlobalVariable.schThreadPool.schedule(UserRanking::flushAllRanking,
+      GlobalVariable.schThreadPool.schedule(() -> UserRanking.flushRanking(this.eventId),
               flushTime - second, TimeUnit.SECONDS);
     }
     catch (Exception e) {
       startTime     = -1;
       endTime       = -1;
-      this.strStart = "";
-      this.strEnd   = "";
-      LOG.console(" Đua top cá nhân: event time invalid");
     }
+    return this;
   }
 }

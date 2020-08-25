@@ -1,5 +1,7 @@
 package com.heartbeat.model.data;
 
+import com.common.Constant;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -19,6 +21,7 @@ import java.util.Map;
 
 import static com.common.Constant.RANK_EVENT.*;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRanking extends Ranking {
   public static final EventLoop rankingEventLoop;
   public static final Map<Integer, LeaderBoard<Integer, ScoreObj>> rankings;
@@ -42,28 +45,32 @@ public class UserRanking extends Ranking {
     UserRanking ur  = new UserRanking();
     ur.records      = new HashMap<>();
     ur.claimed      = new HashMap<>();
+    ur.evt2cas      = new HashMap<>();
     return ur;
   }
 
-  public static void flushAllRanking() {
-    for (LeaderBoard<Integer, ScoreObj> ldb : rankings.values()) {
-      EventLoop.Command flushCommand = new FlushCommand<>(ldb);
-      rankingEventLoop.addCommand(flushCommand);
-    }
+  public static void flushRanking(int rankId) {
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
+    if (ldb == null)
+      return;
+    EventLoop.Command flushCommand = new FlushCommand<>(ldb);
+    rankingEventLoop.addCommand(flushCommand);
   }
 
-  public static void closeAllRanking() {
-    for (LeaderBoard<Integer, ScoreObj> ldb : rankings.values()) {
-      EventLoop.Command closeCommand = new CloseCommand<>(ldb);
-      rankingEventLoop.addCommand(closeCommand);
-    }
+  public static void closeRanking(int rankId) {
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
+    if (ldb == null)
+      return;
+    EventLoop.Command closeCommand = new CloseCommand<>(ldb);
+    rankingEventLoop.addCommand(closeCommand);
   }
 
-  public static void openAllRanking() {
-    for (LeaderBoard<Integer, ScoreObj> ldb : rankings.values()) {
-      EventLoop.Command openCommand = new OpenCommand<>(ldb);
-      rankingEventLoop.addCommand(openCommand);
-    }
+  public static void openRanking(int rankId) {
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
+    if (ldb == null)
+      return;
+    EventLoop.Command openCommand = new OpenCommand<>(ldb);
+    rankingEventLoop.addCommand(openCommand);
   }
 
   /********************************************************************************************************************/
@@ -71,61 +78,88 @@ public class UserRanking extends Ranking {
   public void reBalance() {
     if (claimed == null)
       claimed = new HashMap<>();
+    if (evt2cas == null)
+      evt2cas = new HashMap<>();
+
+    for (Integer rankId : evtMap.keySet()) {
+      records.putIfAbsent(rankId, 0L);
+      claimed.putIfAbsent(rankId, 0);
+      evt2cas.putIfAbsent(rankId, 0);
+
+      RankingInfo ri = Constant.RANK_EVENT.evtMap.get(rankId);
+      if (ri != null && invalidCas(rankId, ri.startTime))
+        resetEventData(rankId);
+    }
   }
 
-  public void addEventRecord(int rankingType, long amount) {
-    RankingInfo ri = rankingInfo; //for short (rankingInfo is from constant)
+  private void resetEventData(int evtId) {
+    records.computeIfPresent(evtId ,(k, v) -> v *= 0);
+    claimed.computeIfPresent(evtId, (k, v) -> v = 0);
+    evt2cas.computeIfPresent(evtId, (k, v) -> v = 0); //reset cas to zero
+  }
 
-    boolean active  = ri.activeRankings.getOrDefault(rankingType, false);
+  private boolean invalidCas(int evtId, int cas) {
+    int oldCas = evt2cas.getOrDefault(evtId, 0);
+    return oldCas != cas;
+  }
 
-    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankingType);
+  public void addEventRecord(int rankId, long amount) {
+    RankingInfo ri = evtMap.get(rankId);
+    if (ri == null)
+      return;
+
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
     if (ldb == null)
       return;
 
-    if (cas != ri.startTime)
-      records.computeIfPresent(rankingType, (k, v) -> v = 0L);
+    if (invalidCas(rankId, ri.startTime)) {
+      resetEventData(rankId);
+    }
 
     int second    = (int)(System.currentTimeMillis()/1000);
-    if (ri.startTime > 0 && active && second >= ri.startTime && second <= ri.endTime) {
-      long oldVal = records.getOrDefault(rankingType, 0L);
+    if (ri.startTime > 0 && ri.active && second >= ri.startTime && second <= ri.endTime) {
+      long oldVal = records.getOrDefault(rankId, 0L);
       long newVal = oldVal + amount;
 
       EventLoop.Command record = new RecordCommand<>(ldb, ScoreObj.of(sessionId, newVal, displayName));
       rankingEventLoop.addCommand(record);
-      records.put(rankingType, newVal);
-      cas = ri.startTime;
+      records.put(rankId, newVal);  //update new record
+      evt2cas.put(rankId, ri.startTime); //update cas if !=
     }
   }
 
-  public void claimReward(Session session, int rankingType, Handler<AsyncResult<String>> ar) {
-    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankingType);
+  public void claimReward(Session session, int rankId, Handler<AsyncResult<String>> ar) {
+    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
     if (ldb == null) {
       ar.handle(Future.failedFuture("unknown_ranking_type"));
       return;
     }
 
-    Map<Integer, RankingData.RewardDto> rewardMap = RankingData.rewardMap.get(rankingType);
+    Map<Integer, RankingData.RewardDto> rewardMap = RankingData.rewardMap.get(rankId);
     if (rewardMap == null) {
       ar.handle(Future.failedFuture("rewards_data_not_found"));
       return;
     }
 
-    RankingInfo ri  = rankingInfo; //for short (rankingInfo is from constant)
-    boolean active  = ri.activeRankings.getOrDefault(rankingType, false);
+    RankingInfo ri  = evtMap.get(rankId);
+    if (ri == null) {
+      ar.handle(Future.failedFuture("event_not_found"));
+      return;
+    }
 
-    if (!active) {
+    if (!ri.active) {
       ar.handle(Future.failedFuture("ranking_not_active"));
       return;
     }
 
-    int cas = claimed.getOrDefault(rankingType, 0);
-    if (cas == ri.startTime) {
+    int claimCas = claimed.getOrDefault(rankId, 0);
+    if (claimCas == ri.startTime) {
       ar.handle(Future.failedFuture("already_claim"));
       return;
     }
 
     int second      = (int)(System.currentTimeMillis()/1000);
-    if (ri.startTime <= 0 || second <= ri.startTime || second >= ri.endTime + FLUSH_DELAY){
+    if (ri.startTime <= 0 || second <= ri.startTime || second >= ri.endTime + ri.flushDelay){
       ar.handle(Future.failedFuture("claim_time_out"));
       return;
     }
@@ -137,7 +171,7 @@ public class UserRanking extends Ranking {
           ar.handle(Future.failedFuture("invalid_rank"));
         }
         else {
-          claimed.put(rankingType, ri.startTime);
+          claimed.put(rankId, ri.startTime);
           RankingData.RewardDto dto = rewardMap.get(rank);
           if (dto == null) {
             ar.handle(Future.failedFuture("invalid_rank"));

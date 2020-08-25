@@ -11,8 +11,6 @@ import com.hazelcast.config.NetworkConfig;
 import com.heartbeat.controller.*;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBSession;
-import com.heartbeat.event.ExtEventInfo;
-import com.heartbeat.event.ExtIdolEventInfo;
 import com.heartbeat.internal.InternalController;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
@@ -205,9 +203,6 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/leaderboard").handler(new LeaderBoardController());
         router.post("/api/inbox").handler(new InboxController());
 
-        router.post("/gm/session_inject").handler(new SessionInjectController());
-        router.post("/gm/constant").handler(new ConstantInjectController());
-
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
 
@@ -236,7 +231,7 @@ public class HBServer extends AbstractVerticle {
     DB.USER                                = localConfig.getString("DB.USER");
     DB.PWD                                 = localConfig.getString("DB.PWD");
     ONLINE_INFO.ONLINE_HEARTBEAT_TIME      = localConfig.getInteger("ONLINE_INFO.ONLINE_HEARTBEAT_TIME");
-    SCHEDULE.TIME_ZONE                     = localConfig.getString("SCHEDULE.TIMEZONE");
+    TIME_ZONE                              = localConfig.getString("SCHEDULE.TIMEZONE");
     if (nodeId > 0) {
       DB.ID_INIT                           = nodeId*1000000;
       DB.GID_INIT                          = nodeId*10000;
@@ -267,7 +262,7 @@ public class HBServer extends AbstractVerticle {
     });
 
     Scheduler scheduler = RxHelper.scheduler(vertx);
-    newDayTask          = CronObservable.cronspec(scheduler, "0 0 0 * * ? *", Constant.SCHEDULE.TIME_ZONE)
+    newDayTask          = CronObservable.cronspec(scheduler, "0 0 0 * * ? *", TIME_ZONE)
             .subscribe(
                     timed -> {
                       SessionPool.dailyReset.run();
@@ -281,7 +276,7 @@ public class HBServer extends AbstractVerticle {
             Constant.SCHEDULE.gameShowOneOpenMin,
             Constant.SCHEDULE.gameShowOneOpenHour,
             Constant.SCHEDULE.gameShowTwoOpenHour);
-    gsOpenTask          = CronObservable.cronspec(scheduler, gameShowOpenCron, Constant.SCHEDULE.TIME_ZONE)
+    gsOpenTask          = CronObservable.cronspec(scheduler, gameShowOpenCron, TIME_ZONE)
             .subscribe(
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = true;
@@ -296,7 +291,7 @@ public class HBServer extends AbstractVerticle {
             Constant.SCHEDULE.gameShowOneCloseMin,
             Constant.SCHEDULE.gameShowOneCloseHour,
             Constant.SCHEDULE.gameShowTwoCloseHour);
-    gsCloseTask         = CronObservable.cronspec(scheduler, gameShowCloseCron, Constant.SCHEDULE.TIME_ZONE)
+    gsCloseTask         = CronObservable.cronspec(scheduler, gameShowCloseCron, TIME_ZONE)
             .subscribe(
                     timed -> {
                       Constant.SCHEDULE.gameShowOpen = false;
