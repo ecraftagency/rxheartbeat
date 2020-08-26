@@ -44,7 +44,7 @@ public class ExtRankingInfo extends RankingInfo {
 
       startTime       = newStart;
       endTime         = newEnd;
-      this.flushDelay = flushDelay > 0 ? flushDelay*3600 : EventInfo.FLUSH_DELAY*3600;
+      this.flushDelay = flushDelay > 0 ? flushDelay : EventInfo.FLUSH_DELAY;
       int flushTime   = endTime + flushDelay;
 
       GlobalVariable.schThreadPool.schedule(() -> UserRanking.openRanking(this.eventId),

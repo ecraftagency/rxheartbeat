@@ -34,7 +34,7 @@ public class ExtIdolEventInfo extends IdolEventInfo {
 
       startTime       = newStart;
       endTime         = newEnd;
-      this.flushDelay = FLUSH_DELAY;
+      this.flushDelay = flushDelay > 0 ? flushDelay : FLUSH_DELAY;;
     }
     catch (Exception e) {
       startTime  = -1;

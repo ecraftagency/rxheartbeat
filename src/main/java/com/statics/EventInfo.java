@@ -2,7 +2,7 @@ package com.statics;
 
 @SuppressWarnings("unused")
 public class EventInfo {
-  public static int FLUSH_DELAY = 24;
+  public static int FLUSH_DELAY = 60*60*24;
   public String     eventName;
   public int        eventId;
   public int        startTime; //second

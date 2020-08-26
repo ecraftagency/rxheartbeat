@@ -4,6 +4,7 @@ import com.common.LOG;
 import com.common.Utilities;
 import com.gateway.model.Payload;
 import com.google.gson.reflect.TypeToken;
+import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -70,6 +71,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getLDB":
           processGetLDB(ctx);
           return;
+        case "getSessionId":
+          processGetSessionId(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -81,6 +85,20 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException(e);
     }
+  }
+
+  private void processGetSessionId(Message<JsonObject> ctx) throws Exception {
+    JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
+    String userName       = ctx.body().getString("userName");
+    String sid            = CBMapper.getInstance().getValue(Utilities.sha256Hash(userName.trim()));
+    try {
+      Integer.parseInt(sid);
+      resp.put("sessionId", sid);
+    }
+    catch (Exception e) {
+      resp.put("msg", "user not found");
+    }
+    ctx.reply(resp);
   }
 
   private void processGetLDB(Message<JsonObject> ctx) {

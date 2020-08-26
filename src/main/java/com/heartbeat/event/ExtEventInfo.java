@@ -33,7 +33,7 @@ public class ExtEventInfo extends EventInfo {
 
       startTime       = newStart;
       endTime         = newEnd;
-      this.flushDelay = flushDelay > 0 ? flushDelay*3600 : FLUSH_DELAY*3600;
+      this.flushDelay = flushDelay > 0 ? flushDelay : FLUSH_DELAY;
 
     }
     catch (Exception e) {

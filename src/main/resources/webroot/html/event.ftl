@@ -2,10 +2,6 @@
 <#include "navbar.ftl">
 <#include "servers.ftl">
 
-<script>
-
-</script>
-
 <div v-if="isLoaded == true" class ="row top-buffer">
     <div class ="col-ml-4">
       <select class="form-control" v-model:value="eventType" name="eventType" id="eventType">
@@ -85,7 +81,15 @@ var app = new Vue({
     setUserEventTime: function(event) {
        if(!confirm("Coi chừng sự kiện loại này mà id thì của loại kia nha :-w"))
         return;
-       let data = { cmd:'setUserEventTime', eventType: this.eventType, serverId: this.serverId, eventList: this.userEventList, startDate: this.userEventStart, endDate: this.userEventEnd, flushDelay: this.flushDelay};
+
+       let data = {
+            cmd:'setUserEventTime',
+            eventType: this.eventType,
+            serverId: this.serverId,
+            eventList: this.userEventList,
+            startDate: this.parseDate(new Date(this.userEventStart)),
+            endDate: this.parseDate(new Date(this.userEventEnd)),
+            flushDelay: this.flushDelay};
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))
        .catch((error) => (error) => this.isLoaded = false);
@@ -99,6 +103,17 @@ var app = new Vue({
          alert(data.msg);
          this.isLoaded = false;
       }
+    },
+    parseDate: function getDateFormat(date){
+        console.log(date);
+        var result = this.twoDigit(date.getDate())+"/"+this.twoDigit(date.getMonth()+1)+"/"+this.twoDigit(date.getFullYear())+" "+this.twoDigit(date.getHours())+":"+this.twoDigit(date.getMinutes())+":"+this.twoDigit(date.getSeconds());
+        console.log(result);
+        return result;
+    },
+    twoDigit: function (num){
+        if (num<10)
+            return '0'+num;
+        return num;
     }
   }
 });

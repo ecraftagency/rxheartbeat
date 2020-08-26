@@ -72,7 +72,9 @@ public class Transformer {
     for (Map.Entry<Integer, Integer> entry : session.userInventory.userItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());
       if (prop != null) {
-        it.put(prop.name, entry.getValue());
+        it.put("id", prop.propID);
+        it.put("name", prop.name);
+        it.put("qty", entry.getValue());
       }
     }
 

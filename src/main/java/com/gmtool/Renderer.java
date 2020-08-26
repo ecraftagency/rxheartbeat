@@ -28,6 +28,7 @@ public class Renderer implements Handler<RoutingContext> {
         renderIndex(ctx);
         return;
       case "user":
+        ctx.put("nodes", GMTool.getNodes());
         render("webroot/html/user.ftl", ctx);
         return;
       case "mail":

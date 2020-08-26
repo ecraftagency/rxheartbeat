@@ -1,8 +1,13 @@
 <#include "header.ftl">
 <#include "navbar.ftl">
+<#include "servers.ftl">
 
 <div class ="row top-buffer">
    <div class="float-left" class="col-sm-2">
+         <input v-model="userName" type="text" class="form-control" id="userName" name="userName" placeholder="User name" v-on:keyup.enter="getUserId">
+   </div>
+
+   <div class="float-left col-sm-2 left-buffer">
          <input v-model="sessionId" type="text" class="form-control" id="sessionId" name="sessionId" placeholder="User Id" v-on:keyup.enter="fetchUser">
    </div>
 
@@ -31,61 +36,69 @@
 </div>
 
 <div v-if="isLoaded == true" class="row top-buffer">
-    <table id="inventory" class="table table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Đạo Cụ</th>
-          <th scope="col">Số Lượng</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr v-for="(key, value) in resp.session.userInventory">
-            <td>{{ value }}</td>
-            <td>{{ key }}</td>
-          </tr>
-      </tbody>
-    </table>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th v-for="key in Object.keys(resp.session.userInventory[0])">{{ key }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="inv in resp.session.userInventory">
+        <td v-for="key in Object.keys(resp.session.userInventory[0])">{{ inv[key] }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <#include "footer.ftl">
 
 <script>
 const host = '${host}/api/fwd'
+const postOptions = function(data) {
+return {
+     method: 'POST',
+     headers: {'Content-Type': 'application/json',},
+     body: JSON.stringify(data),
+  }
+}
+
 var app = new Vue({
   el: '#app',
   data() {
     return {
+        serverId: '',
         sessionId: '',
         codeVal: '',
+        userName: '',
         resp: undefined,
         isLoaded: false
     }
   },
   methods: {
+    serverSelect: function() {
+    },
+    getUserId: function(event){
+       let data = { cmd:"getSessionId", serverId: this.serverId, userName: this.userName };
+
+       fetch(host, postOptions(data))
+       .then(response => response.json())
+       .then(data => {
+          if (data.msg == "ok") {
+            this.sessionId = data.sessionId;
+          }
+          else {
+             alert(data.msg);
+          }
+       })
+       .catch(error => this.isLoaded = false);
+    },
     fetchUser: function (event){
        let data = { cmd:"getSession", sessionId: this.sessionId };
 
-       fetch(host, {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(data),
-       })
+       fetch(host, postOptions(data))
        .then(response => response.json())
-       .then(data => {
-         if (data.msg == "ok") {
-           this.resp = data;
-           this.isLoaded = true;
-         }
-         else {
-            alert(data.msg);
-            this.isLoaded = false;
-         }
-       })
-       .catch((error) => {
-         this.isLoaded = false;
-       });
+       .then(data => this.success(data))
+       .catch(error => this.isLoaded = false);
     },
     injectUser: function (event){
        if (!confirm("Bạn có chắc ko? GMTool có log lại đó nha!"))
@@ -93,27 +106,20 @@ var app = new Vue({
 
        let data = { cmd:"injectSession", sessionId: this.sessionId,  path: "", value:this.codeVal};
 
-       fetch(host, {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(data),
-       })
+       fetch(host, postOptions(data))
        .then(response => response.json())
-       .then(data => {
-         if (data.msg == "ok") {
-           this.resp = data;
-           this.isLoaded = true;
-         }
-         else {
-            this.isLoaded = false;
-            alert(data.msg);
-         }
-       })
-       .catch((error) => {
+       .then(data => this.success(data))
+       .catch(error => this.isLoaded = false);
+    },
+    success: function(data) {
+      if (data.msg == "ok") {
+        this.resp = data;
+        this.isLoaded = true;
+      }
+      else {
+         alert(data.msg);
          this.isLoaded = false;
-       });
+      }
     }
   }
 });
@@ -122,7 +128,11 @@ var app = new Vue({
 <style>
 #codeValue {
   margin-left: 14px;
-  width: 800px;
+  width: 700px;
 }
+.left-buffer {
+  margin-left: 14px;
+}
+
 .top-buffer { margin-top:15px; }
 </style>
