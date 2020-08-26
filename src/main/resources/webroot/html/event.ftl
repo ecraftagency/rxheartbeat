@@ -24,7 +24,7 @@
    </div>
    <div class="float-left left-buffer" class="col-sm-4">
       <input v-model="flushDelay" type="text" class="form-control" id="flushDelay" name="flushDelay"
-      placeholder="TG đóng băng (giờ)">
+      placeholder="TG đóng băng (giây)">
    </div>
    <div class="float-left top-buffer" class="col-sm-4">
       <button type="button" class="btn btn-primary" v-on:click="setUserEventTime">Set Time</button>

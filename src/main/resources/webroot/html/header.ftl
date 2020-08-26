@@ -7,8 +7,6 @@
   <script src="./js/vue-2.6.11.min.js"></script>
   <link href="./css/bootstrap.min.css"
         rel="stylesheet">
-  <link href="./css/style.css"
-        rel="stylesheet">
   <title>A simplest GMTool ever </title>
 </head>
 <body>

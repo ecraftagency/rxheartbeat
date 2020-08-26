@@ -82,6 +82,7 @@ public class SessionLoginService implements AuthService {
           Session session = ar.result();
           if (session.isBan()) {
             handler.handle(Future.failedFuture("login_ban"));
+            return;
           }
           session.id = userID;
           Profile profile = handleLoginResult("ok", session, snsToken, request);

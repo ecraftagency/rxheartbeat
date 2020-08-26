@@ -17,6 +17,17 @@
    </div>
 </div>
 
+<div class ="row top-buffer">
+   <div class="float-left col-sm-4">
+      <input v-model="banDate" type="datetime-local" class="form-control" id="banDate" name="banDate"
+      placeholder="Ban Date">
+   </div>
+
+   <div class="float-left col-sm-2">
+      <button type="button" class="btn btn-primary" v-on:click="banUser">Ban</button>
+   </div>
+</div>
+
 <div v-if="isLoaded == true" class="row top-buffer">
     <table id="gameInfo" class="table table-dark">
       <thead>
@@ -70,12 +81,17 @@ var app = new Vue({
         sessionId: '',
         codeVal: '',
         userName: '',
+        banDate:'',
         resp: undefined,
         isLoaded: false
     }
   },
   methods: {
     serverSelect: function() {
+    },
+    banUser: function(event){
+        let d = new Date(this.banDate);
+        this.codeVal = 'session.userProfile.banTo = ' + Math.round(d.getTime()/1000) + ';'
     },
     getUserId: function(event){
        let data = { cmd:"getSessionId", serverId: this.serverId, userName: this.userName };
@@ -120,6 +136,17 @@ var app = new Vue({
          alert(data.msg);
          this.isLoaded = false;
       }
+    },
+    parseDate: function getDateFormat(date){
+        console.log(date);
+        var result = this.twoDigit(date.getDate())+"/"+this.twoDigit(date.getMonth()+1)+"/"+this.twoDigit(date.getFullYear())+" "+this.twoDigit(date.getHours())+":"+this.twoDigit(date.getMinutes())+":"+this.twoDigit(date.getSeconds());
+        console.log(result);
+        return result;
+    },
+    twoDigit: function (num){
+        if (num<10)
+            return '0'+num;
+        return num;
     }
   }
 });
@@ -129,9 +156,6 @@ var app = new Vue({
 #codeValue {
   margin-left: 14px;
   width: 700px;
-}
-.left-buffer {
-  margin-left: 14px;
 }
 
 .top-buffer { margin-top:15px; }
