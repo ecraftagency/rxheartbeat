@@ -27,7 +27,12 @@ public class Transformer {
   public static Map<Integer, String> rankEvtId2name;
   public static Map<Integer, String> idolEvtId2name;
 
+  public static DateFormat formatter;
+
   static {
+    formatter =  new SimpleDateFormat(Constant.DATE_PATTERN);
+    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+
     userEvtId2Name = new HashMap<>();
     userEvtId2Name.put(USER_EVENT.APT_BUFF_USE_EVT_ID,   "Sử dụng cuộn cường hóa");
     userEvtId2Name.put(USER_EVENT.VIEW_PROD_EVT_ID,      "Cày View");
@@ -54,9 +59,10 @@ public class Transformer {
 
   //transform runtime object to view object
   public static JsonObject transformSession(Session session) {
-    JsonObject gi = new JsonObject();
-    JsonObject it = new JsonObject();
-    JsonObject ss = new JsonObject();
+    JsonObject gi         = new JsonObject();
+    JsonArray items       = new JsonArray();
+    JsonObject ss         = new JsonObject();
+
 
     gi.put("Tên",         session.userGameInfo.displayName);
     gi.put("Giới Tính",   session.userGameInfo.gender == 0 ? "Nam" : "Nữ");
@@ -67,26 +73,36 @@ public class Transformer {
     gi.put("Money",       session.userGameInfo.money);
     gi.put("View",        session.userGameInfo.view);
     gi.put("Fan",         session.userGameInfo.fan);
-    gi.put("Time",        session.userGameInfo.time);
+
+
+    long time = session.userGameInfo.time;
+    long nDay   = time/86400;
+    time -= (nDay*86400);
+    long nHour  = time/3600;
+    time -= (nHour*3600);
+    long nMin = time/60;
+    time -= nMin*60;
+    long nSec = time;
+    gi.put("Time còn lại",        String.format("%d:%02d:%02d:%02d", nDay, nHour, nMin, nSec));
+
+    Date start    = new Date(session.userProfile.banTo*1000L);
+    String ban    = formatter.format(start);
+    gi.put("Bị ban đến",  ban);
 
     for (Map.Entry<Integer, Integer> entry : session.userInventory.userItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());
       if (prop != null) {
-        it.put("id", prop.propID);
-        it.put("name", prop.name);
-        it.put("qty", entry.getValue());
+        items.add(new JsonObject().put("id", prop.propID).put("name", prop.name).put("qty", entry.getValue()));
       }
     }
 
     ss.put("userGameInfo", gi);
-    ss.put("userInventory", it);
+    ss.put("userInventory", items);
     return ss;
   }
 
   public static JsonArray transformUserEvent() {
     JsonArray res = new JsonArray();
-    DateFormat formatter = new SimpleDateFormat(Constant.DATE_PATTERN);
-    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
     for (ExtEventInfo ei : USER_EVENT.evtMap.values()){
       String  name        = userEvtId2Name.getOrDefault(ei.eventId, "");
@@ -121,8 +137,6 @@ public class Transformer {
 
   public static JsonArray transformIdolEvent() {
     JsonArray res = new JsonArray();
-    DateFormat formatter = new SimpleDateFormat(Constant.DATE_PATTERN);
-    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
     for (ExtIdolEventInfo ei : IDOL_EVENT.evtMap.values()){
       String  name        = idolEvtId2name.getOrDefault(ei.eventId, "");
@@ -157,8 +171,6 @@ public class Transformer {
 
   public static JsonArray transformRankingEvent() {
     JsonArray res         = new JsonArray();
-    DateFormat formatter  = new SimpleDateFormat(Constant.DATE_PATTERN);
-    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
     for (ExtRankingInfo ri : RANK_EVENT.evtMap.values()){
       String  name        = rankEvtId2name.getOrDefault(ri.eventId, "");
