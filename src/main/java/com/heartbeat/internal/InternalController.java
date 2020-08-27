@@ -50,6 +50,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "sendMail":
           processSendMail(ctx);
           return;
+        case "sendPrivateMail":
+          processSendPrivateMail(ctx);
+          return;
         case "getEvents":
           processGetEvents(ctx);
           return;
@@ -83,8 +86,50 @@ public class InternalController implements Handler<Message<JsonObject>> {
     catch (Exception e) {
       resp.put("msg", e.getMessage());
       ctx.reply(resp);
-      LOG.globalException(e);
+      LOG.globalException("node", "InternalCall", e);
     }
+  }
+
+  private void processSendPrivateMail(Message<JsonObject> ctx) {
+    String title     = ctx.body().getString("mailTitle");
+    String content   = ctx.body().getString("mailContent");
+    String item      = ctx.body().getString("mailItems");
+    String sessionId = ctx.body().getString("sessionId");
+
+    JsonObject resp  = new JsonObject();
+
+    loadSession(Integer.parseInt(sessionId), resp, sr -> {
+      if (sr.succeeded()) {
+        try {
+          Session session = sr.result();
+
+          Type listOfListOfInt = new TypeToken<List<List<Integer>>>() {}.getType();
+          List<List<Integer>> r = Utilities.gson.fromJson(item, listOfListOfInt);
+          if (r == null) {
+            r = new ArrayList<>();
+          }
+          MailObj mailObj = MailObj.of(title, content, r, MailObj.MSG_TYPE_PRIVATE);
+          session.userInbox.addPrivateMsg(mailObj);
+
+          resp.put("msg", "ok");
+          resp.put("session", Transformer.transformSession(session));
+          if (resp.getString("state").equals("offline")) {
+            CBSession.getInstance().sync(sessionId, session, ar -> {});
+          }
+          ctx.reply(resp);
+        }
+        catch (Exception e) {
+          resp.put("msg", e.getMessage());
+          ctx.reply(resp);
+          LOG.globalException("node", "processSendPrivateMail",e);
+        }
+      }
+      else {
+        resp.put("msg", sr.cause().getMessage());
+        ctx.reply(resp);
+        LOG.globalException("node", "processSendPrivateMail",sr.cause());
+      }
+    });
   }
 
   private void processGetSessionId(Message<JsonObject> ctx) throws Exception {
@@ -126,7 +171,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     catch (Exception e) {
       resp.put("msg", e.getMessage());
       ctx.reply(resp);
-      LOG.globalException(e);
+      LOG.globalException("node", "injectConstant", e);
     }
   }
 
@@ -192,6 +237,8 @@ public class InternalController implements Handler<Message<JsonObject>> {
       }
       else {
         resp.put("msg", sar.cause().getMessage());
+        ctx.reply(resp);
+        LOG.globalException("node", "getRole100D", sar.cause());
       }
     });
   }
@@ -298,12 +345,13 @@ public class InternalController implements Handler<Message<JsonObject>> {
         catch (Exception e) {
           resp.put("msg", e.getMessage());
           ctx.reply(resp);
-          LOG.globalException(e);
+          LOG.globalException("node", "injectSession", e);
         }
       }
       else {
         resp.put("msg", sr.cause().getMessage());
         ctx.reply(resp);
+        LOG.globalException("node", "injectSession", sr.cause());
       }
     });
   }

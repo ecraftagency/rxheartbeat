@@ -24,8 +24,9 @@ public class GroupController implements Handler<RoutingContext> {
 
   @Override
   public void handle(RoutingContext ctx) {
+    String cmd          = "";
     try {
-      String cmd        = ctx.getBodyAsJson().getString("cmd");
+      cmd               = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       int lastIssued    = ctx.user().principal().getInteger("issueTime");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
@@ -90,8 +91,8 @@ public class GroupController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
+      LOG.globalException("node", cmd, e);
     }
   }
 
@@ -264,7 +265,8 @@ public class GroupController implements Handler<RoutingContext> {
             },
             er -> {
               handler.handle(Future.succeededFuture("[]"));
-              LOG.globalException(er.getCause());
+              LOG.globalException("node", "fetchGroup", er.getCause());
+
             }
     );
   }
@@ -399,7 +401,7 @@ public class GroupController implements Handler<RoutingContext> {
     }
     catch (Exception e) {
       ctx.response().setStatusCode(404).end();
-      LOG.globalException(e);
+      LOG.globalException("node", "createGroup", e);
       return;
     }
 

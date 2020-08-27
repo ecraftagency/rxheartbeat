@@ -40,7 +40,7 @@ public class NodePool {
         }
       }
       catch (Exception ex) {
-        LOG.globalException(ex);
+        LOG.globalException("gateway", "nodePool:getNode", ex);
       }
     }
     return nodes;

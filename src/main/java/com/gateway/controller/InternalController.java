@@ -11,9 +11,10 @@ import java.util.List;
 public class InternalController implements Handler<Message<JsonObject>> {
   @Override
   public void handle(Message<JsonObject> ctx) {
+    String  cmd       = "";
     try {
       JsonObject json = ctx.body();
-      String  cmd     = json.getString("cmd");
+      cmd             = json.getString("cmd");
 
       switch (cmd) {
         case "ping":
@@ -51,8 +52,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       }
     }
     catch (Exception e) {
-      LOG.globalException(e);
+      LOG.globalException("gateway", cmd, e);
     }
-
   }
 }

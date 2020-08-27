@@ -61,7 +61,7 @@ public class GMTool extends AbstractVerticle {
         System.out.println("HB GMTool Deployed, local IP: " + localIP);
       }
       else {
-        LOG.globalException(res.cause());
+        LOG.globalException("gmtool", "deploy verticle", res.cause());
       }
     });
   }

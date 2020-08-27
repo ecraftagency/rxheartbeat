@@ -13,8 +13,9 @@ import io.vertx.ext.web.RoutingContext;
 public class InboxController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
+    String cmd          = "";
     try {
-      String cmd        = ctx.getBodyAsJson().getString("cmd");
+      cmd               = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       int lastIssued    = ctx.user().principal().getInteger("issueTime");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
@@ -23,8 +24,11 @@ public class InboxController implements Handler<RoutingContext> {
         ExtMessage resp;
         long curMs = System.currentTimeMillis();
         switch (cmd) {
-          case "claimInboxReward":
-            resp = processClaimInboxReward(session, ctx, curMs);
+          case "claimPublicInboxReward":
+            resp = processClaimPublicInboxReward(session, ctx, curMs);
+            break;
+          case "claimPrivateInboxReward":
+            resp = processClaimPrivateInboxReward(session, ctx, curMs);
             break;
           case "getInboxMessage":
             resp = processGetInboxMessage(session, curMs);
@@ -48,15 +52,24 @@ public class InboxController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
+      LOG.globalException("node", cmd, e);
     }
   }
 
-  private ExtMessage processClaimInboxReward(Session session, RoutingContext ctx, long curMs) {
+  private ExtMessage processClaimPrivateInboxReward(Session session, RoutingContext ctx, long curMs) {
     ExtMessage resp     = ExtMessage.inbox();
     long msgId          = ctx.getBodyAsJson().getLong("messageId");
-    resp.msg            = session.userInbox.claimInboxReward(session, msgId, curMs);
+    resp.msg            = session.userInbox.claimPrivateInboxReward(session, msgId, curMs);
+    resp.effectResults  = session.effectResults;
+    resp.data.inbox     = session.userInbox;
+    return resp;
+  }
+
+  private ExtMessage processClaimPublicInboxReward(Session session, RoutingContext ctx, long curMs) {
+    ExtMessage resp     = ExtMessage.inbox();
+    long msgId          = ctx.getBodyAsJson().getLong("messageId");
+    resp.msg            = session.userInbox.claimPublicInboxReward(session, msgId, curMs);
     resp.effectResults  = session.effectResults;
     resp.data.inbox     = session.userInbox;
     return resp;

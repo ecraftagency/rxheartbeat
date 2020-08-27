@@ -10,6 +10,7 @@ import com.statics.OfficeData;
 import com.statics.PropData;
 import com.statics.VipData;
 import com.transport.model.LDBObj;
+import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -61,8 +62,8 @@ public class Transformer {
   public static JsonObject transformSession(Session session) {
     JsonObject gi         = new JsonObject();
     JsonArray items       = new JsonArray();
+    JsonArray mails       = new JsonArray();
     JsonObject ss         = new JsonObject();
-
 
     gi.put("Tên",         session.userGameInfo.displayName);
     gi.put("Giới Tính",   session.userGameInfo.gender == 0 ? "Nam" : "Nữ");
@@ -96,8 +97,15 @@ public class Transformer {
       }
     }
 
+    if (session.userInbox.privateMails != null) {
+      for (MailObj priMsg : session.userInbox.privateMails) {
+        mails.add(new JsonObject().put("Title", priMsg.title).put("Content", priMsg.msg).put("Reward", priMsg.rewards));
+      }
+    }
+
     ss.put("userGameInfo", gi);
     ss.put("userInventory", items);
+    ss.put("userInbox", mails);
     return ss;
   }
 

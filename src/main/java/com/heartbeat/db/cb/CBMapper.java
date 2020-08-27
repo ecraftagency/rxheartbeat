@@ -1,13 +1,16 @@
 package com.heartbeat.db.cb;
 
+import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.GetResult;
+import com.couchbase.client.java.kv.MutationResult;
 import com.couchbase.client.java.kv.UpsertOptions;
 import com.heartbeat.HBServer;
 import com.heartbeat.db.Mapper;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+
 import java.time.Duration;
 
 public class CBMapper implements Mapper {
@@ -26,7 +29,10 @@ public class CBMapper implements Mapper {
   public void map(String id, String key, Handler<AsyncResult<String>> handler) {
     rxIndexBucket.defaultCollection().insert(key, id).subscribe(
             res -> handler.handle(Future.succeededFuture("ok")),
-            err -> handler.handle(Future.failedFuture(err.getMessage())));
+            err -> {
+              handler.handle(Future.failedFuture(err.getMessage()));
+              LOG.globalException("node", "CBMapper:map", String.format("id:%s | key:%s", id, key));
+            });
   }
 
   @Override
@@ -61,7 +67,9 @@ public class CBMapper implements Mapper {
   @Override
   public String map(String id, String key) {
     try {
-      rxIndexBucket.defaultCollection().insert(key, id).block();
+      MutationResult res =  rxIndexBucket.defaultCollection().insert(key, id).block();
+      if (res == null)
+        LOG.globalException("node", "CBMapper:map", String.format("key:%s | id:%s", id, key));
       return "ok";
     }
     catch (Exception e) {

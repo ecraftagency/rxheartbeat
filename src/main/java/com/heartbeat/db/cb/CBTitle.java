@@ -89,7 +89,7 @@ public class CBTitle implements Cruder<Title> {
       return result != null;
     }
     catch (Exception e) {
-      LOG.globalException(e);
+      LOG.globalException("node", "cbTitle:add", e);
       return false;
     }
   }

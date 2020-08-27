@@ -22,7 +22,7 @@ public class LOG {
 
   private static final String EXCEPTION_LINE_HEADER = "\n\t";
 
-  public static void globalException(Throwable cause) {
+  public static void globalException(String source, String action, Throwable cause) {
     if(SYSTEM_INFO.USE_GLOBAL_FILE_LOG) {
       StringBuilder builder = GlobalVariable.stringBuilder.get().append(cause.getMessage());
       for (StackTraceElement ste : cause.getStackTrace())
@@ -35,11 +35,13 @@ public class LOG {
       trace.add(0, cause.getMessage());
       data.put("type", "global_exception");
       data.put("msg", trace);
+      data.put("source", source);
+      data.put("action", action);
       FLUENT.log("exception", data);
     }
   }
 
-  public static void globalException(Object ... params) {
+  public static void globalException(String source, String action, Object ... params) {
     if(SYSTEM_INFO.USE_GLOBAL_FILE_LOG) {
       if (params != null && params.length > 0) {
         StringBuilder logContent = GlobalVariable.stringBuilder.get().append(';');
@@ -54,7 +56,7 @@ public class LOG {
         FLUENT.log("exception", data);
       }
       else {
-        globalException(new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
+        globalException(source,action,new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
       }
     }
   }
@@ -73,7 +75,7 @@ public class LOG {
         System.out.println(logContent);
       }
       else {
-        globalException(new Throwable("ScribeReporter.console(...) with no param!!!"));
+        globalException("","",new Throwable("ScribeReporter.console(...) with no param!!!"));
       }
     }
   }
@@ -92,7 +94,7 @@ public class LOG {
       FLUENT.log("exception", data);
     }
     else {
-      globalException(new Throwable("ScribeReporter.writePaymentException(...) with no param!!!"));
+      globalException("", "", new Throwable("ScribeReporter.writePaymentException(...) with no param!!!"));
     }
   }
 
@@ -143,7 +145,7 @@ public class LOG {
         FLUENT.log("exception", data);
       }
       else {
-        globalException(new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
+        globalException("", "", new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
       }
     }
   }
@@ -180,7 +182,7 @@ public class LOG {
         FLUENT.log("exception", data);
       }
       else {
-        globalException(new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
+        globalException("", "", new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
       }
     }
   }

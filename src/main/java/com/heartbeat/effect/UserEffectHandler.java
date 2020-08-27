@@ -58,8 +58,7 @@ public class UserEffectHandler implements EffectHandler{
       return UserGameInfo.class.getField(fieldName);
     }
     catch (Exception e) {
-      LOG.globalException(e);
-      LOG.globalException("UserGameInfo could not found field " + fieldName);
+      LOG.globalException("node", "userEffectHandler", e);
       return null;
     }
   }
@@ -81,7 +80,7 @@ public class UserEffectHandler implements EffectHandler{
           result = EffectHandler.SUCCESS;
 
         } catch (IllegalAccessException e) {
-          LOG.globalException(e);
+          LOG.globalException("node", "userEffectHandler:linearIncrease", e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
@@ -135,7 +134,7 @@ public class UserEffectHandler implements EffectHandler{
 
           result = EffectHandler.SUCCESS;
         } catch (IllegalAccessException e) {
-          LOG.globalException(e);
+          LOG.globalException("node", "userEffectHandler:boundIncrease", e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
@@ -158,7 +157,7 @@ public class UserEffectHandler implements EffectHandler{
           result = EffectHandler.SUCCESS;
 
         } catch (Exception e) {
-          LOG.globalException(e);
+          LOG.globalException("node", "userEffectHandler:stepIncrease",e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }
@@ -184,7 +183,7 @@ public class UserEffectHandler implements EffectHandler{
           }
 
         } catch (IllegalAccessException e) {
-          LOG.globalException(e);
+          LOG.globalException("node", "userEffectHandler:rateIncrease", e);
           result     = EffectHandler.UNKNOWN_PROPERTY;
         }
       }

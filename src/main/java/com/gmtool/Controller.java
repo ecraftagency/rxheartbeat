@@ -1,6 +1,7 @@
 package com.gmtool;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.transport.model.Node;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
@@ -30,6 +31,7 @@ public class Controller implements Handler<RoutingContext> {
         JsonObject resp = new JsonObject();
         resp.put("msg", far.cause().getMessage());
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        LOG.globalException("gmtool", "forward request", far.cause());
       }
     });
   }

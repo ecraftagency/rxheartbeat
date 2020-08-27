@@ -61,7 +61,7 @@ public class HBGateway extends AbstractVerticle {
         System.out.println("HB Gateway Deployed, local IP: " + localIp);
       }
       else {
-        LOG.globalException(res.cause());
+        LOG.globalException("gateway", "verticleDeploy", res.cause());
       }
     });
   }

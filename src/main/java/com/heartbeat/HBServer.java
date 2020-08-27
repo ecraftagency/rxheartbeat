@@ -158,8 +158,8 @@ public class HBServer extends AbstractVerticle {
       UserInbox.loadInboxFromDB();
     }
     catch (Exception ioe) {
-      LOG.globalException(ioe);
       startPromise.fail(ioe);
+      LOG.globalException("node", "verticle start up", ioe);
     }
 
     ConfigRetriever retriever = ConfigRetriever.create(vertx);
@@ -238,7 +238,7 @@ public class HBServer extends AbstractVerticle {
       nodeBus                              = String.format("%d.%s.bus", nodeId, nodeName);
     }
     else {
-      LOG.globalException(String.format("critical invalid node id: %d", nodeId));
+      LOG.globalException("node", "override constant", String.format("critical invalid node id: %d", nodeId));
     }
   }
 
@@ -257,7 +257,7 @@ public class HBServer extends AbstractVerticle {
         eb.send(SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
       }
       catch (Exception e) {
-        LOG.globalException(e);
+        LOG.globalException("node", "schedule tasks", e);
       }
     });
 
@@ -268,7 +268,7 @@ public class HBServer extends AbstractVerticle {
                       SessionPool.dailyReset.run();
                       LOG.console("execute new day task");
                     },
-                    fault -> LOG.globalException("error new day task")
+                    fault -> LOG.globalException("node","schedule new day task", "error new day task")
             );
 
     String gameShowOpenCron = String.format("%d %d %d,%d * * ? *",
@@ -283,7 +283,7 @@ public class HBServer extends AbstractVerticle {
                       SessionPool.resetGameShowIdols.run();
                       LOG.console("open game show");
                     },
-                    fault -> LOG.globalException("error open game show task")
+                    fault -> LOG.globalException("node","open game show task", "error open game show task")
             );
 
     String gameShowCloseCron = String.format("%d %d %d,%d * * ? *",
@@ -298,7 +298,7 @@ public class HBServer extends AbstractVerticle {
                       SessionPool.resetGameShowIdols.run();
                       LOG.console("close game show");
                     },
-                    fault -> LOG.globalException("error close game show task")
+                    fault -> LOG.globalException("node","close game show task","error close game show task")
             );
   }
 

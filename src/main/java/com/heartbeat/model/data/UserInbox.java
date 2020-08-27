@@ -8,6 +8,7 @@ import com.heartbeat.model.Session;
 import com.transport.model.Inbox;
 import com.transport.model.MailObj;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -80,11 +81,13 @@ public class UserInbox extends Inbox {
       claimedMsg = new HashMap<>();
     }
     claimedMsg.entrySet().removeIf(entry -> curMs - entry.getKey() > CLAIM_EXPIRE);
-    if (privateMail == null)
-      privateMail = new HashMap<>();
+    if (privateMails == null)
+      privateMails = new ArrayDeque<>();
+    if(claimedPrivateMsg == null)
+      claimedPrivateMsg = new HashMap<>();
   }
 
-  public String claimInboxReward(Session session, long cas, long curMs) {
+  public String claimPublicInboxReward(Session session, long cas, long curMs) {
     if (claimedMsg.containsKey(cas))
       return "msg_reward_already_claim";
 
@@ -104,5 +107,47 @@ public class UserInbox extends Inbox {
     claimedMsg.put(cas, curMs);
 
     return "ok";
+  }
+
+  public void addPrivateMsg(MailObj msg) {
+    if (msg == null)
+      return;
+    if (privateMails == null) {
+      privateMails = new ArrayDeque<>();
+    }
+
+    if (privateMails.size() >= MAX_INBOX_ITEM)
+      privateMails.removeFirst();
+    privateMails.addLast(msg);
+  }
+
+  public String claimPrivateInboxReward(Session session, long cas, long curMs) {
+    if (claimedPrivateMsg.containsKey(cas))
+      return "msg_reward_already_claim";
+
+    MailObj obj = havePrivateMsg(cas);
+    if (obj == null)
+      return "msg_not_exist";
+
+    if (obj.rewards == null)
+      return "msg_reward_invalid";
+
+    for (List<Integer> reward : obj.rewards) {
+      if (reward == null || reward.size() != 4)
+        continue;
+      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, reward);
+    }
+
+    claimedPrivateMsg.put(cas, curMs);
+
+    return "ok";
+  }
+
+  private MailObj havePrivateMsg(long id) {
+    for (MailObj obj : privateMails) {
+      if (obj.id == id)
+        return obj;
+    }
+    return null;
   }
 }

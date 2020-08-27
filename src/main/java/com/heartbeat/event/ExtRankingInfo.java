@@ -55,7 +55,7 @@ public class ExtRankingInfo extends RankingInfo {
               flushTime - second, TimeUnit.SECONDS);
     }
     catch (Exception e) {
-      LOG.globalException(e);
+      LOG.globalException("node", "update ranking event", e);
     }
     return this;
   }

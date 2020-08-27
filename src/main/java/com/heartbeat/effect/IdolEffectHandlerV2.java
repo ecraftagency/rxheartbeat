@@ -43,8 +43,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
       return Idols.Idol.class.getField(fieldName);
     }
     catch (Exception e) {
-      LOG.globalException(e);
-      LOG.globalException("UserGameInfo could not found field " + fieldName);
+      LOG.globalException("node", "getUserIdolField", e);
       return null;
     }
   }
@@ -66,7 +65,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), amount));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOG.globalException(e);
+            LOG.globalException("node", "idolEffectHandler:linearIncrease", e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -88,7 +87,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), (long)(oldVale*scl)));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOG.globalException(e);
+            LOG.globalException("node", "idolEffectHandler:scaleIncrease",e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -110,7 +109,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), rangeIncrement));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOG.globalException(e);
+            LOG.globalException("node", "idolEffectHandler:voundIncrease", e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -132,7 +131,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
             session.effectResults.add(EffectResult.of(idol.id,entry.getKey(), increment));
             result = EffectHandler.SUCCESS;
           } catch (IllegalAccessException e) {
-            LOG.globalException(e);
+            LOG.globalException("node", "idolEffectHandler:stepIncrease",e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }
@@ -157,7 +156,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
               result = EffectHandler.SUCCESS;
             }
           } catch (IllegalAccessException e) {
-            LOG.globalException(e);
+            LOG.globalException("node", "idolEffectHandler:stepIncrease",e);
             result     = EffectHandler.UNKNOWN_PROPERTY;
           }
         }

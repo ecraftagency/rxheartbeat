@@ -61,6 +61,48 @@
   </table>
 </div>
 
+<div v-if="isLoaded == true" class="row top-buffer">
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th v-for="key in Object.keys(resp.session.userInbox[0])">{{ key }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="inb in resp.session.userInbox">
+        <td v-for="key in Object.keys(resp.session.userInbox[0])">{{ inb[key] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div v-if="isLoaded == true" class="row top-buffer">
+   <div class="float-left mailInput" class="col-xl-4">
+      <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
+      placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
+   </div>
+</div>
+
+<div v-if="isLoaded == true" class="row top-buffer">
+   <div class="float-left mailInput" class="col-xl-4">
+      <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
+      placeholder="Nội Dung">
+   </div>
+</div>
+
+<div v-if="isLoaded == true" class="row top-buffer">
+   <div class="float-left mailInput" class="col-xl-4">
+      <input v-model="mailItems" type="text" class="form-control" id="mailItems" name="mailTitle"
+      placeholder="Vật phẩm...">
+   </div>
+</div>
+
+<div v-if="isLoaded == true" class="row top-buffer">
+   <div class="float-left" class="col-xl-4">
+      <button type="button" class="btn btn-primary" v-on:click="sendMail">Send</button>
+   </div>
+</div>
+
 <#include "footer.ftl">
 
 <script>
@@ -82,12 +124,25 @@ var app = new Vue({
         codeVal: '',
         userName: '',
         banDate:'',
+        mailTitle:'',
+        mailContent:'',
+        mailItems:'',
         resp: undefined,
         isLoaded: false
     }
   },
   methods: {
     serverSelect: function() {
+    },
+    sendMail: function (event){
+       if(!confirm("Hãy kiểm tra kỹ format quà nha bạn!"))
+            return;
+       let data = { cmd:'sendPrivateMail', sessionId: this.sessionId , mailTitle: this.mailTitle, mailContent: this.mailContent, mailItems: this.mailItems};
+
+      fetch(host, postOptions(data))
+      .then(response => response.json())
+      .then(data => this.success(data))
+      .catch(error => this.isLoaded = false);
     },
     banUser: function(event){
         let d = new Date(this.banDate);
@@ -156,6 +211,14 @@ var app = new Vue({
 #codeValue {
   margin-left: 14px;
   width: 700px;
+}
+
+#mailContent {
+  height: 450px;
+}
+
+.mailInput {
+    width: 450px;
 }
 
 .top-buffer { margin-top:15px; }

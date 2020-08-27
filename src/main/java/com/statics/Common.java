@@ -47,9 +47,8 @@ public class Common {
       }
     }
     catch (Exception e) {
-      System.out.println(j);
-      LOG.globalException(e);
       result.clear();
+      LOG.globalException("node", "load static file", e);
     }
     return result;
   }

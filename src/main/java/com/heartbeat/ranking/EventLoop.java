@@ -27,7 +27,7 @@ public class EventLoop implements Runnable{
           command.execute();
       }
       catch (Exception e) {
-        LOG.globalException(e);
+        LOG.globalException("node", "eventLoop", e);
       }
     }
     GlobalVariable.schThreadPool.schedule(this, SYSTEM_INFO.EVENT_LOOP_SLEEP_INV, TimeUnit.MILLISECONDS);

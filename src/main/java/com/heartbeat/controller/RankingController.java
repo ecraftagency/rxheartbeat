@@ -12,8 +12,9 @@ import io.vertx.ext.web.RoutingContext;
 public class RankingController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
+    String cmd          = "";
     try {
-      String cmd        = ctx.getBodyAsJson().getString("cmd");
+      cmd               = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       int lastIssued    = ctx.user().principal().getInteger("issueTime");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
@@ -53,7 +54,7 @@ public class RankingController implements Handler<RoutingContext> {
     }
     catch (Exception e) {
       ctx.response().setStatusCode(404).end();
-      LOG.globalException(e);
+      LOG.globalException("node", cmd, e);
     }
   }
 

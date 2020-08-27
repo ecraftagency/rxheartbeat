@@ -74,6 +74,7 @@ public class CBGroup implements Cruder<UserGroup> {
                   //if add group fail, then rollback
                   CBMapper.getInstance().unmap(Integer.toString(obj.owner));
                   handler.handle(Future.failedFuture(err.getMessage()));
+                  LOG.globalException("node", "CBGroup", "id:%s, gid:%d", id, obj.id);
                 }
             );
           }
@@ -102,13 +103,13 @@ public class CBGroup implements Cruder<UserGroup> {
                     handler.handle(Future.succeededFuture("ok"));
                   },
                   err -> {
-                    LOG.globalException("red alert: already unmap sid_gid but fail to delete group from db, gid: " + id + " sid: " + group.owner);
                     handler.handle(Future.failedFuture(err.getMessage()));
+                    LOG.globalException("node", "createGroup", "red alert: already unmap sid_gid but fail to delete group from db, gid: " + id + " sid: " + group.owner);
                   }
           );
         }
         else {
-          LOG.globalException("red alert: sid_gid fail to unmap but have group instance online, gid: " + id + " sid: " + group.owner);
+          LOG.globalException("node", "removeGroup", "red alert: sid_gid fail to unmap but have group instance online, gid: " + id + " sid: " + group.owner);
           handler.handle(Future.failedFuture(unmapRes.cause().getMessage()));
         }
       });

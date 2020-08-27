@@ -60,7 +60,7 @@ public class UserRollCall extends RollCall {
         entry.getValue().lastClaimTime  = 0;
         entry.getValue().todayClaim     = false;
         String err = String.format("data_inconsistency[sessionId:%d, giftType:%d]", session.id, entry.getKey());
-        LOG.globalException(err);
+        LOG.globalException("node", "reCalcGiftCardInfo", err);
         continue;
       }
 
@@ -121,7 +121,7 @@ public class UserRollCall extends RollCall {
       currentVipLevel = cur.level;
       if (cur.level > VipGiftData.vipGiftDtoMap.size()) {
         String err = String.format("data_inconsistency[curVipLevel:%d,vipGiftSize:%d]",cur.level, VipGiftData.vipGiftDtoMap.size());
-        LOG.globalException(err);
+        LOG.globalException("node","claimVipGift", err);
       }
       return "mission_impossible";
     }

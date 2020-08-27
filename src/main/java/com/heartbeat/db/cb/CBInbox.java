@@ -71,7 +71,7 @@ public class CBInbox implements Cruder<PublicMailBoxDAO> {
       return true;
     }
     catch (Exception e) {
-      LOG.globalException(e);
+      LOG.globalException("node", "CBInbox:sync", e);
       return false;
     }
   }

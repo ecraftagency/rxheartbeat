@@ -37,7 +37,7 @@ public class ExtEventInfo extends EventInfo {
 
     }
     catch (Exception e) {
-      LOG.globalException(e);
+      LOG.globalException("node", "update user event", e);
     }
 
     return this;

@@ -322,6 +322,7 @@ public class Session {
           }
           else{
             handler.handle(Future.failedFuture(addRes.cause().getMessage()));
+            LOG.globalException("node", "createGroup", addRes.cause());
           }
         });
       }
@@ -329,8 +330,8 @@ public class Session {
         // try for next login
         CBGroup.getInstance().load(oldGid, loadRes -> {
           if (loadRes.succeeded()) {
-            LOG.globalException("red alert: groupID zero but have sid_gid mapping and even a persistent group");
             handler.handle(Future.failedFuture("delay"));
+            LOG.globalException("node", "create group", "red alert: groupID zero but have sid_gid mapping and even a persistent group");
           }
           else { //have sid_gid mapping but don't have persistent group, ok (mean member of last delete group)
             CBMapper.getInstance().unmap(Integer.toString(id), unmapRes -> {
@@ -396,9 +397,9 @@ public class Session {
           }
         }
         catch (Exception e) {
-          LOG.globalException(e);
           groupID = Group.GROUP_ID_TYPE_NONE;
           handler.handle(Future.succeededFuture("ok"));
+          LOG.globalException("node", "load session group", e);
         }
       }
       else { //there no sid-gid mapping entry
@@ -471,8 +472,8 @@ public class Session {
           handler.handle(Future.failedFuture("join_group_delay"));
         }
         else if (Group.isValidGid(oldGID)) { //fuck map say valid gid, but runtime gid == 0
-          LOG.globalException("alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
           handler.handle(Future.failedFuture("join_group_fail runtime and persistent mismatch"));
+          LOG.globalException("node", "join group","alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
         }
         else {
           handler.handle(Future.failedFuture("join_group_fail_unknown"));
@@ -518,7 +519,7 @@ public class Session {
       UserGroup group = GroupPool.getGroupFromPool(groupID);
       if (group == null) { //todo critical
         String err = String.format("leave_group_fail_[sid:%d,gid:%d,runtime:%s,members:%s]",id, groupID, "no", "_");
-        LOG.globalException(err);
+        LOG.globalException("node", "leave group", err);
         return err;
       }
 
@@ -535,7 +536,7 @@ public class Session {
       }
       else { //todo critical
         String err = String.format("leave_group_fail_[sid:%d,gid:%d,runtime:%s,members:%s]",id, groupID, "valid", "no");
-        LOG.globalException(err);
+        LOG.globalException("node", "leave group", err);
         return err;
       }
     }
@@ -549,7 +550,7 @@ public class Session {
     UserGroup group = GroupPool.getGroupFromPool(this.groupID);
     if (group == null) {
       String err = String.format("user_have_no_group[sid:%d,gid:%d,runtime:%s]",id, groupID, "no");
-      LOG.globalException(err);
+      LOG.globalException("node", "approve member", err);
       return err;
     }
 
@@ -584,9 +585,9 @@ public class Session {
       }
       catch (Exception e) {
         //malform
-        LOG.globalException(String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
         CBMapper.getInstance().unmap(Integer.toString(memberId), ar -> {});
         group.removePendingMember(memberId);
+        LOG.globalException("node", "approve member", String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
         return "approve_fail_unknown";
       }
     }

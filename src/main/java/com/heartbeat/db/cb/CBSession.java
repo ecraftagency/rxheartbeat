@@ -1,5 +1,6 @@
 package com.heartbeat.db.cb;
 
+import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 
 import com.heartbeat.HBServer;
@@ -71,7 +72,10 @@ public class CBSession implements Cruder<Session> {
   public void add(String id, Session obj, Handler<AsyncResult<String>> handler) {
     rxSessionBucket.defaultCollection().insert(id, obj).subscribe(
             res -> handler.handle(Future.succeededFuture("ok")),
-            err -> handler.handle(Future.succeededFuture(err.getMessage())));
+            err -> {
+              handler.handle(Future.succeededFuture(err.getMessage()));
+              LOG.globalException("node", "CBSession:add", String.format("id:%s", id));
+            });
   }
 
   @Override

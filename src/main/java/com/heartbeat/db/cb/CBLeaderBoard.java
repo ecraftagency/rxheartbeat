@@ -70,7 +70,7 @@ public class CBLeaderBoard implements Cruder<LeaderBoardDAO> {
       return true;
     }
     catch (Exception e) {
-      LOG.globalException(e);
+      LOG.globalException("node","CBLeaderboad:sync",e);
       return false;
     }
   }

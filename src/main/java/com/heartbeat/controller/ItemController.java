@@ -19,8 +19,9 @@ import java.util.List;
 public class ItemController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
+    String cmd          = "";
     try {
-      String cmd        = ctx.getBodyAsJson().getString("cmd");
+      cmd               = ctx.getBodyAsJson().getString("cmd");
       String strUserId  = ctx.user().principal().getString("username");
       int lastIssued    = ctx.user().principal().getInteger("issueTime");
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
@@ -62,8 +63,8 @@ public class ItemController implements Handler<RoutingContext> {
       }
     }
     catch (Exception e) {
-      LOG.globalException(e);
       ctx.response().setStatusCode(404).end();
+      LOG.globalException("node", cmd, e);
     }
   }
 
