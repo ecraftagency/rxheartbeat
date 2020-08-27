@@ -10,44 +10,11 @@ import com.transport.model.Idols;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import static com.common.Constant.*;
+import static com.common.Constant.USER_IDOL.*;
 
 public class UserIdol extends Idols {
-  public static final int               CREATIVITY              = 2; //trí lực
-  public static final int               PERFORMANCE             = 3; //chính trị
-  public static final int               ATTRACTIVE              = 4; //mị lực
-  public static final int               GROUP_HALO              = 1;
-  public static final int               PERSONAL_HALO           = 0;
-
-  public static final int               EXP_PER_UPGRADE         = 200;
-  public static final int               EXP_UP_STEP             = 1;
-
-  public static final int               CRT_UP_ITEM             = 67;
-  public static final int               PERF_UP_ITEM            = 68;
-  public static final int               ATTR_UP_ITEM            = 69;
-  public static List<Integer>           APT_UP_RATE             = new ArrayList<>();
-  public static final int               APT_UP_COST             = 1;
-  public static final int               DEFAULT_APT_EXP         = 2000;
-  public static final List<Integer>     DEFAULT_IDOLS;
-
-  public static final int               RAMPAGE_BUFF_PERCENT    = 15;
-  public static final int               RAMPAGE_BUFF_LV_CNT     = 2;
-
-  public static List<Integer>           EXCLUDE_RAMPAGE_LEVEL;
-  public static final int               MAX_RAMPAGE_ALLOW_LV    = 197;
-
-  public int dailyRampage;
-  public int maxDailyRampage;
-
-  static {
-    APT_UP_RATE.add(0);
-    APT_UP_RATE.add(100);
-    APT_UP_RATE.add(0);
-    APT_UP_RATE.add(30);
-    APT_UP_RATE.add(0);
-    APT_UP_RATE.add(23);
-    DEFAULT_IDOLS = Arrays.asList(1,2,3,4);
-    EXCLUDE_RAMPAGE_LEVEL = Arrays.asList(98,99,100,148,149,150);
-  }
+  public int                                  dailyRampage;
+  public int                                  maxDailyRampage;
 
   private transient Map<Integer, List<Idol>>  halo2Idol;    //group Idol by Halos
   public  transient UserEvent                 userEvent;    //ref;
@@ -93,7 +60,7 @@ public class UserIdol extends Idols {
         }
       }
 
-      idol.aptitudeExp            = DEFAULT_APT_EXP;
+      idol.aptitudeExp            = INIT_APT_EXP;
       idol.honorID                = 1; //todo must have 1
       idol.crtApt                 = servant.defaultProperties.get(0);
       idol.perfApt                = servant.defaultProperties.get(1);
@@ -241,7 +208,7 @@ public class UserIdol extends Idols {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
       return "idol_not_exist";
-    if (idol.aptitudeExp < EXP_PER_UPGRADE)
+    if (idol.aptitudeExp < APT_EXP_COST_PER_UPGRADE)
       return "insufficient_aptitude_exp";
 
     int currentLimit = BookLimitData.getCurrentLimit(idolId, speciality, idol.level);
@@ -267,7 +234,7 @@ public class UserIdol extends Idols {
       default:
         break;
     }
-    idol.aptitudeExp -= EXP_PER_UPGRADE;
+    idol.aptitudeExp -= APT_EXP_COST_PER_UPGRADE;
     onPropertiesChange(idol);
     return "ok";
   }

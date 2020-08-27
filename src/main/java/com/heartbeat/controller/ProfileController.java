@@ -68,6 +68,12 @@ public class ProfileController implements Handler<RoutingContext> {
   private ExtMessage processBuyShopItem(Session session, RoutingContext ctx) {
     int shopItemId      = ctx.getBodyAsJson().getInteger("shopItemId");
     ExtMessage resp     = ExtMessage.profile();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.SHOP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userGameInfo.buyShopItem(session, shopItemId);
     resp.data.gameInfo  = session.userGameInfo;
     resp.data.inventory = session.userInventory;

@@ -220,6 +220,60 @@ public class Constant {
     public static final int         MAX_GENDER                = 2;
     public static final int         MEDIA_INTERVAL            = 1198; //unit second 20'
     public static final int         MEDIA_CONTRACT_ITEM       = 2;    //hợp đồng truyền thông
+    public static int               INIT_MONEY                = 20000;
+    public static int               INIT_VIEW                 = 20000;
+    public static int               INIT_FAN                  = 20000;
+  }
+
+  public static class USER_IDOL {
+    public static final int               CREATIVITY              = 2; //trí lực
+    public static final int               PERFORMANCE             = 3; //chính trị
+    public static final int               ATTRACTIVE              = 4; //mị lực
+    public static final int               GROUP_HALO              = 1;
+    public static final int               PERSONAL_HALO           = 0;
+
+    public static final int               EXP_UP_STEP             = 1;
+
+    public static final int               CRT_UP_ITEM             = 67;
+    public static final int               PERF_UP_ITEM            = 68;
+    public static final int               ATTR_UP_ITEM            = 69;
+    public static List<Integer>           APT_UP_RATE             = new ArrayList<>();
+    public static final List<Integer>     DEFAULT_IDOLS;
+
+    public static final int               RAMPAGE_BUFF_PERCENT    = 15;
+    public static final int               RAMPAGE_BUFF_LV_CNT     = 2;
+
+    public static List<Integer>           EXCLUDE_RAMPAGE_LEVEL;
+    public static final int               MAX_RAMPAGE_ALLOW_LV    = 197;
+
+    public static final int               APT_UP_COST               = 1;
+    public static int                     APT_EXP_COST_PER_UPGRADE  = 200;
+    public static int                     INIT_APT_EXP              = 2000;
+
+    static {
+      APT_UP_RATE.add(0);
+      APT_UP_RATE.add(100);
+      APT_UP_RATE.add(0);
+      APT_UP_RATE.add(30);
+      APT_UP_RATE.add(0);
+      APT_UP_RATE.add(23);
+      DEFAULT_IDOLS = Arrays.asList(1,2,3,4);
+      EXCLUDE_RAMPAGE_LEVEL = Arrays.asList(98,99,100,148,149,150);
+    }
+  }
+
+  public static class UNLOCK_FUNCTION {
+    public static int TIME_UNLOCK_LEVEL           = 2;
+    public static int GAME_SHOW_UNLOCK_LEVEL      = 2;
+    public static int SHOP_UNLOCK_LEVEL           = 2;
+    public static int TRAVEL_UNLOCK_LEVEL         = 3;
+    public static int GROUP_UNLOCK_LEVEL          = 4;
+    public static int FRIEND_QR_UNLOCK_LEVEL      = 5;
+    public static int SHOPPING_UNLOCK_LEVEL       = 6;
+    public static int SKIP_FIGHT_UNLOCK_LEVEL     = 6;
+    public static int FAST_SHOPPING_UNLOCK_LEVEL  = 7;
+    public static int RUN_SHOW_UNLOCK_LEVEL       = 7;
+    public static int FAST_RUN_SHOW_UNLOCK_LEVEL  = 7;
   }
 
   public static class EFFECT_RESULT {

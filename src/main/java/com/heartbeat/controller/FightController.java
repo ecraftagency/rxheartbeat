@@ -79,6 +79,12 @@ public class FightController implements Handler<RoutingContext> {
   private ExtMessage processMultiShoppingFight(Session session, RoutingContext ctx) {
     int time            = ctx.getBodyAsJson().getInteger("time");
     ExtMessage resp     = ExtMessage.fight();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.FAST_SHOPPING_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userFight.handleMultiShoppingFight(session, time);
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
@@ -94,6 +100,12 @@ public class FightController implements Handler<RoutingContext> {
   private ExtMessage processMultiRunShowFight(Session session, RoutingContext ctx) {
     int time            = ctx.getBodyAsJson().getInteger("time");
     ExtMessage resp     = ExtMessage.fight();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.FAST_RUN_SHOW_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userFight.handleMultiRunShowFight(session, time);
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
@@ -161,6 +173,11 @@ public class FightController implements Handler<RoutingContext> {
   private ExtMessage processGameShowFight(Session session, RoutingContext ctx) {
     ExtMessage resp       =  ExtMessage.fight();
 
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.GAME_SHOW_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     if (Constant.SCHEDULE.gameShowOpen) {
       int idolId          = ctx.getBodyAsJson().getInteger("idolId");
       resp.msg            = session.userFight.handleGameShowFight(session, idolId);
@@ -185,6 +202,11 @@ public class FightController implements Handler<RoutingContext> {
   private ExtMessage processFreeGameShowIdol(Session session, RoutingContext ctx) {
     ExtMessage resp = ExtMessage.fight();
 
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.GAME_SHOW_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     if (Constant.SCHEDULE.gameShowOpen) {
       int idolId          = ctx.getBodyAsJson().getInteger("idolId");
       resp.msg            = session.userFight.freeUsedGameShowIdol(session, idolId);
@@ -201,6 +223,12 @@ public class FightController implements Handler<RoutingContext> {
 
   private ExtMessage processRunShowFight(Session session) {
     ExtMessage resp     = ExtMessage.fight();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.RUN_SHOW_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userFight.handleRunShowFight(session);
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;
@@ -214,6 +242,12 @@ public class FightController implements Handler<RoutingContext> {
 
   private ExtMessage processShoppingFight(Session session) {
     ExtMessage resp     = ExtMessage.fight();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.SHOPPING_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userFight.handleShoppingFight(session);
     resp.data.fight     = session.userFight;
     resp.data.gameInfo  = session.userGameInfo;

@@ -52,7 +52,7 @@ public class GroupController implements Handler<RoutingContext> {
             resp = processGroupApproval(session, ctx);
             break;
           case "listGroup":
-            processListGroup(cmd, ctx);
+            processListGroup(session, cmd, ctx);
             return;
           case "leaveGroup":
             resp = processLeaveGroup(session);
@@ -97,6 +97,12 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processClaimReward(Session session, RoutingContext ctx, long curMs) {
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     UserGroup group = GroupPool.getGroupFromPool(session.groupID);
     int missionId   = ctx.getBodyAsJson().getInteger("missionId");
 
@@ -113,6 +119,12 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processFlushGroupState(Session session) {
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     if (session.groupID == Group.GROUP_ID_TYPE_REMOVE) {
       session.groupID = Group.GROUP_ID_TYPE_NONE;
       CBMapper.getInstance().unmap(Integer.toString(session.id));
@@ -125,6 +137,12 @@ public class GroupController implements Handler<RoutingContext> {
   private ExtMessage processsSwitchMode(Session session, RoutingContext ctx) {
     int joinType = ctx.getBodyAsJson().getInteger("joinType");
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     if (joinType < 0 || joinType > 1) {
       resp.msg = "switch_join_type_fail";
       return resp;
@@ -157,6 +175,12 @@ public class GroupController implements Handler<RoutingContext> {
     int    type       = ctx.getBodyAsJson().getInteger("type");
     //type 0 -> doi noi, type 1 -> doi ngoai
     ExtMessage resp   = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.data.currentGroupState = session.groupID;
     resp.msg          = session.setGroupInform(type, informMsg);
     resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
@@ -169,6 +193,12 @@ public class GroupController implements Handler<RoutingContext> {
     int memberId    = ctx.getBodyAsJson().getInteger("memberId");
 
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     if (session.id == memberId) {
       resp.msg = "set_role_fail_dup_memberID";
       return resp;
@@ -184,13 +214,26 @@ public class GroupController implements Handler<RoutingContext> {
     int memberId    = ctx.getBodyAsJson().getInteger("memberId");
     String action   = ctx.getBodyAsJson().getString("action");
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg        = session.approveMember(memberId, action);
     resp.data.group = GroupPool.getGroupFromPool(session.groupID);
     resp.data.currentGroupState = session.groupID;
     return resp;
   }
 
-  private void processListGroup(String cmd, RoutingContext ctx) {
+  private void processListGroup(Session session, String cmd, RoutingContext ctx) {
+    ExtMessage check = ExtMessage.group();
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      check.msg = "level_limit";
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(check));
+      return;
+    }
+
     fetchGroups(ar -> {
       if (ar.succeeded()) {
         ExtMessage resp   = ExtMessage.group();
@@ -228,6 +271,12 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processLeaveGroup(Session session) {
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg        = session.leaveGroup();
     resp.data.currentGroupState = session.groupID;
     return resp;
@@ -235,6 +284,12 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processKickMember(Session session, RoutingContext ctx) {
     ExtMessage resp   = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     int memberId      = ctx.getBodyAsJson().getInteger("memberId");
     resp.msg          = session.kick(memberId);
     resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
@@ -244,6 +299,13 @@ public class GroupController implements Handler<RoutingContext> {
 
   private void processJoinGroup(Session session, String cmd, RoutingContext ctx) {
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      return;
+    }
+
     int groupId;
     try {
       groupId = ctx.getBodyAsJson().getInteger("groupId");
@@ -269,6 +331,12 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processGroupInfo(Session session) {
     ExtMessage resp   = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     UserGroup group;
     if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
       group.calcMissionHitMember();
@@ -292,6 +360,13 @@ public class GroupController implements Handler<RoutingContext> {
 
   private void processRemoveGroup(Session session, RoutingContext ctx, String cmd) {
     ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      return;
+    }
+
     session.removeGroup(crtRes -> {
       if (crtRes.succeeded()) {
         resp.msg = "ok";
@@ -306,6 +381,14 @@ public class GroupController implements Handler<RoutingContext> {
   }
 
   private void processCreateGroup(Session session, RoutingContext ctx, String cmd) {
+    ExtMessage resp = ExtMessage.group();
+
+    if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      return;
+    }
+
     int groupType;
     String name, externalInform, internalInform;
     try {
@@ -316,10 +399,10 @@ public class GroupController implements Handler<RoutingContext> {
     }
     catch (Exception e) {
       ctx.response().setStatusCode(404).end();
+      LOG.globalException(e);
       return;
     }
 
-    ExtMessage resp = ExtMessage.group();
     if (groupType < 0 || groupType > 1) {
       resp.msg = "invalid_group_type";
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));

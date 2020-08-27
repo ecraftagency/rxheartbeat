@@ -14,6 +14,8 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
+import java.util.HashMap;
+
 @SuppressWarnings("unused")
 public class SessionLoginService implements AuthService {
 

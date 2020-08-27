@@ -63,6 +63,12 @@ public class TravelController implements Handler<RoutingContext> {
 
   private ExtMessage processAddMultiClaim(Session session, RoutingContext ctx) {
     ExtMessage resp     = ExtMessage.travel();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     int amount          = ctx.getBodyAsJson().getInteger("amount");
     resp.msg            = session.userTravel.addMultiTravelClaim(session, amount);
     resp.data.travel    = session.userTravel;
@@ -72,6 +78,12 @@ public class TravelController implements Handler<RoutingContext> {
 
   private ExtMessage processAddTravelClaim(Session session) {
     ExtMessage resp     = ExtMessage.travel();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userTravel.addTravelClaim(session);
     resp.data.travel    = session.userTravel;
     resp.data.gameInfo  = session.userGameInfo;
@@ -79,15 +91,27 @@ public class TravelController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processTravelInfo(Session session, long curMs) {
+    ExtMessage resp   = ExtMessage.travel();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     session.userTravel.updateTravel(session, curMs);
-    ExtMessage resp = ExtMessage.travel();
-    resp.data.travel = session.userTravel;
-    resp.serverTime = (int)(curMs/1000);
+    resp.data.travel  = session.userTravel;
+    resp.serverTime   = (int)(curMs/1000);
     return resp;
   }
 
   private ExtMessage processClaimMultiTravel(Session session, long curMs) {
     ExtMessage resp         = ExtMessage.travel();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     int currentTrvClaimCnt  = session.userTravel.currentTravelClaimCount;
     resp.msg                = session.userTravel.claimMultiTravel(session, curMs);
     resp.data.travel        = session.userTravel;
@@ -104,6 +128,12 @@ public class TravelController implements Handler<RoutingContext> {
 
   private ExtMessage processClaimTravel(Session session, long curMs) {
     ExtMessage resp     = ExtMessage.travel();
+
+    if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
+      resp.msg = "level_limit";
+      return resp;
+    }
+
     resp.msg            = session.userTravel.claimTravel(session, curMs);
     resp.data.travel    = session.userTravel;
     resp.effectResults  = session.effectResults;

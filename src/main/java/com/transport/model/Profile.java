@@ -1,6 +1,8 @@
 package com.transport.model;
 
 
+import java.util.HashMap;
+
 public class Profile {
   public String       result;       //Const.ResultCode
   public String       strUserId;

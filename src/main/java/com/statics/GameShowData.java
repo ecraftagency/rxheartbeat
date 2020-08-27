@@ -30,7 +30,7 @@ public class GameShowData {
     clone.bosshp = gs.bosshp;
     clone.reward = new ArrayList<>();
     clone.reward.addAll(gs.reward);
-    return gs;
+    return clone;
   }
 
   public static GameShow ofNullObject() {

@@ -3,17 +3,19 @@ package com.transport;
 import com.transport.model.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class ExtMessage {
-  public String             cmd;
-  public String             msg;
-  public Data               data;
-  public String             group;
-  public int                serverTime;
-  public long               userRemainTime;
-  public boolean            timeChange;
-  public boolean            newInbox;
-  public List<EffectResult> effectResults;
+  public String               cmd;
+  public String               msg;
+  public Data                 data;
+  public String               group;
+  public int                  serverTime;
+  public long                 userRemainTime;
+  public boolean              timeChange;
+  public boolean              newInbox;
+  public List<EffectResult>   effectResults;
+  public Map<String, Integer> unlockFunction;
 
   public static class Data {
     public GameInfo     gameInfo;

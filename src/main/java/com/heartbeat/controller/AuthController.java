@@ -1,5 +1,6 @@
 package com.heartbeat.controller;
 
+import com.common.Constant;
 import com.common.LOG;
 import com.heartbeat.service.AuthService;
 import com.heartbeat.service.impl.SessionLoginService;
@@ -15,6 +16,8 @@ import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 public class AuthController implements Handler<RoutingContext> {
   public static final int TOKEN_EXPIRE_TIME       = 24*60; //minutes
@@ -42,7 +45,8 @@ public class AuthController implements Handler<RoutingContext> {
         profile.jwtToken = jwt.generateToken(
             new JsonObject().put("username", profile.strUserId).put("issueTime", profile.lastLogin),
             new JWTOptions().setIssuer("Vert.x").setExpiresInMinutes(TOKEN_EXPIRE_TIME));
-        resp.data.profile = profile;
+        resp.data.profile     = profile;
+        resp.unlockFunction   = unlockFunction();
         resp.msg = "ok";
       }
       else {
@@ -55,5 +59,22 @@ public class AuthController implements Handler<RoutingContext> {
 
   public JWTAuth getJWTProvider() {
     return jwt;
+  }
+
+  private static HashMap<String, Integer> unlockFunction() {
+    HashMap<String, Integer> unlockMap = new HashMap<>();
+    unlockMap.put("TIME_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.TIME_UNLOCK_LEVEL);
+    unlockMap.put("GAME_SHOW_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.GAME_SHOW_UNLOCK_LEVEL);
+    unlockMap.put("SHOP_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.SHOP_UNLOCK_LEVEL);
+    unlockMap.put("TRAVEL_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL);
+    unlockMap.put("GROUP_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL);
+    unlockMap.put("FRIEND_QR_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.FRIEND_QR_UNLOCK_LEVEL);
+    unlockMap.put("SHOPPING_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.SHOPPING_UNLOCK_LEVEL);
+    unlockMap.put("SKIP_FIGHT_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.SKIP_FIGHT_UNLOCK_LEVEL);
+    unlockMap.put("FAST_SHOPPING_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.FAST_SHOPPING_UNLOCK_LEVEL);
+    unlockMap.put("RUN_SHOW_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.RUN_SHOW_UNLOCK_LEVEL);
+    unlockMap.put("FAST_RUN_SHOW_UNLOCK_LEVEL", Constant.UNLOCK_FUNCTION.FAST_RUN_SHOW_UNLOCK_LEVEL);
+
+    return unlockMap;
   }
 }

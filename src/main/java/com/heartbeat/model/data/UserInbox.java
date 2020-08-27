@@ -80,6 +80,8 @@ public class UserInbox extends Inbox {
       claimedMsg = new HashMap<>();
     }
     claimedMsg.entrySet().removeIf(entry -> curMs - entry.getKey() > CLAIM_EXPIRE);
+    if (privateMail == null)
+      privateMail = new HashMap<>();
   }
 
   public String claimInboxReward(Session session, long cas, long curMs) {
