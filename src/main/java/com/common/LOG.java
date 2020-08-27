@@ -28,37 +28,35 @@ public class LOG {
       for (StackTraceElement ste : cause.getStackTrace())
         builder.append(EXCEPTION_LINE_HEADER).append(ste.toString());
       GLOBAL_EXCEPTION.info(builder.toString());
-
-      //fluent LOG
-      Map<String, Object> data = new HashMap<>();
-      List<String> trace       = Arrays.stream(cause.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
-      trace.add(0, cause.getMessage());
-      data.put("type", "global_exception");
-      data.put("msg", trace);
-      data.put("source", source);
-      data.put("action", action);
-      FLUENT.log("exception", data);
     }
+
+    Map<String, Object> data = new HashMap<>();
+    List<String> trace       = Arrays.stream(cause.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
+    trace.add(0, cause.getMessage());
+    data.put("type", "global_exception");
+    data.put("msg", trace);
+    data.put("source", source);
+    data.put("action", action);
+    FLUENT.log("exception", data);
   }
 
   public static void globalException(String source, String action, Object ... params) {
+    StringBuilder logContent = GlobalVariable.stringBuilder.get().append(';');
+
     if(SYSTEM_INFO.USE_GLOBAL_FILE_LOG) {
       if (params != null && params.length > 0) {
-        StringBuilder logContent = GlobalVariable.stringBuilder.get().append(';');
         for (Object param : params)
           logContent.append(param).append(EXCEPTION_LINE_HEADER);
         GLOBAL_EXCEPTION.info(logContent.toString());
-
-        //fluent LOG
-        Map<String, Object> data = new HashMap<>();
-        data.put("type", "global_exception");
-        data.put("msg", logContent.toString());
-        FLUENT.log("exception", data);
-      }
-      else {
-        globalException(source,action,new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
       }
     }
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("type", "global_exception");
+    data.put("msg", logContent.toString());
+    data.put("source", source);
+    data.put("action", action);
+    FLUENT.log("exception", data);
   }
 
   public static void console(Throwable cause) {

@@ -11,6 +11,7 @@
             <a class="nav-item nav-link" href="/config">Config</a>
             <a class="nav-item nav-link" href="/event">Events</a>
             <a class="nav-item nav-link" href="/ldb">LeaderBoard</a>
+            <a class="nav-item nav-link" href="/payment">Payment</a>
         </div>
       </div>
     </nav>

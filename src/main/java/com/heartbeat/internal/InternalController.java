@@ -13,6 +13,7 @@ import com.heartbeat.service.ConstantInjector;
 import com.heartbeat.service.SessionInjector;
 import com.heartbeat.service.impl.EvilInjector;
 import com.heartbeat.service.impl.MaydayInjector;
+import com.statics.PaymentData;
 import com.transport.IntMessage;
 import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
@@ -37,9 +38,10 @@ public class InternalController implements Handler<Message<JsonObject>> {
   @Override
   public void handle(Message<JsonObject> ctx) {
     JsonObject resp = new JsonObject();
+    String cmd      = "";
     try {
       JsonObject json = ctx.body();
-      String  cmd     = json.getString("cmd");
+      cmd             = json.getString("cmd");
       switch (cmd) {
         case "injectSession":
           processInjectSession(ctx);
@@ -77,6 +79,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getSessionId":
           processGetSessionId(ctx);
           return;
+        case "getPaymentInfo":
+          getPaymentInfo(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -86,8 +91,14 @@ public class InternalController implements Handler<Message<JsonObject>> {
     catch (Exception e) {
       resp.put("msg", e.getMessage());
       ctx.reply(resp);
-      LOG.globalException("node", "InternalCall", e);
+      LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void getPaymentInfo(Message<JsonObject> ctx) {
+    JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
+    resp.put("payment", Transformer.transformPaymentData());
+    ctx.reply(resp);
   }
 
   private void processSendPrivateMail(Message<JsonObject> ctx) {
@@ -187,12 +198,22 @@ public class InternalController implements Handler<Message<JsonObject>> {
     try {
       JsonObject req  = ctx.body();
       Payload payload = Json.decodeValue(req.getString("payload"), Payload.class);
+      PaymentData.PaymentDto dto = PaymentData.paymentDtoMap.get(payload.itemId);
+
+      if (dto == null || dto.reward == null) {
+        resp.put("code", -9).put("msg", "Exchange fail");
+        ctx.reply(resp);
+        LOG.paymentException(String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
+        return;
+      }
+
       loadSession(payload.sessionId, resp, sar -> {
         if (sar.succeeded()) {
           try {
             Session session = sar.result();
             boolean online  = resp.getString("state").equals("online");
-            PaymentHandler.mobiPaymentSuccess(session, payload, online);
+
+            PaymentHandler.mobiPaymentSuccess(session, payload, online, dto);
             resp.put("code", 0).put("msg", "Success");
           }
           catch (Exception e) {

@@ -1,12 +1,14 @@
 package com.heartbeat.internal;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.heartbeat.event.ExtEventInfo;
 import com.heartbeat.event.ExtIdolEventInfo;
 import com.heartbeat.event.ExtRankingInfo;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserLDB;
 import com.statics.OfficeData;
+import com.statics.PaymentData;
 import com.statics.PropData;
 import com.statics.VipData;
 import com.transport.model.LDBObj;
@@ -271,5 +273,20 @@ public class Transformer {
         ar.handle(Future.succeededFuture(res));
       }
     });
+  }
+
+  public static JsonArray transformPaymentData() {
+    JsonArray res = new JsonArray();
+    if (PaymentData.paymentDtoMap == null || PaymentData.paymentDtoMap.size() == 0) {
+      LOG.globalException("node", "transformPaymentData", "invalid payment data");
+      return res;
+    }
+
+    for (PaymentData.PaymentDto dto : PaymentData.paymentDtoMap.values()) {
+      res.add(new JsonObject().put("id", dto.id).put("Giá web", dto.webVal).put("Giá iap", dto.iapVal)
+              .put("vip", dto.vip).put("time", dto.time).put("items", dto.reward));
+    }
+
+    return res;
   }
 }

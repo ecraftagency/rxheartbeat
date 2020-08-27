@@ -40,7 +40,7 @@ public class Common {
     try {
       JSONArray rows = new JSONArray(json);
       for (int i = 0; i < rows.length(); i++){
-        j= rows.getJSONObject(i);
+        j = rows.getJSONObject(i);
         Common.arraySubstitute(rows.getJSONObject(i));
         V v = Utilities.gson.fromJson(j.toString(), object);
         result.put(v.mapKey(), v);
@@ -48,7 +48,10 @@ public class Common {
     }
     catch (Exception e) {
       result.clear();
-      LOG.globalException("node", "load static file", e);
+      String logJson = "";
+      if (j != null)
+        logJson = j.toString();
+      LOG.globalException("node", "Common.loadMap", logJson);
     }
     return result;
   }

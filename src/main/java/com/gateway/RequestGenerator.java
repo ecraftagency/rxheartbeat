@@ -20,7 +20,7 @@ public class RequestGenerator {
     String serverid = "2";
     String roleid = "2000000";
     String orderid = System.currentTimeMillis() + "";
-    String itemid = "1";
+    String itemid = "mg01.p13";
     String payload = "asda87dh3ie328d";
     int money = 10000;
     int gold = 40000;

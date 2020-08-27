@@ -3,29 +3,27 @@
 <#include "servers.ftl">
 
 <div class ="row top-buffer">
-   <div class="float-left" class="col-sm-2">
+   <div class="col-sm-2">
          <input v-model="userName" type="text" class="form-control" id="userName" name="userName" placeholder="User name" v-on:keyup.enter="getUserId">
    </div>
 
-   <div class="float-left col-sm-2 left-buffer">
+   <div class="col-sm-2">
          <input v-model="sessionId" type="text" class="form-control" id="sessionId" name="sessionId" placeholder="User Id" v-on:keyup.enter="fetchUser">
    </div>
 
-   <div class="float-left" class="col-xl-4">
+   <div class="col-sm-4">
       <input v-model="codeVal" type="text" class="form-control" id="codeValue" name="codeValue"
       placeholder="eg session.userGameInfo.exp += 200; (Great power comes with great responsibility...)" v-on:keyup.enter="injectUser">
    </div>
-</div>
 
-<div class ="row top-buffer">
-   <div class="float-left col-sm-4">
-      <input v-model="banDate" type="datetime-local" class="form-control" id="banDate" name="banDate"
-      placeholder="Ban Date">
-   </div>
+  <div class="float-left col-sm-3">
+     <input v-model="banDate" type="datetime-local" class="form-control" id="banDate" name="banDate"
+     placeholder="Ban Date">
+  </div>
 
-   <div class="float-left col-sm-2">
-      <button type="button" class="btn btn-primary" v-on:click="banUser">Ban</button>
-   </div>
+  <div class="float-left col-sm-1">
+     <button type="button" class="btn btn-primary" v-on:click="banUser">Ban</button>
+  </div>
 </div>
 
 <div v-if="isLoaded == true" class="row top-buffer">
@@ -208,11 +206,6 @@ var app = new Vue({
 </script>
 
 <style>
-#codeValue {
-  margin-left: 14px;
-  width: 700px;
-}
-
 #mailContent {
   height: 450px;
 }

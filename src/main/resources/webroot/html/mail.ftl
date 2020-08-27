@@ -71,6 +71,7 @@ var app = new Vue({
        });
     },
     serverSelect: function(event) {
+
     }
   }
 });

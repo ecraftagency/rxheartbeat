@@ -139,6 +139,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       RankingData.loadJson(rank);
 
+      String payment = new String(Files.readAllBytes(Paths.get("data/json/payment.json")),
+              StandardCharsets.UTF_8);
+      PaymentData.loadJson(payment);
+
       WordFilter.loadJson("");
     }
     catch (Exception ioe) {

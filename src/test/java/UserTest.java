@@ -77,14 +77,6 @@ public class UserTest {
 //    json.put("sessionId", 15);
 //    Integer nodeId = json.getInteger("nodeId");
 //    System.out.println(nodeId);
-
-    long mills = Utilities.getMillisFromDateString("21/08/2020 11:05:00", EventInfo.DATE_PATTERN);
-
-    Date date = new Date(mills);
-    DateFormat formatter = new SimpleDateFormat(EventInfo.DATE_PATTERN);
-    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
-    String dateFormatted = formatter.format(date);
-    System.out.println(dateFormatted);
   }
 
   private static String getDefaultAddressNotLoopback() {

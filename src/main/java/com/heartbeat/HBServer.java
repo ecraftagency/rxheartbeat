@@ -434,6 +434,10 @@ public class HBServer extends AbstractVerticle {
             StandardCharsets.UTF_8);
     RankingData.loadJson(rank);
 
+    String payment = new String(Files.readAllBytes(Paths.get("data/json/payment.json")),
+            StandardCharsets.UTF_8);
+    PaymentData.loadJson(payment);
+
     WordFilter.loadJson("");
   }
 }
