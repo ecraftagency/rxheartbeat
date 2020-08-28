@@ -5,7 +5,6 @@ import com.common.LOG;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.config.NetworkConfig;
-import com.heartbeat.HBServer;
 import com.transport.model.Node;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
@@ -29,7 +28,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class GMTool extends AbstractVerticle {
   public static JsonObject                localConfig;
-  public static String                    gatewayIP = "";
+  public static String                    gatewayIP       = "";
+  public static String                    gatewayPublicIP = "";
+
   public static String                    localIP = "";
   public static ClusterManager            mgr;
   public static EventBus                  eventBus;
@@ -72,9 +73,8 @@ public class GMTool extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startPromise) throws Exception {
+  public void start(Promise<Void> startPromise) {
     templateEngine = FreeMarkerTemplateEngine.create(vertx);
-    HBServer.loadStaticData();
     Router router = Router.router(vertx);
 
     router.route().handler(CorsHandler.create(".*.")

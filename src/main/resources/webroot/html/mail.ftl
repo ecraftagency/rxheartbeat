@@ -3,29 +3,23 @@
 <#include "servers.ftl">
 
 <div class="row top-buffer">
-   <div class="float-left" class="col-xl-4">
+   <div class="col-sm-4">
       <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
       placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
    </div>
-</div>
-
-<div class="row top-buffer">
-   <div class="float-left" class="col-xl-4">
-      <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
-      placeholder="Nội Dung">
-   </div>
-</div>
-
-<div class="row top-buffer">
-   <div class="float-left" class="col-xl-4">
+   <div class="col-sm-7">
       <input v-model="mailItems" type="text" class="form-control" id="mailItems" name="mailTitle"
       placeholder="Vật phẩm...">
    </div>
+   <div class="col-sm-1 w-100">
+      <button type="button" class="btn btn-primary" v-on:click="sendMail">Send</button>
+   </div>
 </div>
 
 <div class="row top-buffer">
-   <div class="float-left" class="col-xl-4">
-      <button type="button" class="btn btn-primary" v-on:click="sendMail">Send</button>
+   <div class="col-sm-12">
+      <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
+      placeholder="Nội Dung">
    </div>
 </div>
 
@@ -79,11 +73,8 @@ var app = new Vue({
 
 <style>
 #mailContent {
-  height: 450px;
+  height: 250px;
 }
 
-.float-left {
-    width: 450px;
-}
 .top-buffer { margin-top:15px; }
 </style>

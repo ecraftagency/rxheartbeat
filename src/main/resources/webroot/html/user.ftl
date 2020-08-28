@@ -13,7 +13,7 @@
 
    <div class="col-sm-4">
       <input v-model="codeVal" type="text" class="form-control" id="codeValue" name="codeValue"
-      placeholder="eg session.userGameInfo.exp += 200; (Great power comes with great responsibility...)" v-on:keyup.enter="injectUser">
+      placeholder="eg session.userGameInfo.exp += 200;" v-on:keyup.enter="injectUser">
    </div>
 
   <div class="float-left col-sm-3">
@@ -22,83 +22,120 @@
   </div>
 
   <div class="float-left col-sm-1">
-     <button type="button" class="btn btn-primary" v-on:click="banUser">Ban</button>
+     <button type="button" class="btn btn-primary w-100" v-on:click="banUser">Ban</button>
   </div>
 </div>
 
-<div v-if="isLoaded == true" class="row top-buffer">
-    <table id="gameInfo" class="table table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Thuộc Tính [{{ resp.state }}]</th>
-          <th scope="col">Giá Trị</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr v-for="(key, value) in resp.session.userGameInfo">
-            <td>{{ value }}</td>
-            <td>{{ key }}</td>
-          </tr>
-          <tr><td>Easy, more to come...</td></tr>
-      </tbody>
-    </table>
-</div>
-
-<div v-if="isLoaded == true" class="row top-buffer">
-  <table class="table table-dark">
-    <thead>
-      <tr>
-        <th v-for="key in Object.keys(resp.session.userInventory[0])">{{ key }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="inv in resp.session.userInventory">
-        <td v-for="key in Object.keys(resp.session.userInventory[0])">{{ inv[key] }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div v-if="isLoaded == true" class="row top-buffer">
-  <table class="table table-dark">
-    <thead>
-      <tr>
-        <th v-for="key in Object.keys(resp.session.userInbox[0])">{{ key }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="inb in resp.session.userInbox">
-        <td v-for="key in Object.keys(resp.session.userInbox[0])">{{ inb[key] }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div v-if="isLoaded == true" class="row top-buffer">
-   <div class="float-left mailInput" class="col-xl-4">
-      <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
-      placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
-   </div>
-</div>
-
-<div v-if="isLoaded == true" class="row top-buffer">
-   <div class="float-left mailInput" class="col-xl-4">
-      <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
-      placeholder="Nội Dung">
-   </div>
-</div>
-
-<div v-if="isLoaded == true" class="row top-buffer">
-   <div class="float-left mailInput" class="col-xl-4">
-      <input v-model="mailItems" type="text" class="form-control" id="mailItems" name="mailTitle"
-      placeholder="Vật phẩm...">
-   </div>
-</div>
-
-<div v-if="isLoaded == true" class="row top-buffer">
-   <div class="float-left" class="col-xl-4">
-      <button type="button" class="btn btn-primary" v-on:click="sendMail">Send</button>
-   </div>
+<div id="accordion" v-if="isLoaded == true" class="top-buffer">
+    <div class="card top-buffer">
+      <div class="card-header" id="infoHeader">
+          <h5 class="text-center">
+            <button class="btn" data-toggle="collapse" data-target="#infoCollapse" aria-expanded="true" aria-controls="infoCollapse">
+              Thông tin user
+            </button>
+          </h5>
+      </div>
+      <div id="infoCollapse" class="collapse" aria-labelledby="infoHeader" data-parent="#accordion">
+        <div class="card-body">
+          <table class="table table-bordered table-responsive-md table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Thuộc Tính [{{ resp.state }}]</th>
+                  <th scope="col">Giá Trị</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="pt-3-half" v-for="(key, value) in resp.session.userGameInfo">
+                  <td>{{ value }}</td>
+                  <td>{{ key }}</td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card top-buffer">
+      <div class="card-header" id="inventoryHeader">
+          <h5 class="text-center">
+            <button class="btn" data-toggle="collapse" data-target="#inventoryCollapse" aria-expanded="false" aria-controls="inventoryCollapse">
+              Đạo cụ
+            </button>
+          </h5>
+      </div>
+      <div id="inventoryCollapse" class="collapse" aria-labelledby="inventoryHeader" data-parent="#accordion">
+        <div class="card-body">
+          <table class="table table-bordered table-responsive-md table-striped">
+              <thead>
+                  <tr>
+                    <th v-for="key in Object.keys(resp.session.userInventory[0])">{{ key }}</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr v-for="inv in resp.session.userInventory">
+                    <td v-for="key in Object.keys(resp.session.userInventory[0])">{{ inv[key] }}</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card top-buffer">
+      <div class="card-header" id="inboxHeader">
+          <h5 class="text-center">
+            <button class="btn" data-toggle="collapse" data-target="#inboxCollapse" aria-expanded="false" aria-controls="inboxCollapse">
+              Inbox
+            </button>
+          </h5>
+      </div>
+      <div v-if="resp.session.userInbox.length > 0" id="inboxCollapse" class="collapse" aria-labelledby="inboxHeader" data-parent="#accordion">
+        <div class="card-body">
+          <table class="table table-bordered table-responsive-md table-striped">
+              <thead>
+                  <tr>
+                    <th v-for="key in Object.keys(resp.session.userInbox[0])">{{ key }}</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr v-for="inb in resp.session.userInbox">
+                    <td v-for="key in Object.keys(resp.session.userInbox[0])">{{ inb[key] }}</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card top-buffer">
+      <div class="card-header" id="sendHeader">
+          <h5 class="text-center">
+            <button class="btn" data-toggle="collapse" data-target="#sendCollapse" aria-expanded="false" aria-controls="sendCollapse">
+              Gửi mail cá nhân
+            </button>
+          </h5>
+      </div>
+      <div id="sendCollapse" class="collapse" aria-labelledby="sendHeader" data-parent="#accordion">
+        <div class="card-body">
+          <div class="row">
+             <div class="col-sm-4">
+                <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
+                placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
+             </div>
+             <div class="col-sm-7">
+                <input v-model="mailItems" type="text" class="form-control" id="mailItems" name="mailItems"
+                placeholder="Vật phẩm...">
+             </div>
+             <div class="col-sm-1">
+                <button type="button" class="btn btn-primary w-100" v-on:click="sendMail">Send</button>
+             </div>
+          </div>
+          <div class="row top-buffer">
+             <div class="mailInput col-sm-12">
+                <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
+                placeholder="Nội Dung">
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 <#include "footer.ftl">
@@ -207,11 +244,7 @@ var app = new Vue({
 
 <style>
 #mailContent {
-  height: 450px;
-}
-
-.mailInput {
-    width: 450px;
+  height: 200px;
 }
 
 .top-buffer { margin-top:15px; }

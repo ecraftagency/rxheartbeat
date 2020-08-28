@@ -46,6 +46,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "injectSession":
           processInjectSession(ctx);
           return;
+        case "genWebPaymentLink":
+          processGenWebPaymentLink(ctx);
+          return;
         case "getSession":
           processGetSession(ctx);
           return;
@@ -66,6 +69,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "exchange":
           processMobiWebPayment(ctx);
+          return;
+        case "updatePaymentPackage":
+          processUpdatePaymentPackage(ctx);
           return;
         case "getConfig":
           processGetConfig(ctx);
@@ -93,6 +99,61 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processUpdatePaymentPackage(Message<JsonObject> ctx) {
+    JsonObject resp             = new JsonObject();
+    String updatePID            = ctx.body().getString("updatePID");
+    String updateTime           = ctx.body().getString("updateTime");
+    String updateVIP            = ctx.body().getString("updateVIP");
+    String updateItems          = ctx.body().getString("updateItems");
+
+    PaymentData.PaymentDto dto = PaymentData.paymentDtoMap.get(updatePID);
+    if (dto == null) {
+      resp.put("msg", "invalid update package, wrong id");
+      ctx.reply(resp);
+      return;
+    }
+
+    int newTime, newVip;
+    List<List<Integer>> newItems;
+    try {
+      newTime               = Integer.parseInt(updateTime);
+      newVip                = Integer.parseInt(updateVIP);
+
+      Type listOfListOfInt  = new TypeToken<List<List<Integer>>>() {}.getType();
+      newItems              = Utilities.gson.fromJson(updateItems, listOfListOfInt);
+    }
+    catch (Exception e) {
+      resp.put("msg", "invalid update value");
+      ctx.reply(resp);
+      return;
+    }
+
+
+    dto.reward  = newItems;
+    dto.time    = newTime;
+    dto.vip     = newVip;
+
+    resp.put("msg", "ok");
+    resp.put("payment", Transformer.transformPaymentData());
+    ctx.reply(resp);
+  }
+
+  private void processGenWebPaymentLink(Message<JsonObject> ctx) throws Exception {
+    String sessionId            = ctx.body().getString("sessionId");
+    String packageId            = ctx.body().getString("packageId");
+    PaymentData.PaymentDto dto  = PaymentData.paymentDtoMap.get(packageId);
+    JsonObject resp             = new JsonObject();
+    if (dto == null) {
+      resp.put("msg", "payment package not found");
+      ctx.reply(resp);
+      return;
+    }
+
+    resp.put("msg", "ok");
+    resp.put("paymentRequest", RequestGenerator.genPaymentRequest(sessionId, dto));
+    ctx.reply(resp);
   }
 
   private void getPaymentInfo(Message<JsonObject> ctx) {
