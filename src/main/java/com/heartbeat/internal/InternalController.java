@@ -274,7 +274,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
             Session session = sar.result();
             boolean online  = resp.getString("state").equals("online");
 
-            PaymentHandler.mobiPaymentSuccess(session, payload, online, dto);
+            PaymentHandler._100DPaymentSuccess(session, payload, online, dto);
             resp.put("code", 0).put("msg", "Success");
           }
           catch (Exception e) {

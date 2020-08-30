@@ -20,12 +20,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import static com.common.Constant.*;
 
-/*
-group ref count I/O
-session online  -> ++
-session close   -> --
- */
-@SuppressWarnings("unused")
 public class Session {
   transient public int        id;
   transient public int        m_ping_count;
@@ -33,9 +27,6 @@ public class Session {
   transient public boolean    isRegister;
   transient public String     clientToken = Constant.EMPTY_STRING;
 
-  //online stuff
-  transient public String     nodeIp;
-  transient public int        nodePort;
   transient public int        lastUpdateOnline;
   transient public int        lastUpdateLDB;
   transient public int        lastHearBeatTime;
@@ -69,6 +60,7 @@ public class Session {
   public UserEvent          userEvent;
   public UserRanking        userRanking;
   public UserInbox          userInbox;
+  public UserPayment        userPayment;
 
   public List<EffectResult> effectResults;
 
@@ -89,6 +81,7 @@ public class Session {
     userRanking           = UserRanking.ofDefault();
     userLDB               = UserLDB.ofDefault();
     userInbox             = UserInbox.ofDefault();
+    userPayment           = UserPayment.ofDefault();
 
 
     //todo reBalance
@@ -133,17 +126,17 @@ public class Session {
     return userProfile.banTo > (int)(System.currentTimeMillis()/1000);
   }
 
-  private void newDay() {
-
-  }
-
   public void updateLogin() {
     long curMs = System.currentTimeMillis();
     int second = (int)(curMs/1000);
 
-    //todo null check, consistency rebalance
+    //todo null check, consistency reBalance
+    if (userInventory.expireItems == null)
+      userInventory.expireItems = new HashMap<>();
+
     if (userDailyMission == null)
       userDailyMission = UserDailyMission.ofDefault();
+
     if (userTravel == null)
       userTravel = UserTravel.ofDefault();
 
@@ -160,7 +153,7 @@ public class Session {
     }
 
     if (userRollCall == null) {
-      userRollCall          = UserRollCall.ofDefault();
+      userRollCall = UserRollCall.ofDefault();
     }
     else {
       userRollCall.reBalance();
@@ -183,6 +176,13 @@ public class Session {
       userInbox = UserInbox.ofDefault();
     else {
       userInbox.reBalance(curMs);
+    }
+
+    if (userPayment == null) {
+      userPayment = UserPayment.ofDefault();
+    }
+    else {
+      userPayment.reBalance();
     }
 
     userGameInfo.reBalance();

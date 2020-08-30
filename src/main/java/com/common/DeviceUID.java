@@ -1,6 +1,6 @@
 package com.common;
 
-import com.heartbeat.model.data.PaymentTransaction;
+import com.transport.model.PaymentTransaction;
 
 import java.util.HashMap;
 

@@ -8,9 +8,6 @@ import java.util.*;
 
 public class Constant {
   public static final String        EMPTY_STRING                    = "";
-  public static final int           MINUTE_SECONDS                  = 60;
-  public static final int           HOUR_SECONDS                    = 60 * MINUTE_SECONDS;
-  public static final int           DAY_SECONDS                     = 24 * HOUR_SECONDS;
   public static final String        DATE_PATTERN                    = "dd/MM/yyyy HH:mm:ss";
   public static String              TIME_ZONE                       = "Asia/Ho_Chi_Minh";
 
@@ -260,6 +257,15 @@ public class Constant {
       DEFAULT_IDOLS = Arrays.asList(1,2,3,4);
       EXCLUDE_RAMPAGE_LEVEL = Arrays.asList(98,99,100,148,149,150);
     }
+  }
+
+  @SuppressWarnings("unused")
+  public static class USER_PAYMENT {
+    public static final int               PAYMENT_CHANNEL_UNKNOWN     = -1;
+    public static final int               PAYMENT_CHANNEL_NONE        = 0;
+    public static final int               PAYMENT_CHANNEL_GOOGLE_IAP  = 1;
+    public static final int               PAYMENT_CHANNEL_APPLE_IAP   = 2;
+    public static final int               PAYMENT_CHANNEL_100D        = 2;
   }
 
   public static class UNLOCK_FUNCTION {
