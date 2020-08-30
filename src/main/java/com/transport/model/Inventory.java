@@ -1,7 +1,9 @@
 package com.transport.model;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Inventory {
-  public ConcurrentHashMap<Integer, Integer> userItems;
+  public HashMap<Integer, Integer>              userItems;
+  public HashMap<Integer, LinkedList<Integer>>  expireItems;
 }

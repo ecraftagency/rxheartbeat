@@ -149,7 +149,7 @@ public class FightController implements Handler<RoutingContext> {
     int idolId          = ctx.getBodyAsJson().getInteger("idolId");
     resp.msg            = session.userFight.freeUsedIdol(session, idolId);
     resp.data.fight     = session.userFight;
-    resp.data.inventory = session.userInventory;
+    resp.data.inventory = session.userInventory.updateAndGet();
     resp.data.gameInfo  = session.userGameInfo;
 
     return resp;
@@ -212,7 +212,7 @@ public class FightController implements Handler<RoutingContext> {
       int idolId          = ctx.getBodyAsJson().getInteger("idolId");
       resp.msg            = session.userFight.freeUsedGameShowIdol(session, idolId);
       resp.data.fight     = session.userFight;
-      resp.data.inventory = session.userInventory;
+      resp.data.inventory = session.userInventory.updateAndGet();
       resp.data.gameInfo  = session.userGameInfo;
     }
     else {

@@ -77,7 +77,7 @@ public class ProfileController implements Handler<RoutingContext> {
 
     resp.msg            = session.userGameInfo.buyShopItem(session, shopItemId);
     resp.data.gameInfo  = session.userGameInfo;
-    resp.data.inventory = session.userInventory;
+    resp.data.inventory = session.userInventory.updateAndGet();
     resp.effectResults  = session.effectResults;
 
     if (resp.msg.equals("ok")) {
@@ -181,7 +181,7 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.gameInfo    = session.userGameInfo;
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
-    resp.data.inventory   = session.userInventory;
+    resp.data.inventory   = session.userInventory.updateAndGet();
     resp.data.fight       = session.userFight;
     return resp;
   }

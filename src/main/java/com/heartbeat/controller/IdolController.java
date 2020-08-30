@@ -125,7 +125,7 @@ public class IdolController implements Handler<RoutingContext> {
     int speciality      = ctx.getBodyAsJson().getInteger("speciality");
     int step            = ctx.getBodyAsJson().getInteger("step");
     resp.msg            = session.userIdol.addAptByItem(session, idolId, speciality, step);
-    resp.data.inventory = session.userInventory;
+    resp.data.inventory = session.userInventory.updateAndGet();
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.IDOL_APT_MISSION_TYPE);
     }
@@ -146,7 +146,7 @@ public class IdolController implements Handler<RoutingContext> {
     if (resp.msg.equals("ok")) {
       resp.data.gameInfo = session.userGameInfo;
       resp.data.idols = session.userIdol;
-      resp.data.inventory = session.userInventory;
+      resp.data.inventory = session.userInventory.updateAndGet();
     }
     return resp;
   }

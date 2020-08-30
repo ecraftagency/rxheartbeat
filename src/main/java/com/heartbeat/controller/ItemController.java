@@ -1,6 +1,5 @@
 package com.heartbeat.controller;
 
-
 import com.common.LOG;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -10,11 +9,7 @@ import com.statics.PropData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
-
-import java.util.List;
 
 public class ItemController implements Handler<RoutingContext> {
   @Override
@@ -40,9 +35,6 @@ public class ItemController implements Handler<RoutingContext> {
             break;
           case "userInventory":
             resp = processGetUserInventory(session);
-            break;
-          case "effectTest":
-            resp = processTestEffect(session, ctx);
             break;
           default:
             resp = ExtMessage.item();
@@ -74,19 +66,8 @@ public class ItemController implements Handler<RoutingContext> {
 
     ExtMessage resp     = ExtMessage.item();
     resp.msg            = session.userInventory.mergeItem(session, mergeId, mergeCount);
-    resp.data.inventory = session.userInventory;
+    resp.data.inventory = session.userInventory.updateAndGet();
     resp.effectResults  = session.effectResults;
-    return resp;
-  }
-
-  private ExtMessage processTestEffect(Session session, RoutingContext ctx) {
-    List<Integer> effect          = ctx.getBodyAsJson().getJsonArray("effect").getList();
-    EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
-    ExtMessage resp               = ExtMessage.item();
-    session.effectResults.clear();
-    resp.msg                      = EffectManager.inst().handleEffect(extArgs, session, effect);
-    resp.data.gameInfo            = session.userGameInfo;
-    resp.effectResults            = session.effectResults;
     return resp;
   }
 
@@ -111,7 +92,7 @@ public class ItemController implements Handler<RoutingContext> {
         session.userInventory.addItem(propId, amount);
       }
       resp.data.gameInfo  = session.userGameInfo;
-      resp.data.inventory = session.userInventory;
+      resp.data.inventory = session.userInventory.updateAndGet();
       resp.data.idols     = session.userIdol;
       resp.effectResults  = session.effectResults;
     }
@@ -141,9 +122,9 @@ public class ItemController implements Handler<RoutingContext> {
         resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);
       }
       resp.data.gameInfo    = session.userGameInfo;
-      resp.data.inventory   = session.userInventory;
+      resp.data.inventory   = session.userInventory.updateAndGet();
       resp.data.idols       = session.userIdol;
-      resp.effectResults  = session.effectResults;
+      resp.effectResults    = session.effectResults;
     }
     else {
       resp.msg = "not_enough_item";
@@ -155,7 +136,7 @@ public class ItemController implements Handler<RoutingContext> {
   private ExtMessage processGetUserInventory(Session session) {
     ExtMessage resp = ExtMessage.item();
     resp.data.gameInfo = session.userGameInfo;
-    resp.data.inventory = session.userInventory;
+    resp.data.inventory = session.userInventory.updateAndGet();
     resp.msg = "ok";
     return resp;
   }

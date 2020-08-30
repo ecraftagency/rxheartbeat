@@ -71,8 +71,21 @@ public class UserTest {
 //    syncMail();
 //    Thread.sleep(1000);
 
-    String defaultAddressNotLoopback = getDefaultAddressNotLoopback();
-    System.out.println(defaultAddressNotLoopback);
+    int amount = 4;
+    List<Integer> l = new LinkedList<>();
+    l.add(1);
+    l.add(2);
+    l.add(3);
+    l.add(4);
+    l.add(5);
+    l.add(6);
+    l.add(7);
+    l.add(8);
+
+    l.subList(0,amount + 10).clear();
+    System.out.println(l);
+    //String defaultAddressNotLoopback = getDefaultAddressNotLoopback();
+    //System.out.println(defaultAddressNotLoopback);
 //    JsonObject json = new JsonObject();
 //    json.put("sessionId", 15);
 //    Integer nodeId = json.getInteger("nodeId");

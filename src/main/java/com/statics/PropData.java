@@ -16,8 +16,8 @@ public class PropData {
     public int            sort;
     public String         effect;
     public int            status;
-    public int            isExpire;
-    public int            expireSeconds;
+    public int            isExpired;
+    public int            expiredSeconds;
     public int            propVer;
     public int            isMultiUse;
     public String         approach;
