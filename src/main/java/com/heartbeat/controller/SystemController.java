@@ -8,7 +8,6 @@ import com.heartbeat.model.data.UserInbox;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
-import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 public class SystemController implements Handler<RoutingContext> {
@@ -61,8 +60,8 @@ public class SystemController implements Handler<RoutingContext> {
     resp.userRemainTime = session.userGameInfo.remainTime();
 
     //check new inbox message
-    long cas = UserInbox.checkNewMessage(session.userInbox.lastMailCheckTime);
-    resp.newInbox = cas > 0;
+    long lastPublicMsgTime = UserInbox.checkNewMessage(session.userInbox.lastMailCheckTime);
+    resp.newInbox = lastPublicMsgTime > 0 && session.userInbox.haveNewPriMsg();
 
     resp.serverTime = second;
     return resp;

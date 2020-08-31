@@ -266,7 +266,6 @@ public class GroupController implements Handler<RoutingContext> {
             er -> {
               handler.handle(Future.succeededFuture("[]"));
               LOG.globalException("node", "fetchGroup", er.getCause());
-
             }
     );
   }

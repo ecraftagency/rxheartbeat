@@ -181,7 +181,7 @@ public class UserInventory extends Inventory {
   /*FOR EXPIRE ITEMS***************************************************************************************************/
   private void updateExpire() {
     int curSec = (int)(System.currentTimeMillis()/1000);
-    for (Map.Entry<Integer, LinkedList<Integer>> entry : expireItems.entrySet()) {
+    for (Map.Entry<Integer, List<Integer>> entry : expireItems.entrySet()) {
       int expireSec = getExpireTime(entry.getKey());
       if (expireSec < 0 || entry.getValue() == null || entry.getValue().size() == 0)
         continue;
@@ -192,7 +192,7 @@ public class UserInventory extends Inventory {
   private void addExpireItem(int itemId, int amount) {
     int curSec = (int)(System.currentTimeMillis()/1000);
     if (!expireItems.containsKey(itemId)) {
-      expireItems.put(itemId, new LinkedList<>());
+      expireItems.put(itemId, new ArrayList<>());
     }
 
     List<Integer> expireVector = expireItems.get(itemId);
@@ -209,8 +209,9 @@ public class UserInventory extends Inventory {
   private boolean userExpireItem(int itemId, int amount) {
     if (!haveExpireItem(itemId, amount))
       return false;
-
-    expireItems.get(itemId).subList(itemId, amount).clear();
+    List<Integer> expireVector        = expireItems.get(itemId);
+    List<Integer> newExp              = expireVector.subList(amount, expireVector.size());
+    expireItems.put(itemId, newExp);
     return true;
   }
 }

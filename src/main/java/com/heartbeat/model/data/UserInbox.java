@@ -119,13 +119,14 @@ public class UserInbox extends Inbox {
     if (privateMails.size() >= MAX_INBOX_ITEM)
       privateMails.removeFirst();
     privateMails.addLast(msg);
+    lastPriMsgTime = msg.id;
   }
 
   public String claimPrivateInboxReward(Session session, long cas, long curMs) {
     if (claimedPrivateMsg.containsKey(cas))
       return "msg_reward_already_claim";
 
-    MailObj obj = havePrivateMsg(cas);
+    MailObj obj = getPrivateMsgById(cas);
     if (obj == null)
       return "msg_not_exist";
 
@@ -143,11 +144,15 @@ public class UserInbox extends Inbox {
     return "ok";
   }
 
-  private MailObj havePrivateMsg(long id) {
+  private MailObj getPrivateMsgById(long id) {
     for (MailObj obj : privateMails) {
       if (obj.id == id)
         return obj;
     }
     return null;
+  }
+
+  public boolean haveNewPriMsg() {
+    return lastMailCheckTime > lastPriMsgTime;
   }
 }
