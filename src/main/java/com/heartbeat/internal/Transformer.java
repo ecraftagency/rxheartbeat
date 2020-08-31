@@ -99,10 +99,10 @@ public class Transformer {
       }
     }
 
-    for (Map.Entry<Integer, LinkedList<Integer>> entry : session.userInventory.expireItems.entrySet()) {
+    for (Map.Entry<Integer, List<Integer>> entry : session.userInventory.expireItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());
       if (prop != null) {
-        LinkedList<Integer> itemVector = entry.getValue();
+        List<Integer> itemVector = entry.getValue();
         if (itemVector != null && itemVector.size() > 0)
           items.add(new JsonObject().put("id", prop.propID).put("name", prop.name).put("qty", itemVector.size()));
       }

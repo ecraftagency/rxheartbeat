@@ -1,16 +1,13 @@
 package com.heartbeat.ranking.impl;
+import com.common.LOG;
 import com.heartbeat.ranking.Heap;
 import com.statics.Common;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 //pls don't ask me about this after 3 months :D
 //make sure only one thread at a time can operation on this Heap [!-NO SYNCHRONIZATION @ALL-!]
 public class LeaderBoard<K, V extends Comparable<V> & Common.hasKey<K>> implements Heap<K, V> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(LeaderBoard.class);
-
   protected Map<K,V>  indexer;
   protected Queue<V>  sorter;
   protected List<V>   achiever;
@@ -78,14 +75,14 @@ public class LeaderBoard<K, V extends Comparable<V> & Common.hasKey<K>> implemen
     sorter.clear();
     indexer.clear();
     achiever.clear();
-    LOGGER.info("flush ranking");
+    LOG.console("flush ranking");
   }
 
   public void close() {
     achiever  = new ArrayList<>(sorter);
     recordLock = true;
     achiever.sort(Comparator.reverseOrder());
-    LOGGER.info("close ranking");
+    LOG.console("close ranking");
   }
 
   public int getRank(K key) {

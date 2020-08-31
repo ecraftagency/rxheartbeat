@@ -1,12 +1,14 @@
 package com.heartbeat.model.data;
 
 import com.common.Constant;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.transport.model.PaymentTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPayment {
   public ArrayList<PaymentTransaction> history;
 
@@ -34,7 +36,7 @@ public class UserPayment {
     return false;
   }
 
-  public boolean isFirstPaying() {
+  public boolean firstPaying() {
     if(history == null)
       history = new ArrayList<>();
     return history.isEmpty();
@@ -48,7 +50,7 @@ public class UserPayment {
     return count;
   }
 
-  public int getChannel(List<Integer> sources) {
+  public int lookupChanel(List<Integer> sources) {
     if (history == null || history.isEmpty())
       return Constant.USER_PAYMENT.PAYMENT_CHANNEL_NONE;
 
