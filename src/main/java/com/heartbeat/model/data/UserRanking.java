@@ -7,8 +7,8 @@ import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.impl.*;
+import com.statics.EventInfo;
 import com.statics.RankingData;
-import com.statics.RankingInfo;
 import com.transport.model.ScoreObj;
 import com.transport.model.Ranking;
 import io.vertx.core.AsyncResult;
@@ -86,7 +86,7 @@ public class UserRanking extends Ranking {
       claimed.putIfAbsent(rankId, 0);
       evt2cas.putIfAbsent(rankId, 0);
 
-      RankingInfo ri = Constant.RANK_EVENT.evtMap.get(rankId);
+      EventInfo ri = Constant.RANK_EVENT.evtMap.get(rankId);
       if (ri != null && invalidCas(rankId, ri.startTime))
         resetEventData(rankId);
     }
@@ -104,7 +104,7 @@ public class UserRanking extends Ranking {
   }
 
   public void addEventRecord(int rankId, long amount) {
-    RankingInfo ri = evtMap.get(rankId);
+    EventInfo ri = evtMap.get(rankId);
     if (ri == null)
       return;
 
@@ -141,7 +141,7 @@ public class UserRanking extends Ranking {
       return;
     }
 
-    RankingInfo ri  = evtMap.get(rankId);
+    EventInfo ri  = evtMap.get(rankId);
     if (ri == null) {
       ar.handle(Future.failedFuture("event_not_found"));
       return;

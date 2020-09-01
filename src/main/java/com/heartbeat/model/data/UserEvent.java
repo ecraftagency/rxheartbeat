@@ -3,11 +3,10 @@ package com.heartbeat.model.data;
 import com.common.Constant;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
-import com.heartbeat.event.ExtIdolEventInfo;
 import com.heartbeat.model.Session;
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.statics.EventData;
 import com.statics.EventInfo;
-import com.statics.IdolEventInfo;
 import com.statics.ServantData;
 import com.transport.EffectResult;
 import com.transport.model.Event;
@@ -123,14 +122,14 @@ public class UserEvent extends Event {
   }
 
   public String claimEventIdol(Session session, int idolId, int eventId, int second) {
-    ExtIdolEventInfo ei  = IDOL_EVENT.evtMap.get(eventId);
+    ExtendEventInfo ei  = IDOL_EVENT.evtMap.get(eventId);
     if (ei == null)
       return "event_not_found";
 
     if (ei.startTime <= 0 || !ei.active || second < ei.startTime || second > ei.endTime)
       return "event_time_out";
 
-    IdolEventInfo.IdolClaimInfo icp = ei.idolList.get(idolId);
+    EventInfo.IdolClaimInfo icp = ei.idolList.get(idolId);
     if (icp == null || ServantData.servantMap.get(icp.idolId) == null)
       return "idol_not_found";
 

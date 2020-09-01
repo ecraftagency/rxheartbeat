@@ -1,9 +1,8 @@
 package com.common;
 
-import com.heartbeat.event.ExtEventInfo;
-import com.heartbeat.event.ExtIdolEventInfo;
-import com.heartbeat.event.ExtRankingInfo;
-import static com.statics.IdolEventInfo.*;
+import com.heartbeat.scheduler.ExtendEventInfo;
+import static com.statics.EventInfo.*;
+
 import java.util.*;
 
 public class Constant {
@@ -63,14 +62,14 @@ public class Constant {
 
   public static class SCHEDULE {
     public static boolean           gameShowOpen              = false;
-    public static int               gameShowOneOpenHour       = 12;
-    public static int               gameShowTwoOpenHour       = 19;
-    public static int               gameShowOneOpenSec        = 0;
-    public static int               gameShowOneOpenMin        = 0;
-    public static int               gameShowOneCloseHour      = 14;
-    public static int               gameShowTwoCloseHour      = 21;
-    public static int               gameShowOneCloseSec       = 0;
-    public static int               gameShowOneCloseMin       = 0;
+    public static final int         gameShowOneOpenHour       = 12;
+    public static final int         gameShowTwoOpenHour       = 19;
+    public static final int         gameShowOneOpenSec        = 0;
+    public static final int         gameShowOneOpenMin        = 0;
+    public static final int         gameShowOneCloseHour      = 14;
+    public static final int         gameShowTwoCloseHour      = 21;
+    public static final int         gameShowOneCloseSec       = 0;
+    public static final int         gameShowOneCloseMin       = 0;
   }
 
   public static class GROUP {
@@ -141,44 +140,45 @@ public class Constant {
 
   /*EVENT*/
   public static class RANK_EVENT {
-    public static final int         TOTAL_TALENT_RANK_ID      = 13;
-    public static final int         FIGHT_RANK_ID             = 14;
-    public static final int         MONEY_SPEND_RANK_ID       = 15;
-    public static final int         VIEW_SPEND_RANK_ID        = 16;
-    public static final int         FAN_SPEND_RANK_ID         = 17;
+    public static final int         TOTAL_TALENT_RANK_ID      = 1300;
+    public static final int         FIGHT_RANK_ID             = 1400;
+    public static final int         MONEY_SPEND_RANK_ID       = 1500;
+    public static final int         VIEW_SPEND_RANK_ID        = 1600;
+    public static final int         FAN_SPEND_RANK_ID         = 1700;
     public static final int         LDB_CAPACITY              = 100;
-    public static final Map<Integer, ExtRankingInfo> evtMap;
+    public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap      = new HashMap<>();
-      evtMap.put(VIEW_SPEND_RANK_ID,    ExtRankingInfo.of(VIEW_SPEND_RANK_ID));
-      evtMap.put(FAN_SPEND_RANK_ID,     ExtRankingInfo.of(FAN_SPEND_RANK_ID));
-      evtMap.put(TOTAL_TALENT_RANK_ID,  ExtRankingInfo.of(TOTAL_TALENT_RANK_ID));
-      evtMap.put(FIGHT_RANK_ID,         ExtRankingInfo.of(FIGHT_RANK_ID));
-      evtMap.put(MONEY_SPEND_RANK_ID,   ExtRankingInfo.of(MONEY_SPEND_RANK_ID));
+      evtMap.put(VIEW_SPEND_RANK_ID,    ExtendEventInfo.of(VIEW_SPEND_RANK_ID));
+      evtMap.put(FAN_SPEND_RANK_ID,     ExtendEventInfo.of(FAN_SPEND_RANK_ID));
+      evtMap.put(TOTAL_TALENT_RANK_ID,  ExtendEventInfo.of(TOTAL_TALENT_RANK_ID));
+      evtMap.put(FIGHT_RANK_ID,         ExtendEventInfo.of(FIGHT_RANK_ID));
+      evtMap.put(MONEY_SPEND_RANK_ID,   ExtendEventInfo.of(MONEY_SPEND_RANK_ID));
     }
   }
 
   public static class IDOL_EVENT {
-    public static final int         BP_EVT_ID                 = 0;
-    public static final int         DB_EVT_ID                 = 1;
+    public static final int         BP_EVT_ID                 = 100;
+    public static final int         DB_EVT_ID                 = 200;
 
-    public static final Map<Integer, ExtIdolEventInfo> evtMap;
+    public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
-      ExtIdolEventInfo bpEvt = ExtIdolEventInfo.of(BP_EVT_ID);
+      ExtendEventInfo bpEvt = ExtendEventInfo.of(BP_EVT_ID);
+      ExtendEventInfo dbEvt = ExtendEventInfo.of(DB_EVT_ID);
+      evtMap.put(BP_EVT_ID, bpEvt);
+      evtMap.put(DB_EVT_ID, dbEvt);
+
       bpEvt.addIdol(IdolClaimInfo.of(48, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(49, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(50, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(51, 93, 10));
       bpEvt.addIdol(IdolClaimInfo.of(52, 93, 10));
 
-      ExtIdolEventInfo dbEvt = ExtIdolEventInfo.of(DB_EVT_ID);
       dbEvt.addIdol(IdolClaimInfo.of(43, 92, 10));
       dbEvt.addIdol(IdolClaimInfo.of(44, 92, 10));
       dbEvt.addIdol(IdolClaimInfo.of(45, 92, 10));
       dbEvt.addIdol(IdolClaimInfo.of(46, 92, 10));
-      evtMap.put(BP_EVT_ID, bpEvt);
-      evtMap.put(DB_EVT_ID, dbEvt);
     }
   }
 
@@ -194,32 +194,32 @@ public class Constant {
     public static final int         GAME_SHOW_EVT_ID          = 12;
     public static final int         TOTAL_TALENT_EVT_ID       = 13;
 
-    public static final Map<Integer, ExtEventInfo> evtMap;
+    public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
-      evtMap.put(TIME_SPEND_EVT_ID,   ExtEventInfo.of(TIME_SPEND_EVT_ID));
-      evtMap.put(APT_BUFF_USE_EVT_ID, ExtEventInfo.of(APT_BUFF_USE_EVT_ID));
-      evtMap.put(MONEY_SPEND_EVT_ID,  ExtEventInfo.of(MONEY_SPEND_EVT_ID));
-      evtMap.put(VIEW_SPEND_EVT_ID,   ExtEventInfo.of(VIEW_SPEND_EVT_ID));
-      evtMap.put(FAN_SPEND_EVT_ID,    ExtEventInfo.of(FAN_SPEND_EVT_ID));
-      evtMap.put(CRT_PROD_EVT_ID,     ExtEventInfo.of(CRT_PROD_EVT_ID));
-      evtMap.put(VIEW_PROD_EVT_ID,    ExtEventInfo.of(VIEW_PROD_EVT_ID));
-      evtMap.put(FAN_PROD_EVT_ID,     ExtEventInfo.of(FAN_PROD_EVT_ID));
-      evtMap.put(TOTAL_TALENT_EVT_ID, ExtEventInfo.of(TOTAL_TALENT_EVT_ID));
-      evtMap.put(GAME_SHOW_EVT_ID,    ExtEventInfo.of(GAME_SHOW_EVT_ID));
+      evtMap.put(TIME_SPEND_EVT_ID,   ExtendEventInfo.of(TIME_SPEND_EVT_ID));
+      evtMap.put(APT_BUFF_USE_EVT_ID, ExtendEventInfo.of(APT_BUFF_USE_EVT_ID));
+      evtMap.put(MONEY_SPEND_EVT_ID,  ExtendEventInfo.of(MONEY_SPEND_EVT_ID));
+      evtMap.put(VIEW_SPEND_EVT_ID,   ExtendEventInfo.of(VIEW_SPEND_EVT_ID));
+      evtMap.put(FAN_SPEND_EVT_ID,    ExtendEventInfo.of(FAN_SPEND_EVT_ID));
+      evtMap.put(CRT_PROD_EVT_ID,     ExtendEventInfo.of(CRT_PROD_EVT_ID));
+      evtMap.put(VIEW_PROD_EVT_ID,    ExtendEventInfo.of(VIEW_PROD_EVT_ID));
+      evtMap.put(FAN_PROD_EVT_ID,     ExtendEventInfo.of(FAN_PROD_EVT_ID));
+      evtMap.put(TOTAL_TALENT_EVT_ID, ExtendEventInfo.of(TOTAL_TALENT_EVT_ID));
+      evtMap.put(GAME_SHOW_EVT_ID,    ExtendEventInfo.of(GAME_SHOW_EVT_ID));
     }
   }
 
   public static class USER_GAME_INFO {
-    public static int               INIT_TIME_GIFT            = 86400*7; //milis
-    public static int               TIME_ACTIVE_LEVEL         = 2;
-    public static final int         MAX_AVATAR                = 10;
-    public static final int         MAX_GENDER                = 2;
-    public static final int         MEDIA_INTERVAL            = 1198; //unit second 20'
-    public static final int         MEDIA_CONTRACT_ITEM       = 2;    //hợp đồng truyền thông
-    public static int               INIT_MONEY                = 20000;
-    public static int               INIT_VIEW                 = 20000;
-    public static int               INIT_FAN                  = 20000;
+    public static int               INIT_TIME_GIFT                = 86400*7; //milis
+    public static int               TIME_ACTIVE_LEVEL             = 2;
+    public static final int         MAX_AVATAR                    = 10;
+    public static final int         MAX_GENDER                    = 2;
+    public static final int         MEDIA_INTERVAL                = 1198; //unit second 20'
+    public static final int         MEDIA_CONTRACT_ITEM           = 2;    //hợp đồng truyền thông
+    public static int               INIT_MONEY                    = 20000;
+    public static int               INIT_VIEW                     = 20000;
+    public static int               INIT_FAN                      = 20000;
   }
 
   public static class USER_IDOL {

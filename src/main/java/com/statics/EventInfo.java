@@ -1,5 +1,7 @@
 package com.statics;
 
+import java.util.Map;
+
 @SuppressWarnings("unused")
 public class EventInfo {
   public static int FLUSH_DELAY = 60*60*24;
@@ -9,6 +11,22 @@ public class EventInfo {
   public int        endTime; //second
   public int        flushDelay;
   public boolean    active;
+
+  //extra composite
+  public Map<Integer, IdolClaimInfo> idolList;
+
+  public static class IdolClaimInfo {
+    public int idolId;
+    public int requireItem;
+    public int amount;
+    public static IdolClaimInfo of(int idolId, int itemId, int amount) {
+      IdolClaimInfo icp   = new IdolClaimInfo();
+      icp.idolId          = idolId;
+      icp.requireItem     = itemId;
+      icp.amount          = amount;
+      return icp;
+    }
+  }
 
   public int getEndTime() {
     return endTime;

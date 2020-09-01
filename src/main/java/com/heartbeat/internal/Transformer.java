@@ -2,11 +2,9 @@ package com.heartbeat.internal;
 
 import com.common.Constant;
 import com.common.LOG;
-import com.heartbeat.event.ExtEventInfo;
-import com.heartbeat.event.ExtIdolEventInfo;
-import com.heartbeat.event.ExtRankingInfo;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserLDB;
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.statics.OfficeData;
 import com.statics.PaymentData;
 import com.statics.PropData;
@@ -34,7 +32,7 @@ public class Transformer {
 
   static {
     formatter =  new SimpleDateFormat(Constant.DATE_PATTERN);
-    formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+    formatter.setTimeZone(TimeZone.getTimeZone(Constant.TIME_ZONE));
 
     userEvtId2Name = new HashMap<>();
     userEvtId2Name.put(USER_EVENT.APT_BUFF_USE_EVT_ID,   "Sử dụng cuộn cường hóa");
@@ -49,18 +47,17 @@ public class Transformer {
     userEvtId2Name.put(USER_EVENT.TOTAL_TALENT_EVT_ID,   "Tăng tổng tài năng");
 
     rankEvtId2name = new HashMap<>();
-    rankEvtId2name.put(RANK_EVENT.TOTAL_TALENT_RANK_ID, "Top tăng tổng tài năng");
-    rankEvtId2name.put(RANK_EVENT.FAN_SPEND_RANK_ID, "Top tiêu hao fan");
-    rankEvtId2name.put(RANK_EVENT.MONEY_SPEND_RANK_ID, "Top tiêu hao money");
-    rankEvtId2name.put(RANK_EVENT.VIEW_SPEND_RANK_ID, "Top tiêu hao view");
-    rankEvtId2name.put(RANK_EVENT.FIGHT_RANK_ID, "Top đi ải");
+    rankEvtId2name.put(RANK_EVENT.TOTAL_TALENT_RANK_ID,   "Top tăng tổng tài năng");
+    rankEvtId2name.put(RANK_EVENT.FAN_SPEND_RANK_ID,      "Top tiêu hao fan");
+    rankEvtId2name.put(RANK_EVENT.MONEY_SPEND_RANK_ID,    "Top tiêu hao money");
+    rankEvtId2name.put(RANK_EVENT.VIEW_SPEND_RANK_ID,     "Top tiêu hao view");
+    rankEvtId2name.put(RANK_EVENT.FIGHT_RANK_ID,          "Top đi ải");
 
     idolEvtId2name = new HashMap<>();
     idolEvtId2name.put(IDOL_EVENT.BP_EVT_ID, "Idol Event Black Pink");
     idolEvtId2name.put(IDOL_EVENT.DB_EVT_ID, "Idol Event BB");
   }
 
-  //transform runtime object to view object
   public static JsonObject transformSession(Session session) {
     JsonObject gi         = new JsonObject();
     JsonArray items       = new JsonArray();
@@ -120,11 +117,11 @@ public class Transformer {
     return ss;
   }
 
-  public static JsonArray transformUserEvent() {
+  public static JsonArray transformEvent(Map<Integer, ExtendEventInfo> evtMap, Map<Integer, String> nameMap) {
     JsonArray res = new JsonArray();
 
-    for (ExtEventInfo ei : USER_EVENT.evtMap.values()){
-      String  name        = userEvtId2Name.getOrDefault(ei.eventId, "");
+    for (ExtendEventInfo ei : evtMap.values()){
+      String  name        = nameMap.getOrDefault(ei.eventId, "");
       String  strStart;
       String  strEnd;
 
@@ -151,75 +148,6 @@ public class Transformer {
       evt.put("active",     ei.active ? "Active" : "InActive");
       res.add(evt);
     }
-    return res;
-  }
-
-  public static JsonArray transformIdolEvent() {
-    JsonArray res = new JsonArray();
-
-    for (ExtIdolEventInfo ei : IDOL_EVENT.evtMap.values()){
-      String  name        = idolEvtId2name.getOrDefault(ei.eventId, "");
-      String  strStart;
-      String  strEnd;
-
-      try {
-        if (ei.startTime <= 0 || ei.endTime <= 0)
-          throw new IllegalArgumentException();
-
-        Date start  = new Date(ei.startTime*1000L);
-        strStart    = formatter.format(start);
-
-        Date end    = new Date(ei.endTime*1000L);
-        strEnd      = formatter.format(end);
-      }
-      catch (Exception e) {
-        strEnd    = "";
-        strStart  = "";
-      }
-      JsonObject evt =  new JsonObject();
-      evt.put("eventId",    ei.eventId);
-      evt.put("eventName",  name);
-      evt.put("startDate",  strStart);
-      evt.put("endDate",    strEnd);
-      evt.put("flushDelay", ei.flushDelay);
-      evt.put("active",     ei.active ? "Active" : "InActive");
-      res.add(evt);
-    }
-    return res;
-  }
-
-  public static JsonArray transformRankingEvent() {
-    JsonArray res         = new JsonArray();
-
-    for (ExtRankingInfo ri : RANK_EVENT.evtMap.values()){
-      String  name        = rankEvtId2name.getOrDefault(ri.eventId, "");
-      String  strStart;
-      String  strEnd;
-
-      try {
-        if (ri.startTime <= 0 || ri.endTime <= 0)
-          throw new IllegalArgumentException();
-
-        Date start  = new Date(ri.startTime*1000L);
-        strStart    = formatter.format(start);
-
-        Date end    = new Date(ri.endTime*1000L);
-        strEnd      = formatter.format(end);
-      }
-      catch (Exception e) {
-        strEnd    = "";
-        strStart  = "";
-      }
-      JsonObject evt =  new JsonObject();
-      evt.put("eventId",    ri.eventId);
-      evt.put("eventName",  name);
-      evt.put("startDate",  strStart);
-      evt.put("endDate",    strEnd);
-      evt.put("flushDelay", ri.flushDelay);
-      evt.put("active",     ri.active ? "Active" : "InActive");
-      res.add(evt);
-    }
-
     return res;
   }
 

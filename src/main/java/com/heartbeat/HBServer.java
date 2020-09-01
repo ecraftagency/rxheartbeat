@@ -3,7 +3,6 @@ package com.heartbeat;
 import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCluster;
-import com.diabolicallabs.vertx.cron.CronObservable;
 import com.common.Constant;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
@@ -18,9 +17,7 @@ import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserFight;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.model.data.UserLDB;
-import com.statics.*;
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
+import com.heartbeat.scheduler.TaskRunner;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
@@ -35,14 +32,10 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
-import io.vertx.reactivex.RxHelper;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
-
 import static com.common.Constant.*;
 
 /*
@@ -62,7 +55,6 @@ import static com.common.Constant.*;
 //  ? ("no specific value")
 
 // AVAILABILITY > CONSISTENCY
-// don't share data by communication, communication by sharing data
 @SuppressWarnings("unused")
 public class HBServer extends AbstractVerticle {
   public static Cruder<Session>  cruder;
@@ -74,12 +66,13 @@ public class HBServer extends AbstractVerticle {
   public static JsonObject       systemConfig;
   public static JsonObject       localConfig;
 
-  public static Disposable        gsOpenTask;
-  public static Disposable        gsCloseTask;
-  public static Disposable        newDayTask;
+//  public static Disposable        gsOpenTask;
+//  public static Disposable        gsCloseTask;
+//  public static Disposable        newDayTask;
+//  public static long              gateWayPingTaskId;
+
   public static ClusterManager    mgr;
   public static EventBus          eventBus;
-  public static long              gateWayPingTaskId;
 
   public static String  nodeIp    = "";
   public static int     nodePort  = 0;
@@ -100,9 +93,6 @@ public class HBServer extends AbstractVerticle {
     rxIndexBucket   = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.INDEX_BUCKET));
     rxPersistBucket = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.PERSIST_BUCKET));
 
-    //for logging backend
-    System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
-
     //for faster startup, fucking couchbase java sdk T___T
     cruder = CBSession.getInstance();
 
@@ -113,7 +103,6 @@ public class HBServer extends AbstractVerticle {
       UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
       LOG.console("HBServer shutdown hook");
     }));
-
 
     Config clusterOption = new Config();
     NetworkConfig network = clusterOption.getNetworkConfig();
@@ -129,10 +118,11 @@ public class HBServer extends AbstractVerticle {
       if (res.succeeded()) {
         Vertx vertx = res.result();
         eventBus = vertx.eventBus();
-        System.out.println(eventBus);
-        scheduleTask(vertx);
+        //scheduleTask(vertx);
+        TaskRunner.getInstance().setVXInstance(vertx);
+        TaskRunner.getInstance().scheduleMainTask();
         vertx.deployVerticle(HBServer.class.getName());
-        System.out.println("HB Server Deployed");
+        LOG.console("HB Server Deployed");
       }
     });
   }
@@ -145,7 +135,7 @@ public class HBServer extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) {
     try {
-      loadStaticData();
+      StaticLoader.loadStaticData();
 
       SessionPool.checkHeartBeat.run();
       GroupPool.groupSyncTask.run();
@@ -238,206 +228,7 @@ public class HBServer extends AbstractVerticle {
       nodeBus                              = String.format("%d.%s.bus", nodeId, nodeName);
     }
     else {
-      LOG.globalException("node", "override constant", String.format("critical invalid node id: %d", nodeId));
+      LOG.globalException("node", "overrideConstant", String.format("critical invalid node id: %d", nodeId));
     }
-  }
-
-  private static void scheduleTask(Vertx vertx) {
-    gateWayPingTaskId = vertx.setPeriodic(SYSTEM_INFO.GATEWAY_NOTIFY_INTERVAL, id -> {
-      JsonObject jsonMessage = new JsonObject().put("cmd", "ping");
-      jsonMessage.put("cmd", "ping");
-      jsonMessage.put("nodeId", nodeId);
-      jsonMessage.put("nodeIp", nodeIp);
-      jsonMessage.put("nodePort", nodePort);
-      jsonMessage.put("nodeName", nodeName);
-      jsonMessage.put("nodeBus", nodeBus);
-      jsonMessage.put("nodeCcu", SessionPool.getCCU());
-      try {
-        EventBus eb = vertx.eventBus();
-        eb.send(SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
-      }
-      catch (Exception e) {
-        LOG.globalException("node", "schedule tasks", e);
-      }
-    });
-
-    Scheduler scheduler = RxHelper.scheduler(vertx);
-    newDayTask          = CronObservable.cronspec(scheduler, "0 0 0 * * ? *", TIME_ZONE)
-            .subscribe(
-                    timed -> {
-                      SessionPool.dailyReset.run();
-                      LOG.console("execute new day task");
-                    },
-                    fault -> LOG.globalException("node","schedule new day task", "error new day task")
-            );
-
-    String gameShowOpenCron = String.format("%d %d %d,%d * * ? *",
-            Constant.SCHEDULE.gameShowOneOpenSec,
-            Constant.SCHEDULE.gameShowOneOpenMin,
-            Constant.SCHEDULE.gameShowOneOpenHour,
-            Constant.SCHEDULE.gameShowTwoOpenHour);
-    gsOpenTask          = CronObservable.cronspec(scheduler, gameShowOpenCron, TIME_ZONE)
-            .subscribe(
-                    timed -> {
-                      Constant.SCHEDULE.gameShowOpen = true;
-                      SessionPool.resetGameShowIdols.run();
-                      LOG.console("open game show");
-                    },
-                    fault -> LOG.globalException("node","open game show task", "error open game show task")
-            );
-
-    String gameShowCloseCron = String.format("%d %d %d,%d * * ? *",
-            Constant.SCHEDULE.gameShowOneCloseSec,
-            Constant.SCHEDULE.gameShowOneCloseMin,
-            Constant.SCHEDULE.gameShowOneCloseHour,
-            Constant.SCHEDULE.gameShowTwoCloseHour);
-    gsCloseTask         = CronObservable.cronspec(scheduler, gameShowCloseCron, TIME_ZONE)
-            .subscribe(
-                    timed -> {
-                      Constant.SCHEDULE.gameShowOpen = false;
-                      SessionPool.resetGameShowIdols.run();
-                      LOG.console("close game show");
-                    },
-                    fault -> LOG.globalException("node","close game show task","error close game show task")
-            );
-  }
-
-  public static void loadStaticData() throws Exception {
-
-    String servantJson = new String(Files.readAllBytes(Paths.get("data/json/servants.json")),
-            StandardCharsets.UTF_8);
-    ServantData.loadJson(servantJson);
-
-    String officeJson = new String(Files.readAllBytes(Paths.get("data/json/office.json")),
-            StandardCharsets.UTF_8);
-    OfficeData.loadJson(officeJson);
-
-    String specialityJson = new String(Files.readAllBytes(Paths.get("data/json/specialty.json")),
-            StandardCharsets.UTF_8);
-    SpecialityData.loadJson(specialityJson);
-
-    String servantLVJson = new String(Files.readAllBytes(Paths.get("data/json/servantLV.json")),
-            StandardCharsets.UTF_8);
-    ServantLVData.loadJson(servantLVJson);
-
-    String servantHaloJson = new String(Files.readAllBytes(Paths.get("data/json/servantHaloBase.json")),
-            StandardCharsets.UTF_8);
-    HaloBaseData.loadJson(servantHaloJson);
-
-    String haloJson = new String(Files.readAllBytes(Paths.get("data/json/Halo.json")),
-            StandardCharsets.UTF_8);
-    HaloData.loadJson(haloJson);
-
-    String propJson = new String(Files.readAllBytes(Paths.get("data/json/props.json")),
-            StandardCharsets.UTF_8);
-    PropData.loadJson(propJson);
-
-    String mediaJson = new String(Files.readAllBytes(Paths.get("data/json/media.json")),
-            StandardCharsets.UTF_8);
-    MediaData.loadJson(mediaJson);
-
-    String honorJson = new String(Files.readAllBytes(Paths.get("data/json/servantHonor.json")),
-            StandardCharsets.UTF_8);
-    ServantHonorData.loadJson(honorJson);
-
-    String headJson = new String(Files.readAllBytes(Paths.get("data/json/head.json")),
-            StandardCharsets.UTF_8);
-    HeadData.loadJson(headJson);
-
-    String dropJson = new String(Files.readAllBytes(Paths.get("data/json/drop.json")),
-            StandardCharsets.UTF_8);
-    DropData.loadJson(dropJson);
-
-    String bookLimitJson = new String(Files.readAllBytes(Paths.get("data/json/servantBookLimit.json")),
-            StandardCharsets.UTF_8);
-    BookLimitData.loadJson(bookLimitJson);
-
-    String fightBossJson     = new String(Files.readAllBytes(Paths.get("data/json/fightBoss.json")),
-            StandardCharsets.UTF_8);
-    FightBossData.loadJson(fightBossJson);
-
-    String fightJson = new String(Files.readAllBytes(Paths.get("data/json/fight.json")),
-            StandardCharsets.UTF_8);
-    FightData.loadJson(fightJson);
-
-    String gameShowJson = new String(Files.readAllBytes(Paths.get("data/json/gameshow.json")),
-            StandardCharsets.UTF_8);
-    GameShowData.loadJson(gameShowJson);
-
-    String runShowJson     = new String(Files.readAllBytes(Paths.get("data/json/runshow.json")),
-            StandardCharsets.UTF_8);
-    RunShowData.loadJson(runShowJson);
-
-    String shoppingJson    = new String(Files.readAllBytes(Paths.get("data/json/shopping.json")),
-            StandardCharsets.UTF_8);
-    ShoppingData.loadJson(shoppingJson);
-
-    //todo this is ORACLE java! group, join...JAVA x SQL!
-    //1 month later pls don't ever ask me about this chunk of code T___T
-    String travelJson    = new String(Files.readAllBytes(Paths.get("data/json/travel.json")),
-            StandardCharsets.UTF_8);
-    TravelData.loadJson(travelJson, () ->
-            TravelData.npcTypeMap = TravelData.travelNPCMap
-                    .values()
-                    .stream()
-                    .collect(Collectors.groupingBy(TravelData.TravelNPC::getType, Collectors.toList())));
-
-    String vipJson    = new String(Files.readAllBytes(Paths.get("data/json/vip.json")),
-            StandardCharsets.UTF_8);
-    VipData.loadJson(vipJson);
-
-    String companyEventJson = new String(Files.readAllBytes(Paths.get("data/json/companyEvent.json")),
-            StandardCharsets.UTF_8);
-    GroupMissionData.loadJson(companyEventJson);
-
-    String dailyMission = new String(Files.readAllBytes(Paths.get("data/json/dailyMission.json")),
-            StandardCharsets.UTF_8);
-    DailyMissionData.loadJson(dailyMission);
-
-    String crazyReward = new String(Files.readAllBytes(Paths.get("data/json/crazyReward.json")),
-            StandardCharsets.UTF_8);
-    CrazyRewardData.loadJson(crazyReward);
-
-    String achievement = new String(Files.readAllBytes(Paths.get("data/json/achievement.json")),
-            StandardCharsets.UTF_8);
-    AchievementData.loadJson(achievement);
-
-    String mission = new String(Files.readAllBytes(Paths.get("data/json/mission.json")),
-            StandardCharsets.UTF_8);
-    MissionData.loadJson(mission);
-
-    String dailyGift = new String(Files.readAllBytes(Paths.get("data/json/dailyGift.json")),
-            StandardCharsets.UTF_8);
-    DailyGiftData.loadJson(dailyGift);
-
-    String vipGift = new String(Files.readAllBytes(Paths.get("data/json/vipGift.json")),
-            StandardCharsets.UTF_8);
-    VipGiftData.loadJson(vipGift);
-
-    String giftCard = new String(Files.readAllBytes(Paths.get("data/json/giftCard.json")),
-            StandardCharsets.UTF_8);
-    GiftCardData.loadJson(giftCard);
-
-    String shop = new String(Files.readAllBytes(Paths.get("data/json/shop.json")),
-            StandardCharsets.UTF_8);
-    ShopData.loadJson(shop);
-
-    String itemMerge = new String(Files.readAllBytes(Paths.get("data/json/itemMerge.json")),
-            StandardCharsets.UTF_8);
-    ItemMergeData.loadJson(itemMerge);
-
-    String event = new String(Files.readAllBytes(Paths.get("data/json/event.json")),
-            StandardCharsets.UTF_8);
-    EventData.loadJson(event);
-
-    String rank = new String(Files.readAllBytes(Paths.get("data/json/rankingReward.json")),
-            StandardCharsets.UTF_8);
-    RankingData.loadJson(rank);
-
-    String payment = new String(Files.readAllBytes(Paths.get("data/json/payment.json")),
-            StandardCharsets.UTF_8);
-    PaymentData.loadJson(payment);
-
-    WordFilter.loadJson("");
   }
 }

@@ -22,6 +22,7 @@ public class Controller implements Handler<RoutingContext> {
   }
 
   private void forwardRequest(Node node, RoutingContext ctx) {
+    String cmd = ctx.getBodyAsJson().getString("cmd", "");
     eventBus.request(node.bus, ctx.getBodyAsJson(), options, far -> {
       if (far.succeeded()) {
         JsonObject resp = (JsonObject) far.result().body();
@@ -31,7 +32,7 @@ public class Controller implements Handler<RoutingContext> {
         JsonObject resp = new JsonObject();
         resp.put("msg", far.cause().getMessage());
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
-        LOG.globalException("gmtool", "forward request", far.cause());
+        LOG.globalException("gmtool", String.format("forwardRequest:%s", cmd), far.cause());
       }
     });
   }

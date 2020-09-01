@@ -9,6 +9,7 @@ import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.heartbeat.service.ConstantInjector;
 import com.heartbeat.service.SessionInjector;
 import com.heartbeat.service.impl.EvilInjector;
@@ -342,22 +343,27 @@ public class InternalController implements Handler<Message<JsonObject>> {
       return;
     }
 
+    Map<Integer, ExtendEventInfo> evtMap;
     if (eventType == 0) {
-      for (Integer eventId : events)
-        USER_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd, flushDelay));
+      evtMap = USER_EVENT.evtMap;
     }
     else if (eventType == 1) {
-      for (Integer eventId : events)
-        IDOL_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd, flushDelay));
+      evtMap = IDOL_EVENT.evtMap;
     }
     else {
-      for (Integer eventId : events)
-        RANK_EVENT.evtMap.computeIfPresent(eventId, (k, v) -> v.updateEventTime(strStart, strEnd, flushDelay));
+      evtMap = RANK_EVENT.evtMap;
     }
 
-    JsonArray userEvent = Transformer.transformUserEvent();
-    JsonArray idolEvent = Transformer.transformIdolEvent();
-    JsonArray rankEvent = Transformer.transformRankingEvent();
+    for (Integer eventId : events) {
+      ExtendEventInfo ei = evtMap.get(eventId);
+      if (ei != null) {
+        ei.updateTime(strStart, strEnd, flushDelay);
+      }
+    }
+
+    JsonArray userEvent = Transformer.transformEvent(USER_EVENT.evtMap, Transformer.userEvtId2Name);
+    JsonArray idolEvent = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
+    JsonArray rankEvent = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
     resp.put("userEvents", userEvent);
     resp.put("idolEvents", idolEvent);
     resp.put("rankEvents", rankEvent);
@@ -366,9 +372,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
   private void processGetEvents(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
-    JsonArray userEvent = Transformer.transformUserEvent();
-    JsonArray idolEvent = Transformer.transformIdolEvent();
-    JsonArray rankEvent = Transformer.transformRankingEvent();
+    JsonArray userEvent = Transformer.transformEvent(USER_EVENT.evtMap, Transformer.userEvtId2Name);
+    JsonArray rankEvent = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
+    JsonArray idolEvent = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
 
     resp.put("userEvents", userEvent);
     resp.put("idolEvents", idolEvent);
