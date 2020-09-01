@@ -149,7 +149,7 @@ public class HBServer extends AbstractVerticle {
     }
     catch (Exception ioe) {
       startPromise.fail(ioe);
-      LOG.globalException("node", "verticle start up", ioe);
+      LOG.globalException("node", "verticleStartUp", ioe);
     }
 
     ConfigRetriever retriever = ConfigRetriever.create(vertx);

@@ -5,22 +5,22 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class Group {
-  public static final int OWNER_ROLE          = 0;
-  public static final int MOD_ROLE            = 1;
-  public static final int USER_ROLE           = 2;
+  public static final int OWNER_ROLE            = 0;
+  public static final int MOD_ROLE              = 1;
+  public static final int USER_ROLE             = 2;
 
-  public static final int AUTO_JOIN           = 0;
-  public static final int REQUEST_JOIN        = 1;
+  public static final int AUTO_JOIN             = 0;
+  public static final int REQUEST_JOIN          = 1;
 
-  public static final int KICK_EXPIRE         = 2; //minute
+  public static final int KICK_EXPIRE           = 2; //minute
 
   public static final int GROUP_ID_TYPE_NONE    = 0;
   public static final int GROUP_ID_TYPE_KICK    = -1;
   public static final int GROUP_ID_TYPE_REMOVE  = -2;
 
-  public static final int MAX_GROUP_MEMBER    = 25;
-  public static final int INTERNAL_INFORM     = 0;
-  public static final int EXTERNAL_INFORM     = 1;
+  public static final int MAX_GROUP_MEMBER      = 25;
+  public static final int INTERNAL_INFORM       = 0;
+  public static final int EXTERNAL_INFORM       = 1;
 
   public int                      id;
   public int                      createTime;

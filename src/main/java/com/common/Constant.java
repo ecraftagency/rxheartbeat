@@ -73,13 +73,15 @@ public class Constant {
   }
 
   public static class GROUP {
-    public static String            EVENT_START               = "01/07/2020 23:00:00";
-    public static String            EVENT_END                 = "31/08/2020 23:00:00";
+    public static String            EVENT_START               = "01/09/2020 00:00:00";
+    public static String            EVENT_END                 = "30/09/2020 23:00:00";
     public static int               missionStart              = -1;
     public static int               missionEnd                = -1;
     public static int               CREATE_GROUP_TIME_COST    = 5*86400; //5 days
     public static int               PRODUCTION_MISSION_ID     = 1;
     public static int               GAME_SHOW_MISSION_ID      = 2;
+    public static int               CRAZY_DEGREE_MISSION_ID   = 3;
+
   }
 
   public static class LEADER_BOARD {
@@ -140,11 +142,11 @@ public class Constant {
 
   /*EVENT*/
   public static class RANK_EVENT {
-    public static final int         TOTAL_TALENT_RANK_ID      = 1300;
-    public static final int         FIGHT_RANK_ID             = 1400;
-    public static final int         MONEY_SPEND_RANK_ID       = 1500;
-    public static final int         VIEW_SPEND_RANK_ID        = 1600;
-    public static final int         FAN_SPEND_RANK_ID         = 1700;
+    public static final int         TOTAL_TALENT_RANK_ID      = 13;
+    public static final int         FIGHT_RANK_ID             = 14;
+    public static final int         MONEY_SPEND_RANK_ID       = 15;
+    public static final int         VIEW_SPEND_RANK_ID        = 16;
+    public static final int         FAN_SPEND_RANK_ID         = 17;
     public static final int         LDB_CAPACITY              = 100;
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
@@ -158,8 +160,8 @@ public class Constant {
   }
 
   public static class IDOL_EVENT {
-    public static final int         BP_EVT_ID                 = 100;
-    public static final int         DB_EVT_ID                 = 200;
+    public static final int         BP_EVT_ID                 = 0;
+    public static final int         DB_EVT_ID                 = 1;
 
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {

@@ -176,6 +176,28 @@ public class UserGroup extends Group {
     isChange = true;
   }
 
+  public void setRecord(Session session, int cas, int missionId, int amount) {
+    Member member = members.get(session.id);
+    if (member == null) {
+      LOG.globalException("group_mission: member not found,",
+              "memberID: ", session.id, "groupId: ", id);
+      return;
+    }
+    Mission mission = member.missions.get(missionId);
+    if (mission == null) {
+      LOG.globalException("group_mission: mission not found,",
+              "memberID: ", session.id, "groupId: ", id, "missionId ", missionId);
+      return;
+    }
+
+    if (member.cas != cas) {
+      member.cas = cas;
+      mission.resetMission();
+    }
+    mission.count = amount;
+    isChange = true;
+  }
+
   public Map<Integer, Integer> calcMissionHitMember() {
     Map<Integer, Integer> res = new HashMap<>();
 

@@ -1,8 +1,11 @@
 package com.heartbeat.effect;
 
+import com.common.Constant;
 import com.common.LOG;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserGameInfo;
+import com.heartbeat.model.data.UserGroup;
 import com.statics.HeadData;
 import com.transport.EffectResult;
 
@@ -345,8 +348,13 @@ public class UserEffectHandler implements EffectHandler{
     if (subHandler != null) {
       String res = subHandler.handleEffect(extArgs, session, effectFormat);
       int propID = effectFormat.get(EffectHandler.PARAM1);
-      if (res.equals("ok") && propID == 5) {
+      if (res.equals("ok") && propID == TIME_PROPERTY) {
         session.userGameInfo.timeChange = true;
+      }
+      if (res.equals("ok") && propID == CRAZY_PROPERTY && Constant.GROUP.missionStart > 0) {
+          UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+          if (group != null && session.userGameInfo.crazyDegree >= 100)
+            group.setRecord(session, Constant.GROUP.missionStart, Constant.GROUP.CRAZY_DEGREE_MISSION_ID, (int)(session.userGameInfo.crazyDegree));
       }
       return res;
     }
