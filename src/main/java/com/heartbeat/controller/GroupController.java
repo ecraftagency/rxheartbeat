@@ -341,11 +341,8 @@ public class GroupController implements Handler<RoutingContext> {
     UserGroup group;
     if (Group.isValidGid(session.groupID) && (group = GroupPool.getGroupFromPool(session.groupID)) != null) {
       group.calcMissionHitMember();
-      group.strStartDate      = GROUP.EVENT_START;
-      group.strEndDate        = GROUP.EVENT_END;
       group.missions          = GroupMissionData.missionMap;
-      group.missionStartDate  = GROUP.missionStart;
-      group.missionEndDate    = GROUP.missionEnd;
+      resp.data.extObj        = Json.encode(GROUP_EVENT.evtMap);
       resp.data.group         = group;
       resp.msg                = "ok";
     }

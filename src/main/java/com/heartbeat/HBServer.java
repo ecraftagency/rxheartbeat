@@ -141,7 +141,6 @@ public class HBServer extends AbstractVerticle {
       GroupPool.groupSyncTask.run();
 
       UserFight.serverStartup();
-      Constant.serverStartUp();
 
       UserLDB.loadLDBFromDB(LEADER_BOARD.TALENT_LDB_ID);
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);

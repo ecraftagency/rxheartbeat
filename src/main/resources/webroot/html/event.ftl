@@ -8,6 +8,7 @@
         <option value="0">Thưởng hạn giờ</option>
         <option value="1">Idol Đặc Biệt</option>
         <option value="2">Đua top cá nhân</option>
+        <option value="3">Nhiệm vụ cty</option>
       </select>
     </div>
    <div class="float-left left-buffer" class="col-sm-4">

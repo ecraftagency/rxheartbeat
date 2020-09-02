@@ -223,7 +223,7 @@ public class Session {
       //record time spent event
       long remainTime = userGameInfo.remainTime();
       long timeSpent  = deltaTime > remainTime ? remainTime : deltaTime;
-      userEvent.addEventRecord(USER_EVENT.TIME_SPEND_EVT_ID, timeSpent);
+      userEvent.addEventRecord(COMMON_EVENT.TIME_SPEND_EVT_ID, timeSpent);
       userGameInfo.subtractTime(deltaTime);
     }
 
@@ -298,7 +298,7 @@ public class Session {
   }
 
   public void createGroup(int groupType, String name, String externalInform, String internalInform, Handler<AsyncResult<String>> handler) {
-    if (userGameInfo.remainTime() < Constant.GROUP.CREATE_GROUP_TIME_COST) {
+    if (userGameInfo.remainTime() < GROUP_EVENT.CREATE_GROUP_TIME_COST) {
       handler.handle(Future.failedFuture("insufficient_time"));
       return;
     }
@@ -317,7 +317,7 @@ public class Session {
         CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
           if (addRes.succeeded()) {
             groupID = Integer.parseInt(addRes.result());
-            userGameInfo.useTime(this, Constant.GROUP.CREATE_GROUP_TIME_COST);
+            userGameInfo.useTime(this, GROUP_EVENT.CREATE_GROUP_TIME_COST);
             handler.handle(Future.succeededFuture("ok"));
           }
           else{
@@ -341,7 +341,7 @@ public class Session {
                 CBGroup.getInstance().add(Integer.toString(newGroup.id), newGroup, addRes -> {
                   if (addRes.succeeded()) {
                     groupID = Integer.parseInt(addRes.result());
-                    userGameInfo.useTime(this, Constant.GROUP.CREATE_GROUP_TIME_COST);
+                    userGameInfo.useTime(this, GROUP_EVENT.CREATE_GROUP_TIME_COST);
                     handler.handle(Future.succeededFuture("ok"));
                   }
                   else{

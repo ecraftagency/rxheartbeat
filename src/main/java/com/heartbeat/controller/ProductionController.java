@@ -77,26 +77,24 @@ public class ProductionController implements Handler<RoutingContext> {
       int deltaView = viewCntBef - session.userProduction.currentViewClaimCount;
       int deltaFan  = fanCntBef  - session.userProduction.currentFanClaimCount;
 
-      if (Constant.GROUP.missionStart > 0) {
-        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-        if (group != null && deltaGold > 0)
-          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID, deltaGold);
-      }
-
       if (deltaGold > 0) {
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        if (group != null)
+          group.addRecord(session, Constant.GROUP_EVENT.GE_PROD_EVT_ID, deltaGold, true);
+
         session.userDailyMission.addRecord(UserProduction.PRODUCE_GOLD, deltaGold);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.CRT_ACHIEVEMENT, deltaGold);
-        session.userEvent.addEventRecord(Constant.USER_EVENT.CRT_PROD_EVT_ID, deltaGold);
+        session.userEvent.addEventRecord(Constant.COMMON_EVENT.CRT_PROD_EVT_ID, deltaGold);
       }
       if (deltaView > 0) {
         session.userDailyMission.addRecord(UserProduction.PRODUCE_VIEW, deltaView);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIEW_ACHIEVEMENT, deltaView);
-        session.userEvent.addEventRecord(Constant.USER_EVENT.VIEW_PROD_EVT_ID, deltaView);
+        session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIEW_PROD_EVT_ID, deltaView);
       }
       if (deltaFan > 0) {
         session.userDailyMission.addRecord(UserProduction.PRODUCE_FAN, deltaFan);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, deltaFan);
-        session.userEvent.addEventRecord(Constant.USER_EVENT.FAN_PROD_EVT_ID, deltaFan);
+        session.userEvent.addEventRecord(Constant.COMMON_EVENT.FAN_PROD_EVT_ID, deltaFan);
       }
     }
 
@@ -136,26 +134,25 @@ public class ProductionController implements Handler<RoutingContext> {
     resp.data.idols       = session.userIdol;
 
     if (resp.msg.equals("ok")) {
-      if (Constant.GROUP.missionStart > 0) {
-        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-        if (group != null && productType == UserProduction.PRODUCE_GOLD)
-          group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.PRODUCTION_MISSION_ID, 1);
-      }
+
+      UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+      if (group != null && productType == UserProduction.PRODUCE_GOLD)
+        group.addRecord(session, Constant.GROUP_EVENT.GE_PROD_EVT_ID, 1, true);
 
       session.userDailyMission.addRecord(productType);
 
       switch (productType) {
         case UserProduction.PRODUCE_GOLD:
           session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.CRT_ACHIEVEMENT, 1);
-          session.userEvent.addEventRecord(Constant.USER_EVENT.CRT_PROD_EVT_ID, 1);
+          session.userEvent.addEventRecord(Constant.COMMON_EVENT.CRT_PROD_EVT_ID, 1);
           break;
         case UserProduction.PRODUCE_FAN:
           session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, 1);
-          session.userEvent.addEventRecord(Constant.USER_EVENT.FAN_PROD_EVT_ID, 1);
+          session.userEvent.addEventRecord(Constant.COMMON_EVENT.FAN_PROD_EVT_ID, 1);
           break;
         case UserProduction.PRODUCE_VIEW:
           session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.VIEW_ACHIEVEMENT, 1);
-          session.userEvent.addEventRecord(Constant.USER_EVENT.VIEW_PROD_EVT_ID, 1);
+          session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIEW_PROD_EVT_ID, 1);
           break;
         default:
           break;

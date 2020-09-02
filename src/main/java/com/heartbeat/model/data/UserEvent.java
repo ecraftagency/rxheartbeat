@@ -41,7 +41,7 @@ public class UserEvent extends Event {
       claimed.putIfAbsent(eventType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
       evt2cas.putIfAbsent(eventType, 0);
 
-      EventInfo ei = Constant.USER_EVENT.evtMap.get(eventType);
+      EventInfo ei = COMMON_EVENT.evtMap.get(eventType);
       if (ei != null && invalidCas(eventType, ei.startTime))
         resetEventData(eventType);
     }
@@ -62,7 +62,7 @@ public class UserEvent extends Event {
     if (!EventData.eventMap.containsKey(eventType))
       return;
 
-    EventInfo ei = Constant.USER_EVENT.evtMap.get(eventType);
+    EventInfo ei = COMMON_EVENT.evtMap.get(eventType);
     if (ei == null)
       return;
 
@@ -79,7 +79,7 @@ public class UserEvent extends Event {
   }
 
   public String claimEventReward(Session session, int eventType, int milestoneId, int second) {
-    EventInfo ei = Constant.USER_EVENT.evtMap.get(eventType);
+    EventInfo ei = COMMON_EVENT.evtMap.get(eventType);
     if (ei == null)
       return "event_not_found";
 

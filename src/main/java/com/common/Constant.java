@@ -72,18 +72,6 @@ public class Constant {
     public static final int         gameShowOneCloseMin       = 0;
   }
 
-  public static class GROUP {
-    public static String            EVENT_START               = "01/09/2020 00:00:00";
-    public static String            EVENT_END                 = "30/09/2020 23:00:00";
-    public static int               missionStart              = -1;
-    public static int               missionEnd                = -1;
-    public static int               CREATE_GROUP_TIME_COST    = 5*86400; //5 days
-    public static int               PRODUCTION_MISSION_ID     = 1;
-    public static int               GAME_SHOW_MISSION_ID      = 2;
-    public static int               CRAZY_DEGREE_MISSION_ID   = 3;
-
-  }
-
   public static class LEADER_BOARD {
     public static final int         TALENT_LDB_ID             = 0;
     public static final int         FIGHT_LDB_ID              = 1;
@@ -159,6 +147,23 @@ public class Constant {
     }
   }
 
+  public static class GROUP_EVENT {
+    public static int               CREATE_GROUP_TIME_COST    = 5*86400; //5 days
+
+    public static final int         GE_PROD_EVT_ID            = 1;
+    public static final int         GE_GS_EVT_ID              = 2;
+    public static final int         GE_CRZ_DEGREE_EVT_ID      = 3;
+
+    public static final Map<Integer, ExtendEventInfo> evtMap;
+
+    static {
+      evtMap = new HashMap<>();
+      evtMap.put(GE_PROD_EVT_ID,        ExtendEventInfo.of(GE_PROD_EVT_ID));
+      evtMap.put(GE_GS_EVT_ID,          ExtendEventInfo.of(GE_GS_EVT_ID));
+      evtMap.put(GE_CRZ_DEGREE_EVT_ID,  ExtendEventInfo.of(GE_CRZ_DEGREE_EVT_ID));
+    }
+  }
+
   public static class IDOL_EVENT {
     public static final int         BP_EVT_ID                 = 0;
     public static final int         DB_EVT_ID                 = 1;
@@ -184,7 +189,7 @@ public class Constant {
     }
   }
 
-  public static class USER_EVENT {
+  public static class COMMON_EVENT {
     public static final int         TIME_SPEND_EVT_ID         = 21;
     public static final int         APT_BUFF_USE_EVT_ID       = 6700;
     public static final int         MONEY_SPEND_EVT_ID        = 6;
@@ -292,18 +297,5 @@ public class Constant {
 
   public static class TITLE {
     public static int               EXPIRY                    = 60*24*30; //minutes
-  }
-
-  public static void serverStartUp() {
-    try {
-      GROUP.missionStart =
-              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_START, DATE_PATTERN)/1000);
-      GROUP.missionEnd =
-              (int)(Utilities.getMillisFromDateString(GROUP.EVENT_END, DATE_PATTERN)/1000);
-    }
-    catch (Exception e) {
-      GROUP.missionStart = -1;
-      GROUP.missionEnd = -1;
-    }
   }
 }

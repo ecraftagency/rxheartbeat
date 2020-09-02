@@ -351,10 +351,10 @@ public class UserEffectHandler implements EffectHandler{
       if (res.equals("ok") && propID == TIME_PROPERTY) {
         session.userGameInfo.timeChange = true;
       }
-      if (res.equals("ok") && propID == CRAZY_PROPERTY && Constant.GROUP.missionStart > 0) {
-          UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-          if (group != null && session.userGameInfo.crazyDegree >= 100)
-            group.setRecord(session, Constant.GROUP.missionStart, Constant.GROUP.CRAZY_DEGREE_MISSION_ID, (int)(session.userGameInfo.crazyDegree));
+      if (res.equals("ok") && propID == CRAZY_PROPERTY) {
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        if (group != null && session.userGameInfo.crazyDegree >= 100)
+          group.addRecord(session, Constant.GROUP_EVENT.GE_CRZ_DEGREE_EVT_ID, (int)(session.userGameInfo.crazyDegree), false);
       }
       return res;
     }

@@ -95,7 +95,7 @@ public class EventController implements Handler<RoutingContext> {
     session.userEvent.reBalance();
     ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
-    resp.data.extObj        = Json.encode(Constant.USER_EVENT.evtMap);
+    resp.data.extObj        = Json.encode(Constant.COMMON_EVENT.evtMap);
     resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }

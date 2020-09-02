@@ -337,7 +337,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     List<Integer> events  = Utilities.gson.fromJson(strEvt, listOfInt);
     JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
 
-    if (eventType < 0 || eventType > 2) {
+    if (eventType < 0 || eventType > 3) {
       resp.put("msg", "invalid event type");
       ctx.reply(resp);
       return;
@@ -345,13 +345,16 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
     Map<Integer, ExtendEventInfo> evtMap;
     if (eventType == 0) {
-      evtMap = USER_EVENT.evtMap;
+      evtMap = COMMON_EVENT.evtMap;
     }
     else if (eventType == 1) {
       evtMap = IDOL_EVENT.evtMap;
     }
-    else {
+    else if (eventType == 2){
       evtMap = RANK_EVENT.evtMap;
+    }
+    else {
+      evtMap  = GROUP_EVENT.evtMap;
     }
 
     for (Integer eventId : events) {
@@ -361,25 +364,28 @@ public class InternalController implements Handler<Message<JsonObject>> {
       }
     }
 
-    JsonArray userEvent = Transformer.transformEvent(USER_EVENT.evtMap, Transformer.userEvtId2Name);
-    JsonArray idolEvent = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
-    JsonArray rankEvent = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
+    JsonArray userEvent   = Transformer.transformEvent(COMMON_EVENT.evtMap, Transformer.userEvtId2Name);
+    JsonArray idolEvent   = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
+    JsonArray rankEvent   = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
+    JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
     resp.put("userEvents", userEvent);
     resp.put("idolEvents", idolEvent);
     resp.put("rankEvents", rankEvent);
+    resp.put("groupEvents", groupEvent);
     ctx.reply(resp);
   }
 
   private void processGetEvents(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
-    JsonArray userEvent = Transformer.transformEvent(USER_EVENT.evtMap, Transformer.userEvtId2Name);
+    JsonArray userEvent = Transformer.transformEvent(COMMON_EVENT.evtMap, Transformer.userEvtId2Name);
     JsonArray rankEvent = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
     JsonArray idolEvent = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
+    JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
 
     resp.put("userEvents", userEvent);
     resp.put("idolEvents", idolEvent);
     resp.put("rankEvents", rankEvent);
-
+    resp.put("groupEvents", groupEvent);
     ctx.reply(resp);
   }
   /*EVENTS*/

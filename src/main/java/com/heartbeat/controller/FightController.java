@@ -186,14 +186,13 @@ public class FightController implements Handler<RoutingContext> {
       resp.data.fight     = session.userFight;
       resp.data.gameInfo  = session.userGameInfo;
       if (resp.msg.equals("ok")) {
-        if (Constant.GROUP.missionStart > 0) {
-          UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-          if (group != null)
-            group.addRecord(session, Constant.GROUP.missionStart, Constant.GROUP.GAME_SHOW_MISSION_ID, 1);
-        }
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        if (group != null)
+          group.addRecord(session, Constant.GROUP_EVENT.GE_GS_EVT_ID, 1, true);
+
         session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAME_SHOW_ACHIEVEMENT, 1);
-        session.userEvent.addEventRecord(Constant.USER_EVENT.GAME_SHOW_EVT_ID, 1);
+        session.userEvent.addEventRecord(Constant.COMMON_EVENT.GAME_SHOW_EVT_ID, 1);
       }
     }
 

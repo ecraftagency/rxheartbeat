@@ -1,12 +1,12 @@
 package com.heartbeat.model.data;
 
-import com.common.Constant;
 import com.common.LOG;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.statics.GroupMissionData;
 import com.transport.model.Group;
 
@@ -154,47 +154,35 @@ public class UserGroup extends Group {
     return "set_inform_fail";
   }
 
-  public void addRecord(Session session, int cas, int missionId, int amount) {
+  public void addRecord(Session session, int missionId, int amount, boolean add) {
+    ExtendEventInfo ei = GROUP_EVENT.evtMap.get(missionId);
+    if (ei == null || ei.startTime <= 0) {
+      return;
+    }
+
     Member member = members.get(session.id);
     if (member == null) {
-      LOG.globalException("group_mission: member not found,",
-              "memberID: ", session.id, "groupId: ", id);
+      LOG.globalException("group_mission: member not found,", "memberID: ", session.id, "groupId: ", id);
       return;
     }
+
     Mission mission = member.missions.get(missionId);
     if (mission == null) {
-      LOG.globalException("group_mission: mission not found,",
-              "memberID: ", session.id, "groupId: ", id, "missionId ", missionId);
+      LOG.globalException("group_mission: mission not found,", "memberID: ", session.id, "groupId: ", id, "missionId ", missionId);
       return;
     }
 
-    if (member.cas != cas) {
-      member.cas = cas;
+    if (member.cas != ei.startTime) {
+      member.cas = ei.startTime;
       mission.resetMission();
     }
-    mission.count += amount;
-    isChange = true;
-  }
 
-  public void setRecord(Session session, int cas, int missionId, int amount) {
-    Member member = members.get(session.id);
-    if (member == null) {
-      LOG.globalException("group_mission: member not found,",
-              "memberID: ", session.id, "groupId: ", id);
-      return;
+    if (add) {
+      mission.count += amount;
     }
-    Mission mission = member.missions.get(missionId);
-    if (mission == null) {
-      LOG.globalException("group_mission: mission not found,",
-              "memberID: ", session.id, "groupId: ", id, "missionId ", missionId);
-      return;
+    else {
+      mission.count = amount;
     }
-
-    if (member.cas != cas) {
-      member.cas = cas;
-      mission.resetMission();
-    }
-    mission.count = amount;
     isChange = true;
   }
 
@@ -202,9 +190,13 @@ public class UserGroup extends Group {
     Map<Integer, Integer> res = new HashMap<>();
 
     try {
-      int cas = Constant.GROUP.missionStart;
-
       for (GroupMission gm : missionMap.values()) {
+        ExtendEventInfo ei = GROUP_EVENT.evtMap.get(gm.id);
+        if (ei == null)
+          continue;
+
+        int cas = ei.startTime;
+
         int hitMember = 0;
         for (Member member : members.values()) {
           if (member.cas != cas) {
@@ -238,14 +230,18 @@ public class UserGroup extends Group {
     if (member == null)
       return "member_not_found";
 
+    ExtendEventInfo ei = GROUP_EVENT.evtMap.get(missionId);
+    if (ei == null)
+      return "event_info_not_found";
+
     Mission mission = member.missions.get(missionId);
     if (mission == null)
       return "mission_not_found";
 
-    if (GROUP.missionStart <= 0     ||
-        GROUP.missionEnd <= 0       ||
-        second < GROUP.missionStart ||
-        second > GROUP.missionEnd ||
+    if (ei.startTime <= 0     ||
+        ei.endTime <= 0       ||
+        second < ei.startTime ||
+        second > ei.endTime ||
         mission.claim) {
       return "claim_reward_time_out";
     }
