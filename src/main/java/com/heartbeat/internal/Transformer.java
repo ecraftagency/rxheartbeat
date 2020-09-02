@@ -36,16 +36,17 @@ public class Transformer {
     formatter.setTimeZone(TimeZone.getTimeZone(Constant.TIME_ZONE));
 
     userEvtId2Name = new HashMap<>();
-    userEvtId2Name.put(COMMON_EVENT.APT_BUFF_USE_EVT_ID,   "Sử dụng cuộn cường hóa");
-    userEvtId2Name.put(COMMON_EVENT.VIEW_PROD_EVT_ID,      "Cày View");
-    userEvtId2Name.put(COMMON_EVENT.VIEW_SPEND_EVT_ID,     "Tiêu hao view");
-    userEvtId2Name.put(COMMON_EVENT.CRT_PROD_EVT_ID,       "Sáng tác");
-    userEvtId2Name.put(COMMON_EVENT.FAN_PROD_EVT_ID,       "Fan metting");
-    userEvtId2Name.put(COMMON_EVENT.FAN_SPEND_EVT_ID,      "Tiêu hao fan");
-    userEvtId2Name.put(COMMON_EVENT.GAME_SHOW_EVT_ID,      "Phụ bản game show");
-    userEvtId2Name.put(COMMON_EVENT.MONEY_SPEND_EVT_ID,    "Tiêu hao gole");
-    userEvtId2Name.put(COMMON_EVENT.TIME_SPEND_EVT_ID,     "Tiêu hao time");
-    userEvtId2Name.put(COMMON_EVENT.TOTAL_TALENT_EVT_ID,   "Tăng tổng tài năng");
+    userEvtId2Name.put(COMMON_EVENT.APT_BUFF_USE_EVT_ID,    "Sử dụng cuộn cường hóa");
+    userEvtId2Name.put(COMMON_EVENT.VIEW_PROD_EVT_ID,       "Cày View");
+    userEvtId2Name.put(COMMON_EVENT.VIEW_SPEND_EVT_ID,      "Tiêu hao view");
+    userEvtId2Name.put(COMMON_EVENT.CRT_PROD_EVT_ID,        "Sáng tác");
+    userEvtId2Name.put(COMMON_EVENT.FAN_PROD_EVT_ID,        "Fan metting");
+    userEvtId2Name.put(COMMON_EVENT.FAN_SPEND_EVT_ID,       "Tiêu hao fan");
+    userEvtId2Name.put(COMMON_EVENT.GAME_SHOW_EVT_ID,       "Phụ bản game show");
+    userEvtId2Name.put(COMMON_EVENT.MONEY_SPEND_EVT_ID,     "Tiêu hao gole");
+    userEvtId2Name.put(COMMON_EVENT.TIME_SPEND_EVT_ID,      "Tiêu hao time");
+    userEvtId2Name.put(COMMON_EVENT.TOTAL_TALENT_EVT_ID,    "Tăng tổng tài năng");
+    userEvtId2Name.put(COMMON_EVENT.VIP_INCR_EVT_ID,        "Thưởng Nạp");
 
     rankEvtId2name = new HashMap<>();
     rankEvtId2name.put(RANK_EVENT.TOTAL_TALENT_RANK_ID,   "Top tăng tổng tài năng");

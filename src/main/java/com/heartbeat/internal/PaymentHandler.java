@@ -1,5 +1,6 @@
 package com.heartbeat.internal;
 
+import com.common.Constant;
 import com.gateway.model.Payload;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
@@ -24,6 +25,9 @@ public class PaymentHandler {
     session.userGameInfo.addVipExp(session, dto.vip);
     for (List<Integer> re : dto.reward)
     EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, re);
+    session.effectResults.clear();
+    if (session.userEvent != null)
+      session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIP_INCR_EVT_ID, dto.vip);
     if (!online)
       CBSession.getInstance().sync(Integer.toString(payload.sessionId), session, ar -> {});
   }

@@ -200,6 +200,7 @@ public class Constant {
     public static final int         FAN_PROD_EVT_ID           = 11;
     public static final int         GAME_SHOW_EVT_ID          = 12;
     public static final int         TOTAL_TALENT_EVT_ID       = 13;
+    public static final int         VIP_INCR_EVT_ID           = 14;
 
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
@@ -214,6 +215,7 @@ public class Constant {
       evtMap.put(FAN_PROD_EVT_ID,     ExtendEventInfo.of(FAN_PROD_EVT_ID));
       evtMap.put(TOTAL_TALENT_EVT_ID, ExtendEventInfo.of(TOTAL_TALENT_EVT_ID));
       evtMap.put(GAME_SHOW_EVT_ID,    ExtendEventInfo.of(GAME_SHOW_EVT_ID));
+      evtMap.put(VIP_INCR_EVT_ID,     ExtendEventInfo.of(VIP_INCR_EVT_ID));
     }
   }
 
