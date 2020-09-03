@@ -89,6 +89,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getPaymentInfo":
           getPaymentInfo(ctx);
           return;
+        case "getShopInfo":
+          getPaymentInfo(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -154,6 +157,12 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
     resp.put("msg", "ok");
     resp.put("paymentRequest", RequestGenerator.genPaymentRequest(sessionId, dto));
+    ctx.reply(resp);
+  }
+
+  private void getShopIngo(Message<JsonObject> ctx) {
+    JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
+    resp.put("shop", Transformer.transformShopData());
     ctx.reply(resp);
   }
 

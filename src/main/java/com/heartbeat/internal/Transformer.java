@@ -5,10 +5,7 @@ import com.common.LOG;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserLDB;
 import com.heartbeat.scheduler.ExtendEventInfo;
-import com.statics.OfficeData;
-import com.statics.PaymentData;
-import com.statics.PropData;
-import com.statics.VipData;
+import com.statics.*;
 import com.transport.model.LDBObj;
 import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
@@ -233,4 +230,21 @@ public class Transformer {
 
     return res;
   }
+
+  public static JsonArray transformShopData() {
+    JsonArray res = new JsonArray();
+    if (ShopData.shopDtoMap == null || ShopData.shopDtoMap.size() == 0) {
+      LOG.globalException("node", "transformPaymentData", "invalid payment data");
+      return res;
+    }
+
+    for (ShopData.ShopDto dto : ShopData.shopDtoMap.values()) {
+
+      res.add(new JsonObject().put("id", dto.id).put("Type", dto.type).put("Desc", dto.desc)
+              .put("vipCond", dto.vipCond).put("timeCost", dto.timeCost).put("dailyLimit", dto.dailyLimit).put("items", dto.format));
+    }
+
+    return res;
+  }
+
 }

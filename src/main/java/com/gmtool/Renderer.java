@@ -47,6 +47,10 @@ public class Renderer implements Handler<RoutingContext> {
         ctx.put("nodes", GMTool.getNodes());
         render("webroot/html/payment.ftl", ctx);
         return;
+      case "shop":
+        ctx.put("nodes", GMTool.getNodes());
+        render("webroot/html/shop.ftl", ctx);
+        return;
       case "event":
         ctx.put("nodes", GMTool.getNodes());
         ctx.put("evtType", Arrays.asList("userEvents", "idolEvents", "rankEvents", "groupEvents")); //todo double check template/controller

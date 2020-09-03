@@ -12,6 +12,7 @@
             <a class="nav-item nav-link" href="/event">Events</a>
             <a class="nav-item nav-link" href="/ldb">LeaderBoard</a>
             <a class="nav-item nav-link" href="/payment">Payment</a>
+            <a class="nav-item nav-link" href="/shop">Shop</a>
         </div>
       </div>
     </nav>
