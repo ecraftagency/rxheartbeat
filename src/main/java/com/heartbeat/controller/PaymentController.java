@@ -22,7 +22,6 @@ public class PaymentController implements Handler<RoutingContext> {
       Session session   = SessionPool.getSessionFromPool(Integer.parseInt(strUserId));
 
       if (session != null && session.userProfile.lastLogin == lastIssued) {
-        long curMs = System.currentTimeMillis();
         ExtMessage resp;
         switch (cmd) {
           case "paymentHistory":
