@@ -1,5 +1,3 @@
-package com.gateway;
-
 import com.common.Constant;
 import com.common.GlobalVariable;
 import com.common.Utilities;

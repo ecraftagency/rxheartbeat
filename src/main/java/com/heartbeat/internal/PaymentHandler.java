@@ -1,6 +1,7 @@
 package com.heartbeat.internal;
 
 import com.common.Constant;
+import com.common.LOG;
 import com.gateway.model.Payload;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
@@ -9,19 +10,17 @@ import com.heartbeat.model.Session;
 import com.statics.PaymentData;
 import com.transport.model.PaymentTransaction;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import static com.common.Constant.USER_PAYMENT.*;
 
 public class PaymentHandler {
+  public static final String MONTH_GC_ID = "mg01.p7";
+
   public static void _100DPaymentSuccess(Session session, Payload payload, boolean online, PaymentData.PaymentDto dto) {
     PaymentTransaction trans = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_100D, payload.money, payload.time);
-    if (session.userPayment.firstPaying()) {
+    if (session.userPayment != null && session.userPayment.firstPaying()) {
       handleFirstPayment();
     }
-
 
     session.userGameInfo.addTime(dto.time);
     session.userGameInfo.addVipExp(session, dto.vip);
@@ -32,6 +31,13 @@ public class PaymentHandler {
 
     trans.reward.addAll(dto.reward);
     session.userPayment.addHistory(trans);
+
+    if (payload.itemId.equals(MONTH_GC_ID)) {
+      String res = session.userRollCall.addGiftCard(session, payload.time, 2);
+      if (!res.equals("ok")) {
+        LOG.globalException("node", "paymentMonthlyGC", res);
+      }
+    }
 
     if (session.userEvent != null)
       session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIP_INCR_EVT_ID, dto.vip);

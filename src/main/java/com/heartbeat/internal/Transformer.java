@@ -240,11 +240,10 @@ public class Transformer {
 
     for (ShopData.ShopDto dto : ShopData.shopDtoMap.values()) {
 
-      res.add(new JsonObject().put("id", dto.id).put("Type", dto.type).put("Desc", dto.desc)
+      res.add(new JsonObject().put("id", dto.id).put("type", dto.type).put("desc", dto.desc)
               .put("vipCond", dto.vipCond).put("timeCost", dto.timeCost).put("dailyLimit", dto.dailyLimit).put("items", dto.format));
     }
 
     return res;
   }
-
 }

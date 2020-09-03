@@ -9,6 +9,7 @@ import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
+import com.heartbeat.model.data.UserPayment;
 import com.heartbeat.scheduler.ExtendEventInfo;
 import com.heartbeat.service.ConstantInjector;
 import com.heartbeat.service.SessionInjector;
@@ -282,10 +283,19 @@ public class InternalController implements Handler<Message<JsonObject>> {
         if (sar.succeeded()) {
           try {
             Session session = sar.result();
-            boolean online  = resp.getString("state").equals("online");
 
-            PaymentHandler._100DPaymentSuccess(session, payload, online, dto);
-            resp.put("code", 0).put("msg", "Success");
+            if (session.userPayment == null)
+              session.userPayment = UserPayment.ofDefault();
+
+            if (session.userPayment.isOrderLoop(payload.orderId)) {
+              resp.put("code", -4).put("msg", "Order Loop");
+            }
+            else {
+              boolean online  = resp.getString("state").equals("online");
+
+              PaymentHandler._100DPaymentSuccess(session, payload, online, dto);
+              resp.put("code", 0).put("msg", "Success");
+            }
           }
           catch (Exception e) {
             resp.put("code", -9).put("msg", "Exchange fail");

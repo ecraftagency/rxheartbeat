@@ -48,6 +48,18 @@ public class UserPayment {
     return false;
   }
 
+  public boolean isOrderLoop(String orderId) {
+    if(orderId != null) {
+      if(history == null)
+        history = new ArrayList<>();
+      for(PaymentTransaction trans : history)
+        if(trans.transID.equals(orderId))
+          return true;
+      return false;
+    }
+    return false;
+  }
+
   public boolean firstPaying() {
     if(history == null)
       history = new ArrayList<>();

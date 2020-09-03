@@ -46,8 +46,11 @@
                       </option>
                    </select>
              </div>
+              <div class="col-sm-2">
+                 <input type="text" v-model="updateDesc" class="form-control" id="updateDesc" name="updateDesc" placeholder="Desc">
+              </div>
              <div class="col-sm-2">
-                <input type="text" v-model="updateTimeCost" class="form-control" id="updateTimeCost" name="updateTimeCost" placeholder="time">
+                <input type="text" v-model="updateTimeCost" class="form-control" id="updateTimeCost" name="updateTimeCost" placeholder="timeCost">
              </div>
              <div class="col-sm-2">
                 <input type="text" v-model="updateVIPCond" class="form-control" id="updateVIPCond" name="updateVIPCond" placeholder="vipCond">
@@ -89,6 +92,7 @@ var app = new Vue({
         isLoaded: false,
         resp: undefined,
         packageId: 'gói nạp',
+        updateDesc:'',
         updateTimeCost:'',
         updateVIPCond:'',
         updateItems:'',
@@ -104,6 +108,7 @@ var app = new Vue({
         this.resp.shop.forEach(pkg => {
             if (this.updatePID == pkg.id) {
                 this.updateTimeCost = '' + pkg.timeCost;
+                this.updateDesc = '' + pkg.desc;
                 this.updateVIPCond = '' + pkg.vipCond;
                 this.updateDailyLimit = '' + pkg.dailyLimit;
                 this.updateItems = JSON.stringify(pkg.items);
