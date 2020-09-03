@@ -148,11 +148,10 @@ public class Constant {
   }
 
   public static class GROUP_EVENT {
-    public static int               CREATE_GROUP_TIME_COST    = 5*86400; //5 days
-
     public static final int         GE_PROD_EVT_ID            = 1;
     public static final int         GE_GS_EVT_ID              = 2;
     public static final int         GE_CRZ_DEGREE_EVT_ID      = 3;
+    public static final int         GE_MONTHLY_GC_EVT_ID      = 4;
 
     public static final Map<Integer, ExtendEventInfo> evtMap;
 
@@ -161,6 +160,7 @@ public class Constant {
       evtMap.put(GE_PROD_EVT_ID,        ExtendEventInfo.of(GE_PROD_EVT_ID));
       evtMap.put(GE_GS_EVT_ID,          ExtendEventInfo.of(GE_GS_EVT_ID));
       evtMap.put(GE_CRZ_DEGREE_EVT_ID,  ExtendEventInfo.of(GE_CRZ_DEGREE_EVT_ID));
+      evtMap.put(GE_MONTHLY_GC_EVT_ID,  ExtendEventInfo.of(GE_MONTHLY_GC_EVT_ID));
     }
   }
 
@@ -229,6 +229,10 @@ public class Constant {
     public static int               INIT_MONEY                    = 20000;
     public static int               INIT_VIEW                     = 20000;
     public static int               INIT_FAN                      = 20000;
+  }
+
+  public static class USER_GROUP {
+    public static int               CREATE_GROUP_TIME_COST    = 5*86400; //5 days
   }
 
   public static class USER_IDOL {
