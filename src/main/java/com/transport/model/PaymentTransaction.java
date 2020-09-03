@@ -19,6 +19,7 @@ public class PaymentTransaction {
   public static PaymentTransaction of(String id, String itemId, long amount, long bonus, int source, long price, long paidTime) {
     PaymentTransaction ps = new PaymentTransaction();
     ps.transID            = id;
+    ps.itemId             = itemId;
     ps.amount             = amount;
     ps.bonus              = bonus;
     ps.source             = source;

@@ -7,7 +7,7 @@
       <div class="card-header" id="shopHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#shopCollapse" aria-expanded="true" aria-controls="shopCollapse">
-              Gói Nạp
+              Shop Package
             </button>
           </h5>
       </div>
@@ -15,11 +15,11 @@
         <div class="card-body">
           <table class="table table-bordered table-responsive-md table-striped text-center">
               <thead>
-                <tr><th class="text-center" v-for="key in Object.keys(resp.payment[0])">{{ key }}</th></tr>
+                <tr><th class="text-center" v-for="key in Object.keys(resp.shop[0])">{{ key }}</th></tr>
               </thead>
               <tbody>
-                <tr class="pt-3-half" v-for="pay in resp.payment" :key="pay.id">
-                  <td v-for="key in Object.keys(resp.payment[0])" :key="pay[key]">{{ pay[key] }}</td>
+                <tr class="pt-3-half" v-for="pay in resp.shop" :key="pay.id">
+                  <td v-for="key in Object.keys(resp.shop[0])" :key="pay[key]">{{ pay[key] }}</td>
                 </tr>
               </tbody>
           </table>
@@ -27,11 +27,11 @@
       </div>
     </div>
 
-    <!--div class="card top-buffer">
+    <div class="card top-buffer">
       <div class="card-header" id="updatePayHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#upadtePayCollapse" aria-expanded="false" aria-controls="upadtePayCollapse">
-              Update Gói Nạp
+              Update Shop Package
             </button>
           </h5>
       </div>
@@ -40,18 +40,21 @@
            <div class="row">
              <div class="col-sm-2">
                   <select class="form-control" v-model:value="updatePID" name="updatePID" id="updatePID" v-on:change="selectUpdatePackage()">
-                      <option>gói nạp</option>
-                      <option v-for="pay in resp.shop" :value="pay.id">
-                        {{ pay.id }}
+                      <option>Shop item</option>
+                      <option v-for="shopItem in resp.shop" :value="shopItem.id">
+                        {{ shopItem.id }}
                       </option>
                    </select>
              </div>
              <div class="col-sm-2">
-                <input type="text" v-model="updateTime" class="form-control" id="updateTime" name="updateTime" placeholder="time">
+                <input type="text" v-model="updateTimeCost" class="form-control" id="updateTimeCost" name="updateTimeCost" placeholder="time">
              </div>
              <div class="col-sm-2">
-                <input type="text" v-model="updateVIP" class="form-control" id="updateVIP" name="updateVIP" placeholder="vip">
+                <input type="text" v-model="updateVIPCond" class="form-control" id="updateVIPCond" name="updateVIPCond" placeholder="vipCond">
              </div>
+              <div class="col-sm-2">
+                 <input type="text" v-model="updateDailyLimit" class="form-control" id="updateDailyLimit" name="updateDailyLimit" placeholder="dailyLimit">
+              </div>
            </div>
            <div class="row top-buffer">
               <div class="col-sm-10">
@@ -63,7 +66,7 @@
            </div>
         </div>
       </div>
-    </div-->
+    </div>
 </div>
 
 <#include "footer.ftl">
@@ -86,9 +89,10 @@ var app = new Vue({
         isLoaded: false,
         resp: undefined,
         packageId: 'gói nạp',
-        updateTime:'',
-        updateVIP:'',
+        updateTimeCost:'',
+        updateVIPCond:'',
         updateItems:'',
+        updateDailyLimit:'',
         updatePID:''
     }
   },
@@ -99,8 +103,9 @@ var app = new Vue({
     selectUpdatePackage: function(){
         this.resp.shop.forEach(pkg => {
             if (this.updatePID == pkg.id) {
-                this.updateTime = '' + pkg.time;
-                this.updateVIP = '' + pkg.vip;
+                this.updateTimeCost = '' + pkg.timeCost;
+                this.updateVIPCond = '' + pkg.vipCond;
+                this.updateDailyLimit = '' + pkg.dailyLimit;
                 this.updateItems = JSON.stringify(pkg.items);
             }
         })
@@ -113,11 +118,12 @@ var app = new Vue({
     },
     updatePackage: function() {
        let data = {
-           cmd: 'updatePaymentPackage',
+           cmd: 'updateShopPackage',
            serverId: this.serverId,
            updatePID:this.updatePID,
-           updateTime:this.updateTime,
-           updateVIP:this.updateVIP,
+           updateTimeCost:this.updateTime,
+           updateVIPCond:this.updateVIPCond,
+           updateDailyLimit:this.updateDailyLimit,
            updateItems:this.updateItems
        }
        fetch(host, postOptions(data)).then(response => response.json())

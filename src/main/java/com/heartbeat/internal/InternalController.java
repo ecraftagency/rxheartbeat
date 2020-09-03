@@ -90,7 +90,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
           getPaymentInfo(ctx);
           return;
         case "getShopInfo":
-          getPaymentInfo(ctx);
+          getShopInfo(ctx);
           return;
         default:
           resp.put("msg", "unknown_cmd");
@@ -160,7 +160,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     ctx.reply(resp);
   }
 
-  private void getShopIngo(Message<JsonObject> ctx) {
+  private void getShopInfo(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
     resp.put("shop", Transformer.transformShopData());
     ctx.reply(resp);
