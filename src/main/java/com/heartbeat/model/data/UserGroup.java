@@ -172,8 +172,8 @@ public class UserGroup extends Group {
       return;
     }
 
-    if (mission.cas != ei.startTime) {
-      mission.cas = ei.startTime;
+    if (member.cas != ei.startTime) {
+      member.cas = ei.startTime;
       mission.resetMission();
     }
 
@@ -199,13 +199,14 @@ public class UserGroup extends Group {
 
         int hitMember = 0;
         for (Member member : members.values()) {
+          if (member.cas != cas) {
+            member.cas = cas;
+            for (Mission mission : member.missions.values())
+              mission.resetMission();
+          }
           Mission mission = member.missions.get(gm.id);
           if (mission == null)
             continue;
-          if (mission.cas != cas) {
-            mission.cas = cas;
-            mission.resetMission();
-          }
           if (mission.count >= gm.hitCount)
             hitMember++;
         }
