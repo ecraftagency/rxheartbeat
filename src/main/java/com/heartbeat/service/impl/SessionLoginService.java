@@ -160,6 +160,7 @@ public class SessionLoginService implements AuthService {
       lr.gender             = session.userGameInfo.gender;
       lr.avatar             = session.userGameInfo.avatar;
       lr.lastLogin          = session.userProfile.lastLogin;
+      lr.registerAt         = session.registerAt;
       return lr;
     }
 

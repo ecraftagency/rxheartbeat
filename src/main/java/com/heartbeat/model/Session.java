@@ -63,6 +63,7 @@ public class Session {
   public UserPayment        userPayment;
 
   public List<EffectResult> effectResults;
+  public int                registerAt;
 
   public void initRegister(String password) {
     userProfile           = UserProfile.ofDefault();
@@ -98,6 +99,8 @@ public class Session {
     userGameInfo.updateUserMedia(curMs);
     userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
     userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.IDOL_ACHIEVEMENT, 1);
+
+    registerAt              = (int)(curMs/1000);
   }
 
   public void close() {
