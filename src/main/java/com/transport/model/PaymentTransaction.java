@@ -1,25 +1,30 @@
 package com.transport.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class PaymentTransaction {
-  public String transID;
-  public int    payAt;
-  public long   amount;
-  public long   bonus;
-  public int    source;
-  public long   price;
-  public int    useAt;
-  public int    payAtPlayingTime;
-  public String itemId;
+  public String         transID;
+  public int            payAt;
+  public long           amount;
+  public long           bonus;
+  public int            source;
+  public long           price;
+  public int            useAt;
+  public int            payAtPlayingTime;
+  public String         itemId;
+  public List<List<Integer>>  reward;
 
   public static PaymentTransaction of(String id, String itemId, long amount, long bonus, int source, long price, long paidTime) {
     PaymentTransaction ps = new PaymentTransaction();
-    ps.transID = id;
-    ps.amount = amount;
-    ps.bonus = bonus;
-    ps.source = source;
-    ps.price = price;
-    ps.payAt = ps.useAt = (int)(paidTime/1000);
+    ps.transID            = id;
+    ps.amount             = amount;
+    ps.bonus              = bonus;
+    ps.source             = source;
+    ps.price              = price;
+    ps.payAt              = ps.useAt = (int)(paidTime/1000);
+    ps.reward             = new ArrayList<>();
     return ps;
   }
 

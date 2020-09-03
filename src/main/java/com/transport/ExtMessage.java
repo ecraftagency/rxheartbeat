@@ -38,6 +38,15 @@ public class ExtMessage {
     public String       extObj;
   }
 
+  public static ExtMessage payment() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.data = new Data();
+    result.group = "payment";
+    return result;
+  }
+
   public static ExtMessage inbox() {
     ExtMessage result = new ExtMessage();
     result.cmd = "";

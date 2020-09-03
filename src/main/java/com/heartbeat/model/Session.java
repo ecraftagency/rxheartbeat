@@ -64,6 +64,7 @@ public class Session {
 
   public List<EffectResult> effectResults;
   public int                registerAt;
+  public int                lastPaymentCheck;
 
   public void initRegister(String password) {
     userProfile           = UserProfile.ofDefault();

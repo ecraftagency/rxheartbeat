@@ -9,6 +9,9 @@ import com.heartbeat.model.Session;
 import com.statics.PaymentData;
 import com.transport.model.PaymentTransaction;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import static com.common.Constant.USER_PAYMENT.*;
 
@@ -19,13 +22,17 @@ public class PaymentHandler {
       handleFirstPayment();
     }
 
-    session.userPayment.addHistory(trans);
 
     session.userGameInfo.addTime(dto.time);
     session.userGameInfo.addVipExp(session, dto.vip);
-    for (List<Integer> re : dto.reward)
-    EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, re);
+    for (List<Integer> re : dto.reward) {
+      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, re);
+    }
     session.effectResults.clear();
+
+    trans.reward.addAll(dto.reward);
+    session.userPayment.addHistory(trans);
+
     if (session.userEvent != null)
       session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIP_INCR_EVT_ID, dto.vip);
     if (!online)

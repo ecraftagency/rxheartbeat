@@ -11,6 +11,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPayment {
   public ArrayList<PaymentTransaction> history;
+  public int lastPaymentCheck;
 
   public static UserPayment ofDefault() {
     UserPayment up = new UserPayment();
@@ -21,6 +22,17 @@ public class UserPayment {
   public void reBalance() {
     if (history == null)
       history = new ArrayList<>();
+  }
+
+  public List<PaymentTransaction> getUncheckTrans() {
+    int second = (int)(System.currentTimeMillis()/1000);
+    List<PaymentTransaction> res = new ArrayList<>();
+    for (PaymentTransaction ps : history) {
+      if (ps.payAt > lastPaymentCheck)
+        res.add(ps);
+    }
+    this.lastPaymentCheck = second;
+    return res;
   }
 
   public boolean addHistory(PaymentTransaction transaction) {
