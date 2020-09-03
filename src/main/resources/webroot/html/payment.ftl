@@ -149,6 +149,8 @@ var app = new Vue({
        .catch((error) => this.isLoaded = false);
     },
     updatePackage: function() {
+       if(!confirm("Chắc nha, sai là tốn tiền lắm á nha!"))
+            return;
        let data = {
            cmd: 'updatePaymentPackage',
            serverId: this.serverId,

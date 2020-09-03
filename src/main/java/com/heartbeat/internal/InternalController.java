@@ -374,6 +374,11 @@ public class InternalController implements Handler<Message<JsonObject>> {
     }
     else {
       evtMap  = GROUP_EVENT.evtMap;
+      events.clear();
+      events.addAll(Arrays.asList(
+              GROUP_EVENT.GE_PROD_EVT_ID, GROUP_EVENT.GE_GS_EVT_ID,
+              GROUP_EVENT.GE_CRZ_DEGREE_EVT_ID, GROUP_EVENT.GE_MONTHLY_GC_EVT_ID
+      ));
     }
 
     for (Integer eventId : events) {

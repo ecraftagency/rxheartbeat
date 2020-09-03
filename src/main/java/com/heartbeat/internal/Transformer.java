@@ -60,6 +60,7 @@ public class Transformer {
     groupEvtId2name.put(GROUP_EVENT.GE_PROD_EVT_ID, "Nhiệm vụ sáng tác");
     groupEvtId2name.put(GROUP_EVENT.GE_GS_EVT_ID, "Nhiệm vụ đi phụ bản");
     groupEvtId2name.put(GROUP_EVENT.GE_CRZ_DEGREE_EVT_ID, "Nhiệm vụ đạt độ sôi nổi");
+    groupEvtId2name.put(GROUP_EVENT.GE_MONTHLY_GC_EVT_ID, "Nhiệm vụ thẻ tháng");
   }
 
   public static JsonObject transformSession(Session session) {
@@ -159,7 +160,7 @@ public class Transformer {
     JsonArray res = new JsonArray();
     res.add(constField("Time tặng ban đầu", "USER_GAME_INFO.INIT_TIME_GIFT", "Giây", Integer.toString(USER_GAME_INFO.INIT_TIME_GIFT), "(0-n]"));
     res.add(constField("Level active time", "USER_GAME_INFO.TIME_ACTIVE_LEVEL", "Level", Integer.toString(USER_GAME_INFO.TIME_ACTIVE_LEVEL), "phải nằm trong các giá trị hạng sao [1,18]"));
-    res.add(constField("Time tạo công ty", "GROUP_EVENT.CREATE_GROUP_TIME_COST", "Giây", Integer.toString(GROUP_EVENT.CREATE_GROUP_TIME_COST), "(0-n]"));
+    res.add(constField("Time tạo công ty", "USER_GROUP.CREATE_GROUP_TIME_COST", "Giây", Integer.toString(USER_GROUP.CREATE_GROUP_TIME_COST), "(0-n]"));
     res.add(constField("Thời gian lưu trên bảng thương hiệu", "TITLE.EXPIRY", "Phút", Integer.toString(TITLE.EXPIRY), "(0-n]"));
     res.add(constField("Exp tư chất tiêu hao khi up tư chất", "USER_IDOL.APT_EXP_COST_PER_UPGRADE", "Số nguyên", Integer.toString(USER_IDOL.APT_EXP_COST_PER_UPGRADE), "(0-n]"));
     res.add(constField("Exp tư chất ban đầu", "USER_IDOL.INIT_APT_EXP", "Số nguyên", Integer.toString(USER_IDOL.INIT_APT_EXP), "(0-n]"));
