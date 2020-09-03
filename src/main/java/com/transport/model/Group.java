@@ -1,9 +1,11 @@
 package com.transport.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.statics.GroupMissionData;
 
 import java.util.*;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
   public static final int OWNER_ROLE            = 0;
   public static final int MOD_ROLE              = 1;
@@ -37,19 +39,17 @@ public class Group {
   //runtime data
   public Map<Integer, GroupMissionData.GroupMission>  missions;
   public Map<Integer, Integer>                        missionHitMember;
-  public int            missionStartDate;
-  public int            missionEndDate;
-  public String         strStartDate;
-  public String         strEndDate;
 
   public void close() {
 
   }
 
   public static class Mission {
-    public int id;
-    public int count;
-    public boolean claim;
+    public int      id;
+    public int      count;
+    public boolean  claim;
+    public int      cas;
+
     public static Mission of(int id, int count) {
       Mission res = new Mission();
       res.id = id;
@@ -74,7 +74,8 @@ public class Group {
     public long     totalAttr;
     public int      avatarId;
     public int      gender;
-    public int      cas;
+    //public int      cas;
+    //public Map<Integer, Integer> cass;
     public Map<Integer, Mission> missions;
 
     private Member() {
@@ -87,7 +88,6 @@ public class Group {
       member.displayName  = displayName;
       member.role         = USER_ROLE;
       member.joinTime     = (int)(System.currentTimeMillis());
-      member.cas          = 0;
       member.missions     = new HashMap<>();
       if (GroupMissionData.missionMap != null) {
         for (GroupMissionData.GroupMission gm : GroupMissionData.missionMap.values()) {
