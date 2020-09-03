@@ -173,7 +173,7 @@ public class UserGroup extends Group {
     }
 
     if (mission.cas != ei.startTime) {
-      member.cas = ei.startTime;
+      mission.cas = ei.startTime;
       mission.resetMission();
     }
 
