@@ -46,26 +46,17 @@
                       </option>
                    </select>
              </div>
-              <div class="col-sm-2">
-                 <input type="text" v-model="updateDesc" class="form-control" id="updateDesc" name="updateDesc" placeholder="Desc">
-              </div>
              <div class="col-sm-2">
-                <input type="text" v-model="updateTimeCost" class="form-control" id="updateTimeCost" name="updateTimeCost" placeholder="timeCost">
+                  <select class="form-control" v-model:value="updateStatus" name="updateStatus" id="updateStatus">
+                      <option>Status</option>
+                      <option v-for="shopItem in resp.shop" :value="shopItem.status">
+                        {{ shopItem.status }}
+                      </option>
+                   </select>
              </div>
              <div class="col-sm-2">
-                <input type="text" v-model="updateVIPCond" class="form-control" id="updateVIPCond" name="updateVIPCond" placeholder="vipCond">
+                 <button type="button" class="btn btn-primary w-100" v-on:click="updatePackage">Update</button>
              </div>
-              <div class="col-sm-2">
-                 <input type="text" v-model="updateDailyLimit" class="form-control" id="updateDailyLimit" name="updateDailyLimit" placeholder="dailyLimit">
-              </div>
-           </div>
-           <div class="row top-buffer">
-              <div class="col-sm-10">
-                  <input type="text" v-model="updateItems" class="form-control" id="updateItems" name="updateItems" placeholder="items">
-              </div>
-              <div class="col-sm-2">
-                  <button type="button" class="btn btn-primary w-100" v-on:click="updatePackage">Update</button>
-              </div>
            </div>
         </div>
       </div>
@@ -91,7 +82,7 @@ var app = new Vue({
         serverId: '0',
         isLoaded: false,
         resp: undefined,
-        packageId: 'gói nạp',
+        packageId: 'Shop Item',
         updateDesc:'',
         updateTimeCost:'',
         updateVIPCond:'',

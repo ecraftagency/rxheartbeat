@@ -24,11 +24,11 @@ public class NetAwardEffectHandler implements EffectHandler{
     titleKeyMap.put(5, "all_time_title");
 
     titleNameMap = new HashMap<>();
-    titleKeyMap.put(1, "Ngôi Sao Lôi Cuốn");
-    titleKeyMap.put(2, "Ngôi Sao Phong Cách");
-    titleKeyMap.put(3, "Ngôi Sao Thương Hiệu");
-    titleKeyMap.put(4, "Ngôi Sao Cống Hiến");
-    titleKeyMap.put(5, "Ngôi Sao Toàn Năng");
+    titleNameMap.put(1, "Ngôi Sao Lôi Cuốn");
+    titleNameMap.put(2, "Ngôi Sao Phong Cách");
+    titleNameMap.put(3, "Ngôi Sao Thương Hiệu");
+    titleNameMap.put(4, "Ngôi Sao Cống Hiến");
+    titleNameMap.put(5, "Ngôi Sao Toàn Năng");
   }
 
   public NetAwardEffectHandler() {

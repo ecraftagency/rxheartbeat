@@ -12,6 +12,7 @@ public class ShopData {
     public int                  timeCost;
     public int                  dailyLimit;
     public List<List<Integer>>  format;
+    public int                  status;
 
     @Override
     public Integer mapKey() {
