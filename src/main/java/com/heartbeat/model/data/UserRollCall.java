@@ -20,6 +20,7 @@ public class UserRollCall extends RollCall {
     rollCall.todayClaim         = false;
     rollCall.vipClaimed         = new HashMap<>();
     rollCall.giftCards          = new HashMap<>();
+    rollCall.isPaidUser         = false;
     return rollCall;
   }
 

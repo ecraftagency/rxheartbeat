@@ -19,4 +19,6 @@ public class RollCall {
   public Map<Integer, Long> vipClaimed;
 
   public Map<Integer, GiftInfo> giftCards; //key:giftType
+
+  public boolean            isPaidUser; //this mean this user already have at lease 1 success payment
 }

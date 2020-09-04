@@ -18,9 +18,7 @@ public class PaymentHandler {
 
   public static void _100DPaymentSuccess(Session session, Payload payload, boolean online, PaymentData.PaymentDto dto) {
     PaymentTransaction trans = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_100D, payload.money, payload.time);
-    if (session.userPayment != null && session.userPayment.firstPaying()) {
-      handleFirstPayment();
-    }
+
 
     session.userGameInfo.addTime(dto.time);
     session.userGameInfo.addVipExp(session, dto.vip);
@@ -29,8 +27,7 @@ public class PaymentHandler {
     }
     session.effectResults.clear();
 
-    trans.reward.addAll(dto.reward);
-    session.userPayment.addHistory(trans);
+
 
     if (payload.itemId.equals(MONTH_GC_ID)) {
       String res = session.userRollCall.addGiftCard(session, payload.time, 2);
@@ -41,11 +38,24 @@ public class PaymentHandler {
 
     if (session.userEvent != null)
       session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIP_INCR_EVT_ID, dto.vip);
+
+    if (session.userPayment != null && session.userPayment.firstPaying()) {
+      handleFirstPayment(session);
+    }
+
+    trans.reward.addAll(dto.reward);
+    session.userPayment.addHistory(trans);
+
     if (!online)
       CBSession.getInstance().sync(Integer.toString(payload.sessionId), session, ar -> {});
   }
 
-  public static void handleFirstPayment() {
-    //todo not implemented
+  public static void handleFirstPayment(Session session) {
+    try {
+      session.userRollCall.isPaidUser = true;
+    }
+    catch (Exception e) {
+      LOG.paymentException(e);
+    }
   }
 }
