@@ -287,6 +287,10 @@ public class UserGameInfo extends GameInfo {
     if (dto == null || dto.format == null || dto.format.size() == 0)
       return "shop_data_not_found";
 
+    if (dto.status != 1) {
+      return "shop_item_disable";
+    }
+
     if (shopping.getOrDefault(itemId, 0) >= dto.dailyLimit)
       return "shop_daily_limit";
 
