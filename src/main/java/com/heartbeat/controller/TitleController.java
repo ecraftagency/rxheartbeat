@@ -54,7 +54,7 @@ public class TitleController implements Handler<RoutingContext> {
   private ExtMessage processTitleInfo(RoutingContext ctx) {
     int titleId     = ctx.getBodyAsJson().getInteger("titleId");
     String key      = TitleEffectHandler.titleKeyMap.get(titleId);
-    String name     = TitleEffectHandler.titlenameMap.get(titleId);
+    String name     = TitleEffectHandler.titleNameMap.get(titleId);
     ExtMessage resp = ExtMessage.title();
 
     if (key == null || name == null) {
