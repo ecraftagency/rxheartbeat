@@ -14,6 +14,7 @@ public class NetAward {
   public int    vipLevel;
   public int    avatar;
   public int    gender;
+  public long   exp;
 
   public static NetAward of(String id, String titleName, String username, String manifesto) {
     NetAward netAward = new NetAward();

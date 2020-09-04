@@ -48,6 +48,7 @@ public class NetAwardEffectHandler implements EffectHandler{
     netAward.curFightId      = session.userFight.currentFightLV.id;
     netAward.avatar          = session.userGameInfo.avatar;
     netAward.gender          = session.userGameInfo.gender;
+    netAward.exp             = session.userGameInfo.exp;
 
     VipData.VipDto vip    = VipData.getVipData(session.userGameInfo.vipExp);
     int vipLv             = 0;
