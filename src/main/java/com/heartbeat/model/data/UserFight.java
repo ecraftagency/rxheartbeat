@@ -289,7 +289,7 @@ public class UserFight extends Fight {
     long totalTalent      = session.userIdol.totalCrt()
             + session.userIdol.totalPerf()
             + session.userIdol.totalAttr();
-    long expectedConsume  = (currentRunShow.randFanNPC*currentRunShow.randAptNPC/totalTalent) + fixConsume;
+    long expectedConsume  = (currentRunShow.randFanNPC*(currentRunShow.randAptNPC/totalTalent)) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
       session.userGameInfo.spendFan(session, expectedConsume);
@@ -339,7 +339,7 @@ public class UserFight extends Fight {
       long totalTalent      = session.userIdol.totalCrt()
               + session.userIdol.totalPerf()
               + session.userIdol.totalAttr();
-      long expectedConsume  = (avrFanNPC*avrAptNPC/totalTalent) + fixConsume;
+      long expectedConsume  = (avrFanNPC*(avrAptNPC/totalTalent)) + fixConsume;
       totalExpectConsume   += expectedConsume;
     }
 
@@ -390,7 +390,7 @@ public class UserFight extends Fight {
     long totalCrt     = session.userIdol.totalCrt();
 
     if (base >= totalCrt) {
-      moneyConsume = currentShopping.moneyNPC*currentShopping.creativeNPC /totalCrt;
+      moneyConsume = currentShopping.moneyNPC*(currentShopping.creativeNPC /totalCrt);
     }
     else {
       moneyConsume = (long)(currentShopping.moneyNPC*SHOPPING_MONEY_SCL);
@@ -438,7 +438,7 @@ public class UserFight extends Fight {
       long totalCrt     = session.userIdol.totalCrt();
 
       if (base >= totalCrt) {
-        moneyConsume = sp.moneyNPC*sp.creativeNPC /totalCrt;
+        moneyConsume = sp.moneyNPC*(sp.creativeNPC /totalCrt);
       }
       else {
         moneyConsume = (long)(sp.moneyNPC*SHOPPING_MONEY_SCL);

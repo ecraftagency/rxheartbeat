@@ -81,7 +81,7 @@ public class Group {
 
     }
 
-    public static   Member of(int id, String displayName) {
+    public static Member of(int id, String displayName) {
       Member member       = new Member();
       member.id           = id;
       member.displayName  = displayName;

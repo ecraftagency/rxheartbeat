@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import static com.common.Constant.*;
 
+@SuppressWarnings("unused")
 public class Session {
   transient public int        id;
   transient public int        m_ping_count;
