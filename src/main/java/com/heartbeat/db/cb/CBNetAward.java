@@ -7,43 +7,43 @@ import com.couchbase.client.java.kv.InsertOptions;
 import com.couchbase.client.java.kv.MutationResult;
 import com.heartbeat.HBServer;
 import com.heartbeat.db.Cruder;
-import com.transport.model.Title;
+import com.transport.model.NetAward;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import static com.common.Constant.*;
 import java.time.Duration;
 
-public class CBTitle implements Cruder<Title> {
+public class CBNetAward implements Cruder<NetAward> {
 
   private ReactiveBucket    rxIndexBucket;
 
-  private CBTitle() {
+  private CBNetAward() {
     rxIndexBucket   = HBServer.rxIndexBucket;
   }
 
-  private static CBTitle instance = new CBTitle();
-  public static CBTitle getInstance() {
+  private static CBNetAward instance = new CBNetAward();
+  public static CBNetAward getInstance() {
     return instance;
   }
 
   @Override
-  public void load(String id, Handler<AsyncResult<Title>> handler) {
+  public void load(String id, Handler<AsyncResult<NetAward>> handler) {
     handler.handle(Future.failedFuture("unimplemented"));
   }
 
   @Override
-  public void load(String id, String password, Handler<AsyncResult<Title>> handler) {
+  public void load(String id, String password, Handler<AsyncResult<NetAward>> handler) {
     handler.handle(Future.failedFuture("unimplemented"));
   }
 
   @Override
-  public void sync(String id, Title obj, Handler<AsyncResult<String>> handler) {
+  public void sync(String id, NetAward obj, Handler<AsyncResult<String>> handler) {
     handler.handle(Future.failedFuture("unimplemented"));
   }
 
   @Override
-  public void add(String id, Title obj, Handler<AsyncResult<String>> handler) {
+  public void add(String id, NetAward obj, Handler<AsyncResult<String>> handler) {
     handler.handle(Future.failedFuture("unimplemented"));
   }
 
@@ -53,11 +53,11 @@ public class CBTitle implements Cruder<Title> {
   }
 
   @Override
-  public Title load(String id) {
+  public NetAward load(String id) {
     try {
       GetResult result = rxIndexBucket.defaultCollection().get(id).block();
       if (result != null)
-        return result.contentAs(Title.class);
+        return result.contentAs(NetAward.class);
       else
         return null;
     }
@@ -67,29 +67,29 @@ public class CBTitle implements Cruder<Title> {
   }
 
   @Override
-  public Title load(String id, String password) {
+  public NetAward load(String id, String password) {
     //todo implementation
     return null;
   }
 
   @Override
-  public boolean sync(String id, Title obj) {
+  public boolean sync(String id, NetAward obj) {
     //todo implementation
     return false;
   }
 
   @Override
-  public boolean add(String id, Title obj) {
+  public boolean add(String id, NetAward obj) {
     try {
       MutationResult result = rxIndexBucket.defaultCollection()
               .insert(id, obj, InsertOptions
                       .insertOptions()
-                      .expiry(Duration.ofMinutes(TITLE.EXPIRY)))
+                      .expiry(Duration.ofMinutes(NET_AWARD.EXPIRY)))
               .block();
       return result != null;
     }
     catch (Exception e) {
-      LOG.globalException("node", "cbTitle:add", e);
+      LOG.globalException("node", "cbNetAward:add", e);
       return false;
     }
   }

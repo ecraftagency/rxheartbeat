@@ -1,8 +1,10 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserGroup;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
@@ -75,6 +77,13 @@ public class RollCallController implements Handler<RoutingContext> {
     int giftType        = ctx.getBodyAsJson().getInteger("giftType");
     ExtMessage resp     = ExtMessage.rollCall();
     resp.msg            = session.userRollCall.claimGiftCardDailyGift(session,curMs, giftType);
+
+    if (resp.msg.equals("ok")) {
+      UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+      if (group != null)
+        group.addRecord(session, GROUP_EVENT.GE_MONTHLY_GC_EVT_ID, 1, false);
+    }
+
     resp.data.rollCall  = session.userRollCall;
     resp.effectResults  = session.effectResults;
     return resp;

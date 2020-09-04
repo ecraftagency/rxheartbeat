@@ -1,20 +1,20 @@
 package com.heartbeat.effect;
 
 import com.heartbeat.db.Cruder;
-import com.heartbeat.db.cb.CBTitle;
+import com.heartbeat.db.cb.CBNetAward;
 import com.heartbeat.model.Session;
 import com.statics.VipData;
-import com.transport.model.Title;
+import com.transport.model.NetAward;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TitleEffectHandler implements EffectHandler{
+public class NetAwardEffectHandler implements EffectHandler{
   public static final Map<Integer, String> titleKeyMap;
   public static final Map<Integer, String> titleNameMap;
 
-  public Cruder<Title> cruder;
+  public Cruder<NetAward> cruder;
   static {
     titleKeyMap = new HashMap<>();
     titleKeyMap.put(1, "attractive_title");
@@ -31,8 +31,8 @@ public class TitleEffectHandler implements EffectHandler{
     titleKeyMap.put(5, "Ngôi Sao Toàn Năng");
   }
 
-  public TitleEffectHandler() {
-    cruder = CBTitle.getInstance();
+  public NetAwardEffectHandler() {
+    cruder = CBNetAward.getInstance();
   }
 
   @Override
@@ -40,20 +40,23 @@ public class TitleEffectHandler implements EffectHandler{
     String key = titleKeyMap.get(effectFormat.get(PARAM1));
     if (key == null)
       return "invalid_title_id";
-    Title title = Title.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.newDisplayName);
-    title.userTitleId     = session.userGameInfo.titleId;
-    title.totalCrt        = session.userIdol.totalCrt();
-    title.totalPerf       = session.userIdol.totalPerf();
-    title.totalAttr       = session.userIdol.totalAttr();
-    title.curFightId      = session.userFight.currentFightLV.id;
+    NetAward netAward = NetAward.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.newDisplayName);
+    netAward.userTitleId     = session.userGameInfo.titleId;
+    netAward.totalCrt        = session.userIdol.totalCrt();
+    netAward.totalPerf       = session.userIdol.totalPerf();
+    netAward.totalAttr       = session.userIdol.totalAttr();
+    netAward.curFightId      = session.userFight.currentFightLV.id;
+    netAward.avatar          = session.userGameInfo.avatar;
+    netAward.gender          = session.userGameInfo.gender;
+
     VipData.VipDto vip    = VipData.getVipData(session.userGameInfo.vipExp);
     int vipLv             = 0;
     if (vip != null)
       vipLv = vip.level;
 
-    title.vipLevel        = vipLv;
+    netAward.vipLevel        = vipLv;
 
-    if (cruder.add(key, title))
+    if (cruder.add(key, netAward))
       return "ok";
     return "title_already_placed";
   }

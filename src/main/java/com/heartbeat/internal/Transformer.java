@@ -161,7 +161,7 @@ public class Transformer {
     res.add(constField("Time tặng ban đầu", "USER_GAME_INFO.INIT_TIME_GIFT", "Giây", Integer.toString(USER_GAME_INFO.INIT_TIME_GIFT), "(0-n]"));
     res.add(constField("Level active time", "USER_GAME_INFO.TIME_ACTIVE_LEVEL", "Level", Integer.toString(USER_GAME_INFO.TIME_ACTIVE_LEVEL), "phải nằm trong các giá trị hạng sao [1,18]"));
     res.add(constField("Time tạo công ty", "USER_GROUP.CREATE_GROUP_TIME_COST", "Giây", Integer.toString(USER_GROUP.CREATE_GROUP_TIME_COST), "(0-n]"));
-    res.add(constField("Thời gian lưu trên bảng thương hiệu", "TITLE.EXPIRY", "Phút", Integer.toString(TITLE.EXPIRY), "(0-n]"));
+    res.add(constField("Thời gian lưu trên bảng thương hiệu", "TITLE.EXPIRY", "Phút", Integer.toString(NET_AWARD.EXPIRY), "(0-n]"));
     res.add(constField("Exp tư chất tiêu hao khi up tư chất", "USER_IDOL.APT_EXP_COST_PER_UPGRADE", "Số nguyên", Integer.toString(USER_IDOL.APT_EXP_COST_PER_UPGRADE), "(0-n]"));
     res.add(constField("Exp tư chất ban đầu", "USER_IDOL.INIT_APT_EXP", "Số nguyên", Integer.toString(USER_IDOL.INIT_APT_EXP), "(0-n]"));
 

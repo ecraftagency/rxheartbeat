@@ -4,8 +4,8 @@ import com.common.Constant;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.Mapper;
 import com.heartbeat.db.cb.CBMapper;
-import com.heartbeat.db.cb.CBTitle;
-import com.transport.model.Title;
+import com.heartbeat.db.cb.CBNetAward;
+import com.transport.model.NetAward;
 
 public class CBAccess {
   public static void main(String[] args) throws InterruptedException {
@@ -41,9 +41,9 @@ public class CBAccess {
   }
 
   public static void titleInsert() {
-    Cruder<Title> ta = CBTitle.getInstance();
+    Cruder<NetAward> ta = CBNetAward.getInstance();
 
-    Title title = Title.of("1000001", "","mrstart", "stalin is god");
+    NetAward title = NetAward.of("1000001", "","mrstart", "stalin is god");
     System.out.println(ta.add("numberone", title));
 
     title = ta.load("numberone");

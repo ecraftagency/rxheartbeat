@@ -1,17 +1,17 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
-import com.heartbeat.db.cb.CBTitle;
-import com.heartbeat.effect.TitleEffectHandler;
+import com.heartbeat.db.cb.CBNetAward;
+import com.heartbeat.effect.NetAwardEffectHandler;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
-import com.transport.model.Title;
+import com.transport.model.NetAward;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
-public class TitleController implements Handler<RoutingContext> {
+public class NetAwardController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
     String cmd          = "";
@@ -24,7 +24,7 @@ public class TitleController implements Handler<RoutingContext> {
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
-          case "titleInfo":
+          case "netAwardInfo":
             resp = processTitleInfo(ctx);
             break;
           default:
@@ -53,20 +53,20 @@ public class TitleController implements Handler<RoutingContext> {
 
   private ExtMessage processTitleInfo(RoutingContext ctx) {
     int titleId     = ctx.getBodyAsJson().getInteger("titleId");
-    String key      = TitleEffectHandler.titleKeyMap.get(titleId);
-    String name     = TitleEffectHandler.titleNameMap.get(titleId);
+    String key      = NetAwardEffectHandler.titleKeyMap.get(titleId);
+    String name     = NetAwardEffectHandler.titleNameMap.get(titleId);
     ExtMessage resp = ExtMessage.title();
 
     if (key == null || name == null) {
       resp.msg = "invalid_title_id";
     }
 
-    Title title     = CBTitle.getInstance().load(key);
+    NetAward title     = CBNetAward.getInstance().load(key);
     if (title == null)
-      title = Title.of("", "","", "");
+      title = NetAward.of("", "","", "");
 
     title.titleName = name;
-    resp.data.title = title;
+    resp.data.netAward = title;
     resp.msg        = "ok";
     return resp;
   }

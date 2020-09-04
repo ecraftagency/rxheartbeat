@@ -301,7 +301,7 @@ public class Constant {
     public static final int         RAMPAGE_EFFECT_RESULT     = 3000; // rampage [3000, count, 0];
   }
 
-  public static class TITLE {
+  public static class NET_AWARD {
     public static int               EXPIRY                    = 60*24*30; //minutes
   }
 }

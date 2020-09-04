@@ -25,7 +25,7 @@ public class ExtMessage {
     public Inventory    inventory;
     public Fight        fight;
     public Travel       travel;
-    public Title        title;
+    public NetAward     netAward;
     public Group        group;
     public DailyMission dailyMission;
     public Achievement  achievement;
@@ -227,7 +227,7 @@ public class ExtMessage {
     data.inventory          = null;
     data.fight              = null;
     data.travel             = null;
-    data.title              = null;
+    data.netAward           = null;
     data.group              = null;
     data.dailyMission       = null;
     data.achievement        = null;

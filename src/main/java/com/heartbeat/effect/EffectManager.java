@@ -25,7 +25,7 @@ public class EffectManager implements EffectHandler{
     idolEffectHandler         = IdolEffectHandlerV2.inst();
     inventoryEffectHandler    = InventoryEffectHandler.inst();
     dropEffectHandler         = new DropEffectHandler();
-    titleEffectHandler        = new TitleEffectHandler();
+    titleEffectHandler        = new NetAwardEffectHandler();
   }
 
   @Override
