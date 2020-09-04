@@ -20,44 +20,12 @@
               <tbody>
                 <tr class="pt-3-half" v-for="pay in resp.shop" :key="pay.id">
                   <td v-for="key in Object.keys(resp.shop[0])" :key="pay[key]">{{ pay[key] }}</td>
+                  <td>
+                    <button type="button" class="btn btn-primary w-100" v-on:click="updateStatus(pay['status'])">Update</button>
+                  </td>
                 </tr>
               </tbody>
           </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="card top-buffer">
-      <div class="card-header" id="updatePayHeader">
-          <h5 class="text-center">
-            <button class="btn" data-toggle="collapse" data-target="#upadtePayCollapse" aria-expanded="false" aria-controls="upadtePayCollapse">
-              Update Shop Package
-            </button>
-          </h5>
-      </div>
-      <div id="upadtePayCollapse" class="collapse" aria-labelledby="updatePayHeader" data-parent="#accordion">
-        <div class="card-body">
-           <div class="row">
-             <div class="col-sm-2">
-                  <select class="form-control" v-model:value="updatePID" name="updatePID" id="updatePID" v-on:change="selectUpdatePackage()">
-                      <option>Shop item</option>
-                      <option v-for="shopItem in resp.shop" :value="shopItem.id">
-                        {{ shopItem.id }}
-                      </option>
-                   </select>
-             </div>
-             <div class="col-sm-2">
-                  <select class="form-control" v-model:value="updateStatus" name="updateStatus" id="updateStatus">
-                      <option>Status</option>
-                      <option v-for="shopItem in resp.shop" :value="shopItem.status">
-                        {{ shopItem.status }}
-                      </option>
-                   </select>
-             </div>
-             <div class="col-sm-2">
-                 <button type="button" class="btn btn-primary w-100" v-on:click="updatePackage">Update</button>
-             </div>
-           </div>
         </div>
       </div>
     </div>
@@ -83,11 +51,6 @@ var app = new Vue({
         isLoaded: false,
         resp: undefined,
         packageId: 'Shop Item',
-        updateDesc:'',
-        updateTimeCost:'',
-        updateVIPCond:'',
-        updateItems:'',
-        updateDailyLimit:'',
         updatePID:''
     }
   },
@@ -98,11 +61,7 @@ var app = new Vue({
     selectUpdatePackage: function(){
         this.resp.shop.forEach(pkg => {
             if (this.updatePID == pkg.id) {
-                this.updateTimeCost = '' + pkg.timeCost;
-                this.updateDesc = '' + pkg.desc;
-                this.updateVIPCond = '' + pkg.vipCond;
-                this.updateDailyLimit = '' + pkg.dailyLimit;
-                this.updateItems = JSON.stringify(pkg.items);
+                this.status = '' + pkg.status;
             }
         })
     },
@@ -112,15 +71,12 @@ var app = new Vue({
        .then(data => this.success(data))
        .catch((error) => this.isLoaded = false);
     },
-    updatePackage: function() {
+    updateStatus: function(pkgId) {
+        alert(pkgId);
        let data = {
-           cmd: 'updateShopPackage',
+           cmd: 'updateShopStatus',
            serverId: this.serverId,
-           updatePID:this.updatePID,
-           updateTimeCost:this.updateTime,
-           updateVIPCond:this.updateVIPCond,
-           updateDailyLimit:this.updateDailyLimit,
-           updateItems:this.updateItems
+           updatePID:pkgId
        }
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))

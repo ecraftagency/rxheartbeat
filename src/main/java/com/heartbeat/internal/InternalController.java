@@ -93,6 +93,8 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getShopInfo":
           getShopInfo(ctx);
           return;
+        case "updateShopStatus":
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);

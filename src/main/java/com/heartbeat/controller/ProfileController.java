@@ -8,10 +8,15 @@ import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.statics.OfficeData;
+import com.statics.ShopData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.common.Constant.*;
 
 public class ProfileController implements Handler<RoutingContext> {
@@ -29,6 +34,9 @@ public class ProfileController implements Handler<RoutingContext> {
         switch (cmd) {
           case "buyShopItem":
             resp = processBuyShopItem(session, ctx);
+            break;
+          case "getShopStatus":
+            resp = processGetShopStatus();
             break;
           case "addVipExp":
             resp = processAddVipExp(session, ctx  );
@@ -64,6 +72,16 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processGetShopStatus() {
+    ExtMessage resp = ExtMessage.profile();
+    Map<Integer, Integer> shopStatus = new HashMap<>();
+    for (ShopData.ShopDto dto : ShopData.shopDtoMap.values()) {
+      shopStatus.put(dto.id, dto.status);
+    }
+    resp.data.extObj = Json.encode(shopStatus);
+    return resp;
   }
 
   private ExtMessage processBuyShopItem(Session session, RoutingContext ctx) {
