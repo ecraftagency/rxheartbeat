@@ -21,7 +21,7 @@
                 <tr class="pt-3-half" v-for="pay in resp.shop" :key="pay.id">
                   <td v-for="key in Object.keys(resp.shop[0])" :key="pay[key]">{{ pay[key] }}</td>
                   <td>
-                    <button type="button" class="btn btn-primary w-100" v-on:click="updateStatus(pay['status'])">Update</button>
+                    <button type="button" class="btn btn-primary w-100" v-on:click="updateStatus(pay['id'])">{{ pay['status'] == 1 ? 'InActive' : 'Active' }}</button>
                   </td>
                 </tr>
               </tbody>
@@ -58,13 +58,6 @@ var app = new Vue({
 
   },
   methods: {
-    selectUpdatePackage: function(){
-        this.resp.shop.forEach(pkg => {
-            if (this.updatePID == pkg.id) {
-                this.status = '' + pkg.status;
-            }
-        })
-    },
     serverSelect: function (event) {
        let data = { cmd:'getShopInfo', serverId: this.serverId};
        fetch(host, postOptions(data)).then(response => response.json())
@@ -72,7 +65,6 @@ var app = new Vue({
        .catch((error) => this.isLoaded = false);
     },
     updateStatus: function(pkgId) {
-        alert(pkgId);
        let data = {
            cmd: 'updateShopStatus',
            serverId: this.serverId,
@@ -81,20 +73,6 @@ var app = new Vue({
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))
        .catch((error) => this.isLoaded = false);
-    },
-    genPaymentRequest: function(event) {
-       let data = { cmd:'genWebPaymentLink', sessionId: this.sessionId, packageId: this.packageId};
-       fetch(host, postOptions(data)).then(response => response.json())
-       .then(data => {
-         if (data.msg == "ok") {
-            this.payReq = data.paymentRequest;
-         }
-         else {
-            this.payReq = '';
-            alert(data.msg);
-         }
-       })
-       .catch((error) => alert(error));
     },
     success: function(data) {
        if (data.msg == "ok") {

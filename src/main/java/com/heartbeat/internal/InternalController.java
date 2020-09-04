@@ -16,6 +16,7 @@ import com.heartbeat.service.SessionInjector;
 import com.heartbeat.service.impl.EvilInjector;
 import com.heartbeat.service.impl.MaydayInjector;
 import com.statics.PaymentData;
+import com.statics.ShopData;
 import com.transport.IntMessage;
 import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
@@ -94,6 +95,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
           getShopInfo(ctx);
           return;
         case "updateShopStatus":
+          processUpdateShopStatus(ctx);
           return;
         default:
           resp.put("msg", "unknown_cmd");
@@ -106,6 +108,28 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processUpdateShopStatus(Message<JsonObject> ctx) {
+    JsonObject resp         = new JsonObject();
+    int updatePID           = ctx.body().getInteger("updatePID");
+    ShopData.ShopDto dto    = ShopData.shopDtoMap.get(updatePID);
+    if (dto == null) {
+      resp.put("msg", "invalid update package, wrong id");
+      ctx.reply(resp);
+      return;
+    }
+
+    if (dto.status == 1) {
+      dto.status = 0;
+    }
+    else {
+      dto.status = 1;
+    }
+
+    resp.put("shop", Transformer.transformShopData());
+    resp.put("msg", "ok");
+    ctx.reply(resp);
   }
 
   private void processUpdatePaymentPackage(Message<JsonObject> ctx) {
