@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.Msg;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
@@ -105,13 +106,13 @@ public class UserGameInfo extends GameInfo {
           return "ok";
         }
         else
-          return "display_name_exist";
+          return Msg.msgMap.getOrDefault(Msg.DISPLAY_NAME_EXIST, "display_name_exist");
       }
       else
-        return "display_name_invalid";
+        return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
     }
     else
-      return "display_name_invalid";
+      return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
   }
 
   public String replaceDisplayName(Session session, String displayName){
@@ -128,18 +129,17 @@ public class UserGameInfo extends GameInfo {
             return "ok";
           }
           else
-            return "display_name_exist";
+            return Msg.msgMap.getOrDefault(Msg.DISPLAY_NAME_EXIST, "display_name_exist");
         }
         catch (Exception e) {
-          return "display_name_invalid";
+          return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
         }
-
       }
       else
-        return "display_name_invalid";
+        return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
     }
     else
-      return "display_name_invalid";
+      return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
   }
 
   /*MEDIA**************************************************************************************************************/
@@ -280,26 +280,26 @@ public class UserGameInfo extends GameInfo {
   /*SHOPPING***********************************************************************************************************/
   public String buyShopItem(Session session, int itemId) {
     if (time <= 0)
-      return "time_out";
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
 
     ShopData.ShopDto dto = ShopData.shopDtoMap.get(itemId);
 
     if (dto == null || dto.format == null || dto.format.size() == 0)
-      return "shop_data_not_found";
+      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "dto_data_not_found");
 
     if (dto.status != 1) {
-      return "shop_item_disable";
+      return Msg.msgMap.getOrDefault(Msg.SHOP_DATA_NOT_AVAIL, "shop_item_not_avail");
     }
 
     if (shopping.getOrDefault(itemId, 0) >= dto.dailyLimit)
-      return "shop_daily_limit";
+      return Msg.msgMap.getOrDefault(Msg.SHOP_ITEM_DAILY_LIMIT, "shop_daily_limit");
 
     VipData.VipDto vipDto = VipData.getVipData(vipExp);
     if (vipDto == null)
-      return "vip_data_not_found";
+      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "vip_data_not_found");
 
     if (vipDto.level < dto.vipCond)
-      return "vip_condition_mismatch";
+      return Msg.msgMap.getOrDefault(Msg.VIP_LEVEL_LIMIT, "vip_condition_mismatch");
 
     if (useTime(session, dto.timeCost)) {
       for (List<Integer> f : dto.format)
@@ -310,7 +310,7 @@ public class UserGameInfo extends GameInfo {
       return "ok";
     }
     else {
-      return "insufficient_time";
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
     }
   }
 }
