@@ -89,13 +89,13 @@ public class UserInventory extends Inventory {
             || dto.materials.size() == 0
             || dto.product == null
             || dto.product.size() != 4)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "item_merge_data_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "item_merge_data_not_found");
 
     if (dailyMerge.getOrDefault(mergeId, 0) > dto.dailyLimit)
-      return Msg.msgMap.getOrDefault(Msg.MERGE_DAILY_LIMIT, "merge_daily_limit");
+      return Msg.map.getOrDefault(Msg.MERGE_DAILY_LIMIT, "merge_daily_limit");
 
     if (mergeCount <= 0)
-      return Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
+      return Msg.map.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
 
     try {
       boolean able = true;
@@ -124,11 +124,11 @@ public class UserInventory extends Inventory {
         return "ok";
       }
       else {
-        return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_MATERIAL, "insufficient_materials");
+        return Msg.map.getOrDefault(Msg.INSUFFICIENT_MATERIAL, "insufficient_materials");
       }
     }
     catch (Exception e) {
-      return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
+      return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
     }
   }
 

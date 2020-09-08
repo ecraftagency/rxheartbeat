@@ -1,5 +1,5 @@
 id,hitMember,hitCount,gift,name,desc
-1,15,30,"[70,71,72,104]",nhiệm vụ 1,Tối thiểu 15 thành viên tham gia sáng tác 30 lần
-2,15,12,"[37,5,102,66]",nhiệm vụ 2,Tối thiểu 15 thành viên vượt qua 12 phụ bản game show
-3,20,100,"[38,57,25,34]",nhiệm vụ 3,Tối thiểu 20 thành viên đạt 100 độ sôi nổi nhiệm vụ hàng ngày
-4,20,1,"[91,123,59,66]",nhiệm vụ 4,Tối thiểu 20 thành viên đang sử dụng Thẻ Tháng
+1,15,30,"[[100,70,3,0],[100,71,3,0],[100,72,3,0],[100,104,5,0],[100,66,3,0],[100,37,3,0]]",nhiệm vụ 1,Tối thiểu 15 thành viên tham gia sáng tác 30 lần
+2,15,12,"[[100,38,3,0],[100,102,5,0],[100,66,3,0],[100,145,1,0],[100,25,5,0],[100,34,5,0]]",nhiệm vụ 2,Tối thiểu 15 thành viên vượt qua 12 phụ bản game show
+3,20,100,"[[100,51,5,0],[100,52,5,0],[100,53,5,0],[100,66,4,0],[100,145,1,0],[100,63,5,0]]",nhiệm vụ 3,Tối thiểu 20 thành viên đạt 100 độ sôi nổi nhiệm vụ hàng ngày
+4,20,1,"[[100,91,8,0],[100,125,1,0],[100,59,3,0],[100,66,5,0],[100,110,3,0],[100,104,10,0]]",nhiệm vụ 4,Tối thiểu 20 thành viên đang sử dụng Thẻ Tháng

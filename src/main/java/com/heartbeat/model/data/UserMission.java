@@ -22,14 +22,14 @@ public class UserMission extends Mission {
 
   public String unlockMission(Session session) {
     if (!checkAccomplishment(session))
-      return Msg.msgMap.getOrDefault(Msg.MISSION_NOT_ACCOMPLISH, "mission_not_accomplish");
+      return Msg.map.getOrDefault(Msg.MISSION_NOT_ACCOMPLISH, "mission_not_accomplish");
 
     MissionData.MissionDto dto = MissionData.missionDtoMap.get(currentMissionId);
     if (dto == null)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_data_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_data_not_found");
 
     if (dto.rewardFormat == null)
-      return Msg.msgMap.getOrDefault(Msg.REWARD_FORMAT_INVALID, "reward_formal_invalid");
+      return Msg.map.getOrDefault(Msg.REWARD_FORMAT_INVALID, "reward_formal_invalid");
 
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
     for (List<Integer> re : dto.rewardFormat)

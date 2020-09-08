@@ -62,12 +62,12 @@ public class MediaController implements Handler<RoutingContext> {
     int amount = ctx.getBodyAsJson().getInteger("amount");
     ExtMessage resp = ExtMessage.media();
     if (amount <= 0) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "wrong_amount");
+      resp.msg = Msg.map.getOrDefault(Msg.MALFORM_ARGS, "wrong_amount");
       return resp;
     }
 
     if (!session.userInventory.haveItem(USER_GAME_INFO.MEDIA_CONTRACT_ITEM, amount)) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      resp.msg = Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
       return resp;
     }
 

@@ -82,7 +82,7 @@ public class ItemController implements Handler<RoutingContext> {
 
     PropData.Prop prop = PropData.propMap.get(propId);
     if (prop == null || prop.isMultiUse != PropData.SINGLE_ITEM) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_item");
+      resp.msg = Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_item");
       return resp;
     }
 
@@ -98,7 +98,7 @@ public class ItemController implements Handler<RoutingContext> {
       resp.effectResults  = session.effectResults;
     }
     else {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      resp.msg = Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
     }
 
     return resp;
@@ -112,7 +112,7 @@ public class ItemController implements Handler<RoutingContext> {
 
     PropData.Prop prop = PropData.propMap.get(propId);
     if (prop == null || prop.isMultiUse != PropData.MULTI_ITEM) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_item");
+      resp.msg = Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_item");
       return resp;
     }
 
@@ -128,7 +128,7 @@ public class ItemController implements Handler<RoutingContext> {
       resp.effectResults    = session.effectResults;
     }
     else {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      resp.msg = Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
     }
 
     return resp;

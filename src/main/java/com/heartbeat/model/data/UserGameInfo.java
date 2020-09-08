@@ -106,13 +106,13 @@ public class UserGameInfo extends GameInfo {
           return "ok";
         }
         else
-          return Msg.msgMap.getOrDefault(Msg.DISPLAY_NAME_EXIST, "display_name_exist");
+          return Msg.map.getOrDefault(Msg.DISPLAY_NAME_EXIST, "display_name_exist");
       }
       else
-        return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
+        return Msg.map.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
     }
     else
-      return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
+      return Msg.map.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
   }
 
   public String replaceDisplayName(Session session, String displayName){
@@ -129,17 +129,17 @@ public class UserGameInfo extends GameInfo {
             return "ok";
           }
           else
-            return Msg.msgMap.getOrDefault(Msg.DISPLAY_NAME_EXIST, "display_name_exist");
+            return Msg.map.getOrDefault(Msg.DISPLAY_NAME_EXIST, "display_name_exist");
         }
         catch (Exception e) {
-          return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
+          return Msg.map.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
         }
       }
       else
-        return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
+        return Msg.map.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
     }
     else
-      return Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
+      return Msg.map.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_display_name");
   }
 
   /*MEDIA**************************************************************************************************************/
@@ -184,7 +184,7 @@ public class UserGameInfo extends GameInfo {
       return "ok";
     }
     else
-      return Msg.msgMap.getOrDefault(Msg.MEDIA_TIME_OUT, "media_time_out");
+      return Msg.map.getOrDefault(Msg.MEDIA_TIME_OUT, "media_time_out");
   }
 
   public void addMediaClaim(int amount) {
@@ -210,13 +210,13 @@ public class UserGameInfo extends GameInfo {
 
   public String claimCrazyReward(Session session, int milestone) {
     if (crazyDegree < milestone)
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_CRAZY_DEGREE, "insufficient_crazy_degree");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_CRAZY_DEGREE, "insufficient_crazy_degree");
     if (crazyRewardClaim.get(milestone) != null)
-      return Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
+      return Msg.map.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
     for (CrazyRewardData.CrazyReward cr : CrazyRewardData.crazyRewardMap.values()) {
       if (milestone == cr.milestone) {
         if (cr.reward == null || cr.reward.size() == 0)
-          return Msg.msgMap.getOrDefault(Msg.BLANK_REWARD, "crazy_claim_fail");
+          return Msg.map.getOrDefault(Msg.BLANK_REWARD, "crazy_claim_fail");
         EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
         for (List<Integer> re : cr.reward) {
           EffectManager.inst().handleEffect(extArgs, session, re);
@@ -226,7 +226,7 @@ public class UserGameInfo extends GameInfo {
       }
     }
 
-    return Msg.msgMap.getOrDefault(Msg.UNKNOWN_MILESTONE, "unknown_milestone");
+    return Msg.map.getOrDefault(Msg.UNKNOWN_MILESTONE, "unknown_milestone");
   }
 
   public boolean useTime(Session session, long amount) {
@@ -280,26 +280,26 @@ public class UserGameInfo extends GameInfo {
   /*SHOPPING***********************************************************************************************************/
   public String buyShopItem(Session session, int itemId) {
     if (time <= 0)
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
 
     ShopData.ShopDto dto = ShopData.shopDtoMap.get(itemId);
 
     if (dto == null || dto.format == null || dto.format.size() == 0)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "dto_data_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "dto_data_not_found");
 
     if (dto.status != 1) {
-      return Msg.msgMap.getOrDefault(Msg.SHOP_DATA_NOT_AVAIL, "shop_item_not_avail");
+      return Msg.map.getOrDefault(Msg.SHOP_DATA_NOT_AVAIL, "shop_item_not_avail");
     }
 
     if (shopping.getOrDefault(itemId, 0) >= dto.dailyLimit)
-      return Msg.msgMap.getOrDefault(Msg.SHOP_ITEM_DAILY_LIMIT, "shop_daily_limit");
+      return Msg.map.getOrDefault(Msg.SHOP_ITEM_DAILY_LIMIT, "shop_daily_limit");
 
     VipData.VipDto vipDto = VipData.getVipData(vipExp);
     if (vipDto == null)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "vip_data_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "vip_data_not_found");
 
     if (vipDto.level < dto.vipCond)
-      return Msg.msgMap.getOrDefault(Msg.VIP_LEVEL_LIMIT, "vip_condition_mismatch");
+      return Msg.map.getOrDefault(Msg.VIP_LEVEL_LIMIT, "vip_condition_mismatch");
 
     if (useTime(session, dto.timeCost)) {
       for (List<Integer> f : dto.format)
@@ -310,7 +310,7 @@ public class UserGameInfo extends GameInfo {
       return "ok";
     }
     else {
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
     }
   }
 }

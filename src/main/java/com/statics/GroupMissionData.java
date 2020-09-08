@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class GroupMissionData {
   public static class GroupMission implements Common.hasKey<Integer>{
-    public int            id;
-    public int            hitMember;
-    public int            hitCount;
-    public List<Integer>  gift;
-    public String         name;
-    public String         desc;
+    public int                  id;
+    public int                  hitMember;
+    public int                  hitCount;
+    public List<List<Integer>>  gift;
+    public String               name;
+    public String               desc;
 
     @Override
     public Integer mapKey() {

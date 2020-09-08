@@ -165,26 +165,26 @@ public class UserIdol extends Idols {
   public String levelUp(Session session, int idolId) { //todo update total properties
     Idol idol = idolMap.get(idolId);
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
     int currentLV = idol.level;
 
     if (currentLV >= ServantLVData.servantLV.size())
-      return Msg.msgMap.getOrDefault(Msg.IDOL_MAX_LEVEL, "idol_max_level");
+      return Msg.map.getOrDefault(Msg.IDOL_MAX_LEVEL, "idol_max_level");
 
     ServantLVData.ServantLV nextLevel = ServantLVData.servantLV.get(currentLV + 1);
 
     if (nextLevel == null)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_level_invalid");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_level_invalid");
 
     if (session.userGameInfo.money < nextLevel.exp)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_LV_UP_INSUFFICIENT, "idol_lv_up_insufficient");
+      return Msg.map.getOrDefault(Msg.IDOL_LV_UP_INSUFFICIENT, "idol_lv_up_insufficient");
 
     ServantHonorData.ServantHonor curHonor = ServantHonorData.honorMap.get(idol.honorID);
     if (curHonor == null)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_honor_invalid");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_honor_invalid");
 
     if (idol.level >= curHonor.maxServantLV)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_HONOR_MAX_LEVEL, "idol_honor_max_level");
+      return Msg.map.getOrDefault(Msg.IDOL_HONOR_MAX_LEVEL, "idol_honor_max_level");
 
     //calc rampage level buff
     if (        idol.level <= MAX_RAMPAGE_ALLOW_LV
@@ -208,28 +208,28 @@ public class UserIdol extends Idols {
   public String addAptByExp(int idolId, int speciality) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
     if (idol.aptitudeExp < APT_EXP_COST_PER_UPGRADE)
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_APT_EXP, "insufficient_apt_exp");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_APT_EXP, "insufficient_apt_exp");
 
     int currentLimit = BookLimitData.getCurrentLimit(idolId, speciality, idol.level);
     if (currentLimit < 0)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_book_limit_invalid");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_book_limit_invalid");
 
     switch (speciality) {
       case CREATIVITY:
         if (idol.crtApt + EXP_UP_STEP > currentLimit)
-          return Msg.msgMap.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
+          return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
         idol.crtApt += EXP_UP_STEP;
         break;
       case PERFORMANCE:
         if (idol.perfApt + EXP_UP_STEP > currentLimit)
-          return Msg.msgMap.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
+          return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
         idol.perfApt += EXP_UP_STEP;
         break;
       case ATTRACTIVE:
         if (idol.attrApt + EXP_UP_STEP > currentLimit)
-          return Msg.msgMap.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
+          return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
         idol.attrApt += EXP_UP_STEP;
         break;
       default:
@@ -243,24 +243,24 @@ public class UserIdol extends Idols {
   public String addAptByItem(Session session, int idolId, int speciality, int step) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
 
     if (step < 1 || step > 5 || APT_UP_RATE.get(step) == 0) //+1 100%, +3 30%, +5 20%
-      return Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
+      return Msg.map.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
 
     int currentLimit = BookLimitData.getCurrentLimit(idolId, speciality, idol.level);
     if (currentLimit < 0)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_book_limit_invalid");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "idol_book_limit_invalid");
 
     int rate = APT_UP_RATE.get(step);
     int rand = ThreadLocalRandom.current().nextInt(1, 101);
     switch (speciality) {
       case CREATIVITY:
         if (!session.userInventory.haveItem(CRT_UP_ITEM, APT_UP_COST))
-          return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+          return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
         if (idol.crtApt + EXP_UP_STEP > currentLimit)
-          return Msg.msgMap.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
+          return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
 
         session.userInventory.useItem(CRT_UP_ITEM, APT_UP_COST);
         if (rand <= rate) {
@@ -273,10 +273,10 @@ public class UserIdol extends Idols {
         }
       case PERFORMANCE:
         if (!session.userInventory.haveItem(PERF_UP_ITEM, APT_UP_COST))
-          return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+          return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
         if (idol.perfApt + EXP_UP_STEP > currentLimit)
-          return Msg.msgMap.getOrDefault(Msg.APT_LIMIT, "aptitude_limit");
+          return Msg.map.getOrDefault(Msg.APT_LIMIT, "aptitude_limit");
 
         session.userInventory.useItem(PERF_UP_ITEM, APT_UP_COST);
         if (rand <= rate) {
@@ -289,10 +289,10 @@ public class UserIdol extends Idols {
         }
       case ATTRACTIVE:
         if (!session.userInventory.haveItem(ATTR_UP_ITEM, APT_UP_COST))
-          return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+          return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
         if (idol.attrApt + EXP_UP_STEP > currentLimit)
-          return Msg.msgMap.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
+          return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
 
         session.userInventory.useItem(ATTR_UP_ITEM, APT_UP_COST);
         if (rand <= rate) {
@@ -304,7 +304,7 @@ public class UserIdol extends Idols {
           return "apt_up_fail";
         }
       default:
-        return Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
+        return Msg.map.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
     }
   }
 
@@ -326,7 +326,7 @@ public class UserIdol extends Idols {
   public String idolPersonalHaloLevelUp(Session session, int idolId, int haloId) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
 
     IdolHalo pHalo = null;
     for (IdolHalo halo : idol.personalHalos)
@@ -334,23 +334,23 @@ public class UserIdol extends Idols {
         pHalo = halo;
 
     if (pHalo == null)
-      return Msg.msgMap.getOrDefault(Msg.HALO_NOT_EXIST, "halo_not_exist");
+      return Msg.map.getOrDefault(Msg.HALO_NOT_EXIST, "halo_not_exist");
 
     if (!checkPrefixCondition(idol, pHalo))
-      return Msg.msgMap.getOrDefault(Msg.HALO_PREFIX_NOT_MATCH, "halo_prefix_not_match");
+      return Msg.map.getOrDefault(Msg.HALO_PREFIX_NOT_MATCH, "halo_prefix_not_match");
 
     HaloData.HaloDTO haloDTO = HaloData.haloMap.get(haloId);
     if (haloDTO == null)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "halo_data_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "halo_data_not_found");
     List<Integer> updateItems = haloDTO.updateItem;
 
     if (updateItems.size() != 4)
-      return Msg.msgMap.getOrDefault(Msg.HALO_DATA_INVALID, "halo_invalid");
+      return Msg.map.getOrDefault(Msg.HALO_DATA_INVALID, "halo_invalid");
     int itemId = updateItems.get(EffectHandler.PARAM1);
     int amount = updateItems.get(EffectHandler.PARAM2);
 
     if (!session.userInventory.haveItem(itemId, amount))
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
     String result = pHaloLevelUp(idol, pHalo);
     if (result.equals("ok")) {
@@ -362,12 +362,12 @@ public class UserIdol extends Idols {
   public String idolMaxLevelUnlock(Session session, int idolId) {
     Idol idol = idolMap.get(idolId);
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
 
     ServantHonorData.ServantHonor honor     = ServantHonorData.honorMap.get(idol.honorID);
     ServantHonorData.ServantHonor nextHonor = ServantHonorData.honorMap.get(idol.honorID + 1); //todo aware of data inconsistency
     if (nextHonor == null || honor == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_HONOR_MAX_LEVEL, "idol_honor_max_level");
+      return Msg.map.getOrDefault(Msg.IDOL_HONOR_MAX_LEVEL, "idol_honor_max_level");
     List<List<Integer>> need = nextHonor.needFormat; //nguyên liệu cần để lên
 
     boolean isEnough = true;
@@ -379,7 +379,7 @@ public class UserIdol extends Idols {
     }
 
     if (!isEnough)
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
     for (List<Integer> format : need) {
       int propId = format.get(EffectHandler.PARAM1);
@@ -512,10 +512,10 @@ public class UserIdol extends Idols {
   private String pHaloLevelUp(Idol idol, Idols.IdolHalo pHalo) {
     HaloData.HaloDTO haloDTO = HaloData.haloMap.get(pHalo.id);
     if (haloDTO == null || (haloDTO.maxLevel - haloDTO.buff.size()) != 1)
-      return Msg.msgMap.getOrDefault(Msg.HALO_LEVEL_UP_FAIL, "halo_level_up_fail");
+      return Msg.map.getOrDefault(Msg.HALO_LEVEL_UP_FAIL, "halo_level_up_fail");
 
     if (pHalo.level + 1 >= haloDTO.maxLevel)
-      return Msg.msgMap.getOrDefault(Msg.HALO_LEVEL_MAX, "halo_level_max");
+      return Msg.map.getOrDefault(Msg.HALO_LEVEL_MAX, "halo_level_max");
 
     List<List<Integer>> defBuf = haloDTO.buff.get(pHalo.level);
 

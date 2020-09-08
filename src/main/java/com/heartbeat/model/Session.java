@@ -288,29 +288,29 @@ public class Session {
           });
         }
         else {
-          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "permission_error")));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_PERM, "permission_error")));
         }
       }
       else { //fuck, have valid gid but no group on group pool
         groupID = Group.GROUP_ID_TYPE_NONE;
-        handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
+        handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
       }
     }
     else {
-      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
     }
   }
 
   public void createGroup(int groupType, String name, String externalInform, String internalInform, Handler<AsyncResult<String>> handler) {
     if (userGameInfo.remainTime() < USER_GROUP.CREATE_GROUP_TIME_COST) {
-      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time")));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time")));
       return;
     }
     if (Group.isValidGid(groupID)) { //user have group
-      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
     }
     else if (groupID == Group.GROUP_ID_TYPE_KICK) {
-      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
     }
     else if (groupID == Group.GROUP_ID_TYPE_NONE) { //user have no group
       //first unmap sid_gid if have
@@ -334,7 +334,7 @@ public class Session {
         // try for next login
         CBGroup.getInstance().load(oldGid, loadRes -> {
           if (loadRes.succeeded()) {
-            handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
+            handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
             LOG.globalException("node", "create group", "red alert: groupID zero but have sid_gid mapping and even a persistent group");
           }
           else { //have sid_gid mapping but don't have persistent group, ok (mean member of last delete group)
@@ -354,7 +354,7 @@ public class Session {
                 });
               }
               else {
-                handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err")));
+                handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err")));
               }
             });
           }
@@ -362,7 +362,7 @@ public class Session {
       }
     }
     else {
-      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_GID, "unknown_gid")));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_GID, "unknown_gid")));
     }
   }
 
@@ -416,7 +416,7 @@ public class Session {
   public void joinGroup(int joinedGID, Handler<AsyncResult<String>> handler) {
     UserGroup currentGroup = GroupPool.getGroupFromPool(this.groupID);
     if (currentGroup != null){
-      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.ALREADY_JOIN, "user_already_have_group")));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.ALREADY_JOIN, "user_already_have_group")));
       return;
     }
 
@@ -431,7 +431,7 @@ public class Session {
           CBMapper.getInstance().map(Integer.toString(this.groupID), Integer.toString(this.id), mar -> {});
           handler.handle(Future.succeededFuture("ok"));
         }
-        else if (result.equals(Msg.msgMap.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending"))) {
+        else if (result.equals(Msg.map.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending"))) {
           this.groupID = Group.GROUP_ID_TYPE_NONE;
           handler.handle(Future.failedFuture("ok"));
         }
@@ -453,7 +453,7 @@ public class Session {
               CBMapper.getInstance().map(Integer.toString(this.groupID), Integer.toString(this.id), mar -> {});
               handler.handle(Future.succeededFuture("ok"));
             }
-            else if (result.equals(Msg.msgMap.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending"))) {
+            else if (result.equals(Msg.map.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending"))) {
               this.groupID = Group.GROUP_ID_TYPE_NONE;
               handler.handle(Future.failedFuture("ok"));
             }
@@ -464,7 +464,7 @@ public class Session {
             }
           }
           else {
-            handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found")));
+            handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found")));
           }
         });
       }
@@ -473,20 +473,20 @@ public class Session {
       try {
         int oldGID = Integer.parseInt(oldMap);
         if (oldGID == Group.GROUP_ID_TYPE_KICK) {
-          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "join_group_delay")));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_DELAY, "join_group_delay")));
         }
         else if (Group.isValidGid(oldGID)) { //fuck map say valid gid, but runtime gid == 0
-          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail runtime and persistent mismatch")));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail runtime and persistent mismatch")));
           LOG.globalException("node", "join group","alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
         }
         else {
-          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail_unknown")));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail_unknown")));
         }
       }
       catch (Exception e) {
         //mal form map field, delete it
         CBMapper.getInstance().unmap(Integer.toString(id), unmapR -> {});
-        handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail")));
+        handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail")));
       }
     }
   }
@@ -494,12 +494,12 @@ public class Session {
   public String kick(int memberId) {
     UserGroup group = GroupPool.getGroupFromPool(groupID);
     if (group == null)
-      return Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
+      return Msg.map.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
     int role = group.getRole(this.id);
 
     int memberRole = group.getRole(memberId);
     if (memberRole == Group.OWNER_ROLE)
-      return Msg.msgMap.getOrDefault(Msg.OWNER_KICK, "fail_cant_kick_owner");
+      return Msg.map.getOrDefault(Msg.OWNER_KICK, "fail_cant_kick_owner");
 
     if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
       Session session = SessionPool.getSessionFromPool(memberId);
@@ -514,7 +514,7 @@ public class Session {
       return result;
     }
     else {
-      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "fail_no_permission");
+      return Msg.map.getOrDefault(Msg.GROUP_PERM, "fail_no_permission");
     }
   }
 
@@ -528,7 +528,7 @@ public class Session {
       }
 
       if (group.getRole(id) == Group.OWNER_ROLE) {
-        return Msg.msgMap.getOrDefault(Msg.OWNER_LEAVE, "leave_group_fail_admin");
+        return Msg.map.getOrDefault(Msg.OWNER_LEAVE, "leave_group_fail_admin");
       }
 
       String result = group.kickMember(id);
@@ -545,7 +545,7 @@ public class Session {
       }
     }
     else {
-      return Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group");
+      return Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group");
     }
   }
 
@@ -555,17 +555,17 @@ public class Session {
     if (group == null) {
       String err = String.format("user_have_no_group[sid:%d,gid:%d,runtime:%s]",id, groupID, "no");
       LOG.globalException("node", "approve member", err);
-      return Msg.msgMap.getOrDefault(Msg.NO_GROUP, err);
+      return Msg.map.getOrDefault(Msg.NO_GROUP, err);
     }
 
     if (memberId == this.id) {
-      return Msg.msgMap.getOrDefault(Msg.SELF_APPROVE, "can_not_self_approve");
+      return Msg.map.getOrDefault(Msg.SELF_APPROVE, "can_not_self_approve");
     }
 
     //check role
     int role = group.getRole(this.id);
     if (role != Group.OWNER_ROLE && role != Group.MOD_ROLE) {
-      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "approve_fail_permission");
+      return Msg.map.getOrDefault(Msg.GROUP_PERM, "approve_fail_permission");
     }
 
     //check member condition
@@ -575,15 +575,15 @@ public class Session {
         int currentGID = Integer.parseInt(state);
         if (currentGID == -1) {
           group.removePendingMember(memberId);
-          return Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "approve_fail_delay");
+          return Msg.map.getOrDefault(Msg.GROUP_DELAY, "approve_fail_delay");
         }
         else if (Group.isValidGid(currentGID)) {
           group.removePendingMember(memberId);
-          return Msg.msgMap.getOrDefault(Msg.ALREADY_JOIN, "approve_fail_user_already_have_group");
+          return Msg.map.getOrDefault(Msg.ALREADY_JOIN, "approve_fail_user_already_have_group");
         }
         else {
           group.removePendingMember(memberId);
-          return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "approve_fail_unknown");
+          return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "approve_fail_unknown");
         }
       }
       catch (Exception e) {
@@ -591,7 +591,7 @@ public class Session {
         CBMapper.getInstance().unmap(Integer.toString(memberId), ar -> {});
         group.removePendingMember(memberId);
         LOG.globalException("node", "approve member", String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
-        return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "approve_fail_unknown");
+        return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "approve_fail_unknown");
       }
     }
 
@@ -607,23 +607,23 @@ public class Session {
     UserGroup group = GroupPool.getGroupFromPool(this.groupID);
 
     if (group == null)
-      return Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
+      return Msg.map.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
 
     int myRole = group.getRole(this.id);
     if (myRole != Group.OWNER_ROLE)
-      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "set_role_fail_permission");
+      return Msg.map.getOrDefault(Msg.GROUP_PERM, "set_role_fail_permission");
 
     if ((newRole == Group.MOD_ROLE && group.modCount() < 2) || newRole == Group.USER_ROLE) {
       return group.setRole(memberId, newRole);
     }
-    return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "set_role_fail");
+    return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "set_role_fail");
   }
 
   public String setGroupInform(int type, String informMsg) {
     UserGroup group = GroupPool.getGroupFromPool(this.groupID);
 
     if (group == null)
-      return Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
+      return Msg.map.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
 
     int role = group.getRole(this.id);
 
@@ -631,7 +631,7 @@ public class Session {
       return group.changeInform(informMsg, type);
     }
     else
-      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "set_inform_fail_permission");
+      return Msg.map.getOrDefault(Msg.GROUP_PERM, "set_inform_fail_permission");
   }
 
   /*HEARTBEAT**********************************************************************************************************/

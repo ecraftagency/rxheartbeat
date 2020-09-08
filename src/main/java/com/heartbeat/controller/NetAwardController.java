@@ -59,7 +59,7 @@ public class NetAwardController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.title();
 
     if (key == null || name == null) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "invalid_title_id");
+      resp.msg = Msg.map.getOrDefault(Msg.MALFORM_ARGS, "invalid_title_id");
     }
 
     NetAward title     = CBNetAward.getInstance().load(key);

@@ -142,10 +142,10 @@ public class UserFight extends Fight {
       //next fight
       int nextFightId = currentFightLV.id + 1;
       if (nextFightId >= FightData.fightMap.size())
-        return Msg.msgMap.getOrDefault(Msg.MAX_FIGHT, "max_fight");
+        return Msg.map.getOrDefault(Msg.MAX_FIGHT, "max_fight");
       FightData.FightLV nextFightLV = FightData.of(nextFightId);
       if (nextFightLV == null)
-        return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_fight");
+        return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_fight");
       currentFightLV = nextFightLV;
 
       return "ok";
@@ -155,20 +155,20 @@ public class UserFight extends Fight {
                                         currentFightLV.fanNPC) - fixConsume;
       session.userGameInfo.fan      = 0;
       currentFightLV.fanNPC        -= deduct;
-      return Msg.msgMap.put(Msg.FIGHT_LOSS, "fight_lose");
+      return Msg.map.put(Msg.FIGHT_LOSS, "fight_lose");
     }
   }
 
   private String handleBossFight(Session session, int idolId) {
     if (usedIdols.contains(idolId))
-      return Msg.msgMap.getOrDefault(Msg.IDOL_ALREADY_FOUGHT, "idol_already_fought");
+      return Msg.map.getOrDefault(Msg.IDOL_ALREADY_FOUGHT, "idol_already_fought");
     Idols.Idol idol = session.userIdol.idolMap.get(idolId);
 
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_FOUND, "idol_not_found");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_FOUND, "idol_not_found");
 
     if (currentFightLV.boss == null)
-      return Msg.msgMap.getOrDefault(Msg.RECORD_NOT_FOUND, "invalid_boss");
+      return Msg.map.getOrDefault(Msg.RECORD_NOT_FOUND, "invalid_boss");
 
     usedIdols.add(idolId);
 
@@ -184,10 +184,10 @@ public class UserFight extends Fight {
 
       int nextFightId = currentFightLV.id + 1;
       if (nextFightId >= FightData.fightMap.size())
-        return Msg.msgMap.getOrDefault(Msg.MAX_FIGHT, "max_fight");
+        return Msg.map.getOrDefault(Msg.MAX_FIGHT, "max_fight");
       FightData.FightLV nextFightLV = FightData.of(nextFightId);
       if (nextFightLV == null)
-        return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_fight");
+        return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_fight");
       currentFightLV = nextFightLV;
       usedIdols.clear();
       restoreIdols.clear();
@@ -195,20 +195,20 @@ public class UserFight extends Fight {
     }
     else {
       currentFightLV.boss.hp -= damage;
-      return Msg.msgMap.getOrDefault(Msg.FIGHT_LOSS, "fight_loss");
+      return Msg.map.getOrDefault(Msg.FIGHT_LOSS, "fight_loss");
     }
   }
 
   public String freeUsedIdol(Session session, int idolId) {
     if (restoreIdols.contains(idolId))
-      return Msg.msgMap.getOrDefault(Msg.IDOL_ALREADY_RESTORE, "idol_already_restore");
+      return Msg.map.getOrDefault(Msg.IDOL_ALREADY_RESTORE, "idol_already_restore");
 
     int idx = usedIdols.indexOf(idolId);
     if (idx == -1)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_FOUND, "invalid_idol");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_FOUND, "invalid_idol");
 
     if (!session.userInventory.haveItem(IDOL_FREE_FIGHT_ITEM, 1))
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
     session.userInventory.useItem(IDOL_FREE_FIGHT_ITEM, 1);
     usedIdols.remove(idx);
@@ -225,16 +225,16 @@ public class UserFight extends Fight {
 
   public String handleGameShowFight(Session session, int idolId) {
     if (session.userGameInfo.remainTime() <= 0)
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time");
     if (gameShowUsedIdols.contains(idolId))
-      return Msg.msgMap.getOrDefault(Msg.IDOL_ALREADY_FOUGHT, "idol_already_fought");
+      return Msg.map.getOrDefault(Msg.IDOL_ALREADY_FOUGHT, "idol_already_fought");
     Idols.Idol idol = session.userIdol.idolMap.get(idolId);
 
     if (idol == null)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_FOUND, "idol_not_found");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_FOUND, "idol_not_found");
 
     if (currentGameShow.id == -1)
-      return Msg.msgMap.getOrDefault(Msg.GAME_SHOW_MAX, "game_show_max");
+      return Msg.map.getOrDefault(Msg.GAME_SHOW_MAX, "game_show_max");
 
     gameShowUsedIdols.add(idolId);
 
@@ -259,20 +259,20 @@ public class UserFight extends Fight {
     }
     else {
       currentGameShow.bosshp -= damage;
-      return Msg.msgMap.getOrDefault(Msg.FIGHT_LOSS, "lose");
+      return Msg.map.getOrDefault(Msg.FIGHT_LOSS, "lose");
     }
   }
 
   public String freeUsedGameShowIdol(Session session, int idolId) {
     if (gameShowRestoreIdols.contains(idolId))
-      return Msg.msgMap.getOrDefault(Msg.IDOL_ALREADY_RESTORE, "idol_already_restore");
+      return Msg.map.getOrDefault(Msg.IDOL_ALREADY_RESTORE, "idol_already_restore");
 
     int idx = gameShowUsedIdols.indexOf(idolId);
     if (idx == -1)
-      return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_FOUND, "idol_not_found");
+      return Msg.map.getOrDefault(Msg.IDOL_NOT_FOUND, "idol_not_found");
 
     if (!session.userInventory.haveItem(IDOL_FREE_FIGHT_ITEM, 1))
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
 
     session.userInventory.useItem(IDOL_FREE_FIGHT_ITEM, 1);
     gameShowUsedIdols.remove(idx);
@@ -284,7 +284,7 @@ public class UserFight extends Fight {
 
   public String handleRunShowFight(Session session) {
     if (currentRunShow.id == -1)
-      return Msg.msgMap.getOrDefault(Msg.RUN_SHOW_MAX, "run_show_max");
+      return Msg.map.getOrDefault(Msg.RUN_SHOW_MAX, "run_show_max");
 
     long fixConsume       = (int)(currentRunShow.randFanNPC*0.1f);
     long totalTalent      = session.userIdol.totalCrt()
@@ -318,22 +318,22 @@ public class UserFight extends Fight {
     }
     else {
       session.userGameInfo.fan      = 0;
-      return Msg.msgMap.getOrDefault(Msg.FIGHT_LOSS, "lose");
+      return Msg.map.getOrDefault(Msg.FIGHT_LOSS, "lose");
     }
   }
 
   public String handleMultiRunShowFight(Session session, int time) {
     if (time < 0)
-      return Msg.msgMap.getOrDefault(Msg.TIME_LIMIT, "time_limit");
+      return Msg.map.getOrDefault(Msg.TIME_LIMIT, "time_limit");
     if (currentRunShow.id == -1 || currentRunShow.id + time - 1 > RunShowData.runShowMap.size())
-      return Msg.msgMap.getOrDefault(Msg.RUN_SHOW_MAX, "run_show_max");
+      return Msg.map.getOrDefault(Msg.RUN_SHOW_MAX, "run_show_max");
 
     long totalExpectConsume = 0;
 
     for (int i = 0; i < time; i++) {
       RunShowData.RunShow rs = RunShowData.of(currentRunShow.id + i);
       if (rs.id == -1)
-        return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "run_show_invalid");
+        return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "run_show_invalid");
       long avrFanNPC        = (rs.minFanNPC + rs.maxFanNPC)/2;
       long avrAptNPC        = (rs.minAptNPC + rs.maxAptNPC)/2;
       long fixConsume       = (long)(avrAptNPC*0.1f);
@@ -354,7 +354,7 @@ public class UserFight extends Fight {
       for (int i = 0; i < time; i++) {
         RunShowData.RunShow rs = RunShowData.of(i + currentRunShow.id);
         if (rs.id == -1)
-          return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "run_show_invalid");
+          return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "run_show_invalid");
 
         if (session.userGameInfo.isActiveTime()) {
           for (Integer item : rs.reward) {
@@ -376,7 +376,7 @@ public class UserFight extends Fight {
     }
     else {
       session.userGameInfo.fan      = 0;
-      return Msg.msgMap.getOrDefault(Msg.FIGHT_LOSS, "lose");
+      return Msg.map.getOrDefault(Msg.FIGHT_LOSS, "lose");
     }
   }
 
@@ -384,7 +384,7 @@ public class UserFight extends Fight {
 
   public String handleShoppingFight(Session session) {
     if (currentShopping.id == -1)
-      return Msg.msgMap.getOrDefault(Msg.MAX_SHOPPING, "max_shopping");
+      return Msg.map.getOrDefault(Msg.MAX_SHOPPING, "max_shopping");
 
     long moneyConsume;
     long base         = SHOPPING_COEFFICIENT*currentShopping.creativeNPC;
@@ -416,23 +416,23 @@ public class UserFight extends Fight {
       return "ok";
     }
     else {
-      return Msg.msgMap.getOrDefault(Msg.FIGHT_LOSS, "lose");
+      return Msg.map.getOrDefault(Msg.FIGHT_LOSS, "lose");
     }
   }
 
   public String handleMultiShoppingFight(Session session, int time) {
     if (time < 0)
-      return Msg.msgMap.getOrDefault(Msg.TIME_LIMIT, "time_limit");
+      return Msg.map.getOrDefault(Msg.TIME_LIMIT, "time_limit");
 
     if (currentShopping.id == -1 || currentShopping.id + time - 1 > ShoppingData.shoppingMap.size())
-      return Msg.msgMap.getOrDefault(Msg.MAX_SHOPPING, "max_shopping");
+      return Msg.map.getOrDefault(Msg.MAX_SHOPPING, "max_shopping");
 
 
     long totalMoneyConsume = 0;
     for (int i = 0; i < time; i++) {
       ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + i);
       if (sp.id == -1)
-        return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "shopping_invalid");
+        return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "shopping_invalid");
 
       long moneyConsume;
       long base         = SHOPPING_COEFFICIENT*sp.creativeNPC;
@@ -456,7 +456,7 @@ public class UserFight extends Fight {
         for (int i = 0; i < time; i++) {
           ShoppingData.Shopping sp = ShoppingData.of(currentShopping.id + i);
           if (sp.id == -1)
-            return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "shopping_invalid");
+            return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "shopping_invalid");
 
           for (Integer item : sp.reward) {
             rewardFormat.set(1, item);
@@ -472,7 +472,7 @@ public class UserFight extends Fight {
       return "ok";
     }
     else {
-      return Msg.msgMap.getOrDefault(Msg.FIGHT_LOSS, "lose");
+      return Msg.map.getOrDefault(Msg.FIGHT_LOSS, "lose");
     }
   }
 }

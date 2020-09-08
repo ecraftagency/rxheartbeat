@@ -67,7 +67,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -82,7 +82,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -96,7 +96,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -110,7 +110,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp         = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -132,7 +132,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 

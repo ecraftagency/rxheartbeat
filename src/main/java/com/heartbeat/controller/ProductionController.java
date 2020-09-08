@@ -108,12 +108,12 @@ public class ProductionController implements Handler<RoutingContext> {
     int productType = ctx.getBodyAsJson().getInteger("productType");
     ExtMessage resp = ExtMessage.production();
     if (amount <= 0) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "wrong_amount");
+      resp.msg = Msg.map.getOrDefault(Msg.MALFORM_ARGS, "wrong_amount");
       return resp;
     }
 
     if (!session.userInventory.haveItem(UserProduction.CLAIM_ITEM, amount)) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+      resp.msg = Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
       return resp;
     }
 

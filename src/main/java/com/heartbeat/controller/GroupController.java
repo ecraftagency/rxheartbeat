@@ -101,7 +101,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -109,7 +109,7 @@ public class GroupController implements Handler<RoutingContext> {
     int missionId   = ctx.getBodyAsJson().getInteger("missionId");
 
     if (group == null) {
-      resp.msg      = Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
+      resp.msg      = Msg.map.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
       return resp;
     }
     resp.msg            = group.claimReward(session, missionId, (int)(curMs/1000));
@@ -123,7 +123,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -141,18 +141,18 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
     if (joinType < 0 || joinType > 1) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.INVALID_GROUP_TYPE, "switch_join_type_fail");
+      resp.msg = Msg.map.getOrDefault(Msg.INVALID_GROUP_TYPE, "switch_join_type_fail");
       return resp;
     }
 
      UserGroup group = GroupPool.getGroupFromPool(session.groupID);
      if (group == null) {
-       resp.msg = Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
+       resp.msg = Msg.map.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
        return resp;
      }
 
@@ -168,7 +168,7 @@ public class GroupController implements Handler<RoutingContext> {
        return resp;
      }
 
-     resp.msg = Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "switch_type_fail_permission");
+     resp.msg = Msg.map.getOrDefault(Msg.GROUP_PERM, "switch_type_fail_permission");
      return resp;
   }
 
@@ -179,7 +179,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -197,12 +197,12 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
     if (session.id == memberId) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.DUP_MEMBER, "set_role_fail_dup_memberID");
+      resp.msg = Msg.map.getOrDefault(Msg.DUP_MEMBER, "set_role_fail_dup_memberID");
       return resp;
     }
 
@@ -218,7 +218,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -231,7 +231,7 @@ public class GroupController implements Handler<RoutingContext> {
   private void processListGroup(Session session, String cmd, RoutingContext ctx) {
     ExtMessage check = ExtMessage.group();
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      check.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      check.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(check));
       return;
     }
@@ -275,7 +275,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -288,7 +288,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -303,7 +303,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       return;
     }
@@ -335,7 +335,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -348,10 +348,10 @@ public class GroupController implements Handler<RoutingContext> {
       resp.msg                = "ok";
     }
     else if (session.groupID == Group.GROUP_ID_TYPE_KICK) {
-      resp.msg        = Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "user_group_delay");
+      resp.msg        = Msg.map.getOrDefault(Msg.GROUP_DELAY, "user_group_delay");
     }
     else {
-      resp.msg        = Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group");
+      resp.msg        = Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group");
     }
     resp.data.currentGroupState = session.groupID;
     return resp;
@@ -361,7 +361,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       return;
     }
@@ -383,7 +383,7 @@ public class GroupController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       return;
     }
@@ -403,7 +403,7 @@ public class GroupController implements Handler<RoutingContext> {
     }
 
     if (groupType < 0 || groupType > 1) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.INVALID_GROUP_TYPE, "invalid_group_type");
+      resp.msg = Msg.map.getOrDefault(Msg.INVALID_GROUP_TYPE, "invalid_group_type");
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       return;
     }

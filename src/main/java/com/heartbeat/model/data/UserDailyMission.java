@@ -44,17 +44,17 @@ public class UserDailyMission extends DailyMission {
   public String claimReward(Session session, int missionID) {
     Mission uMission = missionMap.get(missionID);
     if (uMission == null)
-      return Msg.msgMap.getOrDefault(Msg.RECORD_NOT_FOUND, "mission_not_found");
+      return Msg.map.getOrDefault(Msg.RECORD_NOT_FOUND, "mission_not_found");
     DailyMissionData.DailyMissionDTO dto = DailyMissionData.missionMap.get(missionID);
 
     if (uMission.claim)
-      return Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
+      return Msg.map.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
 
     if (dto == null)
-      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_data_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_data_not_found");
 
     if (uMission.dailyCount < dto.target)
-      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_CLAIM, "insufficient_claim");
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_CLAIM, "insufficient_claim");
 
     for (List<Integer> reward : dto.reward) {
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();

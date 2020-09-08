@@ -90,7 +90,7 @@ public class ProfileController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.profile();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.SHOP_UNLOCK_LEVEL) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
+      resp.msg = Msg.map.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -118,18 +118,18 @@ public class ProfileController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.profile();
     int currentTitle = session.userGameInfo.titleId;
     if (currentTitle == OfficeData.officeLV.size()) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.USER_MAX_LEVEL, "user_max_level");
+      resp.msg = Msg.map.getOrDefault(Msg.USER_MAX_LEVEL, "user_max_level");
       return resp;
     }
 
     OfficeData.OfficeLV nextLV = OfficeData.officeLV.get(currentTitle + 1);
     if (nextLV == null) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "user_level_invalid");
+      resp.msg = Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "user_level_invalid");
       return resp;
     }
 
     if (session.userGameInfo.exp < nextLV.exp) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.USER_EXP_INSUFFICIENT, "user_insufficient_exp");
+      resp.msg = Msg.map.getOrDefault(Msg.USER_EXP_INSUFFICIENT, "user_insufficient_exp");
       return resp;
     }
 
@@ -156,7 +156,7 @@ public class ProfileController implements Handler<RoutingContext> {
     if (Utilities.isValidString(session.userGameInfo.displayName) ||
             session.userGameInfo.gender >= 0 ||
             session.userGameInfo.avatar >= 0) {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.USER_INFO_EXIST, "user_info_exist");
+      resp.msg = Msg.map.getOrDefault(Msg.USER_INFO_EXIST, "user_info_exist");
       return resp;
     }
 
@@ -182,7 +182,7 @@ public class ProfileController implements Handler<RoutingContext> {
       session.userRanking.displayName = session.userGameInfo.displayName;
     }
     catch (Exception e) {
-      result = Msg.msgMap.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_username");
+      result = Msg.map.getOrDefault(Msg.INVALID_DISPLAY_NAME, "invalid_username");
       resp.msg = result;
       return resp;
     }

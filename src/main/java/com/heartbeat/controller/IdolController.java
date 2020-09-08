@@ -100,7 +100,7 @@ public class IdolController implements Handler<RoutingContext> {
       resp.msg = "ok";
     }
     else {
-      resp.msg = Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "add_idol_fail");
+      resp.msg = Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "add_idol_fail");
     }
 
     if (resp.msg.equals("ok")) {

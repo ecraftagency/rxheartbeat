@@ -108,36 +108,36 @@ public class UserRanking extends Ranking {
   public void claimReward(Session session, int rankId, Handler<AsyncResult<String>> ar) {
     LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
     if (ldb == null) {
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_RANK_TYPE, "unknown_rank_type")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_RANK_TYPE, "unknown_rank_type")));
       return;
     }
 
     Map<Integer, RankingData.RewardDto> rewardMap = RankingData.rewardMap.get(rankId);
     if (rewardMap == null) {
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND,"rewards_data_not_found")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND,"rewards_data_not_found")));
       return;
     }
 
     EventInfo ri  = evtMap.get(rankId);
     if (ri == null) {
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.EVENT_NOT_FOUND, "event_not_found")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.EVENT_NOT_FOUND, "event_not_found")));
       return;
     }
 
     if (!ri.active) {
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.RANKING_NOT_ACTIVE, "ranking_not_active")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.RANKING_NOT_ACTIVE, "ranking_not_active")));
       return;
     }
 
     int claimCas = claimed.getOrDefault(rankId, 0);
     if (claimCas == ri.startTime) {
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "already_claim")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.ALREADY_CLAIM, "already_claim")));
       return;
     }
 
     int second      = (int)(System.currentTimeMillis()/1000);
     if (ri.startTime <= 0 || second <= ri.startTime || second >= ri.endTime + ri.flushDelay){
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.TIMEOUT_CLAIM, "timeout_claim")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "timeout_claim")));
       return;
     }
 
@@ -145,13 +145,13 @@ public class UserRanking extends Ranking {
       if (rar.succeeded()) {
         int rank = rar.result();
         if (rank < 1 || rank > 100) {
-          ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.INVALID_RANK, "invalid_rank")));
+          ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INVALID_RANK, "invalid_rank")));
         }
         else {
           claimed.put(rankId, ri.startTime);
           RankingData.RewardDto dto = rewardMap.get(rank);
           if (dto == null) {
-            ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.INVALID_RANK, "invalid_rank")));
+            ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INVALID_RANK, "invalid_rank")));
             return;
           }
 
@@ -164,7 +164,7 @@ public class UserRanking extends Ranking {
         }
       }
       else {
-        ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err")));
+        ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err")));
       }
     });
     rankingEventLoop.addCommand(rankCommand);
@@ -173,7 +173,7 @@ public class UserRanking extends Ranking {
   public void getRanking(int rankingType, Handler<AsyncResult<List<ScoreObj>>> ar) {
     LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankingType);
     if (ldb == null)
-      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_RANK_TYPE, "unknown_rank_type")));
+      ar.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UNKNOWN_RANK_TYPE, "unknown_rank_type")));
 
     EventLoop.Command listCommand = new ListCommand<>(ldb, ar);
     rankingEventLoop.addCommand(listCommand);

@@ -90,14 +90,14 @@ public class UserInbox extends Inbox {
 
   public String claimPublicInboxReward(Session session, long cas, long curMs) {
     if (claimedMsg.containsKey(cas))
-      return Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "msg_reward_already_claim");
+      return Msg.map.getOrDefault(Msg.ALREADY_CLAIM, "msg_reward_already_claim");
 
     MailObj obj = haveMessage(cas);
     if (obj == null)
-      return Msg.msgMap.getOrDefault(Msg.MSG_NOT_EXIST, "msg_not_exist");
+      return Msg.map.getOrDefault(Msg.MSG_NOT_EXIST, "msg_not_exist");
 
     if (obj.rewards == null)
-      return Msg.msgMap.getOrDefault(Msg.MSG_REWARD_INVALID, "msg_reward_invalid");
+      return Msg.map.getOrDefault(Msg.MSG_REWARD_INVALID, "msg_reward_invalid");
 
     for (List<Integer> reward : obj.rewards) {
       if (reward == null || reward.size() != 4)
@@ -125,14 +125,14 @@ public class UserInbox extends Inbox {
 
   public String claimPrivateInboxReward(Session session, long cas, long curMs) {
     if (claimedPrivateMsg.containsKey(cas))
-      return Msg.msgMap.getOrDefault(Msg.MSG_REWARD_CLAIM_ALREADY, "msg_reward_already_claim");
+      return Msg.map.getOrDefault(Msg.MSG_REWARD_CLAIM_ALREADY, "msg_reward_already_claim");
 
     MailObj obj = getPrivateMsgById(cas);
     if (obj == null)
-      return Msg.msgMap.getOrDefault(Msg.MSG_NOT_EXIST, "msg_not_exist");
+      return Msg.map.getOrDefault(Msg.MSG_NOT_EXIST, "msg_not_exist");
 
     if (obj.rewards == null)
-      return Msg.msgMap.getOrDefault(Msg.MSG_REWARD_INVALID, "msg_reward_invalid");
+      return Msg.map.getOrDefault(Msg.MSG_REWARD_INVALID, "msg_reward_invalid");
 
     for (List<Integer> reward : obj.rewards) {
       if (reward == null || reward.size() != 4)
