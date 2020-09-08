@@ -2,6 +2,7 @@ package com.heartbeat.controller;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.common.Msg;
 import com.common.Utilities;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
@@ -82,7 +83,7 @@ public class FightController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.fight();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.FAST_SHOPPING_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -103,7 +104,7 @@ public class FightController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.fight();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.FAST_RUN_SHOW_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -175,7 +176,7 @@ public class FightController implements Handler<RoutingContext> {
     ExtMessage resp       =  ExtMessage.fight();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.GAME_SHOW_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -203,7 +204,7 @@ public class FightController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.fight();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.GAME_SHOW_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -215,7 +216,7 @@ public class FightController implements Handler<RoutingContext> {
       resp.data.gameInfo  = session.userGameInfo;
     }
     else {
-      resp.msg = "game_show_time_out";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.GAME_SHOW_TIMEOUT, "game_show_time_out");
     }
 
     return resp;
@@ -225,7 +226,7 @@ public class FightController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.fight();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.RUN_SHOW_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -244,7 +245,7 @@ public class FightController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.fight();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.SHOPPING_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 

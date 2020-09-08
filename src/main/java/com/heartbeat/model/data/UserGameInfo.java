@@ -184,7 +184,7 @@ public class UserGameInfo extends GameInfo {
       return "ok";
     }
     else
-      return "media_time_out";
+      return Msg.msgMap.getOrDefault(Msg.MEDIA_TIME_OUT, "media_time_out");
   }
 
   public void addMediaClaim(int amount) {
@@ -210,13 +210,13 @@ public class UserGameInfo extends GameInfo {
 
   public String claimCrazyReward(Session session, int milestone) {
     if (crazyDegree < milestone)
-      return "insufficient_crazy_degree";
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_CRAZY_DEGREE, "insufficient_crazy_degree");
     if (crazyRewardClaim.get(milestone) != null)
-      return "already_claim";
+      return Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
     for (CrazyRewardData.CrazyReward cr : CrazyRewardData.crazyRewardMap.values()) {
       if (milestone == cr.milestone) {
-        if (cr.reward == null)
-          return "crazy_claim_fail";
+        if (cr.reward == null || cr.reward.size() == 0)
+          return Msg.msgMap.getOrDefault(Msg.BLANK_REWARD, "crazy_claim_fail");
         EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
         for (List<Integer> re : cr.reward) {
           EffectManager.inst().handleEffect(extArgs, session, re);
@@ -226,7 +226,7 @@ public class UserGameInfo extends GameInfo {
       }
     }
 
-    return "unknown_milestone";
+    return Msg.msgMap.getOrDefault(Msg.UNKNOWN_MILESTONE, "unknown_milestone");
   }
 
   public boolean useTime(Session session, long amount) {

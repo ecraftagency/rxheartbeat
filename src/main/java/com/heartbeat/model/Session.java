@@ -47,18 +47,18 @@ public class Session {
   transient public int        groupID;
   transient public UserLDB    userLDB;
   //persistent data
-  public UserProfile        userProfile;
+  public UserProfile        userProfile; /**/
   public UserGameInfo       userGameInfo;
   public UserProduction     userProduction;
   public UserIdol           userIdol;
   public UserInventory      userInventory;
-  public UserFight          userFight;
+  public UserFight          userFight; /**/
   public UserTravel         userTravel;
-  public UserDailyMission   userDailyMission;
-  public UserAchievement    userAchievement;
+  public UserDailyMission   userDailyMission; /**/
+  public UserAchievement    userAchievement; /**/
   public UserMission        userMission;
   public UserRollCall       userRollCall;
-  public UserEvent          userEvent;
+  public UserEvent          userEvent; /**/
   public UserRanking        userRanking;
   public UserInbox          userInbox;
   public UserPayment        userPayment;
@@ -85,7 +85,6 @@ public class Session {
     userLDB               = UserLDB.ofDefault();
     userInbox             = UserInbox.ofDefault();
     userPayment           = UserPayment.ofDefault();
-
 
     //todo reBalance
     userProduction.reBalance(userIdol.totalCrt());
@@ -289,29 +288,29 @@ public class Session {
           });
         }
         else {
-          handler.handle(Future.failedFuture("permission_error"));
+          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "permission_error")));
         }
       }
       else { //fuck, have valid gid but no group on group pool
         groupID = Group.GROUP_ID_TYPE_NONE;
-        handler.handle(Future.failedFuture("user_have_no_group"));
+        handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
       }
     }
     else {
-      handler.handle(Future.failedFuture("user_have_no_group"));
+      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
     }
   }
 
   public void createGroup(int groupType, String name, String externalInform, String internalInform, Handler<AsyncResult<String>> handler) {
     if (userGameInfo.remainTime() < USER_GROUP.CREATE_GROUP_TIME_COST) {
-      handler.handle(Future.failedFuture("insufficient_time"));
+      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time")));
       return;
     }
     if (Group.isValidGid(groupID)) { //user have group
-      handler.handle(Future.failedFuture("user_already_have_group"));
+      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
     }
     else if (groupID == Group.GROUP_ID_TYPE_KICK) {
-      handler.handle(Future.failedFuture("delay"));
+      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
     }
     else if (groupID == Group.GROUP_ID_TYPE_NONE) { //user have no group
       //first unmap sid_gid if have
@@ -335,7 +334,7 @@ public class Session {
         // try for next login
         CBGroup.getInstance().load(oldGid, loadRes -> {
           if (loadRes.succeeded()) {
-            handler.handle(Future.failedFuture("delay"));
+            handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
             LOG.globalException("node", "create group", "red alert: groupID zero but have sid_gid mapping and even a persistent group");
           }
           else { //have sid_gid mapping but don't have persistent group, ok (mean member of last delete group)
@@ -355,7 +354,7 @@ public class Session {
                 });
               }
               else {
-                handler.handle(Future.failedFuture("unknown_err"));
+                handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err")));
               }
             });
           }
@@ -363,7 +362,7 @@ public class Session {
       }
     }
     else {
-      handler.handle(Future.failedFuture("unknown_gid"));
+      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_GID, "unknown_gid")));
     }
   }
 
@@ -417,7 +416,7 @@ public class Session {
   public void joinGroup(int joinedGID, Handler<AsyncResult<String>> handler) {
     UserGroup currentGroup = GroupPool.getGroupFromPool(this.groupID);
     if (currentGroup != null){
-      handler.handle(Future.failedFuture("user_already_have_group"));
+      handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.ALREADY_JOIN, "user_already_have_group")));
       return;
     }
 
@@ -465,7 +464,7 @@ public class Session {
             }
           }
           else {
-            handler.handle(Future.failedFuture("group_not_found"));
+            handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found")));
           }
         });
       }
@@ -474,20 +473,20 @@ public class Session {
       try {
         int oldGID = Integer.parseInt(oldMap);
         if (oldGID == Group.GROUP_ID_TYPE_KICK) {
-          handler.handle(Future.failedFuture("join_group_delay"));
+          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "join_group_delay")));
         }
         else if (Group.isValidGid(oldGID)) { //fuck map say valid gid, but runtime gid == 0
-          handler.handle(Future.failedFuture("join_group_fail runtime and persistent mismatch"));
+          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail runtime and persistent mismatch")));
           LOG.globalException("node", "join group","alert, map value: " +  oldMap + " but runtime gid is zero sid: " + id);
         }
         else {
-          handler.handle(Future.failedFuture("join_group_fail_unknown"));
+          handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail_unknown")));
         }
       }
       catch (Exception e) {
         //mal form map field, delete it
         CBMapper.getInstance().unmap(Integer.toString(id), unmapR -> {});
-        handler.handle(Future.failedFuture("join_group_fail"));
+        handler.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "join_group_fail")));
       }
     }
   }
@@ -495,7 +494,7 @@ public class Session {
   public String kick(int memberId) {
     UserGroup group = GroupPool.getGroupFromPool(groupID);
     if (group == null)
-      return "fail_no_group";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
     int role = group.getRole(this.id);
 
     int memberRole = group.getRole(memberId);

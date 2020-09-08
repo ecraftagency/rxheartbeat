@@ -156,7 +156,7 @@ public class ProfileController implements Handler<RoutingContext> {
     if (Utilities.isValidString(session.userGameInfo.displayName) ||
             session.userGameInfo.gender >= 0 ||
             session.userGameInfo.avatar >= 0) {
-      resp.msg = "user_info_exist";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.USER_INFO_EXIST, "user_info_exist");
       return resp;
     }
 

@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.Msg;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -43,17 +44,17 @@ public class UserDailyMission extends DailyMission {
   public String claimReward(Session session, int missionID) {
     Mission uMission = missionMap.get(missionID);
     if (uMission == null)
-      return "mission_not_found";
+      return Msg.msgMap.getOrDefault(Msg.RECORD_NOT_FOUND, "mission_not_found");
     DailyMissionData.DailyMissionDTO dto = DailyMissionData.missionMap.get(missionID);
 
     if (uMission.claim)
-      return "already_claim_reward";
+      return Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
 
     if (dto == null)
-      return "mission_data_not_found";
+      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_data_not_found");
 
     if (uMission.dailyCount < dto.target)
-      return "mission_impossible";
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_CLAIM, "insufficient_claim");
 
     for (List<Integer> reward : dto.reward) {
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
