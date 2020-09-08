@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.Constant;
+import com.common.Msg;
 import com.heartbeat.model.Session;
 import com.statics.OfficeData;
 import com.transport.EffectResult;
@@ -107,7 +108,7 @@ public class UserProduction extends com.transport.model.Production{
           return "ok";
         }
         else
-          return "claim_product_timeout";
+          return Msg.msgMap.getOrDefault(Msg.CLAIM_PRODUCT_TIME_OUT, "claim_product_timeout");
       case PRODUCE_GOLD:
         if (currentGoldClaimCount > 0) {
           currentGoldClaimCount -= 1;
@@ -130,7 +131,7 @@ public class UserProduction extends com.transport.model.Production{
           return "ok";
         }
         else
-          return "claim_product_timeout";
+          return Msg.msgMap.getOrDefault(Msg.CLAIM_PRODUCT_TIME_OUT, "claim_product_timeout");
       case PRODUCE_VIEW:
         if (currentViewClaimCount > 0) {
           currentViewClaimCount -= 1;
@@ -143,7 +144,7 @@ public class UserProduction extends com.transport.model.Production{
         else
           return "claim_product_timeout";
     }
-    return "wrong_product_type";
+    return Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "wrong_product_type");
   }
 
   public String multiProduce(Session session) {
@@ -151,7 +152,7 @@ public class UserProduction extends com.transport.model.Production{
 
     updateProduction(session, curMs);
     if (currentGoldClaimCount <= 0 && currentViewClaimCount <= 0 && currentFanClaimCount <= 0)
-      return "claim_product_timeout";
+      return Msg.msgMap.getOrDefault(Msg.CLAIM_PRODUCT_TIME_OUT, "claim_product_timeout");
 
     //pre checking
     long    totalFanAdd          = 0;

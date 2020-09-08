@@ -2,6 +2,7 @@ package com.heartbeat.controller;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.common.Msg;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -66,7 +67,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -81,7 +82,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -95,7 +96,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp   = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -109,7 +110,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp         = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 
@@ -131,7 +132,7 @@ public class TravelController implements Handler<RoutingContext> {
     ExtMessage resp     = ExtMessage.travel();
 
     if (session.userGameInfo.titleId < Constant.UNLOCK_FUNCTION.TRAVEL_UNLOCK_LEVEL) {
-      resp.msg = "level_limit";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.LEVEL_LIMIT, "level_limit");
       return resp;
     }
 

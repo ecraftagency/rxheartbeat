@@ -4,13 +4,10 @@ import com.common.Constant;
 import com.common.LOG;
 import com.gateway.model.Payload;
 import com.heartbeat.db.cb.CBSession;
-import com.heartbeat.effect.EffectHandler;
-import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.statics.PaymentData;
 import com.transport.model.PaymentTransaction;
 
-import java.util.List;
 import static com.common.Constant.USER_PAYMENT.*;
 
 public class PaymentHandler {
@@ -19,15 +16,8 @@ public class PaymentHandler {
   public static void _100DPaymentSuccess(Session session, Payload payload, boolean online, PaymentData.PaymentDto dto) {
     PaymentTransaction trans = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_100D, payload.money, payload.time);
 
-
     session.userGameInfo.addTime(dto.time);
     session.userGameInfo.addVipExp(session, dto.vip);
-    for (List<Integer> re : dto.reward) {
-      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, re);
-    }
-    session.effectResults.clear();
-
-
 
     if (payload.itemId.equals(MONTH_GC_ID)) {
       String res = session.userRollCall.addGiftCard(session, payload.time, 2);

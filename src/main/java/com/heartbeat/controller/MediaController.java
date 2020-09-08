@@ -2,6 +2,7 @@ package com.heartbeat.controller;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.common.Msg;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -61,12 +62,12 @@ public class MediaController implements Handler<RoutingContext> {
     int amount = ctx.getBodyAsJson().getInteger("amount");
     ExtMessage resp = ExtMessage.media();
     if (amount <= 0) {
-      resp.msg = "wrong_amount";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "wrong_amount");
       return resp;
     }
 
     if (!session.userInventory.haveItem(USER_GAME_INFO.MEDIA_CONTRACT_ITEM, amount)) {
-      resp.msg = "insufficient_item";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
       return resp;
     }
 

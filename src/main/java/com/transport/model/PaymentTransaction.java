@@ -5,16 +5,17 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class PaymentTransaction {
-  public String         transID;
-  public int            payAt;
-  public long           amount;
-  public long           bonus;
-  public int            source;
-  public long           price;
-  public int            useAt;
-  public int            payAtPlayingTime;
-  public String         itemId;
+  public String               transID;
+  public int                  payAt;
+  public long                 amount;
+  public long                 bonus;
+  public int                  source;
+  public long                 price;
+  public int                  useAt;
+  public int                  payAtPlayingTime;
+  public String               itemId;
   public List<List<Integer>>  reward;
+  public boolean              rewardClaim;
 
   public static PaymentTransaction of(String id, String itemId, long amount, long bonus, int source, long price, long paidTime) {
     PaymentTransaction ps = new PaymentTransaction();
@@ -26,6 +27,7 @@ public class PaymentTransaction {
     ps.price              = price;
     ps.payAt              = ps.useAt = (int)(paidTime/1000);
     ps.reward             = new ArrayList<>();
+    ps.rewardClaim        = false;
     return ps;
   }
 

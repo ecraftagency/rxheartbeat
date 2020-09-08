@@ -28,10 +28,10 @@ public class UserPayment {
     int second = (int)(System.currentTimeMillis()/1000);
     List<PaymentTransaction> res = new ArrayList<>();
     for (PaymentTransaction ps : history) {
-      if (ps.payAt > lastPaymentCheck)
+      if (!ps.rewardClaim)
         res.add(ps);
     }
-    this.lastPaymentCheck = second;
+    //this.lastPaymentCheck = second;
     return res;
   }
 

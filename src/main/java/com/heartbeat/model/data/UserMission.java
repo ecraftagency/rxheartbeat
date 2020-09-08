@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.Msg;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -21,14 +22,14 @@ public class UserMission extends Mission {
 
   public String unlockMission(Session session) {
     if (!checkAccomplishment(session))
-      return "mission_impossible";
+      return Msg.msgMap.getOrDefault(Msg.MISSION_NOT_ACCOMPLISH, "mission_not_accomplish");
 
     MissionData.MissionDto dto = MissionData.missionDtoMap.get(currentMissionId);
     if (dto == null)
-      return "mission_data_not_found";
+      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_data_not_found");
 
     if (dto.rewardFormat == null)
-      return "reward_formal_invalid";
+      return Msg.msgMap.getOrDefault(Msg.REWARD_FORMAT_INVALID, "reward_formal_invalid");
 
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
     for (List<Integer> re : dto.rewardFormat)

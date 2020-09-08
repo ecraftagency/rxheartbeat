@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.LOG;
+import com.common.Msg;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -70,7 +71,7 @@ public class UserGroup extends Group {
 
 
     if (members.size() >= MAX_GROUP_MEMBER) {
-      return "group_full_seat";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
     }
 
     if (joinType == AUTO_JOIN) {
@@ -82,10 +83,10 @@ public class UserGroup extends Group {
     else if (joinType == REQUEST_JOIN) {
       pendingMembers.put(member.id, member);
       isChange = true;
-      return "pending";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending");
     }
     else {
-      return "unknown_join_type";
+      return Msg.msgMap.getOrDefault(Msg.INVALID_GROUP_TYPE, "unknown_join_type");
     }
   }
 
@@ -95,7 +96,7 @@ public class UserGroup extends Group {
       isChange = true;
       return "ok";
     }
-    return "member_not_found";
+    return Msg.msgMap.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
   }
 
   public synchronized void removePendingMember(int memberId) {
@@ -105,11 +106,11 @@ public class UserGroup extends Group {
   public synchronized String approveGroup(int memberId, String action) {
     if (action.equals("approve")) {
       if (members.size() >= 25)
-        return "group_full_seat";
+        return Msg.msgMap.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
 
       Member member = pendingMembers.get(memberId);
       if (member == null)
-        return "approve_fail_member_not_found";
+        return Msg.msgMap.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
       members.put(memberId, member);
       pendingMembers.remove(memberId);
       isChange = true;
@@ -121,7 +122,7 @@ public class UserGroup extends Group {
       return "ok";
     }
     else {
-      return "approve_fail_unknown_action";
+      return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
     }
   }
 
@@ -137,7 +138,7 @@ public class UserGroup extends Group {
       return "ok";
     }
 
-    return "member_not_found";
+    return Msg.msgMap.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
   }
 
   public synchronized String changeInform(String informMsg, int type) {
@@ -151,7 +152,7 @@ public class UserGroup extends Group {
       isChange = true;
       return "ok";
     }
-    return "set_inform_fail";
+    return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
   }
 
   public void addRecord(Session session, int missionId, int amount, boolean add) {
@@ -224,35 +225,35 @@ public class UserGroup extends Group {
   public String claimReward(Session session, int missionId, int second) {
     GroupMissionData.GroupMission evt = missionMap.get(missionId);
     if (evt == null)
-      return "mission_not_found";
+      return Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_not_found");
 
     Member member = members.get(session.id);
     if (member == null)
-      return "member_not_found";
+      return Msg.msgMap.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
 
     ExtendEventInfo ei = GROUP_EVENT.evtMap.get(missionId);
     if (ei == null)
-      return "event_info_not_found";
+      return Msg.msgMap.getOrDefault(Msg.EVENT_NOT_FOUND, "event_not_found");
 
     Mission mission = member.missions.get(missionId);
     if (mission == null)
-      return "mission_not_found";
+      return Msg.msgMap.getOrDefault(Msg.MISSION_NOT_FOUND, "mission_not_found");
 
     if (ei.startTime <= 0     ||
         ei.endTime <= 0       ||
         second < ei.startTime ||
         second > ei.endTime ||
         mission.claim) {
-      return "claim_reward_time_out";
+      return Msg.msgMap.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
     }
 
     Map<Integer, Integer> hitMembers = calcMissionHitMember();
     Integer missionHitM = hitMembers.get(evt.id);
     if (missionHitM == null)
-      return "mission_not_found";
+      return Msg.msgMap.getOrDefault(Msg.MISSION_NOT_FOUND, "mission_not_found");
 
     if (missionHitM < evt.hitMember) {//
-      return "mission_impossible"; // :D, chưa đủ tuổi
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_CLAIM, "insufficient_claim"); // :D, chưa đủ tuổi
     }
 
     session.effectResults.clear();

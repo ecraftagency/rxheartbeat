@@ -2,6 +2,7 @@ package com.heartbeat.controller;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.common.Msg;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserIdol;
@@ -99,7 +100,7 @@ public class IdolController implements Handler<RoutingContext> {
       resp.msg = "ok";
     }
     else {
-      resp.msg = "add_idol_fail";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "add_idol_fail");
     }
 
     if (resp.msg.equals("ok")) {

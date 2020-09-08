@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.Msg;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -49,7 +50,7 @@ public class UserTravel extends Travel {
 
     if (currentTravelClaimCount < 1) {
       chosenNPCId = -1;
-      return "claim_travel_timeout";
+      return Msg.msgMap.getOrDefault(Msg.CLAIM_TRAVEL_INSUFFICIENT, "claim_travel_insufficient_count");
     }
 
     int rand = ThreadLocalRandom.current().nextInt(1, 101),acc = 0,npcType = 0;
@@ -65,7 +66,7 @@ public class UserTravel extends Travel {
     if (npcType < 1 || npcType > 3 || TravelData.npcTypeMap.size() != 3) {
       chosenNPCId = -1;
       currentTravelClaimCount      -= 1;
-      return "miss";
+      return Msg.msgMap.getOrDefault(Msg.CLAIM_TRAVEL_MISS, "claim_travel_miss");
     }
 
     List<TravelData.TravelNPC> npcList  = TravelData.npcTypeMap.get(npcType);
@@ -73,7 +74,7 @@ public class UserTravel extends Travel {
     if (npcList.size() == 0) {
       chosenNPCId = -1;
       currentTravelClaimCount      -= 1;
-      return "miss";
+      return Msg.msgMap.getOrDefault(Msg.CLAIM_TRAVEL_MISS, "claim_travel_miss");
     }
 
     TravelData.TravelNPC chosen   = npcList.get(ThreadLocalRandom.current().nextInt(npcList.size()));
@@ -95,7 +96,7 @@ public class UserTravel extends Travel {
 
     if (currentTravelClaimCount < 1) {
       chosenNPCId = -1;
-      return "claim_travel_timeout";
+      return Msg.msgMap.getOrDefault(Msg.CLAIM_TRAVEL_INSUFFICIENT, "claim_travel_insufficient_count");
     }
 
     while (currentTravelClaimCount > 0) {
@@ -143,12 +144,12 @@ public class UserTravel extends Travel {
 
   public String addTravelClaim(Session session) {
     if (dailyTravelAdd >= dailyTravelAddLimit)
-      return "max_travel_add";
+      return Msg.msgMap.getOrDefault(Msg.MAX_TRAVEL_ADD, "max_travel_add");
 
     long viewConsume = COEFF_0 + COEFF_1*dailyTravelAdd*dailyTravelAdd; //100k + 10k*d^2
 
     if (session.userGameInfo.view < viewConsume)
-      return "insufficient_view";
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_VIEW, "insufficient_view");
 
     session.userGameInfo.spendView(session, viewConsume);
     dailyTravelAdd++;
@@ -159,7 +160,7 @@ public class UserTravel extends Travel {
 
   public String addMultiTravelClaim(Session session, int count) {
     if (dailyTravelAdd + count > dailyTravelAddLimit || count <= 0)
-      return "max_travel_add";
+      return Msg.msgMap.getOrDefault(Msg.MAX_TRAVEL_ADD, "max_travel_add");
 
     long viewConsume = 0;
     for (int i = 0; i < count; i++) {
@@ -167,7 +168,7 @@ public class UserTravel extends Travel {
     }
 
     if (session.userGameInfo.view < viewConsume)
-      return "insufficient_view";
+      return Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_VIEW, "insufficient_view");
 
     session.userGameInfo.spendView(session, viewConsume);
     dailyTravelAdd += count;

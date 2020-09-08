@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.Constant;
+import com.common.Msg;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -47,30 +48,6 @@ public class UserRanking extends Ranking {
     ur.claimed      = new HashMap<>();
     ur.evt2cas      = new HashMap<>();
     return ur;
-  }
-
-  public static void flushRanking(int rankId) {
-    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
-    if (ldb == null)
-      return;
-    EventLoop.Command flushCommand = new FlushCommand<>(ldb);
-    rankingEventLoop.addCommand(flushCommand);
-  }
-
-  public static void closeRanking(int rankId) {
-    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
-    if (ldb == null)
-      return;
-    EventLoop.Command closeCommand = new CloseCommand<>(ldb);
-    rankingEventLoop.addCommand(closeCommand);
-  }
-
-  public static void openRanking(int rankId) {
-    LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
-    if (ldb == null)
-      return;
-    EventLoop.Command openCommand = new OpenCommand<>(ldb);
-    rankingEventLoop.addCommand(openCommand);
   }
 
   /********************************************************************************************************************/
@@ -131,36 +108,36 @@ public class UserRanking extends Ranking {
   public void claimReward(Session session, int rankId, Handler<AsyncResult<String>> ar) {
     LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankId);
     if (ldb == null) {
-      ar.handle(Future.failedFuture("unknown_ranking_type"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_RANK_TYPE, "unknown_rank_type")));
       return;
     }
 
     Map<Integer, RankingData.RewardDto> rewardMap = RankingData.rewardMap.get(rankId);
     if (rewardMap == null) {
-      ar.handle(Future.failedFuture("rewards_data_not_found"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND,"rewards_data_not_found")));
       return;
     }
 
     EventInfo ri  = evtMap.get(rankId);
     if (ri == null) {
-      ar.handle(Future.failedFuture("event_not_found"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.EVENT_NOT_FOUND, "event_not_found")));
       return;
     }
 
     if (!ri.active) {
-      ar.handle(Future.failedFuture("ranking_not_active"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.RANKING_NOT_ACTIVE, "ranking_not_active")));
       return;
     }
 
     int claimCas = claimed.getOrDefault(rankId, 0);
     if (claimCas == ri.startTime) {
-      ar.handle(Future.failedFuture("already_claim"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "already_claim")));
       return;
     }
 
     int second      = (int)(System.currentTimeMillis()/1000);
     if (ri.startTime <= 0 || second <= ri.startTime || second >= ri.endTime + ri.flushDelay){
-      ar.handle(Future.failedFuture("claim_time_out"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.TIMEOUT_CLAIM, "timeout_claim")));
       return;
     }
 
@@ -168,13 +145,13 @@ public class UserRanking extends Ranking {
       if (rar.succeeded()) {
         int rank = rar.result();
         if (rank < 1 || rank > 100) {
-          ar.handle(Future.failedFuture("invalid_rank"));
+          ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.INVALID_RANK, "invalid_rank")));
         }
         else {
           claimed.put(rankId, ri.startTime);
           RankingData.RewardDto dto = rewardMap.get(rank);
           if (dto == null) {
-            ar.handle(Future.failedFuture("invalid_rank"));
+            ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.INVALID_RANK, "invalid_rank")));
             return;
           }
 
@@ -187,7 +164,7 @@ public class UserRanking extends Ranking {
         }
       }
       else {
-        ar.handle(Future.failedFuture("unknown_err"));
+        ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err")));
       }
     });
     rankingEventLoop.addCommand(rankCommand);
@@ -196,7 +173,7 @@ public class UserRanking extends Ranking {
   public void getRanking(int rankingType, Handler<AsyncResult<List<ScoreObj>>> ar) {
     LeaderBoard<Integer, ScoreObj> ldb = rankings.get(rankingType);
     if (ldb == null)
-      ar.handle(Future.failedFuture("unknown_ranking_type"));
+      ar.handle(Future.failedFuture(Msg.msgMap.getOrDefault(Msg.UNKNOWN_RANK_TYPE, "unknown_rank_type")));
 
     EventLoop.Command listCommand = new ListCommand<>(ldb, ar);
     rankingEventLoop.addCommand(listCommand);

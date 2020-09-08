@@ -7,8 +7,6 @@ import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LeaderBoardController implements Handler<RoutingContext> {
   @Override
@@ -23,9 +21,6 @@ public class LeaderBoardController implements Handler<RoutingContext> {
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
-          case "submitScore":
-            resp = processSubmitScore(session);
-            break;
           case "getLeaderBoard":
             processGetLeaderBoard(session, cmd, ctx);
             return;
@@ -72,18 +67,5 @@ public class LeaderBoardController implements Handler<RoutingContext> {
       session.effectResults.clear();
       session.userGameInfo.timeChange = false;
     });
-  }
-
-  private ExtMessage processSubmitScore(Session session) {
-//    long totalCrt = session.userIdol.getTotalCreativity();
-//    long totalPerf = session.userIdol.getTotalPerformance();
-//    long totalAttr = session.userIdol.getTotalCreativity();
-//    long totalTalent = totalCrt + totalPerf + totalAttr;
-//
-//    if (session.userLDB != null) {
-//      session.userLDB.addLdbRecord(Constant.LEADER_BOARD.TALENT_LDB_ID, totalTalent);
-//      session.userLDB.addLdbRecord(Constant.LEADER_BOARD.FIGHT_LDB_ID, session.userFight.currentFightLV.id);
-//    }
-    return ExtMessage.leaderBoard();
   }
 }

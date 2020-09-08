@@ -1,6 +1,8 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -54,6 +56,18 @@ public class PaymentController implements Handler<RoutingContext> {
   private ExtMessage processGetPaymentHistory(Session session) {
     ExtMessage resp               = ExtMessage.payment();
     List<PaymentTransaction> res  = session.userPayment.getUncheckTrans();
+
+    for (PaymentTransaction trans : res) {
+      if (!trans.rewardClaim) {
+        for (List<Integer> re : trans.reward) {
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, re);
+        }
+        trans.rewardClaim = true;
+      }
+    }
+
+    resp.effectResults            = session.effectResults;
+
     resp.data.extObj              = Json.encode(res);
     return resp;
   }

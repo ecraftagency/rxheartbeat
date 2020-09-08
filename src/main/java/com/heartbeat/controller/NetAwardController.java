@@ -1,6 +1,7 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
+import com.common.Msg;
 import com.heartbeat.db.cb.CBNetAward;
 import com.heartbeat.effect.NetAwardEffectHandler;
 import com.heartbeat.model.Session;
@@ -58,7 +59,7 @@ public class NetAwardController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.title();
 
     if (key == null || name == null) {
-      resp.msg = "invalid_title_id";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "invalid_title_id");
     }
 
     NetAward title     = CBNetAward.getInstance().load(key);

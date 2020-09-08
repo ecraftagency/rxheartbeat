@@ -48,19 +48,19 @@ public class Session {
   transient public UserLDB    userLDB;
   //persistent data
   public UserProfile        userProfile; /**/
-  public UserGameInfo       userGameInfo;
-  public UserProduction     userProduction;
-  public UserIdol           userIdol;
-  public UserInventory      userInventory;
+  public UserGameInfo       userGameInfo; /**/
+  public UserProduction     userProduction; /**/
+  public UserIdol           userIdol; /**/
+  public UserInventory      userInventory; /**/
   public UserFight          userFight; /**/
-  public UserTravel         userTravel;
+  public UserTravel         userTravel;/**/
   public UserDailyMission   userDailyMission; /**/
   public UserAchievement    userAchievement; /**/
-  public UserMission        userMission;
-  public UserRollCall       userRollCall;
+  public UserMission        userMission;/**/
+  public UserRollCall       userRollCall; /**/
   public UserEvent          userEvent; /**/
-  public UserRanking        userRanking;
-  public UserInbox          userInbox;
+  public UserRanking        userRanking;/**/
+  public UserInbox          userInbox;/**/
   public UserPayment        userPayment;
 
   public List<EffectResult> effectResults;
@@ -431,7 +431,7 @@ public class Session {
           CBMapper.getInstance().map(Integer.toString(this.groupID), Integer.toString(this.id), mar -> {});
           handler.handle(Future.succeededFuture("ok"));
         }
-        else if (result.equals("pending")) {
+        else if (result.equals(Msg.msgMap.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending"))) {
           this.groupID = Group.GROUP_ID_TYPE_NONE;
           handler.handle(Future.failedFuture("ok"));
         }
@@ -453,7 +453,7 @@ public class Session {
               CBMapper.getInstance().map(Integer.toString(this.groupID), Integer.toString(this.id), mar -> {});
               handler.handle(Future.succeededFuture("ok"));
             }
-            else if (result.equals("pending")) {
+            else if (result.equals(Msg.msgMap.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending"))) {
               this.groupID = Group.GROUP_ID_TYPE_NONE;
               handler.handle(Future.failedFuture("ok"));
             }
@@ -499,7 +499,7 @@ public class Session {
 
     int memberRole = group.getRole(memberId);
     if (memberRole == Group.OWNER_ROLE)
-      return "fail_cant_kick_owner";
+      return Msg.msgMap.getOrDefault(Msg.OWNER_KICK, "fail_cant_kick_owner");
 
     if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
       Session session = SessionPool.getSessionFromPool(memberId);
@@ -514,7 +514,7 @@ public class Session {
       return result;
     }
     else {
-      return "fail_no_permission";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "fail_no_permission");
     }
   }
 
@@ -528,7 +528,7 @@ public class Session {
       }
 
       if (group.getRole(id) == Group.OWNER_ROLE) {
-        return "leave_group_fail_admin";
+        return Msg.msgMap.getOrDefault(Msg.OWNER_LEAVE, "leave_group_fail_admin");
       }
 
       String result = group.kickMember(id);
@@ -545,7 +545,7 @@ public class Session {
       }
     }
     else {
-      return "user_have_no_group";
+      return Msg.msgMap.getOrDefault(Msg.NO_GROUP, "user_have_no_group");
     }
   }
 
@@ -555,17 +555,17 @@ public class Session {
     if (group == null) {
       String err = String.format("user_have_no_group[sid:%d,gid:%d,runtime:%s]",id, groupID, "no");
       LOG.globalException("node", "approve member", err);
-      return err;
+      return Msg.msgMap.getOrDefault(Msg.NO_GROUP, err);
     }
 
     if (memberId == this.id) {
-      return "approve_fail_malform";
+      return Msg.msgMap.getOrDefault(Msg.SELF_APPROVE, "can_not_self_approve");
     }
 
     //check role
     int role = group.getRole(this.id);
     if (role != Group.OWNER_ROLE && role != Group.MOD_ROLE) {
-      return "approve_fail_permission";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "approve_fail_permission");
     }
 
     //check member condition
@@ -575,24 +575,23 @@ public class Session {
         int currentGID = Integer.parseInt(state);
         if (currentGID == -1) {
           group.removePendingMember(memberId);
-          return "approve_fail_delay";
+          return Msg.msgMap.getOrDefault(Msg.GROUP_DELAY, "approve_fail_delay");
         }
         else if (Group.isValidGid(currentGID)) {
           group.removePendingMember(memberId);
-          return "approve_fail_user_already_have_group";
+          return Msg.msgMap.getOrDefault(Msg.ALREADY_JOIN, "approve_fail_user_already_have_group");
         }
         else {
           group.removePendingMember(memberId);
-          return "approve_fail_unknown";
+          return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "approve_fail_unknown");
         }
-
       }
       catch (Exception e) {
         //malform
         CBMapper.getInstance().unmap(Integer.toString(memberId), ar -> {});
         group.removePendingMember(memberId);
         LOG.globalException("node", "approve member", String.format("malform_sid_gid_index[sid:%d,gid:%s]",memberId, state));
-        return "approve_fail_unknown";
+        return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "approve_fail_unknown");
       }
     }
 
@@ -608,23 +607,23 @@ public class Session {
     UserGroup group = GroupPool.getGroupFromPool(this.groupID);
 
     if (group == null)
-      return "group_not_found";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
 
     int myRole = group.getRole(this.id);
     if (myRole != Group.OWNER_ROLE)
-      return "set_role_fail_permission]";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "set_role_fail_permission");
 
     if ((newRole == Group.MOD_ROLE && group.modCount() < 2) || newRole == Group.USER_ROLE) {
       return group.setRole(memberId, newRole);
     }
-    return "set_role_fail";
+    return Msg.msgMap.getOrDefault(Msg.UNKNOWN_ERR, "set_role_fail");
   }
 
   public String setGroupInform(int type, String informMsg) {
     UserGroup group = GroupPool.getGroupFromPool(this.groupID);
 
     if (group == null)
-      return "group_not_found";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_NOT_FOUND, "group_not_found");
 
     int role = group.getRole(this.id);
 
@@ -632,7 +631,7 @@ public class Session {
       return group.changeInform(informMsg, type);
     }
     else
-      return "set_inform_fail_permission";
+      return Msg.msgMap.getOrDefault(Msg.GROUP_PERM, "set_inform_fail_permission");
   }
 
   /*HEARTBEAT**********************************************************************************************************/

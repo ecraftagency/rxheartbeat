@@ -1,6 +1,7 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
+import com.common.Msg;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -81,7 +82,7 @@ public class ItemController implements Handler<RoutingContext> {
 
     PropData.Prop prop = PropData.propMap.get(propId);
     if (prop == null || prop.isMultiUse != PropData.SINGLE_ITEM) {
-      resp.msg = "invalid_item";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_item");
       return resp;
     }
 
@@ -97,7 +98,7 @@ public class ItemController implements Handler<RoutingContext> {
       resp.effectResults  = session.effectResults;
     }
     else {
-      resp.msg = "not_enough_item";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
     }
 
     return resp;
@@ -111,7 +112,7 @@ public class ItemController implements Handler<RoutingContext> {
 
     PropData.Prop prop = PropData.propMap.get(propId);
     if (prop == null || prop.isMultiUse != PropData.MULTI_ITEM) {
-      resp.msg = "invalid_item";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "invalid_item");
       return resp;
     }
 
@@ -127,7 +128,7 @@ public class ItemController implements Handler<RoutingContext> {
       resp.effectResults    = session.effectResults;
     }
     else {
-      resp.msg = "not_enough_item";
+      resp.msg = Msg.msgMap.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
     }
 
     return resp;

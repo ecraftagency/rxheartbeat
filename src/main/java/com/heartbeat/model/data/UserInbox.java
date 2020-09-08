@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.Msg;
 import com.heartbeat.db.cb.CBInbox;
 import com.heartbeat.db.dao.PublicMailBoxDAO;
 import com.heartbeat.effect.EffectHandler;
@@ -89,14 +90,14 @@ public class UserInbox extends Inbox {
 
   public String claimPublicInboxReward(Session session, long cas, long curMs) {
     if (claimedMsg.containsKey(cas))
-      return "msg_reward_already_claim";
+      return Msg.msgMap.getOrDefault(Msg.ALREADY_CLAIM, "msg_reward_already_claim");
 
     MailObj obj = haveMessage(cas);
     if (obj == null)
-      return "msg_not_exist";
+      return Msg.msgMap.getOrDefault(Msg.MSG_NOT_EXIST, "msg_not_exist");
 
     if (obj.rewards == null)
-      return "msg_reward_invalid";
+      return Msg.msgMap.getOrDefault(Msg.MSG_REWARD_INVALID, "msg_reward_invalid");
 
     for (List<Integer> reward : obj.rewards) {
       if (reward == null || reward.size() != 4)
@@ -124,14 +125,14 @@ public class UserInbox extends Inbox {
 
   public String claimPrivateInboxReward(Session session, long cas, long curMs) {
     if (claimedPrivateMsg.containsKey(cas))
-      return "msg_reward_already_claim";
+      return Msg.msgMap.getOrDefault(Msg.MSG_REWARD_CLAIM_ALREADY, "msg_reward_already_claim");
 
     MailObj obj = getPrivateMsgById(cas);
     if (obj == null)
-      return "msg_not_exist";
+      return Msg.msgMap.getOrDefault(Msg.MSG_NOT_EXIST, "msg_not_exist");
 
     if (obj.rewards == null)
-      return "msg_reward_invalid";
+      return Msg.msgMap.getOrDefault(Msg.MSG_REWARD_INVALID, "msg_reward_invalid");
 
     for (List<Integer> reward : obj.rewards) {
       if (reward == null || reward.size() != 4)
