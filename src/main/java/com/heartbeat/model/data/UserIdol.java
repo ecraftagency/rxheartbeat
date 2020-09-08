@@ -246,7 +246,7 @@ public class UserIdol extends Idols {
       return Msg.msgMap.getOrDefault(Msg.IDOL_NOT_EXIST, "idol_not_exist");
 
     if (step < 1 || step > 5 || APT_UP_RATE.get(step) == 0) //+1 100%, +3 30%, +5 20%
-      return Msg.msgMap.getOrDefault(Msg.ADD_APT_INVALID_STEP, "add_apt_invalid_step");
+      return Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
 
     int currentLimit = BookLimitData.getCurrentLimit(idolId, speciality, idol.level);
     if (currentLimit < 0)
@@ -304,7 +304,7 @@ public class UserIdol extends Idols {
           return "apt_up_fail";
         }
       default:
-        return Msg.msgMap.getOrDefault(Msg.INVALID_SPECIALITY, "invalid_speciality");
+        return Msg.msgMap.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
     }
   }
 

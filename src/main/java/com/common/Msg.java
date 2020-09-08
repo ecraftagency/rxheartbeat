@@ -34,9 +34,9 @@ public class Msg {
   public static final int SHOP_ITEM_DAILY_LIMIT       = 101;
   public static final int USER_MAX_LEVEL              = 102;
   public static final int USER_EXP_INSUFFICIENT       = 103;
-  public static final int USER_INFO_EXIST             = 106;
   public static final int MEDIA_TIME_OUT              = 104;
   public static final int INSUFFICIENT_CRAZY_DEGREE   = 105;
+  public static final int USER_INFO_EXIST             = 106;
 
 
   //fight
@@ -72,8 +72,6 @@ public class Msg {
   public static final int IDOL_HONOR_MAX_LEVEL        = 403;
   public static final int INSUFFICIENT_APT_EXP        = 404;
   public static final int APT_LIMIT                   = 405;
-  public static final int ADD_APT_INVALID_STEP        = 406;
-  public static final int INVALID_SPECIALITY          = 407;
   public static final int HALO_NOT_EXIST              = 408;
   public static final int HALO_PREFIX_NOT_MATCH       = 409;
   public static final int HALO_DATA_INVALID           = 410;
@@ -144,7 +142,7 @@ public class Msg {
     msgMap.put(TIMEOUT_CLAIM,               "timeout_claim");
     msgMap.put(EVENT_NOT_FOUND,             "event_not_found");
     msgMap.put(IDOL_NOT_FOUND,              "idol_not_found");
-    msgMap.put(INSUFFICIENT_ITEM,           "event_not_found");
+    msgMap.put(INSUFFICIENT_ITEM,           "insufficient_item");
     msgMap.put(TIME_LIMIT,                  "Ban ko du time de su dung tinh nang nay");
     msgMap.put(GROUP_NOT_FOUND,             "group_not_found");
     msgMap.put(UNKNOWN_ERR,                 "unknown_err");
@@ -156,9 +154,9 @@ public class Msg {
     msgMap.put(SHOP_ITEM_DAILY_LIMIT,       "Vat Pham Da Dat Gioi Han Mua Trong Ngay");
     msgMap.put(USER_MAX_LEVEL,              "Da Dat Hang Sao Toi Da");
     msgMap.put(USER_EXP_INSUFFICIENT,       "Khong du Chinh Tich");
-    msgMap.put(USER_INFO_EXIST,             "user_info_exist");
     msgMap.put(MEDIA_TIME_OUT,              "Ban can thoi gian hoi phuc truyen thong");
     msgMap.put(INSUFFICIENT_CRAZY_DEGREE,   "Khong Du DO Soi Noi");
+    msgMap.put(USER_INFO_EXIST,             "user_info_exist");
 
     //Achievement Controller
     //DailyMission  Controller
@@ -192,16 +190,15 @@ public class Msg {
     //Idol Controller
     msgMap.put(IDOL_NOT_EXIST,              "idol_not_exist");
     msgMap.put(IDOL_MAX_LEVEL,              "idol_max_level");
-    msgMap.put(IDOL_LV_UP_INSUFFICIENT,     "idol_insufficient_exp");
+    msgMap.put(IDOL_LV_UP_INSUFFICIENT,     "idol_lv_up_insufficient_exp");
     msgMap.put(IDOL_HONOR_MAX_LEVEL,        "idol_honor_max_level");
     msgMap.put(INSUFFICIENT_APT_EXP,        "insufficient_apt_exp");
     msgMap.put(APT_LIMIT,                   "idol_apt_limit");
-    msgMap.put(ADD_APT_INVALID_STEP,        "add_apt_invalid_step");
-    msgMap.put(INVALID_SPECIALITY,          "invalid_speciality");
     msgMap.put(HALO_NOT_EXIST,              "halo_not_exist");
     msgMap.put(HALO_PREFIX_NOT_MATCH,       "prefix_not_match");
     msgMap.put(HALO_DATA_INVALID,           "halo_data_invalid");
     msgMap.put(HALO_LEVEL_UP_FAIL,          "halo_level_up_fail");
+    msgMap.put(HALO_LEVEL_MAX,              "halo_level_max");
 
     //Inbox Controller
     msgMap.put(MSG_REWARD_CLAIM_ALREADY,    "msg_reward_already_claim");
@@ -209,8 +206,8 @@ public class Msg {
     msgMap.put(MSG_REWARD_INVALID,          "msg_reward_invalid");
 
     //Item Controller
-    msgMap.put(MERGE_DAILY_LIMIT,           "merge_daily_limit");
     msgMap.put(INSUFFICIENT_MATERIAL,       "insufficient_material");
+    msgMap.put(MERGE_DAILY_LIMIT,           "merge_daily_limit");
 
     //Mission Controller
     msgMap.put(MISSION_NOT_ACCOMPLISH,      "mission_not_accomplish");
