@@ -13,6 +13,7 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
 public class ItemController implements Handler<RoutingContext> {
+
   @Override
   public void handle(RoutingContext ctx) {
     String cmd          = "";
@@ -73,12 +74,12 @@ public class ItemController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processUseEffectItem(Session session, RoutingContext ctx) {
-    ExtMessage resp = ExtMessage.item();
-    int propId      = ctx.getBodyAsJson().getInteger("itemId");
-    int objId       = ctx.getBodyAsJson().getInteger("objId");
-    int newAvatar   = ctx.getBodyAsJson().getInteger("newAvatar"); //todo refactor this [objId, intParam, strParam]
-    String newDN    = ctx.getBodyAsJson().getString("newDisplayName");
-    int amount      = 1;
+    ExtMessage  resp = ExtMessage.item();
+    int         propId      = ctx.getBodyAsJson().getInteger("itemId");
+    int         objId       = ctx.getBodyAsJson().getInteger("objId");
+    int         intParam    = ctx.getBodyAsJson().getInteger("intParam"); //todo refactor this [objId, intParam, strParam]
+    String      strParam    = ctx.getBodyAsJson().getString("strParam");
+    int         amount      = 1;
 
     PropData.Prop prop = PropData.propMap.get(propId);
     if (prop == null || prop.isMultiUse != PropData.SINGLE_ITEM) {
@@ -87,7 +88,7 @@ public class ItemController implements Handler<RoutingContext> {
     }
 
     if (session.userInventory.useItem(propId, amount)) {
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, newAvatar, newDN);
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, intParam, strParam);
       resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);
       if (!resp.msg.equals("ok")) { //roll back
         session.userInventory.addItem(propId, amount);

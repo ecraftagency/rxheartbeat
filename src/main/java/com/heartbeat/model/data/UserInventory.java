@@ -26,7 +26,6 @@ public class UserInventory extends Inventory {
       if (prop.status > 0) {
         if (prop.isExpired >= 1) {
           userInventory.addExpireItem(prop.propID, 10);
-          LOG.console("add expire item: " + prop.propID);
         }
         else {
           userInventory.addStaticItem(prop.propID, 100);
@@ -95,7 +94,7 @@ public class UserInventory extends Inventory {
       return Msg.map.getOrDefault(Msg.MERGE_DAILY_LIMIT, "merge_daily_limit");
 
     if (mergeCount <= 0)
-      return Msg.map.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
+      return Msg.map.getOrDefault(Msg.ZERO_MERGE_COUNT, "malform_args");
 
     try {
       boolean able = true;

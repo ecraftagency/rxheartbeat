@@ -40,7 +40,7 @@ public class NetAwardEffectHandler implements EffectHandler{
     String key = titleKeyMap.get(effectFormat.get(PARAM1));
     if (key == null)
       return "invalid_title_id";
-    NetAward netAward = NetAward.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.newDisplayName);
+    NetAward netAward = NetAward.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.strParam);
     netAward.userTitleId     = session.userGameInfo.titleId;
     netAward.totalCrt        = session.userIdol.totalCrt();
     netAward.totalPerf       = session.userIdol.totalPerf();

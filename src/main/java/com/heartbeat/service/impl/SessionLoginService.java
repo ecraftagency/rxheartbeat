@@ -51,7 +51,7 @@ public class SessionLoginService implements AuthService {
           Passport100D.Player pInfo = ar.result();
           String key = String.format("100d_%s", pInfo.player_id);
           String strUserId = CBMapper.getInstance().getValue(key);
-          if (strUserId != null) {
+          if (Utilities.isValidString(strUserId)) {
             handle100DLogin(request, Integer.parseInt(strUserId), strUserId, d100Token, handler);
           }
           else {

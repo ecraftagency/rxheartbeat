@@ -86,6 +86,7 @@ public class Msg {
   //inventory
   public static final int INSUFFICIENT_MATERIAL       = 600;
   public static final int MERGE_DAILY_LIMIT           = 601;
+  public static final int ZERO_MERGE_COUNT            = 602;
 
   //mission
   public static final int MISSION_NOT_ACCOMPLISH      = 700;
@@ -127,107 +128,108 @@ public class Msg {
     map = new HashMap<>();
 
     //common
-    map.put(LEVEL_LIMIT,                 "Bạn không chưa đủ hang sao để sử dụng tính năng này");
-    map.put(INSUFFICIENT_TIME,           "Khong du thoi gian");
-    map.put(DTO_DATA_NOT_FOUND,          "dto_data_not_found");  /**/
-    map.put(VIP_LEVEL_LIMIT,             "Chưa đủ cấp VIP");
-    map.put(INVALID_DISPLAY_NAME,        "Ten Nhan Vat Khong Hop Le");
-    map.put(DISPLAY_NAME_EXIST,          "Ten Nhan Vat Da Ton Tai");
-    map.put(ALREADY_CLAIM,               "already_claim"); /**/
-    map.put(BLANK_REWARD,                "blank_reward"); /**/
-    map.put(UNKNOWN_MILESTONE,           "unknown_milestone");
-    map.put(RECORD_NOT_FOUND,            "record_not_found");
-    map.put(INSUFFICIENT_CLAIM,          "insufficient_claim");
+    map.put(LEVEL_LIMIT,                 "Bạn chưa đủ hạng sao để sử dụng tính năng này");
+    map.put(INSUFFICIENT_TIME,           "Bạn không đủ TIME");
+    map.put(DTO_DATA_NOT_FOUND,          "Không tìm thấy dữ liệu, vui lòng thử lại");  /**/
+    map.put(VIP_LEVEL_LIMIT,             "Bạn chưa đạt cấp VIP");
+    map.put(INVALID_DISPLAY_NAME,        "Tên Nhân Vật Không Hợp Lệ");
+    map.put(DISPLAY_NAME_EXIST,          "Tên Nhân Vật Đã Tồn Tại");
+    map.put(ALREADY_CLAIM,               "Bạn đã nhận phần thưởng này"); /**/
+    map.put(BLANK_REWARD,                "Dữ liệu phần thưởng không hợp lệ"); /**/
+    map.put(UNKNOWN_MILESTONE,           "Dữ liệu thành tích không hợp lệ");
+    map.put(RECORD_NOT_FOUND,            "Không tìm thấy dữ liệu, vui lòng thử lại");
+    map.put(INSUFFICIENT_CLAIM,          "Bạn chưa đạt yêu cầu nhận thưởng");
     map.put(CAS_EXPIRE,                  "cas_expire");
-    map.put(TIMEOUT_CLAIM,               "timeout_claim");
-    map.put(EVENT_NOT_FOUND,             "event_not_found");
-    map.put(IDOL_NOT_FOUND,              "idol_not_found");
-    map.put(INSUFFICIENT_ITEM,           "insufficient_item");
-    map.put(TIME_LIMIT,                  "Ban ko du time de su dung tinh nang nay");
-    map.put(GROUP_NOT_FOUND,             "group_not_found");
-    map.put(UNKNOWN_ERR,                 "unknown_err");
-    map.put(MALFORM_ARGS,                "malform_args");
-    map.put(REWARD_FORMAT_INVALID,       "reward_format_invalid");
+    map.put(TIMEOUT_CLAIM,               "Thời gian nhận thưởng đã hết");
+    map.put(EVENT_NOT_FOUND,             "Không tìm thấy dữ liệu sự kiện");
+    map.put(IDOL_NOT_FOUND,              "Không tìm thấy dữ liệu Idol");
+    map.put(INSUFFICIENT_ITEM,           "Bạn không có đủ vật phẩm yêu cầu");
+    map.put(TIME_LIMIT,                  "Bạn đã hết TIME, không thể nhận thưởng");
+    map.put(GROUP_NOT_FOUND,             "Không tìm thấy dữ liệu công ty");
+    map.put(UNKNOWN_ERR,                 "Mạng không ổn định, vui lòng thử lại");
+    map.put(MALFORM_ARGS,                "Mạng không ổn định, vui lòng thử lại");
+    map.put(REWARD_FORMAT_INVALID,       "Dữ liệu phần thưởng không hợp lệ");
 
     //Profile Controller
-    map.put(SHOP_DATA_NOT_AVAIL,         "shop_item_not_avail"); /**/
-    map.put(SHOP_ITEM_DAILY_LIMIT,       "Vat Pham Da Dat Gioi Han Mua Trong Ngay");
-    map.put(USER_MAX_LEVEL,              "Da Dat Hang Sao Toi Da");
-    map.put(USER_EXP_INSUFFICIENT,       "Khong du Chinh Tich");
-    map.put(MEDIA_TIME_OUT,              "Ban can thoi gian hoi phuc truyen thong");
-    map.put(INSUFFICIENT_CRAZY_DEGREE,   "Khong Du DO Soi Noi");
-    map.put(USER_INFO_EXIST,             "user_info_exist");
+    map.put(SHOP_DATA_NOT_AVAIL,         "Không tìm thấy dữ liệu SHOP"); /**/
+    map.put(SHOP_ITEM_DAILY_LIMIT,       "Lần giới hạn mua đã hết");
+    map.put(USER_MAX_LEVEL,              "Đã đạt hạng sao tối đa");
+    map.put(USER_EXP_INSUFFICIENT,       "Bạn không có đủ danh tiếng");
+    map.put(MEDIA_TIME_OUT,              "Bạn cần chờ thời gian hồi phục");
+    map.put(INSUFFICIENT_CRAZY_DEGREE,   "Không đủ độ sôi nổi");
+    map.put(USER_INFO_EXIST,             "Không tìm thấy dữ liệu nhân vật");
 
     //Achievement Controller
     //DailyMission  Controller
     //Event Controller
     //Fight Controller
-    map.put(GAME_SHOW_TIMEOUT,           "Chua den gio mo phu ban");
-    map.put(MAX_FIGHT,                   "Ban da hoan thanh tat ca cac ai");
-    map.put(FIGHT_LOSS,                  "That bai");
-    map.put(IDOL_ALREADY_FOUGHT,         "Idol da xuat chien");
-    map.put(IDOL_ALREADY_RESTORE,        "Idol da tai xuat chien");
-    map.put(GAME_SHOW_MAX,               "Ban da hoan thanh ta ca phu ban");
-    map.put(RUN_SHOW_MAX,                "Ban da chay tat ca cac show");
-    map.put(MAX_SHOPPING,                "Ban da hoan thanh tat ca cac luot shopping");
+    map.put(GAME_SHOW_TIMEOUT,           "Phụ bản Gameshow chưa mở, vui lòng thử lại sau");
+    map.put(MAX_FIGHT,                   "Bạn đã hoàn thành tất cả các ải");
+    map.put(FIGHT_LOSS,                  "Khiêu chiến thất bại");
+    map.put(IDOL_ALREADY_FOUGHT,         "Idol đã xuất chiến");
+    map.put(IDOL_ALREADY_RESTORE,        "Idol đã hồi phục lượt xuất chiến");
+    map.put(GAME_SHOW_MAX,               "Bạn đã hoàn thành tất cả phụ bản");
+    map.put(RUN_SHOW_MAX,                "Bạn đã hoàn thành tất cả lượt chạy show trong ngày");
+    map.put(MAX_SHOPPING,                "Bạn đã hoàn thành tất cả lượt shopping trong ngày");
 
     //Group Controller
-    map.put(INVALID_GROUP_TYPE,          "invalid_group_type");
-    map.put(GROUP_PERM,                  "fail_permission");
-    map.put(DUP_MEMBER,                  "set_role_fail_dup_memberID");
-    map.put(GROUP_DELAY,                 "group_delay");
-    map.put(NO_GROUP,                    "user_have_no_group");
-    map.put(UNKNOWN_GID,                 "unknown_gid");
-    map.put(ALREADY_JOIN,                "user_already_have_group");
-    map.put(OWNER_KICK,                  "fail_cant_kick_owner");
-    map.put(OWNER_LEAVE,                 "leave_group_fail_admin");
-    map.put(SELF_APPROVE,                "can_not_self_approve");
-    map.put(GROUP_FULL_SEAT,             "group_full_seat");
-    map.put(GROUP_JOIN_PENDING,          "group_join_pending");
-    map.put(MEMBER_NOT_FOUND,            "member_not_found");
-    map.put(MISSION_NOT_FOUND,           "mission_not_found");
+    map.put(INVALID_GROUP_TYPE,          "Dữ liệu công ty không hợp lệ");
+    map.put(GROUP_PERM,                  "Chức vụ không phù hợp để thực hiện thao tác này");
+    map.put(DUP_MEMBER,                  "Không thể thay đổi chức vụ bản thân");
+    map.put(GROUP_DELAY,                 "Bạn vừa rời khỏi công ty, vui lòng chờ 24h");
+    map.put(NO_GROUP,                    "Bạn chưa tham gia công ty");
+    map.put(UNKNOWN_GID,                 "Không tìm thấy dữ liệu công ty");
+    map.put(ALREADY_JOIN,                "Bạn đã tham gia công ty");
+    map.put(OWNER_KICK,                  "Không thể tự kick bản thân");
+    map.put(OWNER_LEAVE,                 "Bạn đang giữ chức vụ giám đốc, không thể rời công ty");
+    map.put(SELF_APPROVE,                "Chức vụ không phù hợp để duyệt");
+    map.put(GROUP_FULL_SEAT,             "Công ty đã đủ thành viên");
+    map.put(GROUP_JOIN_PENDING,          "Đang chờ duyệt");
+    map.put(MEMBER_NOT_FOUND,            "Không tìm thấy dữ liệu thành viên");
+    map.put(MISSION_NOT_FOUND,           "Không tìm thấy dữ liệu nhiệm vụ công ty");
 
     //Idol Controller
-    map.put(IDOL_NOT_EXIST,              "idol_not_exist");
-    map.put(IDOL_MAX_LEVEL,              "idol_max_level");
-    map.put(IDOL_LV_UP_INSUFFICIENT,     "idol_lv_up_insufficient_exp");
-    map.put(IDOL_HONOR_MAX_LEVEL,        "idol_honor_max_level");
-    map.put(INSUFFICIENT_APT_EXP,        "insufficient_apt_exp");
-    map.put(APT_LIMIT,                   "idol_apt_limit");
-    map.put(HALO_NOT_EXIST,              "halo_not_exist");
-    map.put(HALO_PREFIX_NOT_MATCH,       "prefix_not_match");
-    map.put(HALO_DATA_INVALID,           "halo_data_invalid");
-    map.put(HALO_LEVEL_UP_FAIL,          "halo_level_up_fail");
-    map.put(HALO_LEVEL_MAX,              "halo_level_max");
+    map.put(IDOL_NOT_EXIST,              "Idol không tồn tại");
+    map.put(IDOL_MAX_LEVEL,              "Idol đã đạt cấp tối đa");
+    map.put(IDOL_LV_UP_INSUFFICIENT,     "Cát xê không đủ để tăng cấp Idol");
+    map.put(IDOL_HONOR_MAX_LEVEL,        "Idol đã đạt cấp danh hiệu tối đa");
+    map.put(INSUFFICIENT_APT_EXP,        "EXP tố chất không đủ");
+    map.put(APT_LIMIT,                   "Tố chất của Idol đã đạt giới hạn, sau khi đề cử tăng giới hạn");
+    map.put(HALO_NOT_EXIST,              "Vòng sáng không tồn tại");
+    map.put(HALO_PREFIX_NOT_MATCH,       "Thông tin không hợp lệ, vui lòng thử lại");
+    map.put(HALO_DATA_INVALID,           "Dữ liệu vòng sáng không hợp lệ");
+    map.put(HALO_LEVEL_UP_FAIL,          "Tăng cấp vòng sáng thất bại");
+    map.put(HALO_LEVEL_MAX,              "Vòng sáng đã đạt cấp tối đa");
 
     //Inbox Controller
-    map.put(MSG_REWARD_CLAIM_ALREADY,    "msg_reward_already_claim");
-    map.put(MSG_NOT_EXIST,               "msg_not_exist");
-    map.put(MSG_REWARD_INVALID,          "msg_reward_invalid");
+    map.put(MSG_REWARD_CLAIM_ALREADY,    "Bạn đã nhận vật phẩm đính kèm");
+    map.put(MSG_NOT_EXIST,               "Thư không tồn tại");
+    map.put(MSG_REWARD_INVALID,          "Dữ liệu phần thưởng không hợp lệ");
 
     //Item Controller
-    map.put(INSUFFICIENT_MATERIAL,       "insufficient_material");
-    map.put(MERGE_DAILY_LIMIT,           "merge_daily_limit");
+    map.put(INSUFFICIENT_MATERIAL,       "Không đủ nguyên liệu để ghép");
+    map.put(MERGE_DAILY_LIMIT,           "Số lần ghép hàng ngày đã đạt giới hạn");
+    map.put(ZERO_MERGE_COUNT,            "Số lượng ghép phải từ 1 trở lên");
 
     //Mission Controller
-    map.put(MISSION_NOT_ACCOMPLISH,      "mission_not_accomplish");
+    map.put(MISSION_NOT_ACCOMPLISH,      "Nhiệm vụ chưa hoàn thành");
 
     //Production Controller
-    map.put(CLAIM_PRODUCT_TIME_OUT,      "claim_product_timeout");
+    map.put(CLAIM_PRODUCT_TIME_OUT,      "Không đủ số lần kinh doanh");
 
     //Rollcall Controller
-    map.put(GIFT_CARD_EXPIRE,            "gift_card_expire");
-    map.put(VIP_GIFT_CLAIM_FAIL,         "vip_gift_claim_fail");
+    map.put(GIFT_CARD_EXPIRE,            "Thẻ tháng đã hết hạn");
+    map.put(VIP_GIFT_CLAIM_FAIL,         "Nhận thất bại, vui lòng thử lại");
 
     //Travel Controller
-    map.put(CLAIM_TRAVEL_INSUFFICIENT,   "claim_travel_insufficient_count");
+    map.put(CLAIM_TRAVEL_INSUFFICIENT,   "Không đủ số lượt đu đưa");
     map.put(CLAIM_TRAVEL_MISS,           "claim_travel_miss");
-    map.put(MAX_TRAVEL_ADD,              "max_travel_add");
-    map.put(INSUFFICIENT_VIEW,           "insufficient_view");
+    map.put(MAX_TRAVEL_ADD,              "Số lượt mua hàng ngày đã đạt giới hạn, tăng cấp VIP có thể tăng giới hạn");
+    map.put(INSUFFICIENT_VIEW,           "Lượng view không đủ");
 
     //Ranking Controller
-    map.put(INVALID_RANK,                "invalid_rank");
-    map.put(UNKNOWN_RANK_TYPE,           "unknown_rank_type");
-    map.put(RANKING_NOT_ACTIVE,          "ranking_not_active");
+    map.put(INVALID_RANK,                "Không nằm trong BXH");
+    map.put(UNKNOWN_RANK_TYPE,           "Dữ liệu xếp hạng không hợp lệ");
+    map.put(RANKING_NOT_ACTIVE,          "Không trong thời gian sự kiện");
   }
 }

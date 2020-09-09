@@ -255,13 +255,13 @@ public class UserEffectHandler implements EffectHandler{
 
       switch (propertyId) {
         case AVATAR:
-          int newAvatar = extAgrs.newAvatarId%10;
+          int newAvatar = extAgrs.intParam %10;
           newAvatar = Math.max(newAvatar, 0);
           session.userGameInfo.avatar = newAvatar;
           return EffectHandler.SUCCESS;
 
         case DISPLAY_NAME:
-          return session.userGameInfo.replaceDisplayName(session, extAgrs.newDisplayName);
+          return session.userGameInfo.replaceDisplayName(session, extAgrs.strParam);
 
         default:
           return EffectHandler.UNKNOWN_PROPERTY;

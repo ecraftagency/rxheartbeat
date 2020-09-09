@@ -162,7 +162,7 @@ public class UserGameInfo extends GameInfo {
       lastMediaClaim        = (int)(curMs/1000);
       MediaData.Media media = MediaData.mediaMap.get(nextQuestion);
 
-      if (media != null && time > 0) {
+      if (media != null && isActiveTime()) {
         List<List<Integer>> rewards;
         EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 

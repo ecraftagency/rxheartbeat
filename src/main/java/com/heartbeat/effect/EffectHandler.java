@@ -21,18 +21,18 @@ public interface EffectHandler {
   int    PARAM3  = 3;
 
   class ExtArgs {
-    int idolId;
-    int newAvatarId;
-    String newDisplayName;
+    int     objId;
+    int     intParam;
+    String  strParam;
 
     public static ExtArgs of() {
       return def;
     }
-    public static ExtArgs ofDefault(int idolId, int newAvatarId, String newDisplayName) {
-      ExtArgs r = new ExtArgs();
-      r.idolId = idolId;
-      r.newAvatarId = newAvatarId;
-      r.newDisplayName = newDisplayName;
+    public static ExtArgs ofDefault(int objId, int intParam, String strParam) {
+      ExtArgs r   = new ExtArgs();
+      r.objId     = objId;
+      r.intParam  = intParam;
+      r.strParam  = strParam;
       return r;
     }
   }

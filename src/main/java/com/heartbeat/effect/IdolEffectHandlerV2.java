@@ -173,7 +173,7 @@ public class IdolEffectHandlerV2 implements EffectHandler{
   @Override
   public String handleEffect(ExtArgs extArgs, Session session, final List<Integer> effectFormat) {
     int effectType = effectFormat.get(PARAM0);
-    Idols.Idol idol = session.userIdol.idolMap.get(extArgs.idolId);
+    Idols.Idol idol = session.userIdol.idolMap.get(extArgs.objId);
 
     if (effectType  == 27 || effectType == 26) { //filter on idol first, this mean random idol
       int nIdol         = session.userIdol.idolMap.size();

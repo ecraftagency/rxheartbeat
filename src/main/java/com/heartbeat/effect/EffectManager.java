@@ -15,6 +15,7 @@ public class EffectManager implements EffectHandler{
   private EffectHandler dropEffectHandler;
   private EffectHandler inventoryEffectHandler;
   private EffectHandler titleEffectHandler;
+  private EffectHandler flipEffectHandler;
 
   public static EffectManager inst() {
     return instance;
@@ -26,6 +27,7 @@ public class EffectManager implements EffectHandler{
     inventoryEffectHandler    = InventoryEffectHandler.inst();
     dropEffectHandler         = new DropEffectHandler();
     titleEffectHandler        = new NetAwardEffectHandler();
+    flipEffectHandler         = new FlipEffectHandler();
   }
 
   @Override
@@ -59,6 +61,9 @@ public class EffectManager implements EffectHandler{
         return "ok";
       }
       return "effect_add_idol_fail";
+    }
+    else if(type == 105) {
+      return flipEffectHandler.handleEffect(extArgs, session, effectFormat);
     }
     return EffectHandler.UNKNOWN_FORMAT_TYPE;
   }

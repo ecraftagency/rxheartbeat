@@ -27,6 +27,7 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
+import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import io.vertx.ext.web.Router;
@@ -155,6 +156,8 @@ public class HBServer extends AbstractVerticle {
     retriever.getConfig(ar -> {
       if (ar.succeeded()) {
         systemConfig = ar.result();
+        
+        Passport100D.webClient = WebClient.create(vertx);
 
         MessageConsumer<JsonObject> messageConsumer = eventBus.consumer(nodeBus);
         messageConsumer.handler(new InternalController());
