@@ -15,6 +15,7 @@ public class LoginRequest {
   public String clientSource;
   public String buildSource;
   public String clientAddress;
-  public int    snsflag;
+  public int    snsFlag;
+  public String snsToken;
   public int    languageCode;
 }

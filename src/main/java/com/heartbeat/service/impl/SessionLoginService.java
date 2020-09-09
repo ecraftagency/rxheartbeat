@@ -3,7 +3,9 @@ package com.heartbeat.service.impl;
 import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
+import com.heartbeat.Passport100D;
 import com.heartbeat.db.cb.CBCounter;
+import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -19,8 +21,6 @@ public class SessionLoginService implements AuthService {
 
   @Override
   public void processLogin(LoginRequest request, long curMs, Handler<AsyncResult<Profile>> handler) {
-    int userID = Integer.parseInt(request.userID);
-
     String clientVersion = request.clientVersion;
     String clientSource = request.clientSource;
     String osPlatForm = request.osPlatform;
@@ -29,41 +29,119 @@ public class SessionLoginService implements AuthService {
     boolean versionCheck = versionCheck(clientVersion, clientSource, osPlatForm, buildSource, curMs);
 
     if (versionCheck) {
-      String password = request.password;
-      String snsClientToken = request.facebookToken;
-      int snsFlag = request.snsflag;
-
-      if (userID > 0 && Utilities.isValidString(password)) {
-        handleGameLogin(request,userID, request.userID, password, snsClientToken, ar -> {
-          if (ar.succeeded()) {
-            handler.handle(Future.succeededFuture(ar.result()));
-          }
-          else {
-            handler.handle(Future.failedFuture(ar.cause()));
-          }
-        });
+      int snsFlag = request.snsFlag;
+      if (snsFlag == 1) {
+        d100Login(request, handler);
       }
       else {
-        registerAccount(request, ar -> {
-          if (ar.succeeded()) {
-            Session register = ar.result();
-            Profile profile  = handleLoginResult("ok", register, snsClientToken, request);
-            handler.handle(Future.succeededFuture(profile));
-          }
-          else {
-            handler.handle(Future.failedFuture(ar.cause()));
-          }
-        });
+        processCommonLogin(request, handler);
       }
+
     }
     else {
       handler.handle(Future.failedFuture("login_client_update"));
     }
   }
 
-  protected void handleGameLogin(LoginRequest request, int userID, String strId,
-                                    String password,
-                                    String snsToken, Handler<AsyncResult<Profile>> handler) {
+  private void d100Login(LoginRequest request, Handler<AsyncResult<Profile>> handler) {
+    String d100Token = request.snsToken;
+    Passport100D.verify(d100Token, ar -> {
+      if (ar.succeeded()) {
+        try {
+          Passport100D.Player pInfo = ar.result();
+          String key = String.format("100d_%s", pInfo.player_id);
+          String strUserId = CBMapper.getInstance().getValue(key);
+          if (strUserId != null) {
+            handle100DLogin(request, Integer.parseInt(strUserId), strUserId, d100Token, handler);
+          }
+          else {
+            registerAccount(request, rar -> {
+              if (rar.succeeded()) {
+                Session register = rar.result();
+                Profile profile  = handleLoginResult("ok", register, "", request);
+                CBMapper.getInstance().mapOverride(Integer.toString(register.id), key);
+                handler.handle(Future.succeededFuture(profile));
+              }
+              else {
+                handler.handle(Future.failedFuture(ar.cause()));
+              }
+            });
+          }
+        }
+        catch (Exception e) {
+          handler.handle(Future.failedFuture("authorization_fail"));
+        }
+      }
+      else {
+        handler.handle(Future.failedFuture(ar.cause()));
+      }
+    });
+  }
+
+  private void handle100DLogin(LoginRequest request, int userID, String strId,
+                               String snsToken, Handler<AsyncResult<Profile>> handler) {
+    Session oldSession = SessionPool.getSessionFromPool(userID);
+    if (oldSession != null) {
+      if (oldSession.id == userID) {
+        LOG.authException(String.format("Kick login. sessionId: %d", userID));
+        Profile profile = handleLoginResult("kick", oldSession, snsToken, request);
+        handler.handle(Future.succeededFuture(profile));
+      }
+      else {
+        handler.handle(Future.failedFuture("login_wrong_pwd"));
+      }
+    }
+    else {
+      CBSession.getInstance().load(strId, ar -> {
+        if (ar.succeeded()) {
+          Session session = ar.result();
+          if (session.isBan()) {
+            handler.handle(Future.failedFuture("login_ban"));
+            return;
+          }
+          session.id = userID;
+          Profile profile = handleLoginResult("ok", session, snsToken, request);
+          handler.handle(Future.succeededFuture(profile));
+        }
+        else {
+          handler.handle(Future.failedFuture(ar.cause()));
+        }
+      });
+    }
+  }
+
+  private void processCommonLogin(LoginRequest request, Handler<AsyncResult<Profile>> handler) {
+    int userID            = Integer.parseInt(request.userID);
+    String password       = request.password;
+    String snsClientToken = request.facebookToken;
+
+    if (userID > 0 && Utilities.isValidString(password)) {
+      handleCommonLogin(request,userID, request.userID, password, snsClientToken, ar -> {
+        if (ar.succeeded()) {
+          handler.handle(Future.succeededFuture(ar.result()));
+        }
+        else {
+          handler.handle(Future.failedFuture(ar.cause()));
+        }
+      });
+    }
+    else {
+      registerAccount(request, ar -> {
+        if (ar.succeeded()) {
+          Session register = ar.result();
+          Profile profile  = handleLoginResult("ok", register, snsClientToken, request);
+          handler.handle(Future.succeededFuture(profile));
+        }
+        else {
+          handler.handle(Future.failedFuture(ar.cause()));
+        }
+      });
+    }
+  }
+
+  protected void handleCommonLogin(LoginRequest request, int userID, String strId,
+                                   String password,
+                                   String snsToken, Handler<AsyncResult<Profile>> handler) {
 
     Session oldSession = SessionPool.getSessionFromPool(userID);
     if (oldSession != null) {

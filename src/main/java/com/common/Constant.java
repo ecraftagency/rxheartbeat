@@ -31,6 +31,31 @@ public class Constant {
     public static final int         MAX_USER_PER_NODE               = 1000000;
   }
 
+  public static class PASSPORT {
+    public static class Env {
+      public String host;
+      public String secret;
+      public String paramFormat;
+      public static Env of(String host, String secret, String paramFormat) {
+        Env e         = new Env();
+        e.host        = host;
+        e.secret      = secret;
+        e.paramFormat = paramFormat;
+        return e;
+      }
+    }
+
+    public static boolean PROD = false;
+    public static Env     ENV;
+
+    static {
+      Env dev   = Env.of("https://dev-sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
+      Env prod  = Env.of("https://sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
+
+      ENV       = PROD ? prod : dev;
+    }
+  }
+
   public static class ONLINE_INFO {
     public static int               ONLINE_RECORD_UPDATE_TIME       = 20; // 20'
     public static int               ONLINE_RECORD_LDB_TIME          = 4; // 20'
