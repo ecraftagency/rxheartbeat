@@ -7,6 +7,7 @@ import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
 import com.heartbeat.model.data.UserLDB;
+import com.statics.WordFilter;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
 import com.transport.model.Group;
@@ -306,6 +307,20 @@ public class Session {
       handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INSUFFICIENT_TIME, "insufficient_time")));
       return;
     }
+
+    if (!WordFilter.isValidInput(name, "VN")) {
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INVALID_GROUP_NAME, "invalid_group_name")));
+      return;
+    }
+    if (!WordFilter.isValidInput(externalInform, "VN")) {
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INVALID_EXT_INFORM, "invalid_group_name")));
+      return;
+    }
+    if (!WordFilter.isValidInput(internalInform, "VN")) {
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INVALID_INT_INFORM, "invalid_group_name")));
+      return;
+    }
+
     if (Group.isValidGid(groupID)) { //user have group
       handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
     }
@@ -628,6 +643,9 @@ public class Session {
     int role = group.getRole(this.id);
 
     if (role == Group.OWNER_ROLE || role == Group.MOD_ROLE) {
+      if (!WordFilter.isValidInput(informMsg, "VN")) {
+        return Msg.map.getOrDefault(Msg.INVALID_EXT_INFORM, "invalid_inform");
+      }
       return group.changeInform(informMsg, type);
     }
     else

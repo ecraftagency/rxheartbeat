@@ -143,17 +143,30 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       PaymentData.loadJson(payment);
 
-      WordFilter.loadJson("");
+      WordFilter.loadText("data/filter0");
+      WordFilter.loadText("data/filter1");
+      WordFilter.loadText("data/filter2");
+      WordFilter.loadText("data/filter3");
+      WordFilter.loadText("data/filter4");
+      WordFilter.loadText("data/filter5");
+      WordFilter.loadText("data/filter6");
+      WordFilter.loadText("data/filter7");
+      WordFilter.loadText("data/filter8");
+      WordFilter.loadText("data/filter9");
+      WordFilter.loadText("data/filter10");
+      WordFilter.loadText("data/filter11");
+      WordFilter.loadText("data/filter12");
     }
     catch (Exception ioe) {
       System.out.println(ioe.getMessage());
     }
 
-    UserAchievement ac = UserAchievement.ofDefault();
-    ac.recordClaim(4, 1);
-    System.out.println(ac.checkClaim(4, 33));
-    for (Long l : ac.claimedAchievement.get(4))
-      System.out.println(Long.toBinaryString(l));
+    System.out.println(WordFilter.isValidInput("+.hoa.xa.hoi.chu.nghia", "VN"));
+//    UserAchievement ac = UserAchievement.ofDefault();
+//    ac.recordClaim(4, 1);
+//    System.out.println(ac.checkClaim(4, 33));
+//    for (Long l : ac.claimedAchievement.get(4))
+//      System.out.println(Long.toBinaryString(l));
 //    List<AchievementData.AchievementDto> dtos = AchievementData.getAchievementDto(4, 6);
 //    for (AchievementData.AchievementDto dto : dtos)
 //      System.out.println(dto.milestoneValue);

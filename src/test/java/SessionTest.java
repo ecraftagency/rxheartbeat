@@ -1,4 +1,3 @@
-import com.heartbeat.controller.SystemController;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserGameInfo;
 import com.heartbeat.model.data.UserIdol;
@@ -97,7 +96,7 @@ public class SessionTest {
                       .stream()
                       .collect(Collectors.groupingBy(TravelData.TravelNPC::getType, Collectors.toList())));
 
-      WordFilter.loadJson("");
+      WordFilter.loadText("");
     }
     catch (Exception ioe) {
       //

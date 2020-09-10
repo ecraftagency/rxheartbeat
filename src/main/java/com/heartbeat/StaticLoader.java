@@ -144,6 +144,18 @@ public class StaticLoader {
             StandardCharsets.UTF_8);
     PaymentData.loadJson(payment);
 
-    WordFilter.loadJson("");
+    WordFilter.loadText("data/filter0");
+    WordFilter.loadText("data/filter1");
+    WordFilter.loadText("data/filter2");
+    WordFilter.loadText("data/filter3");
+    WordFilter.loadText("data/filter4");
+    WordFilter.loadText("data/filter5");
+    WordFilter.loadText("data/filter6");
+    WordFilter.loadText("data/filter7");
+    WordFilter.loadText("data/filter8");
+    WordFilter.loadText("data/filter9");
+    WordFilter.loadText("data/filter10");
+    WordFilter.loadText("data/filter11");
+    WordFilter.loadText("data/filter12");
   }
 }

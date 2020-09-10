@@ -94,7 +94,7 @@ public class HaloTest {
               StandardCharsets.UTF_8);
       VipData.loadJson(vipJson);
 
-      WordFilter.loadJson("");
+      WordFilter.loadText("");
     }
     catch (Exception ioe) {
       //

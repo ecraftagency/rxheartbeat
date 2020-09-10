@@ -64,6 +64,9 @@ public class Msg {
   public static final int GROUP_JOIN_PENDING          = 311;
   public static final int MEMBER_NOT_FOUND            = 312;
   public static final int MISSION_NOT_FOUND           = 313;
+  public static final int INVALID_GROUP_NAME          = 314;
+  public static final int INVALID_EXT_INFORM          = 315;
+  public static final int INVALID_INT_INFORM          = 316;
 
   //idol
   public static final int IDOL_NOT_EXIST              = 400;
@@ -108,6 +111,9 @@ public class Msg {
   public static final int INVALID_RANK                = 1100;
   public static final int UNKNOWN_RANK_TYPE           = 1101;
   public static final int RANKING_NOT_ACTIVE          = 1102;
+
+  //netAward
+  public static final int AWARD_TITLE_INVALID         = 1200;
 
 
   /*
@@ -187,6 +193,9 @@ public class Msg {
     map.put(GROUP_JOIN_PENDING,          "Đang chờ duyệt");
     map.put(MEMBER_NOT_FOUND,            "Không tìm thấy dữ liệu thành viên");
     map.put(MISSION_NOT_FOUND,           "Không tìm thấy dữ liệu nhiệm vụ công ty");
+    map.put(INVALID_GROUP_NAME,          "Tên công ty không hợp lệ");
+    map.put(INVALID_EXT_INFORM,          "Nội dung đối ngoại không hợp lệ");
+    map.put(INVALID_INT_INFORM,          "Nội dung đối nội không hợp lệ");
 
     //Idol Controller
     map.put(IDOL_NOT_EXIST,              "Idol không tồn tại");
@@ -231,5 +240,8 @@ public class Msg {
     map.put(INVALID_RANK,                "Không nằm trong BXH");
     map.put(UNKNOWN_RANK_TYPE,           "Dữ liệu xếp hạng không hợp lệ");
     map.put(RANKING_NOT_ACTIVE,          "Không trong thời gian sự kiện");
+
+    //NetAward Controller
+    map.put(AWARD_TITLE_INVALID,          "Tuyên ngôn không hợp lệ");
   }
 }

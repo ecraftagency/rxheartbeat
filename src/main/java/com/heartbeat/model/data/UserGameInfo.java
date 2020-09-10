@@ -99,7 +99,7 @@ public class UserGameInfo extends GameInfo {
   public String updateDisplayName(Session session,  String dName) throws Exception {
     dName = dName.trim();
     if (Utilities.isValidString(dName)) {
-      if (WordFilter.isValidUserName(dName, session.buildSource)) {
+      if (WordFilter.isValidInput(dName, session.buildSource)) {
         String sha256DisplayName = Utilities.sha256Hash(dName);
         if (CBMapper.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
           this.displayName = dName;
@@ -118,7 +118,7 @@ public class UserGameInfo extends GameInfo {
   public String replaceDisplayName(Session session, String displayName){
     displayName = displayName.trim();
     if (Utilities.isValidString(displayName)) {
-      if (WordFilter.isValidUserName(displayName, session.buildSource)) {
+      if (WordFilter.isValidInput(displayName, session.buildSource)) {
         try {
           String sha256DisplayName = Utilities.sha256Hash(displayName);
           if (CBMapper.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {

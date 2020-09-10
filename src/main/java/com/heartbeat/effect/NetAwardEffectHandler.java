@@ -1,9 +1,11 @@
 package com.heartbeat.effect;
 
+import com.common.Msg;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBNetAward;
 import com.heartbeat.model.Session;
 import com.statics.VipData;
+import com.statics.WordFilter;
 import com.transport.model.NetAward;
 
 import java.util.HashMap;
@@ -40,6 +42,9 @@ public class NetAwardEffectHandler implements EffectHandler{
     String key = titleKeyMap.get(effectFormat.get(PARAM1));
     if (key == null)
       return "invalid_title_id";
+    if (!WordFilter.isValidInput(extArgs.strParam, "VN"))
+      return Msg.map.getOrDefault(Msg.AWARD_TITLE_INVALID, "award_title_invalid");
+
     NetAward netAward = NetAward.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.strParam);
     netAward.userTitleId     = session.userGameInfo.titleId;
     netAward.totalCrt        = session.userIdol.totalCrt();
