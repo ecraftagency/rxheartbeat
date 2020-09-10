@@ -8,6 +8,7 @@ import java.util.Map;
 public class RunShowData {
   public static class RunShow implements Common.hasKey<Integer> {
     public int            id;
+    public String         npcName;
     public long           minFanNPC;
     public long           maxFanNPC;
     public long           minAptNPC;

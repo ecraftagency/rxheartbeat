@@ -8,6 +8,7 @@ import java.util.Map;
 public class ShoppingData {
   public static class Shopping implements Common.hasKey<Integer> {
     public int id;
+    public String shopName;
     public long creativeNPC;
     public long moneyNPC;
     public List<Integer> reward;
