@@ -30,10 +30,10 @@ public class ItemController implements Handler<RoutingContext> {
             resp = processMergeItem(session, ctx);
             break;
           case "useSingleItem":
-            resp = processUseEffectItem(session, ctx);
+            resp = processUseSingleItem(session, ctx);
             break;
           case "useMultiItem":
-            resp = processUserMultiItem(session, ctx);
+            resp = processUseMultiItem(session, ctx);
             break;
           case "userInventory":
             resp = processGetUserInventory(session);
@@ -73,7 +73,7 @@ public class ItemController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processUseEffectItem(Session session, RoutingContext ctx) {
+  private ExtMessage processUseSingleItem(Session session, RoutingContext ctx) {
     ExtMessage  resp = ExtMessage.item();
     int         propId      = ctx.getBodyAsJson().getInteger("itemId");
     int         objId       = ctx.getBodyAsJson().getInteger("objId");
@@ -105,11 +105,13 @@ public class ItemController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processUserMultiItem(Session session, RoutingContext ctx) {
+  private ExtMessage processUseMultiItem(Session session, RoutingContext ctx) {
     ExtMessage resp = ExtMessage.item();
-    int propId      = ctx.getBodyAsJson().getInteger("itemId");
-    int amount      = ctx.getBodyAsJson().getInteger("amount");
-    int objId       = ctx.getBodyAsJson().getInteger("objId");
+    int     propId      = ctx.getBodyAsJson().getInteger("itemId");
+    int     amount      = ctx.getBodyAsJson().getInteger("amount");
+    int     objId       = ctx.getBodyAsJson().getInteger("objId");
+    int     intParam    = ctx.getBodyAsJson().getInteger("intParam"); //todo refactor this [objId, intParam, strParam]
+    String  strParam    = ctx.getBodyAsJson().getString("strParam");
 
     PropData.Prop prop = PropData.propMap.get(propId);
     if (prop == null || prop.isMultiUse != PropData.MULTI_ITEM) {
@@ -118,7 +120,7 @@ public class ItemController implements Handler<RoutingContext> {
     }
 
     if (session.userInventory.haveItem(propId, amount)) {
-      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, -1, "");
+      EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, intParam, strParam);
       session.userInventory.useItem(propId, amount);
       for (int i = 0; i < amount; i++) {
         resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);
