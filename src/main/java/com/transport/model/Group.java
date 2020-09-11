@@ -35,8 +35,8 @@ public class Group {
   public transient boolean        isChange;
 
   //runtime data
-  public Map<Integer, GroupMissionData.GroupMission>  missions;
-  public Map<Integer, Integer>                        missionHitMember;
+  public transient Map<Integer, GroupMissionData.GroupMission>  missions;
+  public Map<Integer, Integer>                                  missionHitMember;
   public int            missionStartDate;
   public int            missionEndDate;
   public String         strStartDate;
