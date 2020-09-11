@@ -33,9 +33,14 @@ public class CBGroup implements Cruder<UserGroup> {
     builder.append(keyPrefix).append("_").append(id);
 
     rxPersistBucket.defaultCollection().get(builder.toString()).subscribe(res -> {
-      UserGroup group = res.contentAs(UserGroup.class);
-      group.isChange  = false;
-      handler.handle(Future.succeededFuture(group));
+      try {
+        UserGroup group = res.contentAs(UserGroup.class);
+        group.isChange  = false;
+        handler.handle(Future.succeededFuture(group));
+      }
+      catch (Exception e) {
+        handler.handle(Future.failedFuture(e.getMessage()));
+      }
     }, err -> handler.handle(Future.failedFuture(err)));
   }
 

@@ -2,6 +2,7 @@ package com.heartbeat.model.data;
 
 import com.common.LOG;
 import com.common.Msg;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -18,6 +19,7 @@ import java.util.Map;
 import static com.statics.GroupMissionData.*;
 import static com.common.Constant.*;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGroup extends Group {
   public static UserGroup of(int id, Session session, int joinType, String externalInform, String internalInform, String name) {
     UserGroup re          = new UserGroup();

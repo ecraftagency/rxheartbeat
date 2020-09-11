@@ -144,6 +144,10 @@ public class StaticLoader {
             StandardCharsets.UTF_8);
     PaymentData.loadJson(payment);
 
+    String pick     = new String(Files.readAllBytes(Paths.get("data/json/pick.json")),
+            StandardCharsets.UTF_8);
+    PickData.loadJson(pick);
+
     WordFilter.loadText("data/filter0");
     WordFilter.loadText("data/filter1");
     WordFilter.loadText("data/filter2");

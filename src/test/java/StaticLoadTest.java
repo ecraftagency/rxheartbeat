@@ -156,6 +156,10 @@ public class StaticLoadTest {
       WordFilter.loadText("data/filter10");
       WordFilter.loadText("data/filter11");
       WordFilter.loadText("data/filter12");
+
+      String pick     = new String(Files.readAllBytes(Paths.get("data/json/pick.json")),
+              StandardCharsets.UTF_8);
+      PickData.loadJson(pick);
     }
     catch (Exception ioe) {
       System.out.println(ioe.getMessage());
