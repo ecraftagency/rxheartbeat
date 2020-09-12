@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FlipEffectHandler implements EffectHandler{
-  public FlipEffectHandler() {
+public class PickEffectHandler implements EffectHandler{
+  public PickEffectHandler() {
   }
 
   @Override

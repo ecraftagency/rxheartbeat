@@ -27,7 +27,7 @@ public class EffectManager implements EffectHandler{
     inventoryEffectHandler    = InventoryEffectHandler.inst();
     dropEffectHandler         = new DropEffectHandler();
     titleEffectHandler        = new NetAwardEffectHandler();
-    flipEffectHandler         = new FlipEffectHandler();
+    flipEffectHandler         = new PickEffectHandler();
   }
 
   @Override

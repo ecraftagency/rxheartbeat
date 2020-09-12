@@ -148,6 +148,7 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
     resp.timeChange       = session.userGameInfo.timeChange;
+    resp.effectResults    = session.effectResults;
     return resp;
   }
 

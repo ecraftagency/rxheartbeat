@@ -26,7 +26,7 @@ public class UserInbox extends Inbox {
 
   public static UserInbox ofDefault() {
     UserInbox ui          = new UserInbox();
-    ui.lastMailCheckTime  = System.currentTimeMillis()/1000;
+    ui.lastMailCheckTime  = System.currentTimeMillis();
     ui.claimedMsg         = new HashMap<>();
     return ui;
   }
