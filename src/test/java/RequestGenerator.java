@@ -3,6 +3,7 @@ import com.common.GlobalVariable;
 import com.common.Utilities;
 
 public class RequestGenerator {
+
   public static String getRoleRequest = "http://%s:%d/api/getrole?userid=%s&server_id=%s&time=%d&sign=%s";
   public static String getExchangeRequest = "http://%s:%d/exchange?userid=%s&roleid=%s&server_id=%s&order_id=%s&item_id=%s&money=%d&gold=%d&time=%d&sign=%s";
   public static String getIAPExchangeRequest = "http://%s:%d/iapexchange?userid=%s&roleid=%s&server_id=%s&order_id=%s&payload=%s&item_id=%s&money=%d&gold=%d&time=%d&sign=%s";

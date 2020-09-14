@@ -196,21 +196,23 @@ public class Constant {
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
-      ExtendEventInfo bpEvt = ExtendEventInfo.of(BP_EVT_ID);
-      ExtendEventInfo dbEvt = ExtendEventInfo.of(DB_EVT_ID);
-      evtMap.put(BP_EVT_ID, bpEvt);
-      evtMap.put(DB_EVT_ID, dbEvt);
+      ExtendEventInfo blackPinkEvt  = ExtendEventInfo.of(BP_EVT_ID);
+      blackPinkEvt.eventName        = "Black Pink";
+      ExtendEventInfo banDamEvt     = ExtendEventInfo.of(DB_EVT_ID);
+      banDamEvt.eventName           = "Ban Dam";
+      evtMap.put(BP_EVT_ID, blackPinkEvt);
+      evtMap.put(DB_EVT_ID, banDamEvt);
 
-      bpEvt.addIdol(IdolClaimInfo.of(48, 93, 10));
-      bpEvt.addIdol(IdolClaimInfo.of(49, 93, 10));
-      bpEvt.addIdol(IdolClaimInfo.of(50, 93, 10));
-      bpEvt.addIdol(IdolClaimInfo.of(51, 93, 10));
-      bpEvt.addIdol(IdolClaimInfo.of(52, 93, 10));
+      banDamEvt.addIdol(IdolClaimInfo.of(48, 93, 10));
+      banDamEvt.addIdol(IdolClaimInfo.of(49, 93, 10));
+      banDamEvt.addIdol(IdolClaimInfo.of(50, 93, 10));
+      banDamEvt.addIdol(IdolClaimInfo.of(51, 93, 10));
+      banDamEvt.addIdol(IdolClaimInfo.of(52, 93, 10));
 
-      dbEvt.addIdol(IdolClaimInfo.of(43, 92, 10));
-      dbEvt.addIdol(IdolClaimInfo.of(44, 92, 10));
-      dbEvt.addIdol(IdolClaimInfo.of(45, 92, 10));
-      dbEvt.addIdol(IdolClaimInfo.of(46, 92, 10));
+      blackPinkEvt.addIdol(IdolClaimInfo.of(43, 92, 10));
+      blackPinkEvt.addIdol(IdolClaimInfo.of(44, 92, 10));
+      blackPinkEvt.addIdol(IdolClaimInfo.of(45, 92, 10));
+      blackPinkEvt.addIdol(IdolClaimInfo.of(46, 92, 10));
     }
   }
 
