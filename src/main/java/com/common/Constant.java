@@ -197,7 +197,7 @@ public class Constant {
     static {
       evtMap = new HashMap<>();
       ExtendEventInfo blackPinkEvt  = ExtendEventInfo.of(BP_EVT_ID);
-      blackPinkEvt.eventName        = "Black Pink";
+      blackPinkEvt.eventName        = "Blak Pink";
       ExtendEventInfo banDamEvt     = ExtendEventInfo.of(DB_EVT_ID);
       banDamEvt.eventName           = "Ban Dam";
       evtMap.put(BP_EVT_ID, blackPinkEvt);
