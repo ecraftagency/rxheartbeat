@@ -715,4 +715,9 @@ public class Session {
     res.effectResults = new ArrayList<>();
     return res;
   }
+
+  public void gmtBan(int banTo) {
+    this.userProfile.banTo = banTo;
+    this.userProfile.lastLogin = 0;
+  }
 }

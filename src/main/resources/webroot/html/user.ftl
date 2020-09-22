@@ -104,7 +104,7 @@
         </div>
       </div>
     </div>
-    <div class="card top-buffer">
+    <!--div class="card top-buffer">
       <div class="card-header" id="sendHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#sendCollapse" aria-expanded="false" aria-controls="sendCollapse">
@@ -115,6 +115,12 @@
       <div id="sendCollapse" class="collapse" aria-labelledby="sendHeader" data-parent="#accordion">
         <div class="card-body">
           <div class="row">
+             <div class="receipts col-sm-12">
+                <input v-model="receipts" type="text" class="form-control" id="receipts" name="receipts"
+                placeholder="id...">
+             </div>
+          </div>
+          <div class="row top-buffer">
              <div class="col-sm-4">
                 <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
                 placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
@@ -135,12 +141,40 @@
           </div>
         </div>
       </div>
-    </div>
+    </div-->
+</div>
+
+<div class="row big-buffer" >
+ <div class="receipts col-sm-12">
+    <input v-model="receipts" type="text" class="form-control" id="receipts" name="receipts"
+    placeholder="Gửi mail..., user id cách nhau dấu phẩy ko khoảng trắng">
+ </div>
+</div>
+<div class="row top-buffer">
+ <div class="col-sm-4">
+    <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
+    placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
+ </div>
+ <div class="col-sm-7">
+    <input v-model="mailItems" type="text" class="form-control" id="mailItems" name="mailItems"
+    placeholder="Vật phẩm...">
+ </div>
+ <div class="col-sm-1">
+    <button type="button" class="btn btn-primary w-100" v-on:click="sendMail">Send</button>
+ </div>
+</div>
+<div class="row top-buffer">
+ <div class="mailInput col-sm-12">
+    <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
+    placeholder="Nội Dung">
+ </div>
 </div>
 
 <#include "footer.ftl">
-
 <script>
+$(document).ready(function() {
+    $(".toast").toast('show');
+});
 const host = '${host}/api/fwd'
 const postOptions = function(data) {
 return {
@@ -162,6 +196,7 @@ var app = new Vue({
         mailTitle:'',
         mailContent:'',
         mailItems:'',
+        receipts:'',
         resp: undefined,
         isLoaded: false
     }
@@ -172,16 +207,22 @@ var app = new Vue({
     sendMail: function (event){
        if(!confirm("Hãy kiểm tra kỹ format quà nha bạn!"))
             return;
-       let data = { cmd:'sendPrivateMail', sessionId: this.sessionId , mailTitle: this.mailTitle, mailContent: this.mailContent, mailItems: this.mailItems};
+       var receiver = this.receipts.split(',');
+       for (var i = 0; i < receiver.length; i++) {
+         let data = { cmd:'sendPrivateMail', sessionId: receiver[i] + '', mailTitle: this.mailTitle, mailContent: this.mailContent, mailItems: this.mailItems};
 
-      fetch(host, postOptions(data))
-      .then(response => response.json())
-      .then(data => this.success(data))
-      .catch(error => this.isLoaded = false);
+         fetch(host, postOptions(data))
+         .then(response => response.json())
+         .then(data => {
+           alert('ok');
+           //this.success(data)
+         })
+         .catch(error => alert(error));
+       }
     },
     banUser: function(event){
         let d = new Date(this.banDate);
-        this.codeVal = 'session.userProfile.banTo = ' + Math.round(d.getTime()/1000) + ';'
+        this.codeVal = 'session.userProfile.gmtBan(' + Math.round(d.getTime()/1000) + ');';
     },
     getUserId: function(event){
        let data = { cmd:"getSessionId", serverId: this.serverId, userName: this.userName };
@@ -248,4 +289,5 @@ var app = new Vue({
 }
 
 .top-buffer { margin-top:15px; }
+.big-buffer { margin-top:100px; }
 </style>
