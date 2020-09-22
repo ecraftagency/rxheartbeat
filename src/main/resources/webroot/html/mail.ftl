@@ -18,8 +18,7 @@
 
 <div class="row top-buffer">
    <div class="col-sm-12">
-      <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
-      placeholder="Nội Dung">
+      <textarea v-model="mailContent" class="form-control" id="mailContent" rows="10"></textarea>
    </div>
 </div>
 

@@ -165,8 +165,7 @@
 </div>
 <div class="row top-buffer">
  <div class="mailInput col-sm-12">
-    <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
-    placeholder="Nội Dung">
+    <textarea v-model="mailContent" class="form-control" id="mailContent" rows="10"></textarea>
  </div>
 </div>
 
@@ -214,8 +213,7 @@ var app = new Vue({
          fetch(host, postOptions(data))
          .then(response => response.json())
          .then(data => {
-           alert('ok');
-           //this.success(data)
+            alert(data.msg);
          })
          .catch(error => alert(error));
        }
