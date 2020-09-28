@@ -669,15 +669,14 @@ public class Session {
     }
   }
 
-  private void updateLDBScore() {
+  public void updateLDBScore() {
     long totalCrt = userIdol.totalCrt();
     long totalPerf = userIdol.totalPerf();
     long totalAttr = userIdol.totalAttr();
     long totalTalent = totalCrt + totalPerf + totalAttr;
-
     if (userLDB != null) {
-      userLDB.addLdbRecord(this, Constant.LEADER_BOARD.TALENT_LDB_ID, totalTalent);
-      userLDB.addLdbRecord(this, Constant.LEADER_BOARD.FIGHT_LDB_ID, userFight.currentFightLV.id);
+      userLDB.addLdbRecord(this, LEADER_BOARD.TALENT_LDB_ID, totalTalent);
+      userLDB.addLdbRecord(this, LEADER_BOARD.FIGHT_LDB_ID, userFight.currentFightLV.id);
     }
   }
 
@@ -719,5 +718,12 @@ public class Session {
   public void gmtBan(int banTo) {
     this.userProfile.banTo = banTo;
     this.userProfile.lastLogin = 0;
+  }
+
+  //todo don't call without catch
+  public void gmtUpdateName(String newDisplayName) {
+    String res = this.userGameInfo.replaceDisplayName(this, newDisplayName);
+    if (!res.equals("ok"))
+      throw new RuntimeException(res);
   }
 }

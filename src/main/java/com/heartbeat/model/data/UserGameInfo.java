@@ -118,7 +118,7 @@ public class UserGameInfo extends GameInfo {
   public String replaceDisplayName(Session session, String displayName){
     displayName = displayName.trim();
     if (Utilities.isValidString(displayName)) {
-      if (WordFilter.isValidInput(displayName, session.buildSource)) {
+      if (!WordFilter.isValidInput(displayName, session.buildSource)) {
         try {
           String sha256DisplayName = Utilities.sha256Hash(displayName);
           if (CBMapper.getInstance().map(Integer.toString(session.id), sha256DisplayName).equals("ok")) {
@@ -126,6 +126,7 @@ public class UserGameInfo extends GameInfo {
             this.displayName = displayName;
             String sha256OldDisplayName = Utilities.sha256Hash(oldDisplayName);
             CBMapper.getInstance().unmap(sha256OldDisplayName);
+            session.updateLDBScore();
             return "ok";
           }
           else

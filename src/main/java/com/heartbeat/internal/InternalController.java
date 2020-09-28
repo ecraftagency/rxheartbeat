@@ -9,6 +9,7 @@ import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
+import com.heartbeat.model.data.UserLDB;
 import com.heartbeat.model.data.UserPayment;
 import com.heartbeat.scheduler.ExtendEventInfo;
 import com.heartbeat.service.ConstantInjector;
@@ -477,6 +478,8 @@ public class InternalController implements Handler<Message<JsonObject>> {
       if (sr.succeeded()) {
         try {
           Session session = sr.result();
+          session.id      = Integer.parseInt(sessionId);
+          session.userLDB = UserLDB.ofDefault();
           sessionInjector.inject(session, path, value);
 
           resp.put("msg", "ok");
