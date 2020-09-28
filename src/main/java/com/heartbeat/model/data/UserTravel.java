@@ -164,7 +164,7 @@ public class UserTravel extends Travel {
 
     long viewConsume = 0;
     for (int i = 0; i < count; i++) {
-      viewConsume += count*(COEFF_0 + COEFF_1*(dailyTravelAdd + i)*(dailyTravelAdd + i)); //100k + 10k*d^2
+      viewConsume += (COEFF_0 + COEFF_1*(dailyTravelAdd + i)*(dailyTravelAdd + i)); //100k + 10k*d^2
     }
 
     if (session.userGameInfo.view < viewConsume)

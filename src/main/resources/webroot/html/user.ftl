@@ -220,7 +220,7 @@ var app = new Vue({
     },
     banUser: function(event){
         let d = new Date(this.banDate);
-        this.codeVal = 'session.userProfile.gmtBan(' + Math.round(d.getTime()/1000) + ');';
+        this.codeVal = 'session.gmtBan(' + Math.round(d.getTime()/1000) + ');';
     },
     getUserId: function(event){
        let data = { cmd:"getSessionId", serverId: this.serverId, userName: this.userName };

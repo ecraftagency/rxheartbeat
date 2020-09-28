@@ -1,6 +1,5 @@
 package com.heartbeat.model.data;
 
-import com.common.LOG;
 import com.common.Msg;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -11,6 +10,7 @@ import com.transport.model.Inventory;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class UserInventory extends Inventory {
   private UserInventory() {
     userItems   =   new HashMap<>();
@@ -58,6 +58,16 @@ public class UserInventory extends Inventory {
     }
     else {
       addStaticItem(itemId, amount);
+    }
+  }
+
+  public void removeItem(int itemId, int amount) {
+    if (amount <= 0)
+      return;
+    if (!PropData.propMap.containsKey(itemId))
+      return;
+    if (!isExpireItem(itemId)) {
+      removeStaticItem(itemId, amount);
     }
   }
 
@@ -160,6 +170,10 @@ public class UserInventory extends Inventory {
     else {
       userItems.put(itemId, amount);
     }
+  }
+
+  private void removeStaticItem(int itemId, int amount) {
+    userItems.computeIfPresent(itemId, (k,v) -> v > amount ? v - amount : 0);
   }
 
   private boolean haveStaticItem(int itemId, int amount) {

@@ -74,8 +74,9 @@ public class MediaController implements Handler<RoutingContext> {
     session.userGameInfo.updateUserMedia(curMs);
     session.userInventory.useItem(USER_GAME_INFO.MEDIA_CONTRACT_ITEM, amount);
     session.userGameInfo.addMediaClaim(amount);
-    resp.data.gameInfo = session.userGameInfo;
-    resp.msg = "ok";
+    resp.data.gameInfo  = session.userGameInfo;
+    resp.msg            = "ok";
+    resp.data.inventory = session.userInventory;
     //record
     session.userAchievement.addAchieveRecord(ACHIEVEMENT.MEDIA_CONTRACT_USE, amount);
     return resp;

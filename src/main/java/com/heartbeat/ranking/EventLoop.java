@@ -2,9 +2,6 @@ package com.heartbeat.ranking;
 
 import com.common.GlobalVariable;
 import com.common.LOG;
-import com.heartbeat.controller.AchievementController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;

@@ -391,7 +391,7 @@ public class UserFight extends Fight {
     long totalCrt     = session.userIdol.totalCrt();
 
     if (base >= totalCrt) {
-      moneyConsume = currentShopping.moneyNPC*(currentShopping.creativeNPC /totalCrt);
+      moneyConsume = (long)(currentShopping.moneyNPC*(1f * currentShopping.creativeNPC /totalCrt));
     }
     else {
       moneyConsume = (long)(currentShopping.moneyNPC*SHOPPING_MONEY_SCL);
@@ -439,7 +439,7 @@ public class UserFight extends Fight {
       long totalCrt     = session.userIdol.totalCrt();
 
       if (base >= totalCrt) {
-        moneyConsume = sp.moneyNPC*(sp.creativeNPC /totalCrt);
+        moneyConsume = (long)(sp.moneyNPC*(1f * sp.creativeNPC /totalCrt));
       }
       else {
         moneyConsume = (long)(sp.moneyNPC*SHOPPING_MONEY_SCL);

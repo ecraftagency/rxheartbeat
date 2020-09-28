@@ -69,10 +69,12 @@ public class SessionLoginService implements AuthService {
           }
         }
         catch (Exception e) {
+          LOG.authException(e);
           handler.handle(Future.failedFuture("authorization_fail"));
         }
       }
       else {
+        LOG.authException("Fail to verify 100D");
         handler.handle(Future.failedFuture(ar.cause()));
       }
     });
