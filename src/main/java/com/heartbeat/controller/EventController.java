@@ -104,28 +104,26 @@ public class EventController implements Handler<RoutingContext> {
 
     //goldenTimeId -> [0,1,2,3]
     // 1 2 3 la cac khung gio, 0 la ko dang trong khung h nao
-    int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
+    int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs); //<- vo day chinh thoi gian lai de test
     if (goldenTimeId == 1) {
       resp.msg = "ok";
       resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,3,1,0));
-      return resp;
     }
     if (goldenTimeId == 2) {
       resp.msg = "ok";
       resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,4,1,0));
-      return resp;
     }
     if (goldenTimeId == 3) {
       resp.msg = "ok";
       resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,5,1,0));
-      return resp;
+    }
+    else {
+      resp.msg = "golden_time_out";
     }
 
-
     session.userEvent.currentGoldenEvent = goldenTimeId;
-    //if (currentGoldenEvent == currentGoldenEvent) -> da claim qua, render nut da linh
+    //kiem tra currentGoldenEvent == currentGoldenEvent -> da claim qua, render nut da linh
     resp.data.event = session.userEvent;
-    resp.msg = "golden_time_out";
     return resp;
   }
 
