@@ -201,8 +201,10 @@ public class UserProduction extends com.transport.model.Production{
     //fan
     if (currentFanClaimCount > 0 && shouldDoFanProduce) {
       if (session.userGameInfo.isActiveTime()) {
-        session.userGameInfo.fan   += totalFanAdd;
-        session.userGameInfo.spendView(session, totalFanAdd);
+        if (session.userGameInfo.spendView(session, totalFanAdd))
+          session.userGameInfo.fan   += totalFanAdd;
+        else
+          return Msg.map.getOrDefault(Msg.CLAIM_PRODUCT_INSUFFICIENT_VIEW, "unsufficient_view");
       }
 
       lastFanClaim                = (int)(curMs/1000);

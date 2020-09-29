@@ -7,11 +7,12 @@ import com.couchbase.client.java.query.ReactiveQueryResult;
 import com.heartbeat.HBServer;
 import static com.common.Constant.*;
 import com.common.GlobalVariable;
-import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
+import com.heartbeat.service.GroupService;
+import com.heartbeat.service.impl.GroupServiceV1;
 import com.statics.GroupMissionData;
 import com.transport.ExtMessage;
 import com.transport.model.Group;
@@ -22,6 +23,10 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
 public class GroupController implements Handler<RoutingContext> {
+  GroupService groupService;
+  public GroupController() {
+    groupService = new GroupServiceV1();
+  }
 
   @Override
   public void handle(RoutingContext ctx) {
@@ -129,7 +134,7 @@ public class GroupController implements Handler<RoutingContext> {
 
     if (session.groupID == Group.GROUP_ID_TYPE_REMOVE) {
       session.groupID = Group.GROUP_ID_TYPE_KICK;
-      CBMapper.getInstance().unmap(Integer.toString(session.id));
+      //CBMapper.getInstance().unmap(Integer.toString(session.id));
       resp.msg = "ok";
       return resp;
     }
@@ -184,7 +189,8 @@ public class GroupController implements Handler<RoutingContext> {
     }
 
     resp.data.currentGroupState = session.groupID;
-    resp.msg          = session.setGroupInform(type, informMsg);
+    //resp.msg          = session.setGroupInform(type, informMsg);
+    resp.msg          = groupService.setGroupInform(session, type, informMsg);
     resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
     return resp;
   }
@@ -206,7 +212,8 @@ public class GroupController implements Handler<RoutingContext> {
       return resp;
     }
 
-    resp.msg = session.setGroupRole(memberId, role);
+    //resp.msg = session.setGroupRole(memberId, role);
+    resp.msg  = groupService.setGroupRole(session, memberId, role);
     resp.data.group = GroupPool.getGroupFromPool(session.groupID);
     resp.data.currentGroupState = session.groupID;
     return resp;
@@ -222,7 +229,8 @@ public class GroupController implements Handler<RoutingContext> {
       return resp;
     }
 
-    resp.msg        = session.approveMember(memberId, action);
+    //resp.msg        = session.approveMember(memberId, action);
+    resp.msg        = groupService.approveMember(session, memberId, action);
     resp.data.group = GroupPool.getGroupFromPool(session.groupID);
     resp.data.currentGroupState = session.groupID;
     return resp;
@@ -279,7 +287,8 @@ public class GroupController implements Handler<RoutingContext> {
       return resp;
     }
 
-    resp.msg        = session.leaveGroup();
+    //resp.msg        = session.leaveGroup();
+    resp.msg        = groupService.leaveGroup(session);
     resp.data.currentGroupState = session.groupID;
     return resp;
   }
@@ -293,7 +302,8 @@ public class GroupController implements Handler<RoutingContext> {
     }
 
     int memberId      = ctx.getBodyAsJson().getInteger("memberId");
-    resp.msg          = session.kick(memberId);
+    //resp.msg          = session.kick(memberId);
+    resp.msg          = groupService.kick(session, memberId);
     resp.data.group   = GroupPool.getGroupFromPool(session.groupID);
     resp.data.currentGroupState = session.groupID;
     return resp;
@@ -316,7 +326,7 @@ public class GroupController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       return;
     }
-    session.joinGroup(groupId, joinAr -> {
+    groupService.joinGroup(session, groupId, joinAr -> {
       if (joinAr.succeeded()) {
         resp.msg = "ok";
         resp.cmd = cmd;
@@ -366,7 +376,7 @@ public class GroupController implements Handler<RoutingContext> {
       return;
     }
 
-    session.removeGroup(crtRes -> {
+    groupService.removeGroup(session, crtRes -> {
       if (crtRes.succeeded()) {
         resp.msg = "ok";
       }
@@ -407,7 +417,7 @@ public class GroupController implements Handler<RoutingContext> {
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       return;
     }
-    session.createGroup(groupType, name, externalInform, internalInform, crtRes -> {
+    groupService.createGroup(session, groupType, name, externalInform, internalInform, crtRes -> {
       if (crtRes.succeeded()) {
         resp.msg          = "ok";
         resp.cmd          = cmd;

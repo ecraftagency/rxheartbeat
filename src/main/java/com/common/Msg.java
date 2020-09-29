@@ -97,6 +97,7 @@ public class Msg {
 
   //userProduction
   public static final int CLAIM_PRODUCT_TIME_OUT      = 800;
+  public static final int CLAIM_PRODUCT_INSUFFICIENT_VIEW = 801;
 
   //userRollcall
   public static final int GIFT_CARD_EXPIRE            = 900;
@@ -225,7 +226,8 @@ public class Msg {
     map.put(MISSION_NOT_ACCOMPLISH,      "Nhiệm vụ chưa hoàn thành");
 
     //Production Controller
-    map.put(CLAIM_PRODUCT_TIME_OUT,      "Không đủ số lần kinh doanh");
+    map.put(CLAIM_PRODUCT_TIME_OUT,               "Không đủ số lần kinh doanh");
+    map.put(CLAIM_PRODUCT_INSUFFICIENT_VIEW,      "Không đủ view để chiêu mộ fan");
 
     //Rollcall Controller
     map.put(GIFT_CARD_EXPIRE,            "Thẻ tháng đã hết hạn");

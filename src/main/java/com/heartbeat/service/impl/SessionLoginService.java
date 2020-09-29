@@ -10,6 +10,7 @@ import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.service.AuthService;
+import com.heartbeat.service.GroupService;
 import com.transport.LoginRequest;
 import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
@@ -18,6 +19,11 @@ import io.vertx.core.Handler;
 
 @SuppressWarnings("unused")
 public class SessionLoginService implements AuthService {
+  GroupService groupService;
+
+  public SessionLoginService() {
+    groupService = new GroupServiceV1();
+  }
 
   @Override
   public void processLogin(LoginRequest request, long curMs, Handler<AsyncResult<Profile>> handler) {
@@ -175,7 +181,7 @@ public class SessionLoginService implements AuthService {
     }
   }
 
-  private static Profile handleLoginResult(String result, Session session,
+  private Profile handleLoginResult(String result, Session session,
                                            String snsToken,
                                            LoginRequest request) {
     Profile lr = new Profile();
@@ -206,7 +212,8 @@ public class SessionLoginService implements AuthService {
 
         SessionPool.addSession(session);
         session.updateLogin();
-        session.loadSessionGroup(ar -> {});
+        //session.loadSessionGroup(ar -> {});
+        groupService.loadSessionGroup(session, ar -> {});
       }
       else if (result.equals("kick")) {
         int second                    = (int)(System.currentTimeMillis()/1000);

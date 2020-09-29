@@ -73,7 +73,7 @@ public class ProductionController implements Handler<RoutingContext> {
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
 
-    if (resp.msg.equals("ok")) {
+    //if (resp.msg.equals("ok")) {
       int deltaGold = goldCntBef - session.userProduction.currentGoldClaimCount;
       int deltaView = viewCntBef - session.userProduction.currentViewClaimCount;
       int deltaFan  = fanCntBef  - session.userProduction.currentFanClaimCount;
@@ -97,7 +97,7 @@ public class ProductionController implements Handler<RoutingContext> {
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FAN_ACHIEVEMENT, deltaFan);
         session.userEvent.addEventRecord(Constant.COMMON_EVENT.FAN_PROD_EVT_ID, deltaFan);
       }
-    }
+    //}
 
     resp.effectResults = session.effectResults;
     return resp;
