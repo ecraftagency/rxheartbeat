@@ -128,7 +128,7 @@ public class GroupController implements Handler<RoutingContext> {
     }
 
     if (session.groupID == Group.GROUP_ID_TYPE_REMOVE) {
-      session.groupID = Group.GROUP_ID_TYPE_NONE;
+      session.groupID = Group.GROUP_ID_TYPE_KICK;
       CBMapper.getInstance().unmap(Integer.toString(session.id));
       resp.msg = "ok";
       return resp;

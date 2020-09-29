@@ -324,7 +324,7 @@ public class Session {
     if (Group.isValidGid(groupID)) { //user have group
       handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.NO_GROUP, "user_have_no_group")));
     }
-    else if (groupID == Group.GROUP_ID_TYPE_KICK) {
+    else if (groupID == Group.GROUP_ID_TYPE_KICK || groupID == Group.GROUP_ID_TYPE_REMOVE) {
       handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_DELAY, "group_delay")));
     }
     else if (groupID == Group.GROUP_ID_TYPE_NONE) { //user have no group
@@ -487,7 +487,7 @@ public class Session {
     else {
       try {
         int oldGID = Integer.parseInt(oldMap);
-        if (oldGID == Group.GROUP_ID_TYPE_KICK) {
+        if (oldGID == Group.GROUP_ID_TYPE_KICK || oldGID == Group.GROUP_ID_TYPE_REMOVE) {
           handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.GROUP_DELAY, "join_group_delay")));
         }
         else if (Group.isValidGid(oldGID)) { //fuck map say valid gid, but runtime gid == 0
