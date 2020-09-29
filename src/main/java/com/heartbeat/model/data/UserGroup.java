@@ -248,6 +248,9 @@ public class UserGroup extends Group {
       return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
     }
 
+    if (!checkPreviousClaim(member, missionId))
+      return Msg.map.getOrDefault(Msg.PREV_CLAIM, "group_prev_claim");
+
     Map<Integer, Integer> hitMembers = calcMissionHitMember();
     Integer missionHitM = hitMembers.get(evt.id);
     if (missionHitM == null)
@@ -267,5 +270,16 @@ public class UserGroup extends Group {
     mission.claim = true;
 
     return "ok";
+  }
+
+  //todo must finish prev mission before claim current mission
+  private boolean checkPreviousClaim(Member member, int missionId) {
+    for (int i = 1; i < missionId; i++) {
+      Mission mission = member.missions.get(missionId);
+      if (mission != null)
+        if (!mission.claim)
+          return false;
+    }
+    return true;
   }
 }

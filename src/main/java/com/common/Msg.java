@@ -67,6 +67,7 @@ public class Msg {
   public static final int INVALID_GROUP_NAME          = 314;
   public static final int INVALID_EXT_INFORM          = 315;
   public static final int INVALID_INT_INFORM          = 316;
+  public static final int PREV_CLAIM                  = 317;
 
   //idol
   public static final int IDOL_NOT_EXIST              = 400;
@@ -196,7 +197,7 @@ public class Msg {
     map.put(INVALID_GROUP_NAME,          "Tên công ty không hợp lệ");
     map.put(INVALID_EXT_INFORM,          "Nội dung đối ngoại không hợp lệ");
     map.put(INVALID_INT_INFORM,          "Nội dung đối nội không hợp lệ");
-
+    map.put(PREV_CLAIM,                  "Bạn phải hoàn thành/ nhận phần thưởng của NV trước");
     //Idol Controller
     map.put(IDOL_NOT_EXIST,              "Idol không tồn tại");
     map.put(IDOL_MAX_LEVEL,              "Idol đã đạt cấp tối đa");
