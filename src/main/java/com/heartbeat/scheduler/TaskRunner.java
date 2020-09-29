@@ -24,6 +24,8 @@ public class TaskRunner {
 
   public Disposable gameShowOpenTask;
   public Disposable gameShowCloseTask;
+  public Disposable goldenTimeOpenTask;
+  public Disposable goldenTimeCloseTask;
   public Disposable newDayTask;
   public long       gateWayPingTaskId;
   public long       rankingSyncTaskId;
@@ -107,6 +109,39 @@ public class TaskRunner {
               fault -> LOG.globalException("node","gameShowCloseTask",fault)
             );
 
+//    /*GOLDEN TIME OPEN TASK*/
+//    String goldenOpenCron = String.format("%d %d %d,%d,%d * * ? *",
+//            0,
+//            0,
+//            Constant.SCHEDULE.goldenOpenHour1,
+//            Constant.SCHEDULE.goldenOpenHour2,
+//            Constant.SCHEDULE.goldenOpenHour3);
+//    goldenTimeOpenTask = CronObservable.cronspec(scheduler, goldenOpenCron, TIME_ZONE)
+//            .subscribe(
+//                    timed -> {
+//                      Constant.SCHEDULE.goldenTimeOpen = true;
+//                      SessionPool.resetGoldenTimeClaim.run();
+//                      LOG.console("open golden time");
+//                    },
+//                    fault -> LOG.globalException("node","goldenTimeOpenTask", fault)
+//            );
+//
+//    /*GAME SHOW CLOSE TASK*/
+//    String goldenCloseCron = String.format("%d %d %d,%d,%d * * ? *",
+//            0,
+//            0,
+//            Constant.SCHEDULE.goldenCloseHour1,
+//            Constant.SCHEDULE.goldenCloseHour2,
+//            Constant.SCHEDULE.goldenCloseHour3);
+//    goldenTimeCloseTask = CronObservable.cronspec(scheduler, goldenCloseCron, TIME_ZONE)
+//            .subscribe(
+//                    timed -> {
+//                      Constant.SCHEDULE.goldenTimeOpen = false;
+//                      SessionPool.resetGoldenTimeClaim.run();
+//                      LOG.console("close game show");
+//                    },
+//                    fault -> LOG.globalException("node","gameShowCloseTask",fault)
+//            );
 
   }
 }

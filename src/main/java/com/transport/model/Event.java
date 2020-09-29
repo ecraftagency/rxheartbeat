@@ -7,6 +7,7 @@ public class Event {
   public Map<Integer, List<Long>> claimed;
   public Map<Integer, Long>       records;
   public Map<Integer, Integer>    evt2cas;
+  public int                      goldenTimeClaimCas;
 
   public void recordClaim(int achievementType, int milestone) {
     try {

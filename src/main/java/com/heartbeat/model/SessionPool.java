@@ -108,6 +108,7 @@ public class SessionPool {
           session.userTravel.newDay();
           session.userProduction.newDay();
           session.userIdol.newDay();
+          session.userEvent.newDay();
         }
       }
     }
@@ -133,4 +134,20 @@ public class SessionPool {
       LOG.poolException(ex);
     }
   };
+
+//  public static Runnable resetGoldenTimeClaim = () -> {
+//    try {
+//      Enumeration<Integer> e = pool.keys();
+//      while (e.hasMoreElements()) {
+//        Integer sessionId = e.nextElement();
+//        Session session = pool.get(sessionId);
+//        if (session != null) {
+//          //todo
+//        }
+//      }
+//    }
+//    catch(Exception ex) {
+//      LOG.poolException(ex);
+//    }
+//  };
 }

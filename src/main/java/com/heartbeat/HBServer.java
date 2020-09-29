@@ -14,6 +14,7 @@ import com.heartbeat.internal.InternalController;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserEvent;
 import com.heartbeat.model.data.UserFight;
 import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.model.data.UserLDB;

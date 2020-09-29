@@ -95,6 +95,14 @@ public class Constant {
     public static final int         gameShowTwoCloseHour      = 21;
     public static final int         gameShowOneCloseSec       = 0;
     public static final int         gameShowOneCloseMin       = 0;
+
+    public static final int         goldenOpenHour1           = 10;
+    public static final int         goldenOpenHour2           = 15;
+    public static final int         goldenOpenHour3           = 21;
+
+    public static final int         goldenCloseHour1          = 11;
+    public static final int         goldenCloseHour2          = 11;
+    public static final int         goldenCloseHour3          = 11;
   }
 
   public static class LEADER_BOARD {

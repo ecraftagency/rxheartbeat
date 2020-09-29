@@ -2,6 +2,7 @@ package com.heartbeat.model.data;
 
 import com.common.Constant;
 import com.common.Msg;
+import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -34,6 +35,32 @@ public class UserEvent extends Event {
     }
 
     return ue;
+  }
+
+  public static int getCurrentGoldenEvent(long curMs) {
+    long firstOpenTime    = Utilities.certainSecond(15, 25, 0);
+    long firstCloseTime   = Utilities.certainSecond(15, 27, 0);
+    long secondOpenTime   = Utilities.certainSecond(15, 30, 0);
+    long secondCloseTime  = Utilities.certainSecond(15, 32, 0);
+    long thirdOpenTime    = Utilities.certainSecond(15, 34, 0);
+    long thirdCloseTime   = Utilities.certainSecond(15, 36, 0);
+
+    if (curMs >= firstOpenTime && curMs <= firstCloseTime) {
+      return 1;
+    }
+    else if (curMs >= secondOpenTime && curMs <= secondCloseTime) {
+      return 2;
+    }
+    else if (curMs >= thirdOpenTime && curMs <= thirdCloseTime) {
+      return 3;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  public void newDay() {
+    goldenTimeClaimCas = 0;
   }
 
   public void reBalance() {

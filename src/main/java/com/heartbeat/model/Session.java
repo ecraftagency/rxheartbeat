@@ -208,7 +208,7 @@ public class Session {
         userTravel.newDay();
         userProduction.newDay();
         userIdol.newDay();
-
+        userEvent.newDay();
         userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.LOGIN_ACHIEVEMENT, 1);
       }
       else {
