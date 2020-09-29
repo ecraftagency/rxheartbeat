@@ -3,6 +3,8 @@ package com.heartbeat.controller;
 import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserEvent;
@@ -75,36 +77,35 @@ public class EventController implements Handler<RoutingContext> {
     int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
     if (goldenTimeId > 0) {
       if (session.userEvent.goldenTimeClaimCas == goldenTimeId) { //already claim
-        resp.msg = "da nhan phan thuong roi nha";
+        resp.msg = "Đã nhận phần thưởng tại khung giờ này";
       }
       else {
         resp.msg = "ok";
         session.userEvent.goldenTimeClaimCas = goldenTimeId;
         if (goldenTimeId == 1) {
-          resp.data.extObj = "nhan phan thuong khung gio 1";
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,3,1,0));
         }
         else if (goldenTimeId == 2) {
-          resp.data.extObj = "nhan phan thuong khung gio 2";
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,4,1,0));
         }
         else if (goldenTimeId == 3) {
-          resp.data.extObj = "nhan phan thuong khung gio 2";
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,5,1,0));
         }
       }
     }
     else {
       session.userEvent.goldenTimeClaimCas = 0;
-      resp.msg = "golden_time_out";
+      resp.msg = "Sự kiện giờ vàng đã hết hiệu lực";
     }
     resp.data.event = session.userEvent;
+    resp.effectResults = session.effectResults;
     return resp;
   }
 
   private ExtMessage processGetGoldenTimeInfo(Session session, RoutingContext ctx, long curMs) {
     ExtMessage resp = ExtMessage.event();
 
-    //goldenTimeId -> [0,1,2,3]
-    // 1 2 3 la cac khung gio, 0 la ko dang trong khung h nao
-    int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs); //<- vo day chinh thoi gian lai de test
+    int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
     if (goldenTimeId == 1) {
       resp.msg = "ok";
       resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,3,1,0));
@@ -118,11 +119,10 @@ public class EventController implements Handler<RoutingContext> {
       resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,5,1,0));
     }
     else {
-      resp.msg = "golden_time_out";
+      resp.msg = "Đang không trong khung giờ vàng";
     }
 
     session.userEvent.currentGoldenEvent = goldenTimeId;
-    //kiem tra currentGoldenEvent == currentGoldenEvent -> da claim qua, render nut da linh
     resp.data.event = session.userEvent;
     return resp;
   }
