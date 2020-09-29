@@ -49,12 +49,12 @@ public class Main {
   }
 
   public static void groupInfo(Session session) {
-    session.loadSessionGroup(ar -> {
-      if (ar.succeeded())
-        System.out.println(Utilities.gson.toJson(ar.result()));
-      else
-        System.out.println(ar.cause().getMessage());
-    });
+//    session.loadSessionGroup(ar -> {
+//      if (ar.succeeded())
+//        System.out.println(Utilities.gson.toJson(ar.result()));
+//      else
+//        System.out.println(ar.cause().getMessage());
+//    });
   }
 
   public static void createGroup(Session session) {

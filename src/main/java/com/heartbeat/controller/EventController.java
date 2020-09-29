@@ -66,6 +66,7 @@ public class EventController implements Handler<RoutingContext> {
     resp.msg            = session.userEvent.claimEventIdol(session, idolId, evtId, (int)(curMs/1000));
     resp.effectResults  = session.effectResults;
     resp.data.idols     = session.userIdol;
+    resp.data.inventory = session.userInventory;
     return resp;
   }
 

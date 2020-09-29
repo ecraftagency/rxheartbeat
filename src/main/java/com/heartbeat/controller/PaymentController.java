@@ -67,8 +67,8 @@ public class PaymentController implements Handler<RoutingContext> {
     }
 
     resp.effectResults            = session.effectResults;
-
     resp.data.extObj              = Json.encode(res);
+    resp.data.gameInfo            = session.userGameInfo;
     return resp;
   }
 }
