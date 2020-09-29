@@ -38,12 +38,12 @@ public class UserEvent extends Event {
   }
 
   public static int getCurrentGoldenEvent(long curMs) {
-    long firstOpenTime    = Utilities.certainSecond(15, 25, 0);
-    long firstCloseTime   = Utilities.certainSecond(15, 27, 0);
-    long secondOpenTime   = Utilities.certainSecond(15, 30, 0);
-    long secondCloseTime  = Utilities.certainSecond(15, 32, 0);
-    long thirdOpenTime    = Utilities.certainSecond(15, 34, 0);
-    long thirdCloseTime   = Utilities.certainSecond(15, 36, 0);
+    long firstOpenTime    = Utilities.certainSecond(10, 0, 0);
+    long firstCloseTime   = Utilities.certainSecond(11, 0, 0);
+    long secondOpenTime   = Utilities.certainSecond(15, 0, 0);
+    long secondCloseTime  = Utilities.certainSecond(16, 0, 0);
+    long thirdOpenTime    = Utilities.certainSecond(21, 0, 0);
+    long thirdCloseTime   = Utilities.certainSecond(22, 0, 0);
 
     if (curMs >= firstOpenTime && curMs <= firstCloseTime) {
       return 1;
