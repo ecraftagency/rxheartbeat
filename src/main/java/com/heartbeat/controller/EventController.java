@@ -95,6 +95,7 @@ public class EventController implements Handler<RoutingContext> {
       session.userEvent.goldenTimeClaimCas = 0;
       resp.msg = "golden_time_out";
     }
+    resp.data.event = session.userEvent;
     return resp;
   }
 
@@ -118,6 +119,7 @@ public class EventController implements Handler<RoutingContext> {
       return resp;
     }
 
+    session.userEvent.currentGoldenEvent = 1;
     resp.data.event = session.userEvent;
     resp.msg = "golden_time_out";
     return resp;
