@@ -102,6 +102,8 @@ public class EventController implements Handler<RoutingContext> {
   private ExtMessage processGetGoldenTimeInfo(Session session, RoutingContext ctx, long curMs) {
     ExtMessage resp = ExtMessage.event();
 
+    //goldenTimeId -> [0,1,2,3]
+    // 1 2 3 la cac khung gio, 0 la ko dang trong khung h nao
     int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
     if (goldenTimeId == 1) {
       resp.msg = "ok";
@@ -119,7 +121,9 @@ public class EventController implements Handler<RoutingContext> {
       return resp;
     }
 
-    session.userEvent.currentGoldenEvent = 1;
+
+    session.userEvent.currentGoldenEvent = goldenTimeId;
+    //if (currentGoldenEvent == currentGoldenEvent) -> da claim qua, render nut da linh
     resp.data.event = session.userEvent;
     resp.msg = "golden_time_out";
     return resp;
