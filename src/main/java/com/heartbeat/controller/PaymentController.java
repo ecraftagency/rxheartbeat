@@ -1,10 +1,12 @@
 package com.heartbeat.controller;
 
 import com.common.LOG;
+import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.statics.PaymentData;
 import com.transport.ExtMessage;
 import com.transport.model.PaymentTransaction;
 import io.vertx.core.Handler;
@@ -26,6 +28,9 @@ public class PaymentController implements Handler<RoutingContext> {
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
+          case "getPaymentPackage":
+            resp = processGetPaymentPackage();
+            break;
           case "paymentHistory":
             resp = processGetPaymentHistory(session);
             break;
@@ -51,6 +56,12 @@ public class PaymentController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processGetPaymentPackage() {
+    ExtMessage resp = ExtMessage.payment();
+    resp.data.extObj = Utilities.gson.toJson(PaymentData.paymentDtoMap);
+    return resp;
   }
 
   private ExtMessage processGetPaymentHistory(Session session) {
