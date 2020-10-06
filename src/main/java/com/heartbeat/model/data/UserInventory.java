@@ -1,6 +1,8 @@
 package com.heartbeat.model.data;
 
 import com.common.Msg;
+import com.heartbeat.db.cb.AbstractCruder;
+import com.heartbeat.db.dao.ItemStatsDAO;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
@@ -9,9 +11,42 @@ import com.statics.PropData;
 import com.transport.model.Inventory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class UserInventory extends Inventory {
+  private static ConcurrentHashMap<Integer, Integer>  itemStats;
+  public  static AbstractCruder<ItemStatsDAO>         cbItemStats;
+  private static final String dbKey = "ItemStats";
+
+  static {
+    cbItemStats = new AbstractCruder<>(ItemStatsDAO.class);
+    itemStats   = new ConcurrentHashMap<>();
+    itemStats.putIfAbsent(123,0);
+    itemStats.putIfAbsent(124,0);
+    itemStats.putIfAbsent(125,0);
+    itemStats.putIfAbsent(126,0);
+    itemStats.putIfAbsent(127,0);
+    itemStats.putIfAbsent(128,0);
+    itemStats.putIfAbsent(129,0);
+    itemStats.putIfAbsent(130,0);
+    itemStats.putIfAbsent(131,0);
+    itemStats.putIfAbsent(132,0);
+    itemStats.putIfAbsent(133,0);
+    itemStats.putIfAbsent(134,0);
+  }
+
+  public static void loadItemStatsFromDB() {
+    ItemStatsDAO dao = cbItemStats.load(dbKey);
+    if (dao == null)
+      dao = ItemStatsDAO.ofDefault();
+    itemStats.putAll(dao.itemCnt);
+  }
+
+  public static void syncItemStatToDB() {
+    cbItemStats.sync(dbKey, ItemStatsDAO.of(itemStats));
+  }
+
   private UserInventory() {
     userItems   =   new HashMap<>();
     expireItems =   new HashMap<>();
@@ -52,6 +87,7 @@ public class UserInventory extends Inventory {
     if (!PropData.propMap.containsKey(itemId))
       return;
 
+    itemStats.computeIfPresent(itemId, (k,v) -> v + amount);
     if (isExpireItem(itemId)) {
       updateExpire();
       addExpireItem(itemId, amount);

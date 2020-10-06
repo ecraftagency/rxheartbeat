@@ -4,6 +4,7 @@ import com.common.Constant;
 import com.common.LOG;
 import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserInventory;
 import com.heartbeat.model.data.UserRanking;
 import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.impl.TimeCheckCommand;
@@ -24,10 +25,10 @@ public class TaskRunner {
 
   public Disposable gameShowOpenTask;
   public Disposable gameShowCloseTask;
-  public Disposable goldenTimeOpenTask;
-  public Disposable goldenTimeCloseTask;
   public Disposable newDayTask;
   public long       gateWayPingTaskId;
+  public long       statsSyncTask;
+
   public long       rankingSyncTaskId;
   public Scheduler  scheduler;
   public Vertx      vertx;
@@ -59,6 +60,15 @@ public class TaskRunner {
       }
       catch (Exception e) {
         LOG.globalException("node", "schedule tasks", e);
+      }
+    });
+
+    statsSyncTask = vertx.setPeriodic(Constant.SYSTEM_INFO.STATS_DATA_SYNC_INTERVAL, id -> {
+      try {
+        UserInventory.syncItemStatToDB();
+      }
+      catch (Exception e) {
+        LOG.globalException("node", "Sync Stats to DB", e);
       }
     });
 
@@ -108,40 +118,5 @@ public class TaskRunner {
               },
               fault -> LOG.globalException("node","gameShowCloseTask",fault)
             );
-
-//    /*GOLDEN TIME OPEN TASK*/
-//    String goldenOpenCron = String.format("%d %d %d,%d,%d * * ? *",
-//            0,
-//            0,
-//            Constant.SCHEDULE.goldenOpenHour1,
-//            Constant.SCHEDULE.goldenOpenHour2,
-//            Constant.SCHEDULE.goldenOpenHour3);
-//    goldenTimeOpenTask = CronObservable.cronspec(scheduler, goldenOpenCron, TIME_ZONE)
-//            .subscribe(
-//                    timed -> {
-//                      Constant.SCHEDULE.goldenTimeOpen = true;
-//                      SessionPool.resetGoldenTimeClaim.run();
-//                      LOG.console("open golden time");
-//                    },
-//                    fault -> LOG.globalException("node","goldenTimeOpenTask", fault)
-//            );
-//
-//    /*GAME SHOW CLOSE TASK*/
-//    String goldenCloseCron = String.format("%d %d %d,%d,%d * * ? *",
-//            0,
-//            0,
-//            Constant.SCHEDULE.goldenCloseHour1,
-//            Constant.SCHEDULE.goldenCloseHour2,
-//            Constant.SCHEDULE.goldenCloseHour3);
-//    goldenTimeCloseTask = CronObservable.cronspec(scheduler, goldenCloseCron, TIME_ZONE)
-//            .subscribe(
-//                    timed -> {
-//                      Constant.SCHEDULE.goldenTimeOpen = false;
-//                      SessionPool.resetGoldenTimeClaim.run();
-//                      LOG.console("close game show");
-//                    },
-//                    fault -> LOG.globalException("node","gameShowCloseTask",fault)
-//            );
-
   }
 }

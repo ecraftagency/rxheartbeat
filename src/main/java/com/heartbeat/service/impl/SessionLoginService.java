@@ -91,7 +91,7 @@ public class SessionLoginService implements AuthService {
     Session oldSession = SessionPool.getSessionFromPool(userID);
     if (oldSession != null) {
       if (oldSession.id == userID) {
-        LOG.authException(String.format("Kick login. sessionId: %d", userID));
+        //LOG.authException(String.format("Kick login. sessionId: %d", userID));
         Profile profile = handleLoginResult("kick", oldSession, snsToken, request);
         handler.handle(Future.succeededFuture(profile));
       }

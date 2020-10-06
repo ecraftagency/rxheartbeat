@@ -14,10 +14,7 @@ import com.heartbeat.internal.InternalController;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
-import com.heartbeat.model.data.UserEvent;
-import com.heartbeat.model.data.UserFight;
-import com.heartbeat.model.data.UserInbox;
-import com.heartbeat.model.data.UserLDB;
+import com.heartbeat.model.data.*;
 import com.heartbeat.scheduler.TaskRunner;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
@@ -103,6 +100,7 @@ public class HBServer extends AbstractVerticle {
       GroupPool.removeAll();
       UserLDB.syncLDBToDB(LEADER_BOARD.TALENT_LDB_ID);
       UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
+      UserInventory.syncItemStatToDB();
       LOG.console("HBServer shutdown hook");
     }));
 
@@ -147,6 +145,7 @@ public class HBServer extends AbstractVerticle {
       UserLDB.loadLDBFromDB(LEADER_BOARD.TALENT_LDB_ID);
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
       UserInbox.loadInboxFromDB();
+      UserInventory.loadItemStatsFromDB();
     }
     catch (Exception ioe) {
       startPromise.fail(ioe);
