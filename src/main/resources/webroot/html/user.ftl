@@ -80,6 +80,29 @@
       </div>
     </div>
     <div class="card top-buffer">
+      <div class="card-header" id="paymentHeader">
+          <h5 class="text-center">
+            <button class="btn" data-toggle="collapse" data-target="#paymentCollapse" aria-expanded="false" aria-controls="paymentCollapse">
+              Lịch sử nạp
+            </button>
+          </h5>
+      </div>
+      <div id="paymentCollapse" class="collapse show" aria-labelledby="paymentHeader" data-parent="#accordion">
+        <div class="card-body">
+          <table class="table table-bordered table-responsive-md table-striped text-center">
+              <thead>
+                <tr><th class="text-center" v-for="key in Object.keys(resp.session.userPayment[0])">{{ key }}</th></tr>
+              </thead>
+              <tbody>
+                <tr class="pt-3-half" v-for="pay in resp.session.userPayment" :key="pay.transID">
+                  <td v-for="key in Object.keys(resp.session.userPayment[0])" :key="pay[key]">{{ pay[key] }}</td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card top-buffer">
       <div class="card-header" id="inboxHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#inboxCollapse" aria-expanded="false" aria-controls="inboxCollapse">
@@ -104,6 +127,7 @@
         </div>
       </div>
     </div>
+
     <!--div class="card top-buffer">
       <div class="card-header" id="sendHeader">
           <h5 class="text-center">

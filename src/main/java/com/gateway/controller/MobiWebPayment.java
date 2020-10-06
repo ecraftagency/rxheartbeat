@@ -46,11 +46,13 @@ public class MobiWebPayment implements Handler<RoutingContext> {
 
       if (!sign.equals(verifySign)) {
         response(ctx, -7, "Sign error");
+        LOG.paymentException(String.format("Sign Error. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
         return;
       }
 
       if (System.currentTimeMillis() - time > 1000*60*3L) {
         response(ctx, -2, "Expire time");
+        LOG.paymentException(String.format("Expire Time. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
         return;
       }
 

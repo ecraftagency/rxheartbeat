@@ -8,6 +8,7 @@ import com.heartbeat.scheduler.ExtendEventInfo;
 import com.statics.*;
 import com.transport.model.LDBObj;
 import com.transport.model.MailObj;
+import com.transport.model.PaymentTransaction;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -68,6 +69,7 @@ public class Transformer {
     JsonArray items       = new JsonArray();
     JsonArray mails       = new JsonArray();
     JsonObject ss         = new JsonObject();
+    JsonArray payment     = new JsonArray();
 
     gi.put("Tên",         session.userGameInfo.displayName);
     gi.put("Giới Tính",   session.userGameInfo.gender == 0 ? "Nam" : "Nữ");
@@ -116,9 +118,24 @@ public class Transformer {
       }
     }
 
+    if (session.userPayment != null) {
+      for (PaymentTransaction trans : session.userPayment.history) {
+        Date payAt    = new Date(trans.payAt*1000L);
+        String strPayAt    = formatter.format(payAt);
+        payment.add(new JsonObject()
+                .put("transID", trans.transID)
+                .put("Thanh toán lúc", strPayAt)
+                .put("amount", trans.amount)
+                .put("price", trans.price)
+                .put("Gói Nạp", trans.itemId));
+      }
+    }
+
     ss.put("userGameInfo", gi);
     ss.put("userInventory", items);
     ss.put("userInbox", mails);
+    ss.put("userPayment", payment);
+
     return ss;
   }
 

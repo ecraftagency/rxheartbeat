@@ -6,7 +6,6 @@ import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.client.WebClient;
 
 public class Passport extends AbstractVerticle {
-  public static ClusterManager mgr;
 
   public static void main(String[] args) throws Exception {
     String jwtAuth = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF5ZXJfaWQiOiI1ZjU4NGI1OTgyN2U2YzYwOGM5YmQyNTQiLCJhcHBfaWQiOiI1ZjU3MmMyZmUyYjMxNjYwOTJkMjA3NWIiLCJ1c2VybmFtZSI6ImdiY2YyZTllNGE1IiwiaWF0IjoxNTk5NjIxOTc3fQ.zYnfAcxEFOO92ihx8vg9wjCfh5YhfXyX28Om2y4WPJg";

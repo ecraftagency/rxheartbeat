@@ -316,6 +316,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
             if (session.userPayment.isOrderLoop(payload.orderId)) {
               resp.put("code", -4).put("msg", "Order Loop");
+              LOG.paymentException(String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
             }
             else {
               boolean online  = resp.getString("state").equals("online");
