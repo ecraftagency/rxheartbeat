@@ -8,7 +8,7 @@ import com.statics.EventInfo;
 import java.util.HashMap;
 
 public class ExtendEventInfo extends EventInfo implements TaskRunner.ScheduleAble {
-  public static ExtendEventInfo of(int evtId) {
+  public static ExtendEventInfo of(int evtId, int rewardPack) {
     ExtendEventInfo ei = new ExtendEventInfo();
     ei.eventId    = evtId;
     ei.eventName  = "";
@@ -16,13 +16,14 @@ public class ExtendEventInfo extends EventInfo implements TaskRunner.ScheduleAbl
     ei.startTime  = -1;
     ei.endTime    = -1;
     ei.flushDelay = 0;
+    ei.rewardPack = rewardPack;
     //funny error
     ei.idolList   = new HashMap<>();
     return ei;
   }
 
   @Override
-  public void updateTime(String startDate, String endDate, int flushDelay) {
+  public void updateTime(String startDate, String endDate, int flushDelay, int rewardPack) {
     try {
       int newStart    = (int)(Utilities.getMillisFromDateString(startDate, Constant.DATE_PATTERN)/1000);
       int newEnd      = (int)(Utilities.getMillisFromDateString(endDate, Constant.DATE_PATTERN)/1000);
@@ -40,6 +41,7 @@ public class ExtendEventInfo extends EventInfo implements TaskRunner.ScheduleAbl
       startTime       = newStart;
       endTime         = newEnd;
       this.flushDelay = flushDelay > 0 ? flushDelay : EventInfo.FLUSH_DELAY;
+      this.rewardPack = rewardPack;
     }
     catch (Exception e) {
       LOG.globalException("node", "updateTime", e);

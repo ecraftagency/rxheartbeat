@@ -8,9 +8,10 @@ public class GroupMissionData {
     public int                  id;
     public int                  hitMember;
     public int                  hitCount;
-    public List<List<Integer>>  gift;
     public String               name;
     public String               desc;
+    public List<List<Integer>>  reward1;
+    public List<List<Integer>>  reward2;
 
     @Override
     public Integer mapKey() {

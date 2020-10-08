@@ -97,14 +97,6 @@ public class Constant {
     public static final int         gameShowTwoCloseHour      = 21;
     public static final int         gameShowOneCloseSec       = 0;
     public static final int         gameShowOneCloseMin       = 0;
-
-    public static final int         goldenOpenHour1           = 10;
-    public static final int         goldenOpenHour2           = 15;
-    public static final int         goldenOpenHour3           = 21;
-
-    public static final int         goldenCloseHour1          = 11;
-    public static final int         goldenCloseHour2          = 11;
-    public static final int         goldenCloseHour3          = 11;
   }
 
   public static class LEADER_BOARD {
@@ -174,11 +166,11 @@ public class Constant {
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap      = new HashMap<>();
-      evtMap.put(VIEW_SPEND_RANK_ID,    ExtendEventInfo.of(VIEW_SPEND_RANK_ID));
-      evtMap.put(FAN_SPEND_RANK_ID,     ExtendEventInfo.of(FAN_SPEND_RANK_ID));
-      evtMap.put(TOTAL_TALENT_RANK_ID,  ExtendEventInfo.of(TOTAL_TALENT_RANK_ID));
-      evtMap.put(FIGHT_RANK_ID,         ExtendEventInfo.of(FIGHT_RANK_ID));
-      evtMap.put(MONEY_SPEND_RANK_ID,   ExtendEventInfo.of(MONEY_SPEND_RANK_ID));
+      evtMap.put(VIEW_SPEND_RANK_ID,    ExtendEventInfo.of(VIEW_SPEND_RANK_ID, 1));
+      evtMap.put(FAN_SPEND_RANK_ID,     ExtendEventInfo.of(FAN_SPEND_RANK_ID, 1));
+      evtMap.put(TOTAL_TALENT_RANK_ID,  ExtendEventInfo.of(TOTAL_TALENT_RANK_ID, 1));
+      evtMap.put(FIGHT_RANK_ID,         ExtendEventInfo.of(FIGHT_RANK_ID, 1));
+      evtMap.put(MONEY_SPEND_RANK_ID,   ExtendEventInfo.of(MONEY_SPEND_RANK_ID, 1));
     }
   }
 
@@ -192,10 +184,10 @@ public class Constant {
 
     static {
       evtMap = new HashMap<>();
-      evtMap.put(GE_PROD_EVT_ID,        ExtendEventInfo.of(GE_PROD_EVT_ID));
-      evtMap.put(GE_GS_EVT_ID,          ExtendEventInfo.of(GE_GS_EVT_ID));
-      evtMap.put(GE_CRZ_DEGREE_EVT_ID,  ExtendEventInfo.of(GE_CRZ_DEGREE_EVT_ID));
-      evtMap.put(GE_MONTHLY_GC_EVT_ID,  ExtendEventInfo.of(GE_MONTHLY_GC_EVT_ID));
+      evtMap.put(GE_PROD_EVT_ID,        ExtendEventInfo.of(GE_PROD_EVT_ID, 1));
+      evtMap.put(GE_GS_EVT_ID,          ExtendEventInfo.of(GE_GS_EVT_ID, 1));
+      evtMap.put(GE_CRZ_DEGREE_EVT_ID,  ExtendEventInfo.of(GE_CRZ_DEGREE_EVT_ID, 1));
+      evtMap.put(GE_MONTHLY_GC_EVT_ID,  ExtendEventInfo.of(GE_MONTHLY_GC_EVT_ID, 1));
     }
   }
 
@@ -206,9 +198,9 @@ public class Constant {
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
-      ExtendEventInfo blackPinkEvt  = ExtendEventInfo.of(BP_EVT_ID);
+      ExtendEventInfo blackPinkEvt  = ExtendEventInfo.of(BP_EVT_ID, 1);
       blackPinkEvt.eventName        = "Blak Pink";
-      ExtendEventInfo banDamEvt     = ExtendEventInfo.of(DB_EVT_ID);
+      ExtendEventInfo banDamEvt     = ExtendEventInfo.of(DB_EVT_ID, 1);
       banDamEvt.eventName           = "Ban Dam";
       evtMap.put(BP_EVT_ID, blackPinkEvt);
       evtMap.put(DB_EVT_ID, banDamEvt);
@@ -242,17 +234,17 @@ public class Constant {
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
-      evtMap.put(TIME_SPEND_EVT_ID,   ExtendEventInfo.of(TIME_SPEND_EVT_ID));
-      evtMap.put(APT_BUFF_USE_EVT_ID, ExtendEventInfo.of(APT_BUFF_USE_EVT_ID));
-      evtMap.put(MONEY_SPEND_EVT_ID,  ExtendEventInfo.of(MONEY_SPEND_EVT_ID));
-      evtMap.put(VIEW_SPEND_EVT_ID,   ExtendEventInfo.of(VIEW_SPEND_EVT_ID));
-      evtMap.put(FAN_SPEND_EVT_ID,    ExtendEventInfo.of(FAN_SPEND_EVT_ID));
-      evtMap.put(CRT_PROD_EVT_ID,     ExtendEventInfo.of(CRT_PROD_EVT_ID));
-      evtMap.put(VIEW_PROD_EVT_ID,    ExtendEventInfo.of(VIEW_PROD_EVT_ID));
-      evtMap.put(FAN_PROD_EVT_ID,     ExtendEventInfo.of(FAN_PROD_EVT_ID));
-      evtMap.put(TOTAL_TALENT_EVT_ID, ExtendEventInfo.of(TOTAL_TALENT_EVT_ID));
-      evtMap.put(GAME_SHOW_EVT_ID,    ExtendEventInfo.of(GAME_SHOW_EVT_ID));
-      evtMap.put(VIP_INCR_EVT_ID,     ExtendEventInfo.of(VIP_INCR_EVT_ID));
+      evtMap.put(TIME_SPEND_EVT_ID,   ExtendEventInfo.of(TIME_SPEND_EVT_ID, 1));
+      evtMap.put(APT_BUFF_USE_EVT_ID, ExtendEventInfo.of(APT_BUFF_USE_EVT_ID, 1));
+      evtMap.put(MONEY_SPEND_EVT_ID,  ExtendEventInfo.of(MONEY_SPEND_EVT_ID, 1));
+      evtMap.put(VIEW_SPEND_EVT_ID,   ExtendEventInfo.of(VIEW_SPEND_EVT_ID, 1));
+      evtMap.put(FAN_SPEND_EVT_ID,    ExtendEventInfo.of(FAN_SPEND_EVT_ID, 1));
+      evtMap.put(CRT_PROD_EVT_ID,     ExtendEventInfo.of(CRT_PROD_EVT_ID, 1));
+      evtMap.put(VIEW_PROD_EVT_ID,    ExtendEventInfo.of(VIEW_PROD_EVT_ID, 1));
+      evtMap.put(FAN_PROD_EVT_ID,     ExtendEventInfo.of(FAN_PROD_EVT_ID, 1));
+      evtMap.put(TOTAL_TALENT_EVT_ID, ExtendEventInfo.of(TOTAL_TALENT_EVT_ID, 1));
+      evtMap.put(GAME_SHOW_EVT_ID,    ExtendEventInfo.of(GAME_SHOW_EVT_ID, 1));
+      evtMap.put(VIP_INCR_EVT_ID,     ExtendEventInfo.of(VIP_INCR_EVT_ID, 1));
     }
   }
 

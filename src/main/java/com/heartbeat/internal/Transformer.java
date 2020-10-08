@@ -168,6 +168,8 @@ public class Transformer {
       evt.put("endDate",    strEnd);
       evt.put("flushDelay", ei.flushDelay);
       evt.put("active",     ei.active ? "Active" : "InActive");
+      evt.put("rewardPack", ei.rewardPack);
+
       res.add(evt);
     }
     return res;

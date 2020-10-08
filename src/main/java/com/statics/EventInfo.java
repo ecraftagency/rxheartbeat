@@ -14,6 +14,7 @@ public class EventInfo {
 
   //extra composite
   public Map<Integer, IdolClaimInfo> idolList;
+  public int        rewardPack;
 
   public static class IdolClaimInfo {
     public int idolId;

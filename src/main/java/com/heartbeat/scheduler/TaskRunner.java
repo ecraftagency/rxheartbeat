@@ -20,7 +20,7 @@ import static com.heartbeat.HBServer.*;
 
 public class TaskRunner {
   public interface ScheduleAble {
-    void updateTime(String startDate, String endDate, int flushDelay) throws Exception;
+    void updateTime(String startDate, String endDate, int flushDelay, int rewardPack) throws Exception;
   }
 
   public Disposable gameShowOpenTask;

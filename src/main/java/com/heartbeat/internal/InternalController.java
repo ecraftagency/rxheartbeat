@@ -375,20 +375,27 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
   /*EVENTS*/
   private void processSetUserEventTime(Message<JsonObject> ctx) {
-    String strEvt         = ctx.body().getString("eventList");
-    String strStart       = ctx.body().getString("startDate");
-    String strEnd         = ctx.body().getString("endDate");
-    int flushDelay        = Integer.parseInt(ctx.body().getString("flushDelay"));
-    int eventType         = Integer.parseInt(ctx.body().getString("eventType"));
-    Type listOfInt        = new TypeToken<List<Integer>>() {}.getType();
-    List<Integer> events  = Utilities.gson.fromJson(strEvt, listOfInt);
-    JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
+    String strEvt               = ctx.body().getString("eventList");
+    String strStart             = ctx.body().getString("startDate");
+    String strEnd               = ctx.body().getString("endDate");
+    int flushDelay              = Integer.parseInt(ctx.body().getString("flushDelay"));
+    int eventType               = Integer.parseInt(ctx.body().getString("eventType"));
+    Type lsOfLsOfInt            = new TypeToken<List<List<Integer>>>() {}.getType();
+    List<List<Integer>> uptInfo = Utilities.gson.fromJson(strEvt, lsOfLsOfInt);
+    JsonObject resp             = IntMessage.resp(ctx.body().getString("cmd"));
 
     if (eventType < 0 || eventType > 3) {
       resp.put("msg", "invalid event type");
       ctx.reply(resp);
       return;
     }
+
+    for (List<Integer> i : uptInfo)
+      if (i.size() != 2) {
+        resp.put("msg", "invalid event info format");
+        ctx.reply(resp);
+        return;
+      }
 
     Map<Integer, ExtendEventInfo> evtMap;
     if (eventType == 0) {
@@ -402,17 +409,19 @@ public class InternalController implements Handler<Message<JsonObject>> {
     }
     else {
       evtMap  = GROUP_EVENT.evtMap;
-      events.clear();
-      events.addAll(Arrays.asList(
-              GROUP_EVENT.GE_PROD_EVT_ID, GROUP_EVENT.GE_GS_EVT_ID,
-              GROUP_EVENT.GE_CRZ_DEGREE_EVT_ID, GROUP_EVENT.GE_MONTHLY_GC_EVT_ID
+      uptInfo.clear();
+      uptInfo.addAll(Arrays.asList(
+              Arrays.asList(GROUP_EVENT.GE_PROD_EVT_ID, 1),
+              Arrays.asList(GROUP_EVENT.GE_GS_EVT_ID, 1),
+              Arrays.asList(GROUP_EVENT.GE_CRZ_DEGREE_EVT_ID, 1),
+              Arrays.asList(GROUP_EVENT.GE_MONTHLY_GC_EVT_ID,1)
       ));
     }
 
-    for (Integer eventId : events) {
-      ExtendEventInfo ei = evtMap.get(eventId);
+    for (List<Integer> eventId : uptInfo) {
+      ExtendEventInfo ei = evtMap.get(eventId.get(0));
       if (ei != null) {
-        ei.updateTime(strStart, strEnd, flushDelay);
+        ei.updateTime(strStart, strEnd, flushDelay, eventId.get(1) == 2 ? 2 : 1);
       }
     }
 

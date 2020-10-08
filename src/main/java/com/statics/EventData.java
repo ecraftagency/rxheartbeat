@@ -13,7 +13,8 @@ public class EventData {
     public long                 milestoneValue;
     public String               title;
     public String               rewardDesc;
-    public List<List<Integer>>  reward;
+    public List<List<Integer>>  reward1;
+    public List<List<Integer>>  reward2;
 
     @Override
     public Integer mapKey() {

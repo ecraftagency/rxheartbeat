@@ -10,7 +10,8 @@ public class RankingData {
     public int id;
     public int rankingType;
     public int rank;
-    public List<List<Integer>> reward;
+    public List<List<Integer>> reward1;
+    public List<List<Integer>> reward2;
 
     @Override
     public Integer mapKey() {
