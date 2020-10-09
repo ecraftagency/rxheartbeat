@@ -1,14 +1,11 @@
 package com.heartbeat.model.data;
 
 import com.common.Msg;
-import com.heartbeat.HBServer;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
-import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.statics.*;
 import com.transport.EffectResult;
-import com.transport.model.Group;
 import com.transport.model.Idols;
 
 import java.util.*;
