@@ -1,6 +1,8 @@
 package com.heartbeat.service;
 
 import com.heartbeat.model.Session;
+import com.transport.model.GameInfo;
+import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
@@ -15,4 +17,5 @@ public interface GroupService {
   String approveMember(Session session, int memberId, String action);
   String setGroupRole(Session session, int memberId, int newRole);
   String setGroupInform(Session session, int type, String informMsg);
+  void getMemberInfo(int sessionId, Handler<AsyncResult<GameInfo>> handler);
 }

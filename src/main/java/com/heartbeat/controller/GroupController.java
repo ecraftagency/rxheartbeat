@@ -79,6 +79,9 @@ public class GroupController implements Handler<RoutingContext> {
           case "removeGroup":
             processRemoveGroup(session, ctx, cmd);
             return;
+          case "getMemberInfo":
+            processGetMemberInfo(ctx, cmd);
+            return;
           default:
             resp = ExtMessage.group();
             resp.msg = "unknown_cmd";
@@ -100,6 +103,23 @@ public class GroupController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private void processGetMemberInfo(RoutingContext ctx, String cmd) {
+    ExtMessage resp = ExtMessage.group();
+    resp.cmd        = cmd;
+    int memberId    = ctx.getBodyAsJson().getInteger("memberId");
+    groupService.getMemberInfo(memberId, ar -> {
+      if (ar.succeeded()) {
+        resp.msg = "ok";
+        resp.data.gameInfo = ar.result();
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+      else {
+        resp.msg = ar.cause().getMessage();
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
   }
 
   private ExtMessage processClaimReward(Session session, RoutingContext ctx, long curMs) {

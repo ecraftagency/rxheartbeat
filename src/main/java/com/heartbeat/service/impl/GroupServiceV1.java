@@ -5,13 +5,16 @@ import com.common.LOG;
 import com.common.Msg;
 import com.heartbeat.db.cb.CBGroup;
 import com.heartbeat.db.cb.CBMapper;
+import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
 import com.heartbeat.service.GroupService;
 import com.statics.WordFilter;
+import com.transport.model.GameInfo;
 import com.transport.model.Group;
+import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -413,6 +416,24 @@ public class GroupServiceV1 implements GroupService {
     }
     else
       return Msg.map.getOrDefault(Msg.GROUP_PERM, "set_inform_fail_permission");
+  }
+
+  @Override
+  public void getMemberInfo(int sessionId, Handler<AsyncResult<GameInfo>> handler) {
+    Session session   = SessionPool.getSessionFromPool(sessionId);
+    if (session != null) {
+      handler.handle(Future.succeededFuture(session.userGameInfo));
+    }
+    else {
+      CBSession.getInstance().load(Integer.toString(sessionId), ar -> {
+        if (ar.succeeded()) {
+          handler.handle(Future.succeededFuture(ar.result().userGameInfo));
+        }
+        else {
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.MEMBER_INFO_NOT_FOUND, "group_member_not_found")));
+        }
+      });
+    }
   }
 }
 
