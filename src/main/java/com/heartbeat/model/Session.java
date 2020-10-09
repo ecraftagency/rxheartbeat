@@ -2,6 +2,7 @@ package com.heartbeat.model;
 
 import com.common.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
 import com.heartbeat.model.data.UserLDB;
@@ -190,6 +191,7 @@ public class Session {
     userLDB                 = UserLDB.ofDefault();
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
+    userIdol.session        = this;
 
     userRanking.sessionId   = id;
     userRanking.displayName = userGameInfo.displayName;
@@ -312,6 +314,15 @@ public class Session {
 
   private Session() {
 
+  }
+
+  public void syncGroupInfo(String syncField) {
+    UserGroup group = GroupPool.getGroupFromPool(groupID);
+    if (group != null)
+      HBServer.executor.executeBlocking(promise -> {
+        group.updateMemberInfo(this, "totalProperty");
+        promise.complete();
+      }, res -> {});
   }
 
   public static Session of(int id) {

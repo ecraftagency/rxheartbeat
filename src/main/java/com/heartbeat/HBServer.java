@@ -64,6 +64,7 @@ public class HBServer extends AbstractVerticle {
 
   public static JsonObject       systemConfig;
   public static JsonObject       localConfig;
+  public static WorkerExecutor   executor;
 
 //  public static Disposable        gsOpenTask;
 //  public static Disposable        gsCloseTask;
@@ -146,6 +147,8 @@ public class HBServer extends AbstractVerticle {
       UserLDB.loadLDBFromDB(LEADER_BOARD.FIGHT_LDB_ID);
       UserInbox.loadInboxFromDB();
       UserInventory.loadItemStatsFromDB();
+
+      HBServer.executor = vertx.createSharedWorkerExecutor("worker-pool");
     }
     catch (Exception ioe) {
       startPromise.fail(ioe);

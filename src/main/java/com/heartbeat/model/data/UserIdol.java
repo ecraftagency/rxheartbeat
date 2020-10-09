@@ -1,11 +1,14 @@
 package com.heartbeat.model.data;
 
 import com.common.Msg;
+import com.heartbeat.HBServer;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.statics.*;
 import com.transport.EffectResult;
+import com.transport.model.Group;
 import com.transport.model.Idols;
 
 import java.util.*;
@@ -20,6 +23,7 @@ public class UserIdol extends Idols {
   private transient Map<Integer, List<Idol>>  halo2Idol;    //group Idol by Halos
   public  transient UserEvent                 userEvent;    //ref;
   public  transient UserRanking               userRanking;  //ref;
+  public  transient Session                    session;      //ref;
 
   public static UserIdol ofDefault() {
     UserIdol defaultUserIdol = new UserIdol();
@@ -136,6 +140,9 @@ public class UserIdol extends Idols {
         userRanking.addEventRecord(RANK_EVENT.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
       idol.attractive = newAttr;
     }
+
+    if (session != null)
+      session.syncGroupInfo("totalProperty");
   }
 
   /********************************************************************************************************************/

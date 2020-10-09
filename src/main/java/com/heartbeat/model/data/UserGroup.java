@@ -284,4 +284,18 @@ public class UserGroup extends Group {
     }
     return true;
   }
+
+  public void updateMemberInfo(Session session, String updateFields) {
+    Member member = members.get(session.id);
+    if (member == null)
+      return;
+    switch (updateFields) {
+      case "totalProperty" :
+        member.totalCrt = session.userIdol.totalCrt();
+        member.totalAttr = session.userIdol.totalAttr();
+        member.totalPerf = session.userIdol.totalPerf();
+        return;
+      default:
+    }
+  }
 }
