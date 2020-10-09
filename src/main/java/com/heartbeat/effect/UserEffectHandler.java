@@ -27,6 +27,7 @@ public class UserEffectHandler implements EffectHandler{
   private static final int SPECIAL_AVATAR_CHANGE          = 9;
   private static final int LINEAR_EXT_INCREASE            = 10; // x = ax + b
   private static final int EXPONENT_INCREASE              = 11; // x = ax + b
+  private static final int PRODUCTION_INCREASE            = 12;
 
   private static final int MONEY_PROPERTY       = 1;
   private static final int VIEW_PROPERTY        = 2;
@@ -336,6 +337,19 @@ public class UserEffectHandler implements EffectHandler{
           return EffectHandler.UNKNOWN_PROPERTY;
       }
     });
+
+    subHandlers.put(PRODUCTION_INCREASE, ((extArgs, session, eff) -> {
+      int productionType  = eff.get(EffectHandler.PARAM1);
+      int amount          = eff.get(EffectHandler.PARAM2);
+      boolean success     = session.userProduction.addProduction(session, productionType, amount);
+      if (success) {
+        session.effectResults.add(EffectResult.of(4000,productionType, amount));
+        return EffectHandler.SUCCESS;
+      }
+      else {
+        return EffectHandler.UNKNOWN_PROPERTY;
+      }
+    }));
   }
 
   public static UserEffectHandler inst() {

@@ -143,6 +143,10 @@ public class StaticLoadTest {
               StandardCharsets.UTF_8);
       PaymentData.loadJson(payment);
 
+      String goldenTime = new String(Files.readAllBytes(Paths.get("data/json/goldenTime.json")),
+              StandardCharsets.UTF_8);
+      GoldenTimeData.loadJson(goldenTime);
+
       WordFilter.loadText("data/filter0");
       WordFilter.loadText("data/filter1");
       WordFilter.loadText("data/filter2");

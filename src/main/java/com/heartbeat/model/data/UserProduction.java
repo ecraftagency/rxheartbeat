@@ -215,25 +215,25 @@ public class UserProduction extends com.transport.model.Production{
       return Msg.map.getOrDefault(Msg.CLAIM_PRODUCT_INSUFFICIENT_VIEW, "unsufficient_view");
   }
 
-  public void addProduction(Session session, int productType, int amount) {
+  public boolean addProduction(Session session, int productType, int amount) {
     switch (productType){
       case PRODUCE_GOLD:
         currentGoldClaimCount  += amount;
         goldRecoverInv          = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
         goldRecoverInv          = Math.min(goldRecoverInv, MAX_REC_INTERVAL);
-        break;
+        return true;
       case PRODUCE_FAN:
         currentFanClaimCount += amount;
         fanRecoverInv          = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
         fanRecoverInv          = Math.min(fanRecoverInv, MAX_REC_INTERVAL);
-        break;
+        return true;
       case PRODUCE_VIEW:
         currentViewClaimCount += amount;
         viewRecoverInv          = ((int)(session.userIdol.totalCrt()/RECOVERY_DENOMINATOR) + 1)*60;
         viewRecoverInv          = Math.min(viewRecoverInv, MAX_REC_INTERVAL);
-        break;
+        return true;
       default:
-        break;
+        return false;
     }
   }
 }

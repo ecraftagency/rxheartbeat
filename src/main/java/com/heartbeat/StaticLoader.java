@@ -144,6 +144,10 @@ public class StaticLoader {
             StandardCharsets.UTF_8);
     PaymentData.loadJson(payment);
 
+    String goldenTime = new String(Files.readAllBytes(Paths.get("data/json/goldenTime.json")),
+            StandardCharsets.UTF_8);
+    GoldenTimeData.loadJson(goldenTime);
+
     String pick     = new String(Files.readAllBytes(Paths.get("data/json/pick.json")),
             StandardCharsets.UTF_8);
     PickData.loadJson(pick);

@@ -8,12 +8,14 @@ import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserEvent;
+import com.statics.GoldenTimeData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class EventController implements Handler<RoutingContext> {
   @Override
@@ -42,10 +44,10 @@ public class EventController implements Handler<RoutingContext> {
             resp = processClaimIdolEvtRwd(session, ctx, curMs);
             break;
           case "getGoldenTimeInfo":
-            resp = processGetGoldenTimeInfo(session, ctx, curMs);
+            resp = processGetGoldenTimeInfo(session, curMs);
             break;
           case "claimGoldenReward":
-            resp = processClaimGoldenReward(session, ctx, curMs);
+            resp = processClaimGoldenReward(session, curMs);
             break;
           default:
             resp = ExtMessage.event();
@@ -71,7 +73,7 @@ public class EventController implements Handler<RoutingContext> {
     }
   }
 
-  private ExtMessage processClaimGoldenReward(Session session, RoutingContext ctx, long curMs) {
+  private ExtMessage processClaimGoldenReward(Session session, long curMs) {
     ExtMessage resp = ExtMessage.event();
 
     int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
@@ -82,14 +84,13 @@ public class EventController implements Handler<RoutingContext> {
       else {
         resp.msg = "ok";
         session.userEvent.goldenTimeClaimCas = goldenTimeId;
-        if (goldenTimeId == 1) {
-          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,3,1,0));
+        GoldenTimeData.GoldenTimeDto dto = GoldenTimeData.goldenTimeMap.get(goldenTimeId);
+        if (dto == null || dto.reward == null) {
+          resp.msg = "Thông tin sự kiện ko đúng";
         }
-        else if (goldenTimeId == 2) {
-          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,4,1,0));
-        }
-        else if (goldenTimeId == 3) {
-          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,5,1,0));
+        else {
+          for (List<Integer> reward : dto.reward)
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, reward);
         }
       }
     }
@@ -102,21 +103,21 @@ public class EventController implements Handler<RoutingContext> {
     return resp;
   }
 
-  private ExtMessage processGetGoldenTimeInfo(Session session, RoutingContext ctx, long curMs) {
+  private ExtMessage processGetGoldenTimeInfo(Session session, long curMs) {
     ExtMessage resp = ExtMessage.event();
 
     int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
     if (goldenTimeId == 1) {
       resp.msg = "ok";
-      resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,3,1,0));
+      resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap.get(1));
     }
     if (goldenTimeId == 2) {
       resp.msg = "ok";
-      resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,4,1,0));
+      resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap.get(2));
     }
     if (goldenTimeId == 3) {
       resp.msg = "ok";
-      resp.data.extObj = Utilities.gson.toJson(Arrays.asList(100,5,1,0));
+      resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap.get(3));
     }
     else {
       resp.msg = "Đang không trong khung giờ vàng";
