@@ -2,8 +2,10 @@ package com.heartbeat.controller;
 
 import com.common.LOG;
 import com.common.Msg;
+import com.common.Utilities;
 import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.query.ReactiveQueryResult;
+import com.google.gson.Gson;
 import com.heartbeat.HBServer;
 import static com.common.Constant.*;
 import com.common.GlobalVariable;
@@ -112,7 +114,7 @@ public class GroupController implements Handler<RoutingContext> {
     groupService.getMemberInfo(memberId, ar -> {
       if (ar.succeeded()) {
         resp.msg = "ok";
-        resp.data.gameInfo = ar.result();
+        resp.data.extObj = Utilities.gson.toJson(ar.result());
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
       else {
