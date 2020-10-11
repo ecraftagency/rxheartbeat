@@ -2,7 +2,6 @@ package com.common;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class GlobalVariable {
   static final int NUM_CORE = 8;//Runtime.getRuntime().availableProcessors();
@@ -23,7 +22,6 @@ public class GlobalVariable {
 //    return null;
     return null;
   }
-
 
   public static final ThreadLocal<StringBuilder> stringBuilder = new ThreadLocal<StringBuilder>() {
     @Override

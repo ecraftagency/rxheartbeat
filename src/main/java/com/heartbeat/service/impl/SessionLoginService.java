@@ -37,19 +37,18 @@ public class SessionLoginService implements AuthService {
     if (versionCheck) {
       int snsFlag = request.snsFlag;
       if (snsFlag == 1) {
-        d100Login(request, handler);
+        process100dLogin(request, handler);
       }
       else {
         processCommonLogin(request, handler);
       }
-
     }
     else {
       handler.handle(Future.failedFuture("login_client_update"));
     }
   }
 
-  private void d100Login(LoginRequest request, Handler<AsyncResult<Profile>> handler) {
+  private void process100dLogin(LoginRequest request, Handler<AsyncResult<Profile>> handler) {
     String d100Token = request.snsToken;
     Passport100D.verify(d100Token, ar -> {
       if (ar.succeeded()) {

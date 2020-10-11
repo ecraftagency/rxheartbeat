@@ -77,7 +77,6 @@ public class SessionPool {
             }
           }
         }
-        //LOGGER.info("Session online " + pool.size());
       }
       catch(Exception ex) {
         LOG.poolException(ex);
@@ -134,20 +133,4 @@ public class SessionPool {
       LOG.poolException(ex);
     }
   };
-
-//  public static Runnable resetGoldenTimeClaim = () -> {
-//    try {
-//      Enumeration<Integer> e = pool.keys();
-//      while (e.hasMoreElements()) {
-//        Integer sessionId = e.nextElement();
-//        Session session = pool.get(sessionId);
-//        if (session != null) {
-//          //todo
-//        }
-//      }
-//    }
-//    catch(Exception ex) {
-//      LOG.poolException(ex);
-//    }
-//  };
 }

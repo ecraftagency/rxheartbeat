@@ -3,6 +3,7 @@ package com.heartbeat.scheduler;
 import com.common.Constant;
 import com.common.LOG;
 import com.diabolicallabs.vertx.cron.CronObservable;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInventory;
 import com.heartbeat.model.data.UserRanking;
@@ -27,7 +28,7 @@ public class TaskRunner {
   public Disposable gameShowCloseTask;
   public Disposable newDayTask;
   public long       gateWayPingTaskId;
-  public long       statsSyncTask;
+  public long       itemStatsSyncTask;
 
   public long       rankingSyncTaskId;
   public Scheduler  scheduler;
@@ -49,12 +50,13 @@ public class TaskRunner {
       try {
         JsonObject jsonMessage = new JsonObject().put("cmd", "ping");
         jsonMessage.put("cmd", "ping");
-        jsonMessage.put("nodeId",   nodeId);
-        jsonMessage.put("nodeIp",   nodeIp);
-        jsonMessage.put("nodePort", nodePort);
-        jsonMessage.put("nodeName", nodeName);
-        jsonMessage.put("nodeBus",  nodeBus);
-        jsonMessage.put("nodeCcu", SessionPool.getCCU());
+        jsonMessage.put("nodeId",       nodeId);
+        jsonMessage.put("nodeIp",       nodeIp);
+        jsonMessage.put("nodePort",     nodePort);
+        jsonMessage.put("nodeName",     nodeName);
+        jsonMessage.put("nodeBus",      nodeBus);
+        jsonMessage.put("nodeCcu",      SessionPool.getCCU());
+        jsonMessage.put("onlineGroup",  GroupPool.getTotal());
         EventBus eb = vertx.eventBus();
         eb.send(Constant.SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
       }
@@ -63,7 +65,7 @@ public class TaskRunner {
       }
     });
 
-    statsSyncTask = vertx.setPeriodic(Constant.SYSTEM_INFO.STATS_DATA_SYNC_INTERVAL, id -> {
+    itemStatsSyncTask = vertx.setPeriodic(Constant.SYSTEM_INFO.STATS_DATA_SYNC_INTERVAL, id -> {
       try {
         UserInventory.syncItemStatToDB();
       }

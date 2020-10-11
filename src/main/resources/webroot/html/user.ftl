@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-    <div class="card top-buffer">
+    <div v-if="resp.session.userPayment.length > 0" class="card top-buffer">
       <div class="card-header" id="paymentHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#paymentCollapse" aria-expanded="false" aria-controls="paymentCollapse">
@@ -102,7 +102,7 @@
         </div>
       </div>
     </div>
-    <div class="card top-buffer">
+    <div v-if="resp.session.userInbox.length > 0" class="card top-buffer">
       <div class="card-header" id="inboxHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#inboxCollapse" aria-expanded="false" aria-controls="inboxCollapse">

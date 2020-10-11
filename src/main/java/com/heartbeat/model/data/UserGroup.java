@@ -62,6 +62,13 @@ public class UserGroup extends Group {
   }
 
   public synchronized String processJoinGroup(Session session) {
+    if (members.size() >= MAX_GROUP_MEMBER) {
+      return Msg.map.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
+    }
+
+    if (joinType != AUTO_JOIN && joinType != REQUEST_JOIN)
+      return Msg.map.getOrDefault(Msg.INVALID_GROUP_TYPE, "unknown_join_type");
+
     Member member           = Member.of(session.id, session.userGameInfo.displayName);
     member.titleId          = session.userGameInfo.titleId;
     member.totalCrt         = session.userIdol.totalCrt();
@@ -70,24 +77,16 @@ public class UserGroup extends Group {
     member.avatarId         = session.userGameInfo.avatar;
     member.gender           = session.userGameInfo.gender;
 
-
-    if (members.size() >= MAX_GROUP_MEMBER) {
-      return Msg.map.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
-    }
-
     if (joinType == AUTO_JOIN) {
       members.put(member.id, member);
       session.groupID = id;
       isChange        = true;
       return "ok";
     }
-    else if (joinType == REQUEST_JOIN) {
+    else {
       pendingMembers.put(member.id, member);
       isChange = true;
       return Msg.map.getOrDefault(Msg.GROUP_JOIN_PENDING, "group_join_pending");
-    }
-    else {
-      return Msg.map.getOrDefault(Msg.INVALID_GROUP_TYPE, "unknown_join_type");
     }
   }
 

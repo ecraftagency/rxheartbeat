@@ -72,4 +72,8 @@ public class GroupPool {
               Constant.ONLINE_INFO.SYNC_GROUP_INTERVAL, TimeUnit.MILLISECONDS);
     }
   };
+
+  public static int getTotal() {
+    return pool.size();
+  }
 }

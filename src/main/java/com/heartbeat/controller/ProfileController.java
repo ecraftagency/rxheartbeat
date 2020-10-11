@@ -4,13 +4,19 @@ import com.common.Constant;
 import com.common.LOG;
 import com.common.Msg;
 import com.common.Utilities;
+import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserGroup;
+import com.heartbeat.service.GroupService;
+import com.heartbeat.service.impl.GroupServiceV1;
 import com.statics.OfficeData;
 import com.statics.ShopData;
 import com.transport.ExtMessage;
+import com.transport.model.CompactProfile;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -21,6 +27,10 @@ import java.util.Map;
 import static com.common.Constant.*;
 
 public class ProfileController implements Handler<RoutingContext> {
+  private GroupService groupService;
+  public ProfileController() {
+    groupService = new GroupServiceV1();
+  }
   @Override
   public void handle(RoutingContext ctx) {
     String cmd          = "";
@@ -51,6 +61,9 @@ public class ProfileController implements Handler<RoutingContext> {
           case "userLevelUp":
             resp = processUserLevelUp(session);
             break;
+            case "getCompactProfile":
+            processGetUserProfile(ctx, cmd);
+            return;
           default:
             resp = ExtMessage.profile();
             resp.msg = "unknown_cmd";
@@ -73,6 +86,54 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private void processGetUserProfile(RoutingContext ctx, String cmd) {
+    ExtMessage resp = ExtMessage.profile();
+    resp.cmd        = cmd;
+    int userId      = ctx.getBodyAsJson().getInteger("userId");
+    Session session = SessionPool.getSessionFromPool(userId);
+    if (session != null) {
+      transformUserProfile(userId, session, resp, ctx);
+    }
+    else {
+      CBSession.getInstance().load(Integer.toString(userId), ar -> {
+        if (ar.succeeded()) {
+          transformUserProfile(userId, ar.result(), resp, ctx);
+        }
+        else {
+          resp.msg = ar.cause().getMessage();
+          ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        }
+      });
+    }
+  }
+
+  private void transformUserProfile(int userId, Session session, ExtMessage resp, RoutingContext ctx) {
+    groupService.loadSessionGroup(session, ar -> {
+      if (ar.succeeded()) {
+        CompactProfile profile = new CompactProfile();
+        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+        String groupName = group != null ? group.name : "";
+        resp.msg = "ok";
+        profile.displayName = session.userGameInfo.displayName;
+        profile.titleId     = session.userGameInfo.titleId;
+        profile.vipExp      = session.userGameInfo.vipExp;
+        profile.totalCrt    = session.userIdol.totalCrt();
+        profile.totalAttr   = session.userIdol.totalAttr();
+        profile.totalPerf   = session.userIdol.totalPerf();
+        profile.groupName   = groupName;
+        profile.userId      = userId;
+        profile.avatar    = session.userGameInfo.avatar;
+        profile.gender      = session.userGameInfo.gender;
+        resp.data.extObj    = Utilities.gson.toJson(profile);
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+      else {
+        resp.msg = ar.cause().getMessage();
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
   }
 
   private ExtMessage processGetShopStatus() {

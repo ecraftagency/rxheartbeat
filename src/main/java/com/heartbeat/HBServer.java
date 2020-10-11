@@ -66,11 +66,6 @@ public class HBServer extends AbstractVerticle {
   public static JsonObject       localConfig;
   public static WorkerExecutor   executor;
 
-//  public static Disposable        gsOpenTask;
-//  public static Disposable        gsCloseTask;
-//  public static Disposable        newDayTask;
-//  public static long              gateWayPingTaskId;
-
   public static ClusterManager    mgr;
   public static EventBus          eventBus;
 
