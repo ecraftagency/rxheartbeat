@@ -6,9 +6,11 @@ import com.gateway.model.Payload;
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.db.dao.ItemStatsDAO;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
+import com.heartbeat.model.data.UserInventory;
 import com.heartbeat.model.data.UserLDB;
 import com.heartbeat.model.data.UserPayment;
 import com.heartbeat.scheduler.ExtendEventInfo;
@@ -98,6 +100,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "updateShopStatus":
           processUpdateShopStatus(ctx);
           return;
+        case "getStats":
+          processGetStats(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -109,6 +114,21 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processGetStats(Message<JsonObject> ctx) {
+    JsonObject resp = new JsonObject();
+    JsonArray itemStats = new JsonArray();
+    for (Map.Entry<Integer, Integer> entry : UserInventory.itemStats.entrySet()) {
+      JsonObject itemStat = new JsonObject();
+      itemStat.put("itemId", entry.getKey());
+      itemStat.put("SL", entry.getValue());
+      itemStats.add(itemStat);
+    }
+
+    resp.put("statItem", itemStats);
+    resp.put("msg", "ok");
+    ctx.reply(resp);
   }
 
   private void processUpdateShopStatus(Message<JsonObject> ctx) {

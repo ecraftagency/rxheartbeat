@@ -13,6 +13,7 @@
             <a class="nav-item nav-link" href="/ldb">LeaderBoard</a>
             <a class="nav-item nav-link" href="/payment">Payment</a>
             <a class="nav-item nav-link" href="/shop">Shop</a>
+            <a class="nav-item nav-link" href="/stats">Stats</a>
         </div>
       </div>
     </nav>

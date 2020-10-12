@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class UserInventory extends Inventory {
-  private static ConcurrentHashMap<Integer, Integer>  itemStats;
+  public  static ConcurrentHashMap<Integer, Integer>  itemStats;
   public  static AbstractCruder<ItemStatsDAO>         cbItemStats;
   private static final String dbKey = "ItemStats";
 
@@ -225,6 +225,7 @@ public class UserInventory extends Inventory {
     int actualAmount = userItems.get(itemId);
     int remain = actualAmount - amount;
     userItems.put(itemId, remain);
+    itemStats.computeIfPresent(itemId, (k,v) -> Math.max(v - amount, 0));
     return true;
   }
 
@@ -262,6 +263,7 @@ public class UserInventory extends Inventory {
     List<Integer> expireVector        = expireItems.get(itemId);
     List<Integer> newExp              = expireVector.subList(amount, expireVector.size());
     expireItems.put(itemId, newExp);
+    itemStats.computeIfPresent(itemId, (k,v) -> Math.max(v - amount, 0));
     return true;
   }
 }

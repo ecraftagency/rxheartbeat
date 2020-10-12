@@ -56,6 +56,10 @@ public class Renderer implements Handler<RoutingContext> {
         ctx.put("evtType", Arrays.asList("userEvents", "idolEvents", "rankEvents", "groupEvents")); //todo double check template/controller
         render("webroot/html/event.ftl", ctx);
         return;
+      case "stats":
+        ctx.put("nodes", GMTool.getNodes());
+        render("webroot/html/stats.ftl", ctx);
+        return;
       default:
         ctx.response().setStatusCode(404).end();
     }
