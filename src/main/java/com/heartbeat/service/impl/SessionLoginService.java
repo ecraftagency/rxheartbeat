@@ -219,8 +219,10 @@ public class SessionLoginService implements AuthService {
           UserGroup group = GroupPool.getGroupFromPool(session.groupID);
           if (group != null) {
             Group.Member member = group.members.get(session.id);
-            if (member != null)
+            if (member != null) {
               member.lastLogin = session.userProfile.lastLogin;
+              group.isChange = true;
+            }
           }
         });
       }
