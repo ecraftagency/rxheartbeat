@@ -258,12 +258,24 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
   private void processGetLDB(Message<JsonObject> ctx) {
     JsonObject resp       = IntMessage.resp(ctx.body().getString("cmd"));
-    Transformer.transformLDB(LEADER_BOARD.TALENT_LDB_ID, ar -> {
-      if (ar.succeeded()) {
-        resp.put("ldb", ar.result());
-        ctx.reply(resp);
-      }
-    });
+    int ldbId             = Integer.parseInt(ctx.body().getString("ldbId"));
+
+    if (ldbId == LEADER_BOARD.TALENT_LDB_ID) {
+      Transformer.transformLDB(LEADER_BOARD.TALENT_LDB_ID, ar -> {
+        if (ar.succeeded()) {
+          resp.put("ldb", ar.result());
+          ctx.reply(resp);
+        }
+      });
+    }
+    else {
+      Transformer.transformLDB(LEADER_BOARD.FIGHT_LDB_ID, ar -> {
+        if (ar.succeeded()) {
+          resp.put("ldb", ar.result());
+          ctx.reply(resp);
+        }
+      });
+    }
   }
 
   private void processInjectConstant(Message<JsonObject> ctx) {

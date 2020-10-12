@@ -8,18 +8,20 @@ public class Node implements Serializable {
   public String     ip;
   public int        port;
   public int        ccu;
+  public int        cacheGroup;
   public String     bus;
   public String     name;
   public long       lastSync;
 
   private Node() {
-    id        = 0;
-    ip        = "blank_ip";
-    port      = 0;
-    ccu       = 0;
-    bus       = "null_bus";
-    name      = "blank_name";
-    lastSync  = 0;
+    id          = 0;
+    ip          = "blank_ip";
+    port        = 0;
+    ccu         = 0;
+    cacheGroup  = 0;
+    bus         = "null_bus";
+    name        = "blank_name";
+    lastSync    = 0;
   }
 
   public int getId() {
@@ -50,18 +52,23 @@ public class Node implements Serializable {
     return lastSync;
   }
 
+  public int getCacheGroup() {
+    return cacheGroup;
+  }
+
   public static Node ofNullObject() {
     return new Node();
   }
-  public static Node of(int id, String ip, int port, String name, String bus, int ccu) {
-    Node node     = new Node();
-    node.id       = id;
-    node.port     = port;
-    node.ip       = ip;
-    node.name     = name;
-    node.bus      = bus;
-    node.ccu = ccu;
-    node.lastSync = System.currentTimeMillis();
+  public static Node of(int id, String ip, int port, String name, String bus, int ccu, int cacheGroup) {
+    Node node         = new Node();
+    node.id           = id;
+    node.port         = port;
+    node.ip           = ip;
+    node.name         = name;
+    node.bus          = bus;
+    node.ccu          = ccu;
+    node.cacheGroup   = cacheGroup;
+    node.lastSync     = System.currentTimeMillis();
     return node;
   }
 }

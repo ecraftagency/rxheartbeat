@@ -11,12 +11,13 @@
       <th scope="col">Name</th>
       <th scope="col">IP</th>
       <th scope="col">Port</th>
-      <th scope="col">CCU</th>
+      <th scope="col">Ccu</th>
+      <th scope="col">cGroup</th>
     </tr>
   </thead>
   <tbody>
       <#list nodes as node>
-        <tr><td>${node.id}<td>${node.name}<td>${node.ip}<td>${node.port}<td>${node.ccu}
+        <tr><td>${node.id}<td>${node.name}<td>${node.ip}<td>${node.port}<td>${node.ccu}<td>${node.cacheGroup}
       </#list>
   </tbody>
 </table>

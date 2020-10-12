@@ -2,6 +2,15 @@
 <#include "navbar.ftl">
 <#include "servers.ftl">
 
+<div class ="row top-buffer">
+    <div class="col-sm-4">
+        <select class="form-control" v-on:change="serverSelect(event)" v-model:value="ldbId" name="ldbId" id="ldbId">
+            <option value="0">Tổng tài năng</option>
+            <option value="1">Ải</option>
+        </select>
+    </div>
+</div>
+
 <div v-if="isLoaded == true" class="row top-buffer">
   <table class="table table-dark">
     <thead>
@@ -33,13 +42,14 @@ var app = new Vue({
   data() {
     return {
         serverId: '0',
+        ldbId:'0',
         resp: undefined,
         isLoaded: false
     }
   },
   methods: {
     serverSelect: function (event) {
-       let data = { cmd:'getLDB', serverId: this.serverId};
+       let data = { cmd:'getLDB', serverId: this.serverId, ldbId: this.ldbId};
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))
        .catch((error) => this.isLoaded = false);

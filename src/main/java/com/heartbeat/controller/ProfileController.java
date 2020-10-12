@@ -124,15 +124,16 @@ public class ProfileController implements Handler<RoutingContext> {
         profile.totalPerf   = session.userIdol.totalPerf();
         profile.groupName   = groupName;
         profile.userId      = userId;
-        profile.avatar    = session.userGameInfo.avatar;
+        profile.avatar      = session.userGameInfo.avatar;
         profile.gender      = session.userGameInfo.gender;
+        profile.exp         = session.userGameInfo.exp;
+        profile.curFightLV  = session.userFight.currentFightLV;
         resp.data.extObj    = Utilities.gson.toJson(profile);
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
       else {
         resp.msg = ar.cause().getMessage();
-        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
     });
   }
 

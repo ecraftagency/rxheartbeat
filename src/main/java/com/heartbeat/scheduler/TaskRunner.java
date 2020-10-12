@@ -56,7 +56,7 @@ public class TaskRunner {
         jsonMessage.put("nodeName",     nodeName);
         jsonMessage.put("nodeBus",      nodeBus);
         jsonMessage.put("nodeCcu",      SessionPool.getCCU());
-        jsonMessage.put("onlineGroup",  GroupPool.getTotal());
+        jsonMessage.put("cacheGroup",   GroupPool.getTotal());
         EventBus eb = vertx.eventBus();
         eb.send(Constant.SYSTEM_INFO.GATEWAY_EVT_BUS, jsonMessage);
       }

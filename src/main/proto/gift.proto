@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "gift";
+option java_outer_classname = "GiftService";
+
+package gift;
+
+service Gift {
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+    rpc ClaimGift (ClaimGiftRequest) returns (ClaimGiftResponse){}
+}
+
+message ClaimGiftRequest {
+    int32   serverId    = 1;
+    int32   userId      = 2;
+    string  giftCode    = 3;
+}
+
+message ClaimGiftResponse {
+    string msg          = 1;
+    string rewardFormat = 2;
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}

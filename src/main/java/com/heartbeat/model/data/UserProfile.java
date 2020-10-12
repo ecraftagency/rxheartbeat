@@ -17,7 +17,7 @@ public class UserProfile {
   public int              dailyCount; // login count day
   public int              loginCount; // login count day
   public int              onlineTime; // online in seconds
-  public int              banTo; // lock account time
+  public int              banTo;      // lock account time
   public String           banReason = Constant.EMPTY_STRING; // reason to lock account
 
   public int              clientVersion; // for upgrade version reward

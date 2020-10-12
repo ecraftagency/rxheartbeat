@@ -24,18 +24,20 @@ public class InternalController implements Handler<Message<JsonObject>> {
           String  nodeName    = json.getString("nodeName");
           String  nodeBus     = json.getString("nodeBus");
           int     nodeCcu     = json.getInteger("nodeCcu");
+          int     cGroup      = json.getInteger("cacheGroup");
 
           Node node       = NodePool.getNodeFromPool(nodeId);
           if (node != null) {
-            node.ip       = nodeIp;
-            node.port     = nodePort;
-            node.ccu = nodeCcu;
-            node.bus      = nodeBus;
-            node.name     = nodeName;
-            node.lastSync = System.currentTimeMillis();
+            node.ip         = nodeIp;
+            node.port       = nodePort;
+            node.ccu        = nodeCcu;
+            node.bus        = nodeBus;
+            node.name       = nodeName;
+            node.lastSync   = System.currentTimeMillis();
+            node.cacheGroup = cGroup;
           }
           else {
-            Node newNode  = Node.of(nodeId, nodeIp, nodePort, nodeName, nodeBus, nodeCcu);
+            Node newNode  = Node.of(nodeId, nodeIp, nodePort, nodeName, nodeBus, nodeCcu, cGroup);
             NodePool.addNode(newNode);
             LOG.console(
                     String.format("new node added, nodeId: %d, nodeIp: %s, nodePort: %d",

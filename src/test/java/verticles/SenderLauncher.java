@@ -16,12 +16,12 @@ public class SenderLauncher {
 //    hazelcastConfig.getNetworkConfig().getJoin().getTcpIpConfig().addMember("127.0.0.1").setEnabled(true);
 //    hazelcastConfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
 
-    mgr = new HazelcastClusterManager();
+    //mgr = new HazelcastClusterManager();
 
-    VertxOptions options = new VertxOptions().setClusterManager(mgr);
+    VertxOptions options = new VertxOptions();//.setClusterManager(mgr);
     Vertx.clusteredVertx(options, res -> {
       if (res.succeeded()) {
-        DeploymentOptions deploymentOptions = new DeploymentOptions().setInstances(2);
+        DeploymentOptions deploymentOptions = new DeploymentOptions().setInstances(1);
         res.result().deployVerticle(SenderVerticle.class.getName(), deploymentOptions);
         System.out.println("Sender Verticle deployed");
       }
