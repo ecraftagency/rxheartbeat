@@ -1,4 +1,3 @@
-import com.heartbeat.model.data.UserAchievement;
 import com.statics.*;
 
 import java.nio.charset.StandardCharsets;
