@@ -21,6 +21,8 @@ import static com.common.Constant.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGroup extends Group {
+  public static final long MAX_GROUP_MEMBER = 25;
+
   public static UserGroup of(int id, Session session, int joinType, String externalInform, String internalInform, String name) {
     UserGroup re          = new UserGroup();
     re.id                 = id;
@@ -105,7 +107,7 @@ public class UserGroup extends Group {
 
   public synchronized String approveGroup(int memberId, String action) {
     if (action.equals("approve")) {
-      if (members.size() >= 25)
+      if (members.size() >= MAX_GROUP_MEMBER)
         return Msg.map.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
 
       Member member = pendingMembers.get(memberId);
@@ -187,6 +189,10 @@ public class UserGroup extends Group {
     isChange = true;
   }
 
+  public long calcTotalClaimedMember(int missionId) {
+    return members.values().stream().filter(m -> m.missions.get(missionId) != null && m.missions.get(missionId).claim).count();
+  }
+
   public Map<Integer, Integer> calcMissionHitMember() {
     Map<Integer, Integer> res = new HashMap<>();
 
@@ -246,6 +252,9 @@ public class UserGroup extends Group {
         mission.claim) {
       return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
     }
+
+    if (calcTotalClaimedMember(missionId) >= MAX_GROUP_MEMBER)
+      return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
 
     if (!checkPreviousClaim(member, missionId))
       return Msg.map.getOrDefault(Msg.PREV_CLAIM, "group_prev_claim");
