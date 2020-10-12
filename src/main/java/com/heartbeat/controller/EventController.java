@@ -107,21 +107,8 @@ public class EventController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.event();
 
     int goldenTimeId = UserEvent.getCurrentGoldenEvent(curMs);
-    if (goldenTimeId == 1) {
-      resp.msg = "ok";
-      resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap.get(1));
-    }
-    if (goldenTimeId == 2) {
-      resp.msg = "ok";
-      resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap.get(2));
-    }
-    if (goldenTimeId == 3) {
-      resp.msg = "ok";
-      resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap.get(3));
-    }
-    else {
-      resp.msg = "Đang không trong khung giờ vàng";
-    }
+    resp.msg = "ok";
+    resp.data.extObj = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap);
 
     session.userEvent.currentGoldenEvent = goldenTimeId;
     resp.data.event = session.userEvent;
