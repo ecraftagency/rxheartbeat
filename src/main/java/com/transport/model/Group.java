@@ -37,10 +37,10 @@ public class Group {
   //runtime data
   public transient Map<Integer, GroupMissionData.GroupMission>  missions;
   public Map<Integer, Integer>                                  missionHitMember;
-  public int                      missionStartDate;
-  public int                      missionEndDate;
-  public String                   strStartDate;
-  public String                   strEndDate;
+//  public int                      missionStartDate;
+//  public int                      missionEndDate;
+//  public String                   strStartDate;
+//  public String                   strEndDate;
 
   public void close() {
 
@@ -74,6 +74,7 @@ public class Group {
     public long     totalAttr;
     public int      avatarId;
     public int      gender;
+    public int      lastLogin;
     public int      cas;
     public Map<Integer, Mission> missions;
 

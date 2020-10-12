@@ -7,11 +7,14 @@ import com.heartbeat.Passport100D;
 import com.heartbeat.db.cb.CBCounter;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserGroup;
 import com.heartbeat.service.AuthService;
 import com.heartbeat.service.GroupService;
 import com.transport.LoginRequest;
+import com.transport.model.Group;
 import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -212,7 +215,14 @@ public class SessionLoginService implements AuthService {
         SessionPool.addSession(session);
         session.updateLogin();
         //session.loadSessionGroup(ar -> {});
-        groupService.loadSessionGroup(session, ar -> {});
+        groupService.loadSessionGroup(session, ar -> {
+          UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+          if (group != null) {
+            Group.Member member = group.members.get(session.id);
+            if (member != null)
+              member.lastLogin = session.userProfile.lastLogin;
+          }
+        });
       }
       else if (result.equals("kick")) {
         int second                    = (int)(System.currentTimeMillis()/1000);
