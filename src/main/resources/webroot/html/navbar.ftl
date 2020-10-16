@@ -14,6 +14,7 @@
             <a class="nav-item nav-link" href="/payment">Payment</a>
             <a class="nav-item nav-link" href="/shop">Shop</a>
             <a class="nav-item nav-link" href="/stats">Stats</a>
+            <a class="nav-item nav-link" href="/gift">Gift</a>
         </div>
       </div>
     </nav>

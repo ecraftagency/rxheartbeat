@@ -9,6 +9,7 @@ package gift;
 service Gift {
     rpc SayHello (HelloRequest) returns (HelloReply) {}
     rpc ClaimGift (ClaimGiftRequest) returns (ClaimGiftResponse){}
+    rpc ListPrefix (ListPrefixRequest) returns (ListPrefixResponse){}
 }
 
 message ClaimGiftRequest {
@@ -20,6 +21,25 @@ message ClaimGiftRequest {
 message ClaimGiftResponse {
     string msg          = 1;
     string rewardFormat = 2;
+}
+
+message ListPrefixRequest {
+    int32 serverId      = 1;
+}
+
+message ListPrefixResponse {
+    string msg = 1;
+    repeated Prefix prefix = 2;
+}
+
+message Prefix {
+    string prefix       = 1;
+    int32  total        = 2;
+    int32  cnt          = 3;
+    string createDate   = 4;
+    string expire       = 5;
+    int32  server       = 6;
+    string reward       = 7;
 }
 
 message HelloRequest {

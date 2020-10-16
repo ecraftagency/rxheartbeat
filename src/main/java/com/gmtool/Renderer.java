@@ -60,6 +60,10 @@ public class Renderer implements Handler<RoutingContext> {
         ctx.put("nodes", GMTool.getNodes());
         render("webroot/html/stats.ftl", ctx);
         return;
+      case "gift":
+        ctx.put("nodes", GMTool.getNodes());
+        render("webroot/html/giftcode.ftl", ctx);
+        return;
       default:
         ctx.response().setStatusCode(404).end();
     }
