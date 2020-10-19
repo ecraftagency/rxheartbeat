@@ -92,6 +92,8 @@ public class ProfileController implements Handler<RoutingContext> {
     ExtMessage resp = ExtMessage.profile();
     resp.cmd        = cmd;
     int userId      = ctx.getBodyAsJson().getInteger("userId");
+
+    //first get online user
     Session session = SessionPool.getSessionFromPool(userId);
     if (session != null) {
       transformUserProfile(userId, session, resp, ctx);

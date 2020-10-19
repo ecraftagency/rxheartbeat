@@ -6,8 +6,10 @@ import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
 import com.heartbeat.model.data.UserLDB;
+import com.stdprofile.thrift.StdProfile;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
+import org.apache.thrift.TException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,6 +112,7 @@ public class Session {
 
     CBSession cba = CBSession.getInstance();
     cba.sync(Integer.toString(id), this, ar -> SessionPool.removeSession(id));
+    syncStdProfile();
     SessionPool.removeSession(id); //T___T
   }
 
@@ -342,5 +345,16 @@ public class Session {
     String res = this.userGameInfo.replaceDisplayName(this, newDisplayName);
     if (!res.equals("ok"))
       throw new RuntimeException(res);
+  }
+
+  void syncStdProfile() {
+    StdProfile profile = new StdProfile();
+    profile.setUserId(this.id);
+    profile.setDisplayName(this.userGameInfo.displayName);
+    try {
+      HBServer.client.ow_put(profile);
+    } catch (TException e) {
+      //ignore
+    }
   }
 }

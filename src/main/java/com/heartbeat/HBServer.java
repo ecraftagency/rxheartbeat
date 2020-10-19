@@ -16,6 +16,7 @@ import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.*;
 import com.heartbeat.scheduler.TaskRunner;
+import com.stdprofile.thrift.StdProfileService;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
@@ -31,6 +32,12 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -77,7 +84,12 @@ public class HBServer extends AbstractVerticle {
   public static String  gatewayIP = "";
   public static String  localIP   = "";
 
-  public static void main(String[] args) throws IOException {
+  static TTransport transport;
+  static TFramedTransport ft;
+  static TProtocol protocol;
+  public static StdProfileService.Client client;
+
+  public static void main(String[] args) throws IOException, TTransportException {
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
     String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
     localConfig             = new JsonObject(conf);
@@ -90,6 +102,12 @@ public class HBServer extends AbstractVerticle {
 
     //for faster startup, fucking couchbase java sdk T___T
     cruder = CBSession.getInstance();
+
+    transport = new TSocket("13.229.140.173", 8888);
+    ft        = new TFramedTransport(transport);
+    protocol  = new TBinaryProtocol(ft);
+    transport.open();
+    client    = new StdProfileService.Client(protocol);
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();

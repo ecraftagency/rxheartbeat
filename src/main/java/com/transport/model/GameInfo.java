@@ -24,6 +24,9 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public int      lastMediaClaim  = 0;
   public int      nextQuestion    = 1;
   public boolean  timeChange      = false;
+  public long     totalCrt        = 0;
+  public long     totalPerf       = 0;
+  public long     totalAttr       = 0;
 
   //shopping data
   public Map<Integer, Integer> shopping;

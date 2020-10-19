@@ -137,6 +137,13 @@ public class UserIdol extends Idols {
         userRanking.addEventRecord(RANK_EVENT.TOTAL_TALENT_RANK_ID, newAttr - idol.attractive);
       idol.attractive = newAttr;
     }
+
+    //update userProfile
+    if (session != null) {
+      session.userGameInfo.totalCrt = totalCrt();
+      session.userGameInfo.totalPerf = totalPerf();
+      session.userGameInfo.totalAttr = totalAttr();
+    }
   }
 
   /********************************************************************************************************************/
