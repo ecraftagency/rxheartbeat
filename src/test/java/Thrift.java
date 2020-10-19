@@ -1,4 +1,3 @@
-import com.stdprofile.thrift.StdProfileResult;
 import com.stdprofile.thrift.StdProfileService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -14,9 +13,7 @@ public class Thrift {
     TProtocol protocol = new TBinaryProtocol(ft);
     transport.open();
     StdProfileService.Client client = new StdProfileService.Client(protocol);
-    StdProfileResult res = client.get(1000000);
-    if (res.data != null)
-      System.out.println(res.data.getDisplayName());
+    System.out.println(client.getStat(0));
     transport.close();
   }
 }
