@@ -214,7 +214,6 @@ public class SessionLoginService implements AuthService {
 
         SessionPool.addSession(session);
         session.updateLogin();
-        //session.loadSessionGroup(ar -> {});
         groupService.loadSessionGroup(session, ar -> {
           UserGroup group = GroupPool.getGroupFromPool(session.groupID);
           if (group != null) {

@@ -62,7 +62,7 @@ public class ProfileController implements Handler<RoutingContext> {
             resp = processUserLevelUp(session);
             break;
             case "getCompactProfile":
-            processGetUserProfile(ctx, cmd);
+            processCompactProfile(ctx, cmd);
             return;
           default:
             resp = ExtMessage.profile();
@@ -88,27 +88,36 @@ public class ProfileController implements Handler<RoutingContext> {
     }
   }
 
-  private void processGetUserProfile(RoutingContext ctx, String cmd) {
+  private void processCompactProfile(RoutingContext ctx, String cmd) {
     ExtMessage resp = ExtMessage.profile();
     resp.cmd        = cmd;
     int userId      = ctx.getBodyAsJson().getInteger("userId");
 
-    //first get online user
+    //first get online user [level 1 cache]
     Session session = SessionPool.getSessionFromPool(userId);
     if (session != null) {
       transformUserProfile(userId, session, resp, ctx);
+      return;
     }
-    else {
-      CBSession.getInstance().load(Integer.toString(userId), ar -> {
-        if (ar.succeeded()) {
-          transformUserProfile(userId, ar.result(), resp, ctx);
-        }
-        else {
-          resp.msg = ar.cause().getMessage();
-          ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
-        }
-      });
+
+    //if not get from std_profile service [level 2 cache]
+    CompactProfile profile = Session.getProfileFromCache(userId);
+    if (profile != null) {
+      resp.data.extObj    = Utilities.gson.toJson(profile);
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      return;
     }
+
+    //last from persistent
+    CBSession.getInstance().load(Integer.toString(userId), ar -> {
+      if (ar.succeeded()) {
+        transformUserProfile(userId, ar.result(), resp, ctx);
+      }
+      else {
+        resp.msg = ar.cause().getMessage();
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
   }
 
   private void transformUserProfile(int userId, Session session, ExtMessage resp, RoutingContext ctx) {

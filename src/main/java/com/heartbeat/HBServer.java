@@ -103,7 +103,7 @@ public class HBServer extends AbstractVerticle {
     //for faster startup, fucking couchbase java sdk T___T
     cruder = CBSession.getInstance();
 
-    transport = new TSocket("13.229.140.173", 8888);
+    transport = new TSocket(SERVICE.STD_PROFILE_HOST, SERVICE.STD_PROFILE_PORT);
     ft        = new TFramedTransport(transport);
     protocol  = new TBinaryProtocol(ft);
     transport.open();

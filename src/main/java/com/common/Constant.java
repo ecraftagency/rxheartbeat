@@ -17,7 +17,7 @@ public class Constant {
     public static final String      DEFAULT_DEVICE_ID_ANDROID       = "6962556a555d60555660593961555d600xff";
   }
 
-  public static class Service {
+  public static class SERVICE {
     public static String  STD_PROFILE_HOST    = "13.229.140.173";
     public static int     STD_PROFILE_PORT    = 8888;
   }

@@ -6,9 +6,12 @@ import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.data.*;
 import com.heartbeat.model.data.UserLDB;
+import com.statics.FightData;
 import com.stdprofile.thrift.StdProfile;
+import com.stdprofile.thrift.StdProfileResult;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
+import com.transport.model.CompactProfile;
 import org.apache.thrift.TException;
 
 import java.util.ArrayList;
@@ -232,6 +235,10 @@ public class Session {
 
     userProfile.lastLogin   = second;
     lastHearBeatTime        = second;
+
+    userGameInfo.totalCrt   = userIdol.totalCrt();
+    userGameInfo.totalPerf  = userIdol.totalPerf();
+    userGameInfo.totalAttr  = userIdol.totalAttr();
   }
 
   public void updateClientInfo(LoginRequest message) {
@@ -351,10 +358,62 @@ public class Session {
     StdProfile profile = new StdProfile();
     profile.setUserId(this.id);
     profile.setDisplayName(this.userGameInfo.displayName);
+
+    profile.setGender(userGameInfo.gender);
+    profile.setAvatarVersion((short)userGameInfo.avatar);//avatar
+    profile.setBirthdate(userGameInfo.vipExp);
+    UserGroup group = GroupPool.getGroupFromPool(groupID);
+    String groupName = group != null ? group.name : "";
+
+    profile.setStatusText(groupName);
+    profile.setStatus(userGameInfo.titleId);
+    profile.setCertDate(userFight.currentFightLV.id);
+
+    StringBuilder builder = GlobalVariable.stringBuilder.get();
+    builder.append(userGameInfo.totalCrt).append(".")
+           .append(userGameInfo.totalPerf).append(".")
+           .append(userGameInfo.totalAttr).append(".")
+           .append(userGameInfo.exp);
+    profile.setEmail(builder.toString());
+
     try {
       HBServer.client.ow_put(profile);
     } catch (TException e) {
       //ignore
+    }
+  }
+
+  public static CompactProfile getProfileFromCache(int sessionId) {
+    try {
+      StdProfileResult res = HBServer.client.get(sessionId);
+      if (res.data != null) {
+        CompactProfile cProf  = new CompactProfile();
+        StdProfile sProf      = res.data;
+        cProf.userId          = sProf.getUserId();
+        cProf.displayName     = sProf.getDisplayName();
+        cProf.gender          = sProf.getGender();
+        cProf.avatar          = sProf.getAvatarVersion();
+        cProf.groupName       = sProf.getStatusText();
+        cProf.titleId         = sProf.getStatus();
+        cProf.curFightLV      = FightData.fightMap.getOrDefault(sProf.getCertDate(), FightData.of(1));
+        cProf.vipExp          = sProf.getBirthdate();
+        String[] attr         = sProf.getEmail().split(".");
+
+        if (attr.length != 4) {
+          cProf.exp = cProf.totalAttr = cProf.totalCrt = cProf.totalPerf = 0;
+        }
+        else {
+          cProf.totalCrt  = Long.parseLong(attr[0]);
+          cProf.totalPerf = Long.parseLong(attr[1]);
+          cProf.totalAttr = Long.parseLong(attr[2]);
+          cProf.exp       = Long.parseLong(attr[3]);
+        }
+        return cProf;
+      }
+      return null;
+    }
+    catch (TException e) {
+      return null;
     }
   }
 }
