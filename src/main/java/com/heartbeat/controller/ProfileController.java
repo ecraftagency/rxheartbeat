@@ -1,9 +1,7 @@
 package com.heartbeat.controller;
 
-import com.common.Constant;
-import com.common.LOG;
-import com.common.Msg;
-import com.common.Utilities;
+import com.common.*;
+import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -18,16 +16,23 @@ import com.statics.ShopData;
 import com.transport.ExtMessage;
 import com.transport.model.CompactProfile;
 import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.client.WebClient;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.common.Constant.*;
 
 public class ProfileController implements Handler<RoutingContext> {
-  private GroupService groupService;
+  private GroupService        groupService;
+  public  static WebClient     webClient;
+  static Type listOfListOfInt  = new TypeToken<List<List<Integer>>>() {}.getType();
   public ProfileController() {
     groupService = new GroupServiceV1();
   }
@@ -64,6 +69,9 @@ public class ProfileController implements Handler<RoutingContext> {
             case "getCompactProfile":
             processCompactProfile(ctx, cmd);
             return;
+          case "claimGiftCode":
+            processClaimGiftCode(session, ctx, cmd);
+            return;
           default:
             resp = ExtMessage.profile();
             resp.msg = "unknown_cmd";
@@ -88,6 +96,40 @@ public class ProfileController implements Handler<RoutingContext> {
     }
   }
 
+  private void processClaimGiftCode(Session session, RoutingContext ctx, String cmd) {
+    String giftCode       = ctx.getBodyAsJson().getString("giftcode");
+    StringBuilder builder = GlobalVariable.stringBuilder.get();
+    ExtMessage resp       = ExtMessage.profile();
+    resp.cmd              = cmd;
+
+    builder.append(SERVICE.GIFT_SERVICE)
+            .append("/gift_api/code/claim?giftCode=")
+            .append(giftCode).append("&&userId=").append(session.id);
+    webClient.requestAbs(HttpMethod.GET, builder.toString()).send(ar -> {
+      if (ar.succeeded()) {
+        try {
+          JsonObject res = ar.result().bodyAsJsonObject();
+          resp.msg       = res.getString("msg");
+          if (resp.msg.equals("ok")) {
+            List<List<Integer>> rewards = Utilities.gson.fromJson(res.getJsonObject("data").getString("reward"), listOfListOfInt);
+            for (List<Integer> reward : rewards)
+              EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, reward);
+            resp.effectResults = session.effectResults;
+          }
+          ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        }
+        catch (Exception e) {
+          resp.msg = Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
+          ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+        }
+      }
+      else {
+        resp.msg = Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
+        ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      }
+    });
+  }
+
   private void processCompactProfile(RoutingContext ctx, String cmd) {
     ExtMessage resp = ExtMessage.profile();
     resp.cmd        = cmd;
@@ -105,13 +147,18 @@ public class ProfileController implements Handler<RoutingContext> {
     if (profile != null) {
       resp.data.extObj    = Utilities.gson.toJson(profile);
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+      LOG.console(userId + " load from cache");
       return;
     }
 
-    //last from persistent
+    //last from persistent and cache also
     CBSession.getInstance().load(Integer.toString(userId), ar -> {
-      if (ar.succeeded()) {
-        transformUserProfile(userId, ar.result(), resp, ctx);
+      if (ar.succeeded()  ) {
+        Session persist = ar.result();
+        persist.id      = userId;
+        transformUserProfile(userId, persist, resp, ctx);
+
+        LOG.console(userId + "load from disk");
       }
       else {
         resp.msg = ar.cause().getMessage();
@@ -123,16 +170,20 @@ public class ProfileController implements Handler<RoutingContext> {
   private void transformUserProfile(int userId, Session session, ExtMessage resp, RoutingContext ctx) {
     groupService.loadSessionGroup(session, ar -> {
       if (ar.succeeded()) {
-        CompactProfile profile = new CompactProfile();
-        UserGroup group = GroupPool.getGroupFromPool(session.groupID);
-        String groupName = group != null ? group.name : "";
+        CompactProfile profile          = new CompactProfile();
+        session.userGameInfo.totalCrt   =  session.userIdol.totalCrt();
+        session.userGameInfo.totalPerf  =  session.userIdol.totalAttr();
+        session.userGameInfo.totalAttr  =  session.userIdol.totalPerf();
+        UserGroup group                 = GroupPool.getGroupFromPool(session.groupID);
+        String groupName                = group != null ? group.name : "";
+
         resp.msg = "ok";
         profile.displayName = session.userGameInfo.displayName;
         profile.titleId     = session.userGameInfo.titleId;
         profile.vipExp      = session.userGameInfo.vipExp;
-        profile.totalCrt    = session.userIdol.totalCrt();
-        profile.totalAttr   = session.userIdol.totalAttr();
-        profile.totalPerf   = session.userIdol.totalPerf();
+        profile.totalCrt    = session.userGameInfo.totalCrt;
+        profile.totalAttr   = session.userGameInfo.totalPerf;
+        profile.totalPerf   = session.userGameInfo.totalAttr;
         profile.groupName   = groupName;
         profile.userId      = userId;
         profile.avatar      = session.userGameInfo.avatar;
@@ -140,6 +191,7 @@ public class ProfileController implements Handler<RoutingContext> {
         profile.exp         = session.userGameInfo.exp;
         profile.curFightLV  = session.userFight.currentFightLV;
         resp.data.extObj    = Utilities.gson.toJson(profile);
+        session.syncStdProfile();
       }
       else {
         resp.msg = ar.cause().getMessage();

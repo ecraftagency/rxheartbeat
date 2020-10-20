@@ -23,4 +23,8 @@
 </table>
 </div>
 
+<div class="row" style="white-space: pre-wrap">
+    ${cacheStat}
+</div>
+
 <#include "footer.ftl">

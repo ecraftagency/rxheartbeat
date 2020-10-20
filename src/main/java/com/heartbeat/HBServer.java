@@ -84,10 +84,10 @@ public class HBServer extends AbstractVerticle {
   public static String  gatewayIP = "";
   public static String  localIP   = "";
 
-  static TTransport transport;
-  static TFramedTransport ft;
-  static TProtocol protocol;
-  public static StdProfileService.Client client;
+  static TTransport                       transport;
+  static TFramedTransport                 ft;
+  static TProtocol                        protocol;
+  public static StdProfileService.Client  thriftClient;
 
   public static void main(String[] args) throws IOException, TTransportException {
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
@@ -107,7 +107,7 @@ public class HBServer extends AbstractVerticle {
     ft        = new TFramedTransport(transport);
     protocol  = new TBinaryProtocol(ft);
     transport.open();
-    client    = new StdProfileService.Client(protocol);
+    thriftClient = new StdProfileService.Client(protocol);
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();
@@ -173,7 +173,8 @@ public class HBServer extends AbstractVerticle {
       if (ar.succeeded()) {
         systemConfig = ar.result();
         
-        Passport100D.webClient = WebClient.create(vertx);
+        Passport100D.webClient      = WebClient.create(vertx);
+        ProfileController.webClient = Passport100D.webClient;
 
         MessageConsumer<JsonObject> messageConsumer = eventBus.consumer(nodeBus);
         messageConsumer.handler(new InternalController());

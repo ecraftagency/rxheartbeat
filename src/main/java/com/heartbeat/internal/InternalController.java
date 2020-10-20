@@ -354,7 +354,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
               boolean online  = resp.getString("state").equals("online");
 
               PaymentHandler._100DPaymentSuccess(session, payload, online, dto);
-              resp.put("code", 0).put("msg", "Success");
+              resp.put("code", 1).put("msg", "Success");
             }
           }
           catch (Exception e) {

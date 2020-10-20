@@ -354,7 +354,7 @@ public class Session {
       throw new RuntimeException(res);
   }
 
-  void syncStdProfile() {
+  public void syncStdProfile() {
     StdProfile profile = new StdProfile();
     profile.setUserId(this.id);
     profile.setDisplayName(this.userGameInfo.displayName);
@@ -370,23 +370,23 @@ public class Session {
     profile.setCertDate(userFight.currentFightLV.id);
 
     StringBuilder builder = GlobalVariable.stringBuilder.get();
-    builder.append(userGameInfo.totalCrt).append(".")
-           .append(userGameInfo.totalPerf).append(".")
-           .append(userGameInfo.totalAttr).append(".")
+    builder.append(userGameInfo.totalCrt).append("-")
+           .append(userGameInfo.totalPerf).append("-")
+           .append(userGameInfo.totalAttr).append("-")
            .append(userGameInfo.exp);
     profile.setEmail(builder.toString());
 
     try {
-      HBServer.client.ow_put(profile);
+      HBServer.thriftClient.ow_put(profile);
     } catch (TException e) {
-      //ignore
+      System.out.println(e.getMessage());
     }
   }
 
   public static CompactProfile getProfileFromCache(int sessionId) {
     try {
-      StdProfileResult res = HBServer.client.get(sessionId);
-      if (res.data != null) {
+      StdProfileResult res = HBServer.thriftClient.get(sessionId);
+      if (res.data != null && res.data.getUserId() > 0) {
         CompactProfile cProf  = new CompactProfile();
         StdProfile sProf      = res.data;
         cProf.userId          = sProf.getUserId();
@@ -397,7 +397,7 @@ public class Session {
         cProf.titleId         = sProf.getStatus();
         cProf.curFightLV      = FightData.fightMap.getOrDefault(sProf.getCertDate(), FightData.of(1));
         cProf.vipExp          = sProf.getBirthdate();
-        String[] attr         = sProf.getEmail().split(".");
+        String[] attr         = sProf.getEmail().split("-");
 
         if (attr.length != 4) {
           cProf.exp = cProf.totalAttr = cProf.totalCrt = cProf.totalPerf = 0;

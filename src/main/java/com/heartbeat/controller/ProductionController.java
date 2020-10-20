@@ -48,6 +48,7 @@ public class ProductionController implements Handler<RoutingContext> {
         resp.cmd            = cmd;
         resp.timeChange     = session.userGameInfo.timeChange;
         resp.userRemainTime = session.userGameInfo.remainTime();
+        resp.serverTime     = (int)(curMs/1000);
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
         session.effectResults.clear();
         session.userGameInfo.timeChange = false;

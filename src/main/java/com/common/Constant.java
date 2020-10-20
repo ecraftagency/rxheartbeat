@@ -20,6 +20,7 @@ public class Constant {
   public static class SERVICE {
     public static String  STD_PROFILE_HOST    = "13.229.140.173";
     public static int     STD_PROFILE_PORT    = 8888;
+    public static String  GIFT_SERVICE        = "http://a47233bd069ec42b69f101a5fa681eb6-1872285878.ap-southeast-1.elb.amazonaws.com";
   }
 
   public static class SYSTEM_INFO {

@@ -3,10 +3,17 @@ package com.gmtool;
 import com.common.Constant;
 import com.common.Utilities;
 import com.google.gson.reflect.TypeToken;
+import com.stdprofile.thrift.StdProfileService;
 import com.transport.model.Node;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -19,6 +26,23 @@ public class Renderer implements Handler<RoutingContext> {
   //public static String host = "http://localhost:3000";
   public static String host = "http://18.141.216.52:3000";
 
+  static TTransport transport;
+  static TFramedTransport ft;
+  static TProtocol protocol;
+  public static StdProfileService.Client  thriftClient;
+
+  public Renderer() {
+    try {
+      transport = new TSocket(Constant.SERVICE.STD_PROFILE_HOST, Constant.SERVICE.STD_PROFILE_PORT);
+      ft        = new TFramedTransport(transport);
+      protocol  = new TBinaryProtocol(ft);
+      transport.open();
+      thriftClient = new StdProfileService.Client(protocol);
+    }
+    catch (Exception e) {
+      //inorge
+    }
+  }
   @Override
   public void handle(RoutingContext ctx) {
     String path = ctx.request().getParam("path");
@@ -87,7 +111,16 @@ public class Renderer implements Handler<RoutingContext> {
         JsonObject resp     = (JsonObject) ar.result().body();
         Type listOdNode     = new TypeToken<List<Node>>() {}.getType();
         List<Node> nodes    = Utilities.gson.fromJson(resp.getJsonArray("nodes").toString(), listOdNode);
+        String cacheStat    = "";
+
+        try {
+          cacheStat = thriftClient.getStat(0);
+        }
+        catch (Exception e) {
+          //ignore
+        }
         ctx.put("nodes", nodes);
+        ctx.put("cacheStat", cacheStat);
         GMTool.setNodes(nodes);
         render("webroot/html/index.ftl", ctx);
       }
