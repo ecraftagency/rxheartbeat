@@ -183,7 +183,7 @@ public class UserRollCall extends RollCall {
     return "ok";
   }
 
-  public String addGiftCard(Session session, long curMs, int type) {
+  public String addGiftCard(Session session, int curSec, int type) {
     GiftCardData.GiftCardDto giftDto = GiftCardData.giftCardDtoMap.stream()
             .filter(e -> e.type == type)
             .findAny()
@@ -192,13 +192,11 @@ public class UserRollCall extends RollCall {
     if (giftDto == null || giftDto.initReward == null)
       return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "gift_card_data_not_found");
 
-    int second  = (int)(curMs/1000);
-
     GiftInfo giftInfo       = new GiftInfo();
     giftInfo.todayClaim     = true;
     giftInfo.remainDay      = giftDto.expireDay;
-    giftInfo.lastClaimTime  = second;
-    giftInfo.boughtTime     = second;
+    giftInfo.lastClaimTime  = curSec;
+    giftInfo.boughtTime     = curSec;
     giftInfo.giftType       = type;
 
     for (List<Integer> r : giftDto.initReward)

@@ -17,7 +17,7 @@ public class PaymentTransaction {
   public List<List<Integer>>  reward;
   public boolean              rewardClaim;
 
-  public static PaymentTransaction of(String id, String itemId, long amount, long bonus, int source, long price, long paidTime) {
+  public static PaymentTransaction of(String id, String itemId, long amount, long bonus, int source, long price, int paidTime) {
     PaymentTransaction ps = new PaymentTransaction();
     ps.transID            = id;
     ps.itemId             = itemId;
@@ -25,7 +25,7 @@ public class PaymentTransaction {
     ps.bonus              = bonus;
     ps.source             = source;
     ps.price              = price;
-    ps.payAt              = ps.useAt = (int)(paidTime/1000);
+    ps.payAt              = ps.useAt = paidTime;
     ps.reward             = new ArrayList<>();
     ps.rewardClaim        = false;
     return ps;

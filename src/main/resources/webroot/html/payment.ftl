@@ -91,6 +91,14 @@
                  <button type="button" class="btn btn-primary w-100" v-on:click="genPaymentRequest">Tạo Link Nạp</button>
              </div>
            </div>
+          <div class="row">
+            <div class="col-sm-4">
+               <input type="text" v-model="phoenixId" class="form-control" id="sessionId" name="phoenixId" placeholder="Phoenix Id">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-primary w-100" v-on:click="genGetRoleRequest">Tạo Link Get Role</button>
+            </div>
+          </div>
            <div class="row">
                 <div class="col-sm-12 top-buffer">
                     <a v-bind:href="payReq" target="_blank">{{ payReq }}</a>
@@ -123,6 +131,7 @@ var app = new Vue({
         packageId: 'gói nạp',
         payReq:'',
         sessionId: '',
+        phoenixId: '',
         updateTime:'',
         updateVIP:'',
         updateItems:'',
@@ -169,6 +178,20 @@ var app = new Vue({
        .then(data => {
          if (data.msg == "ok") {
             this.payReq = data.paymentRequest;
+         }
+         else {
+            this.payReq = '';
+            alert(data.msg);
+         }
+       })
+       .catch((error) => alert(error));
+    },
+    genGetRoleRequest: function(event) {
+       let data = { cmd:'genGetRoleLink', phoenixId: this.phoenixId, serverId: this.serverId};
+       fetch(host, postOptions(data)).then(response => response.json())
+       .then(data => {
+         if (data.msg == "ok") {
+            this.payReq = data.getRoleRequest;
          }
          else {
             this.payReq = '';

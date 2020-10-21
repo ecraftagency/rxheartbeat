@@ -67,7 +67,7 @@ public class RollCallController implements Handler<RoutingContext> {
   private ExtMessage processBuyGiftCard(Session session, long curMs, RoutingContext ctx) {
     int giftType        = ctx.getBodyAsJson().getInteger("giftType");
     ExtMessage resp     = ExtMessage.rollCall();
-    resp.msg            = session.userRollCall.addGiftCard(session,curMs, giftType);
+    resp.msg            = session.userRollCall.addGiftCard(session,(int)(curMs/1000), giftType);
     resp.data.rollCall  = session.userRollCall;
     resp.effectResults  = session.effectResults;
     return resp;

@@ -2,11 +2,8 @@ package com.gateway;
 
 import com.common.LOG;
 import com.common.Utilities;
-import com.gateway.controller.MobiWebPayment;
-import com.gateway.controller.GetRoleController;
-import com.gateway.controller.InternalController;
+import com.gateway.controller.*;
 import com.common.Constant;
-import com.gateway.controller.NodeController;
 import com.google.gson.reflect.TypeToken;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
@@ -76,8 +73,9 @@ public class HBGateway extends AbstractVerticle {
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
     router.get("/nodes").handler(new NodeController());
-    router.get("/getrole").handler(new GetRoleController());
+    router.get("/api/getrole").handler(new GetRoleController());
     router.get("/exchange").handler(new MobiWebPayment());
+    router.get("/iap-exchange").handler(new IAPPayment());
 
     vertx.createHttpServer().requestHandler(router).listen(80);
 

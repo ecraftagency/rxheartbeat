@@ -101,5 +101,23 @@ public class RequestGenerator {
     md5sig = Utilities.md5Encode(sig);
     request = String.format(getIAPExchangeRequest, ip, port, userid, roleid, serverid, orderid, payload, itemid, money, gold, time, md5sig);
     System.out.println(request);
+
+
+    System.out.println(genGetRoleRequest("88989800", 2, System.currentTimeMillis()));
+  }
+
+  public static String genGetRoleRequest(String userId, int serverId, long time) throws Exception {
+    String ip       =  "18.141.216.52";//"127.0.0.1";//";
+    int port        = 80;
+    String sig = GlobalVariable.stringBuilder.get()
+            .append(userId)
+            .append(serverId)
+            .append(time)
+            .append(Constant.PAYMENT.SECRET).toString();
+    String md5sig = Utilities.md5Encode(sig);
+
+    String request = String.format(getRoleRequest, ip, port, userId, serverId, time, md5sig);
+    System.out.println(request);
+    return request;
   }
 }

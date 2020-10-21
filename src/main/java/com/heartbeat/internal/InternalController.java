@@ -6,7 +6,6 @@ import com.gateway.model.Payload;
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
-import com.heartbeat.db.dao.ItemStatsDAO;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
@@ -54,6 +53,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "genWebPaymentLink":
           processGenWebPaymentLink(ctx);
+          return;
+        case "genGetRoleLink":
+          processGenGetRoleLink(ctx);
           return;
         case "getSession":
           processGetSession(ctx);
@@ -208,6 +210,16 @@ public class InternalController implements Handler<Message<JsonObject>> {
     ctx.reply(resp);
   }
 
+  private void processGenGetRoleLink(Message<JsonObject> ctx) throws Exception {
+    String sessionId            = ctx.body().getString("phoenixId");
+    String serverId             = ctx.body().getString("serverId");
+    JsonObject resp             = new JsonObject();
+
+    resp.put("msg", "ok");
+    resp.put("getRoleRequest", RequestGenerator.genGetRoleRequest(sessionId, serverId, (int)(System.currentTimeMillis()/1000)));
+    ctx.reply(resp);
+  }
+
   private void getShopInfo(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
     resp.put("shop", Transformer.transformShopData());
@@ -332,7 +344,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       PaymentData.PaymentDto dto = PaymentData.paymentDtoMap.get(payload.itemId);
 
       if (dto == null || dto.reward == null) {
-        resp.put("code", -9).put("msg", "Exchange fail");
+        resp.put("status", -9).put("msg", "Exchange fail");
         ctx.reply(resp);
         LOG.paymentException(String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
         return;
@@ -347,30 +359,30 @@ public class InternalController implements Handler<Message<JsonObject>> {
               session.userPayment = UserPayment.ofDefault();
 
             if (session.userPayment.isOrderLoop(payload.orderId)) {
-              resp.put("code", -4).put("msg", "Order Loop");
+              resp.put("status", -4).put("msg", "Order Loop");
               LOG.paymentException(String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
             }
             else {
               boolean online  = resp.getString("state").equals("online");
 
               PaymentHandler._100DPaymentSuccess(session, payload, online, dto);
-              resp.put("code", 1).put("msg", "Success");
+              resp.put("status", 1).put("msg", "Success");
             }
           }
           catch (Exception e) {
-            resp.put("code", -9).put("msg", "Exchange fail");
+            resp.put("status", -9).put("msg", "Exchange fail");
             LOG.paymentException(e);
           }
         }
         else {
-          resp.put("code", -8).put("msg", "Role name not exist");
+          resp.put("status", -8).put("msg", "Role name not exist");
           LOG.paymentException(String.format("Role name not exist sessionId: %d", payload.sessionId));
         }
         ctx.reply(resp);
       });
     }
     catch (Exception e) {
-      resp.put("code", -9).put("msg", "Exchange fail");
+      resp.put("status", -9).put("msg", "Exchange fail");
       ctx.reply(resp);
       LOG.paymentException(e);
     }
@@ -379,17 +391,28 @@ public class InternalController implements Handler<Message<JsonObject>> {
   /*GET ROLE 100D*/
   /*100DID -> sessionID*/
   private void processGetRole100D(Message<JsonObject> ctx) {
-    int sessionId   = 2000000; //todo hardcode [sessionId = 1002SessionId(ctx.getString("100DID"))]
+    String _100dId    = ctx.body().getString("100DID");
+
+    String key        = String.format("100d_%s", _100dId);
+    String sid        = CBMapper.getInstance().getValue(key);
+    if (!Utilities.isValidString(sid))
+      sid = "0";
+
+    int sessionId     = Integer.parseInt(sid);
+
     JsonObject resp = new JsonObject();
     loadSession(sessionId, resp, sar -> {
       if (sar.succeeded()) {
         try {
           resp.put("msg", "ok");
           Session session = sar.result();
-          resp.put("getRoleData", new      JsonObject()
-                  .put("ID",        Integer.toString(sessionId))
+          JsonArray data = new JsonArray();
+          data.add(new      JsonObject()
+                  .put("ID",        sessionId)
                   .put("RoleName",  session.userGameInfo.displayName)
-                  .put("Level",     Integer.toString(session.userGameInfo.titleId)));
+                  .put("Level",     session.userGameInfo.titleId));
+
+          resp.put("getRoleData", data);
           ctx.reply(resp);
         }
         catch (Exception e) {

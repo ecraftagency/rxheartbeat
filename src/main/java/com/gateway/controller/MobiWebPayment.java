@@ -29,7 +29,7 @@ public class MobiWebPayment implements Handler<RoutingContext> {
       String    itemId       = ctx.request().getParam("item_id");
       long      money        = Long.parseLong(ctx.request().getParam("money"));
       long      gold         = Long.parseLong(ctx.request().getParam("gold"));
-      long      time         = Long.parseLong(ctx.request().getParam("time"));
+      int       time         = Integer.parseInt(ctx.request().getParam("time"));
       String    sign         = ctx.request().getParam("sign");
       String    verifySign   = Utilities.md5Encode(
               GlobalVariable.stringBuilder.get()
@@ -50,7 +50,8 @@ public class MobiWebPayment implements Handler<RoutingContext> {
         return;
       }
 
-      if (System.currentTimeMillis() - time > 1000*60*3L) {
+      int curSec = (int)(System.currentTimeMillis()/1000);
+      if (curSec - time > 60*3) {
         response(ctx, -2, "Expire time");
         LOG.paymentException(String.format("Expire Time. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
         return;
@@ -70,7 +71,7 @@ public class MobiWebPayment implements Handler<RoutingContext> {
         if (far.succeeded()) {
           JsonObject localResp = (JsonObject) far.result().body();
           try {
-            response(ctx, localResp.getInteger("code"), localResp.getString("msg"));
+            response(ctx, localResp.getInteger("status"), localResp.getString("msg"));
           }
           catch (Exception e) {
             response(ctx, -9, "Exchange fail");
@@ -91,8 +92,8 @@ public class MobiWebPayment implements Handler<RoutingContext> {
 
   private void response(RoutingContext ctx, int code, String message) {
     JsonObject resp     = new JsonObject();
-    resp.put("code", code);
-    resp.put("message", message);
+    resp.put("status", code);
+    resp.put("msg", message);
     ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
   }
 }
