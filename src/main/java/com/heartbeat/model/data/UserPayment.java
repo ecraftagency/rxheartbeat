@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.Constant;
+import com.common.Utilities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.transport.model.PaymentTransaction;
 
@@ -54,6 +55,18 @@ public class UserPayment {
         history = new ArrayList<>();
       for(PaymentTransaction trans : history)
         if(trans.transID.equals(orderId))
+          return true;
+      return false;
+    }
+    return false;
+  }
+
+  public boolean isIAPPayloadLoop(String iapTransId) {
+    if(iapTransId != null) {
+      if(history == null)
+        history = new ArrayList<>();
+      for(PaymentTransaction trans : history)
+        if(Utilities.isValidString(trans.iapTransId) && trans.iapTransId.equals(iapTransId))
           return true;
       return false;
     }

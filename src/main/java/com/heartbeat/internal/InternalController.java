@@ -54,6 +54,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "genWebPaymentLink":
           processGenWebPaymentLink(ctx);
           return;
+        case "genIAPPaymentLink":
+          processGenIAPPaymentLink(ctx);
+          return;
         case "genGetRoleLink":
           processGenGetRoleLink(ctx);
           return;
@@ -77,6 +80,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "exchange":
           processMobiWebPayment(ctx);
+          return;
+        case "iapexchange":
+          processIAPPayment(ctx);
           return;
         case "updatePaymentPackage":
           processUpdatePaymentPackage(ctx);
@@ -210,6 +216,22 @@ public class InternalController implements Handler<Message<JsonObject>> {
     ctx.reply(resp);
   }
 
+  private void processGenIAPPaymentLink(Message<JsonObject> ctx) throws Exception {
+    String sessionId            = ctx.body().getString("sessionId");
+    String packageId            = ctx.body().getString("packageId");
+    PaymentData.PaymentDto dto  = PaymentData.paymentDtoMap.get(packageId);
+    JsonObject resp             = new JsonObject();
+    if (dto == null) {
+      resp.put("msg", "payment package not found");
+      ctx.reply(resp);
+      return;
+    }
+
+    resp.put("msg", "ok");
+    resp.put("paymentRequest", RequestGenerator.genIAPPaymentRequest(sessionId, dto));
+    ctx.reply(resp);
+  }
+
   private void processGenGetRoleLink(Message<JsonObject> ctx) throws Exception {
     String sessionId            = ctx.body().getString("phoenixId");
     String serverId             = ctx.body().getString("serverId");
@@ -333,6 +355,58 @@ public class InternalController implements Handler<Message<JsonObject>> {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
     resp.put("config", Transformer.transformConstant());
     ctx.reply(resp);
+  }
+
+  private void processIAPPayment(Message<JsonObject> ctx) {
+    JsonObject resp   = new JsonObject();
+    try {
+      JsonObject req  = ctx.body();
+      Payload payload = Json.decodeValue(req.getString("payload"), Payload.class);
+      PaymentData.PaymentDto dto = PaymentData.paymentDtoMap.get(payload.itemId);
+
+      if (dto == null || dto.reward == null) {
+        resp.put("status", -9).put("msg", "Exchange fail");
+        ctx.reply(resp);
+        LOG.paymentException(String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
+        return;
+      }
+
+      loadSession(payload.sessionId, resp, sar -> {
+        if (sar.succeeded()) {
+          try {
+            Session session = sar.result();
+
+            if (session.userPayment == null)
+              session.userPayment = UserPayment.ofDefault();
+
+            if (session.userPayment.isOrderLoop(payload.orderId) || session.userPayment.isIAPPayloadLoop(payload.iapTransId)) {
+              resp.put("status", -4).put("msg", "Order Loop or payload loop");
+              LOG.paymentException(String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
+            }
+            else {
+              boolean online  = resp.getString("state").equals("online");
+
+              PaymentHandler.IAPPaymentSuccess(session, payload, online, dto);
+              resp.put("status", 1).put("msg", "Success");
+            }
+          }
+          catch (Exception e) {
+            resp.put("status", -9).put("msg", "Exchange fail");
+            LOG.paymentException(e);
+          }
+        }
+        else {
+          resp.put("status", -8).put("msg", "Role name not exist");
+          LOG.paymentException(String.format("Role name not exist sessionId: %d", payload.sessionId));
+        }
+        ctx.reply(resp);
+      });
+    }
+    catch (Exception e) {
+      resp.put("status", -9).put("msg", "Exchange fail");
+      ctx.reply(resp);
+      LOG.paymentException(e);
+    }
   }
 
   /*100D Payment handle*/

@@ -90,6 +90,9 @@
              <div class="col-sm-2">
                  <button type="button" class="btn btn-primary w-100" v-on:click="genPaymentRequest">Tạo Link Nạp</button>
              </div>
+             <div class="col-sm-2">
+                 <button type="button" class="btn btn-primary w-100" v-on:click="genIAPPaymentRequest">Tạo Link Nạp IAP</button>
+             </div>
            </div>
           <div class="row">
             <div class="col-sm-4">
@@ -174,6 +177,20 @@ var app = new Vue({
     },
     genPaymentRequest: function(event) {
        let data = { cmd:'genWebPaymentLink', sessionId: this.sessionId, packageId: this.packageId};
+       fetch(host, postOptions(data)).then(response => response.json())
+       .then(data => {
+         if (data.msg == "ok") {
+            this.payReq = data.paymentRequest;
+         }
+         else {
+            this.payReq = '';
+            alert(data.msg);
+         }
+       })
+       .catch((error) => alert(error));
+    },
+    genIAPPaymentRequest: function(event) {
+       let data = { cmd:'genIAPPaymentLink', sessionId: this.sessionId, packageId: this.packageId};
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => {
          if (data.msg == "ok") {

@@ -16,6 +16,7 @@ public class PaymentTransaction {
   public String               itemId;
   public List<List<Integer>>  reward;
   public boolean              rewardClaim;
+  public String               iapTransId;
 
   public static PaymentTransaction of(String id, String itemId, long amount, long bonus, int source, long price, int paidTime) {
     PaymentTransaction ps = new PaymentTransaction();
