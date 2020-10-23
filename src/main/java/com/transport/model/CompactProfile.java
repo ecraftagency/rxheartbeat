@@ -1,6 +1,7 @@
 package com.transport.model;
 
 import com.statics.FightData;
+import java.util.List;
 
 public class CompactProfile {
   public String   groupName;
@@ -15,4 +16,5 @@ public class CompactProfile {
   public int      gender;
   public long     exp;
   public FightData.FightLV curFightLV;
+  public List<Integer> awards;
 }

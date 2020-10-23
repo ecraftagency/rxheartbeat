@@ -5,10 +5,7 @@ import com.heartbeat.db.cb.AbstractCruder;
 import com.heartbeat.db.dao.NetAwardDAO;
 import com.transport.model.NetAward;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserNetAward {
@@ -19,18 +16,23 @@ public class UserNetAward {
   public static final int ALL_TIME_TITLE    = 5;
 
   private static Map<Integer, ConcurrentHashMap<Integer, NetAward>> titles;
+  private static Map<Integer, HashSet<Integer>> user2Title; // 1000000 => [1,2,3,4,5]
   private static final String dbKey = "NetAward";
 
   public  static AbstractCruder<NetAwardDAO> cbNetAward;
+  private static List<Integer> blankList = new ArrayList<>();
+
 
   static {
     cbNetAward        = new AbstractCruder<>(NetAwardDAO.class);
     titles            = new ConcurrentHashMap<>();
-    titles.put(ATTRACTIVE_TITLE, new ConcurrentHashMap<>());
-    titles.put(STYLISH_TITLE, new ConcurrentHashMap<>());
-    titles.put(BRAND_TITLE, new ConcurrentHashMap<>());
-    titles.put(DEDICATED_TITLE, new ConcurrentHashMap<>());
-    titles.put(ALL_TIME_TITLE, new ConcurrentHashMap<>());
+    user2Title        = new ConcurrentHashMap<>();
+
+    titles.put(ATTRACTIVE_TITLE,  new ConcurrentHashMap<>());
+    titles.put(STYLISH_TITLE,     new ConcurrentHashMap<>());
+    titles.put(BRAND_TITLE,       new ConcurrentHashMap<>());
+    titles.put(DEDICATED_TITLE,   new ConcurrentHashMap<>());
+    titles.put(ALL_TIME_TITLE,    new ConcurrentHashMap<>());
   }
 
   public static void loadNetAwardFromDB() {
@@ -48,6 +50,11 @@ public class UserNetAward {
       titles.get(DEDICATED_TITLE).putAll(dao.dedicatedTitle);
     if (dao.allTimeTitle != null)
       titles.get(ALL_TIME_TITLE).putAll(dao.allTimeTitle);
+
+    for (Map.Entry<Integer, ConcurrentHashMap<Integer, NetAward>> entry : titles.entrySet()) {
+      for (Map.Entry<Integer, NetAward> pair : entry.getValue().entrySet())
+        user2Title.get(pair.getKey()).add(entry.getKey());
+    }
   }
 
   public static void syncNetAwardToDB() {
@@ -64,10 +71,18 @@ public class UserNetAward {
     if (title == null)
       return false;
     title.put(netAward.id, netAward);
+    user2Title.getOrDefault(netAward.id, new HashSet<>()).add(titleId);
     return true;
   }
 
-  public static List<NetAward> getNetAward(int titleId) {
+  public static List<Integer> getUserNetAward(int sessionId) {
+    HashSet<Integer> titles = user2Title.get(sessionId);
+    if (titles == null)
+      return blankList;
+    return new ArrayList<>(titles);
+  }
+
+  public static List<NetAward> getNetAwardList(int titleId) {
     List<NetAward> res = new ArrayList<>();
     ConcurrentHashMap<Integer, NetAward> title = titles.get(titleId);
     if (title == null)
@@ -80,8 +95,12 @@ public class UserNetAward {
       try {
         NetAward netAward = title.get(userID);
         if (netAward != null) {
-          if (curSec - netAward.addedTime > 180) { //todo change later
+          if (curSec - netAward.addedTime > 300) { //todo change later
             title.remove(userID);
+            user2Title.computeIfPresent(userID, (k, v) -> {
+              v.remove(titleId);
+              return v;
+            });
           }
           else {
             res.add(netAward);
@@ -94,8 +113,4 @@ public class UserNetAward {
     }
     return res;
   }
-//
-//  List<Integer> getUserAward() {
-//    return new ArrayList<>();
-//  }
 }

@@ -2,13 +2,11 @@ package com.heartbeat.controller;
 
 import com.common.LOG;
 import com.common.Msg;
-import com.heartbeat.db.cb.CBNetAward;
 import com.heartbeat.effect.NetAwardEffectHandler;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserNetAward;
 import com.transport.ExtMessage;
-import com.transport.model.NetAward;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -68,7 +66,7 @@ public class NetAwardController implements Handler<RoutingContext> {
 //      title = NetAward.of(0, "","", "");
 
     //title.titleName     = name;
-    resp.data.netAward  = UserNetAward.getNetAward(titleId);
+    resp.data.netAward  = UserNetAward.getNetAwardList(titleId);
     resp.msg            = "ok";
     return resp;
   }

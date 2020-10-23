@@ -9,6 +9,7 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
+import com.heartbeat.model.data.UserNetAward;
 import com.heartbeat.service.GroupService;
 import com.heartbeat.service.impl.GroupServiceV1;
 import com.statics.OfficeData;
@@ -146,6 +147,7 @@ public class ProfileController implements Handler<RoutingContext> {
     //if not get from std_profile service [level 2 cache]
     CompactProfile profile = Session.getProfileFromCache(userId);
     if (profile != null) {
+      profile.awards      = UserNetAward.getUserNetAward(userId);
       resp.data.extObj    = Utilities.gson.toJson(profile);
       ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       LOG.console(userId + " load from cache");
@@ -178,7 +180,6 @@ public class ProfileController implements Handler<RoutingContext> {
         UserGroup group                 = GroupPool.getGroupFromPool(session.groupID);
         String groupName                = group != null ? group.name : "";
 
-        resp.msg = "ok";
         profile.displayName = session.userGameInfo.displayName;
         profile.titleId     = session.userGameInfo.titleId;
         profile.vipExp      = session.userGameInfo.vipExp;
@@ -191,6 +192,8 @@ public class ProfileController implements Handler<RoutingContext> {
         profile.gender      = session.userGameInfo.gender;
         profile.exp         = session.userGameInfo.exp;
         profile.curFightLV  = session.userFight.currentFightLV;
+        profile.awards      = UserNetAward.getUserNetAward(userId);
+        resp.msg = "ok";
         resp.data.extObj    = Utilities.gson.toJson(profile);
         session.syncStdProfile();
       }
