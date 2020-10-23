@@ -128,7 +128,7 @@ public class UserFight extends Fight {
     long totalTalent      = session.userIdol.totalCrt()
             + session.userIdol.totalPerf()
             + session.userIdol.totalAttr();
-    long expectedConsume  = (int)(currentFightLV.fanNPC* currentFightLV.aptNPC/totalTalent) + fixConsume;
+    long expectedConsume  = (currentFightLV.fanNPC * (currentFightLV.aptNPC/totalTalent)) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
       session.userGameInfo.spendFan(session, expectedConsume);
@@ -151,10 +151,9 @@ public class UserFight extends Fight {
       return "ok";
     }
     else {
-      long deduct                   =   (int)(session.userGameInfo.fan*totalTalent /
-                                        currentFightLV.fanNPC) - fixConsume;
-      session.userGameInfo.fan      = 0;
-      currentFightLV.fanNPC        -= deduct;
+      long deduct               =   (session.userGameInfo.fan * (totalTalent / currentFightLV.fanNPC)) - fixConsume;
+      session.userGameInfo.fan  = 0;
+      currentFightLV.fanNPC    -= deduct;
       return Msg.map.put(Msg.FIGHT_LOSS, "fight_lose");
     }
   }

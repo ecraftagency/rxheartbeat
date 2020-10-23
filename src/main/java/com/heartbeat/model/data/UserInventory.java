@@ -56,18 +56,17 @@ public class UserInventory extends Inventory {
   public Map<Integer, Integer> dailyMerge;
 
   public static UserInventory ofDefault() {
-    UserInventory userInventory = new UserInventory();
-    PropData.propMap.values().forEach(prop -> {
-      if (prop.status > 0) {
-        if (prop.isExpired >= 1) {
-          userInventory.addExpireItem(prop.propID, 10);
-        }
-        else {
-          userInventory.addStaticItem(prop.propID, 100);
-        }
-      }
-    });
-    return userInventory;
+//    PropData.propMap.values().forEach(prop -> {
+//      if (prop.status > 0) {
+//        if (prop.isExpired >= 1) {
+//          userInventory.addExpireItem(prop.propID, 10);
+//        }
+//        else {
+//          userInventory.addStaticItem(prop.propID, 100);
+//        }
+//      }
+//    });
+    return new UserInventory();
   }
 
   public void newDay() {

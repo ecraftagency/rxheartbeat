@@ -117,6 +117,7 @@ public class ProfileController implements Handler<RoutingContext> {
             resp.effectResults = session.effectResults;
           }
           ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+          session.effectResults.clear();
         }
         catch (Exception e) {
           resp.msg = Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
