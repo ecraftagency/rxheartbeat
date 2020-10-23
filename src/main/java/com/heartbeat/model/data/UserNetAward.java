@@ -51,9 +51,13 @@ public class UserNetAward {
     if (dao.allTimeTitle != null)
       titles.get(ALL_TIME_TITLE).putAll(dao.allTimeTitle);
 
+
     for (Map.Entry<Integer, ConcurrentHashMap<Integer, NetAward>> entry : titles.entrySet()) {
-      for (Map.Entry<Integer, NetAward> pair : entry.getValue().entrySet())
-        user2Title.get(pair.getKey()).add(entry.getKey());
+      for (Map.Entry<Integer, NetAward> pair : entry.getValue().entrySet()) {
+        HashSet<Integer> titles = user2Title.getOrDefault(pair.getKey(), new HashSet<>());
+        titles.add(entry.getKey());
+        user2Title.put(pair.getKey(), titles);
+      }
     }
   }
 
@@ -71,7 +75,14 @@ public class UserNetAward {
     if (title == null)
       return false;
     title.put(netAward.id, netAward);
-    user2Title.getOrDefault(netAward.id, new HashSet<>()).add(titleId);
+    HashSet<Integer> titles = user2Title.get(netAward.id);
+    if (titles != null)
+      titles.add(titleId);
+    else {
+      titles = new HashSet<>();
+      titles.add(titleId);
+      user2Title.put(netAward.id, titles);
+    }
     return true;
   }
 

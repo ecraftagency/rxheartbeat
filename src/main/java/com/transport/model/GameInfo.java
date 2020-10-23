@@ -1,5 +1,6 @@
 package com.transport.model;
 
+import java.util.List;
 import java.util.Map;
 
 public class GameInfo {   //todo almost field is use combine reflection, so don't refactor without double check!!!!
@@ -27,6 +28,7 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public long     totalCrt        = 0;
   public long     totalPerf       = 0;
   public long     totalAttr       = 0;
+  public List<Integer> awards;
 
   //shopping data
   public Map<Integer, Integer> shopping;

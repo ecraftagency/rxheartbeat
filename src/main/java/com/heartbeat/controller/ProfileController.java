@@ -326,6 +326,7 @@ public class ProfileController implements Handler<RoutingContext> {
 
   private ExtMessage processUserGameInfo(Session session) {
     ExtMessage resp       = ExtMessage.profile();
+    session.userGameInfo.awards = UserNetAward.getUserNetAward(session.id);
     resp.data.gameInfo    = session.userGameInfo;
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;
