@@ -271,11 +271,16 @@ public class UserEffectHandler implements EffectHandler{
 
     subHandlers.put(SPECIAL_AVATAR_CHANGE, (extArgs, session, eff) -> {
       int newAvatarId   = eff.get(PARAM1);
+      int updateGender  = extArgs.intParam;
       int maxAvail      = HeadData.headMap.size();
+
+      if (updateGender < 0 || updateGender > 1)
+        updateGender = 0;
 
       if (newAvatarId < 1 || newAvatarId > maxAvail)
         return EffectHandler.UNKNOWN_PROPERTY;
       session.userGameInfo.avatar = newAvatarId;
+      session.userGameInfo.gender = updateGender;
       return EffectHandler.SUCCESS;
     });
 

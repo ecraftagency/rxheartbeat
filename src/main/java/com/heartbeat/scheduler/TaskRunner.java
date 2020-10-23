@@ -6,6 +6,7 @@ import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInventory;
+import com.heartbeat.model.data.UserNetAward;
 import com.heartbeat.model.data.UserRanking;
 import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.impl.TimeCheckCommand;
@@ -68,6 +69,7 @@ public class TaskRunner {
     itemStatsSyncTask = vertx.setPeriodic(Constant.SYSTEM_INFO.STATS_DATA_SYNC_INTERVAL, id -> {
       try {
         UserInventory.syncItemStatToDB();
+        UserNetAward.syncNetAwardToDB();
       }
       catch (Exception e) {
         LOG.globalException("node", "Sync Stats to DB", e);

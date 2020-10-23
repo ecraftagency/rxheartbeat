@@ -4,6 +4,7 @@ import com.common.Msg;
 import com.heartbeat.db.Cruder;
 import com.heartbeat.db.cb.CBNetAward;
 import com.heartbeat.model.Session;
+import com.heartbeat.model.data.UserNetAward;
 import com.statics.VipData;
 import com.statics.WordFilter;
 import com.transport.model.NetAward;
@@ -16,7 +17,7 @@ public class NetAwardEffectHandler implements EffectHandler{
   public static final Map<Integer, String> titleKeyMap;
   public static final Map<Integer, String> titleNameMap;
 
-  public Cruder<NetAward> cruder;
+  //public Cruder<NetAward> cruder;
   static {
     titleKeyMap = new HashMap<>();
     titleKeyMap.put(1, "attractive_title");
@@ -34,18 +35,19 @@ public class NetAwardEffectHandler implements EffectHandler{
   }
 
   public NetAwardEffectHandler() {
-    cruder = CBNetAward.getInstance();
+    //cruder = CBNetAward.getInstance();
   }
 
   @Override
   public String handleEffect(ExtArgs extArgs, Session session, List<Integer> effectFormat) {
-    String key = titleKeyMap.get(effectFormat.get(PARAM1));
-    if (key == null)
-      return "invalid_title_id";
+    int titleId = effectFormat.get(PARAM1);
+//    String key = titleKeyMap.get(effectFormat.get(PARAM1));
+//    if (key == null)
+//      return "invalid_title_id";
     if (!WordFilter.isValidInput(extArgs.strParam, "VN"))
       return Msg.map.getOrDefault(Msg.AWARD_TITLE_INVALID, "award_title_invalid");
 
-    NetAward netAward = NetAward.of(Integer.toString(session.id),"", session.userGameInfo.displayName, extArgs.strParam);
+    NetAward netAward = NetAward.of(session.id,"", session.userGameInfo.displayName, extArgs.strParam);
     netAward.userTitleId     = session.userGameInfo.titleId;
     netAward.totalCrt        = session.userIdol.totalCrt();
     netAward.totalPerf       = session.userIdol.totalPerf();
@@ -62,8 +64,9 @@ public class NetAwardEffectHandler implements EffectHandler{
 
     netAward.vipLevel        = vipLv;
 
-    if (cruder.add(key, netAward))
+    if (UserNetAward.addNetAward(titleId, netAward))
       return "ok";
-    return "title_already_placed";
+    return "invalid_title_id";
+    //return "title_already_placed";
   }
 }

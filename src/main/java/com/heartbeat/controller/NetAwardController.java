@@ -6,6 +6,7 @@ import com.heartbeat.db.cb.CBNetAward;
 import com.heartbeat.effect.NetAwardEffectHandler;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserNetAward;
 import com.transport.ExtMessage;
 import com.transport.model.NetAward;
 import io.vertx.core.Handler;
@@ -62,13 +63,13 @@ public class NetAwardController implements Handler<RoutingContext> {
       resp.msg = Msg.map.getOrDefault(Msg.MALFORM_ARGS, "invalid_title_id");
     }
 
-    NetAward title     = CBNetAward.getInstance().load(key);
-    if (title == null)
-      title = NetAward.of("", "","", "");
+//    NetAward title     = CBNetAward.getInstance().load(key);
+//    if (title == null)
+//      title = NetAward.of(0, "","", "");
 
-    title.titleName = name;
-    resp.data.netAward = title;
-    resp.msg        = "ok";
+    //title.titleName     = name;
+    resp.data.netAward  = UserNetAward.getNetAward(titleId);
+    resp.msg            = "ok";
     return resp;
   }
 }

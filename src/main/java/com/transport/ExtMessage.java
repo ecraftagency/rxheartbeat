@@ -18,24 +18,24 @@ public class ExtMessage {
   public Map<String, Integer> unlockFunction;
 
   public static class Data {
-    public GameInfo     gameInfo;
-    public Idols        idols;
-    public Production   production;
-    public Profile      profile;
-    public Inventory    inventory;
-    public Fight        fight;
-    public Travel       travel;
-    public NetAward     netAward;
-    public Group        group;
-    public DailyMission dailyMission;
-    public Achievement  achievement;
-    public Mission      mission;
-    public RollCall     rollCall;
-    public Event        event;
-    public Ranking      ranking;
-    public Inbox        inbox;
-    public int          currentGroupState;
-    public String       extObj;
+    public GameInfo           gameInfo;
+    public Idols              idols;
+    public Production         production;
+    public Profile            profile;
+    public Inventory          inventory;
+    public Fight              fight;
+    public Travel             travel;
+    public List<NetAward>     netAward;
+    public Group              group;
+    public DailyMission       dailyMission;
+    public Achievement        achievement;
+    public Mission            mission;
+    public RollCall           rollCall;
+    public Event              event;
+    public Ranking            ranking;
+    public Inbox              inbox;
+    public int                currentGroupState;
+    public String             extObj;
   }
 
   public static ExtMessage payment() {
