@@ -57,16 +57,16 @@ public class UserInventory extends Inventory {
 
   public static UserInventory ofDefault() {
     UserInventory userInventory = new UserInventory();
-    PropData.propMap.values().forEach(prop -> {
-      if (prop.status > 0) {
-        if (prop.isExpired >= 1) {
-          userInventory.addExpireItem(prop.propID, 10);
-        }
-        else {
-          userInventory.addStaticItem(prop.propID, 100);
-        }
-      }
-    });
+//    PropData.propMap.values().forEach(prop -> {
+//      if (prop.status > 0) {
+//        if (prop.isExpired >= 1) {
+//          userInventory.addExpireItem(prop.propID, 10);
+//        }
+//        else {
+//          userInventory.addStaticItem(prop.propID, 100);
+//        }
+//      }
+//    });
     return userInventory;
   }
 

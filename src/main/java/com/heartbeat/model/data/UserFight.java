@@ -124,11 +124,11 @@ public class UserFight extends Fight {
   }
 
   private String handleNormalFight(Session session) {
-    long fixConsume       = (int)(currentFightLV.fanNPC*0.01f);
+    long fixConsume       = (long)(currentFightLV.fanNPC*0.01f);
     long totalTalent      = session.userIdol.totalCrt()
             + session.userIdol.totalPerf()
             + session.userIdol.totalAttr();
-    long expectedConsume  = (currentFightLV.fanNPC * (currentFightLV.aptNPC/totalTalent)) + fixConsume;
+    long expectedConsume  = (long)((currentFightLV.fanNPC * currentFightLV.aptNPC)/totalTalent*1f) + fixConsume;
 
     if (session.userGameInfo.fan >= expectedConsume) {
       session.userGameInfo.spendFan(session, expectedConsume);
@@ -151,7 +151,7 @@ public class UserFight extends Fight {
       return "ok";
     }
     else {
-      long deduct               =   (session.userGameInfo.fan * (totalTalent / currentFightLV.fanNPC)) - fixConsume;
+      long deduct               =   (long)((session.userGameInfo.fan * totalTalent) / currentFightLV.fanNPC*1f) - fixConsume;
       session.userGameInfo.fan  = 0;
       currentFightLV.fanNPC    -= deduct;
       return Msg.map.put(Msg.FIGHT_LOSS, "fight_lose");

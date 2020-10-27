@@ -36,6 +36,7 @@ public class ExtMessage {
     public Inbox              inbox;
     public int                currentGroupState;
     public String             extObj;
+    public List<Integer>      extIntObj;
   }
 
   public static ExtMessage payment() {

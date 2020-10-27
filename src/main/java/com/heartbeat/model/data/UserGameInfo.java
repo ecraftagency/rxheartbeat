@@ -39,7 +39,6 @@ public class UserGameInfo extends GameInfo {
     defaultInfo.crazyRewardClaim  = new HashMap<>();
     defaultInfo.timeChange        = false;
     defaultInfo.shopping          = new HashMap<>();
-    defaultInfo.awards            = new ArrayList<>();
     return defaultInfo;
   }
 
@@ -96,8 +95,6 @@ public class UserGameInfo extends GameInfo {
   public void reBalance() {
     if (shopping == null)
       shopping = new HashMap<>();
-    if (awards == null)
-      awards = new ArrayList<>();
   }
 
   public String updateDisplayName(Session session,  String dName) throws Exception {

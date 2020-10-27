@@ -56,10 +56,13 @@ public class ProfileController implements Handler<RoutingContext> {
             resp = processGetShopStatus();
             break;
           case "addVipExp":
-            resp = processAddVipExp(session, ctx  );
+            resp = processAddVipExp(session, ctx);
             break;
           case "userGameInfo":
             resp = processUserGameInfo(session);
+            break;
+          case "getUserAward":
+            resp = processGetUserAward(session);
             break;
           case "updateInfo": //async
             resp = processUpdateUserInfo(session, ctx);
@@ -67,9 +70,9 @@ public class ProfileController implements Handler<RoutingContext> {
           case "userLevelUp":
             resp = processUserLevelUp(session);
             break;
-            case "getCompactProfile":
-            processCompactProfile(ctx, cmd);
-            return;
+          case "getCompactProfile":
+          processCompactProfile(ctx, cmd);
+          return;
           case "claimGiftCode":
             processClaimGiftCode(session, ctx, cmd);
             return;
@@ -95,6 +98,12 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processGetUserAward(Session session) {
+    ExtMessage resp = ExtMessage.profile();
+    resp.data.extIntObj = UserNetAward.getUserNetAward(session.id);
+    return resp;
   }
 
   private void processClaimGiftCode(Session session, RoutingContext ctx, String cmd) {
@@ -326,7 +335,6 @@ public class ProfileController implements Handler<RoutingContext> {
 
   private ExtMessage processUserGameInfo(Session session) {
     ExtMessage resp       = ExtMessage.profile();
-    session.userGameInfo.awards = UserNetAward.getUserNetAward(session.id);
     resp.data.gameInfo    = session.userGameInfo;
     resp.data.production  = session.userProduction;
     resp.data.idols       = session.userIdol;

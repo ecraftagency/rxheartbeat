@@ -42,12 +42,6 @@ public class CBAccess {
 
   public static void titleInsert() {
     Cruder<NetAward> ta = CBNetAward.getInstance();
-
-    NetAward title = NetAward.of("1000001", "","mrstart", "stalin is god");
-    System.out.println(ta.add("numberone", title));
-
-    title = ta.load("numberone");
-    System.out.println(title);
   }
 
   public static void mapTest() {

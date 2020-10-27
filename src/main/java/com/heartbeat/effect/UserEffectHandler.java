@@ -257,8 +257,19 @@ public class UserEffectHandler implements EffectHandler{
       switch (propertyId) {
         case AVATAR:
           int newAvatar = extAgrs.intParam %10;
+          int newGender;
+          try {
+            newGender    = Integer.parseInt(extAgrs.strParam);
+          }
+          catch (Exception e) {
+            newGender = 0;
+            LOG.globalException("node", "UserEffectHandler:changeAvatar", String.format("fail to parse gender session: %s", session.id));
+          }
+
           newAvatar = Math.max(newAvatar, 0);
+          newGender    = newGender >= 0 && newGender <= 1 ? newGender : 0;
           session.userGameInfo.avatar = newAvatar;
+          session.userGameInfo.gender = newGender;
           return EffectHandler.SUCCESS;
 
         case DISPLAY_NAME:
