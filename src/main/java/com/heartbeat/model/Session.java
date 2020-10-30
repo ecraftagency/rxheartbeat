@@ -12,6 +12,7 @@ import com.stdprofile.thrift.StdProfileResult;
 import com.transport.EffectResult;
 import com.transport.LoginRequest;
 import com.transport.model.CompactProfile;
+import io.vertx.core.http.ServerWebSocket;
 import org.apache.thrift.TException;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class Session {
   transient public String buildSource       = "VI";
   transient public int    serverVersionInt  = Constant.GAME_INFO.SERVER_VERSION;
   transient public DeviceUID.DeviceUIDUpdateInfo deviceInfo;
+  transient public ServerWebSocket wsCtx;
 
   //runtime data
   transient public int        groupID;

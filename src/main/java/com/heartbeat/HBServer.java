@@ -16,12 +16,14 @@ import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.*;
 import com.heartbeat.scheduler.TaskRunner;
+import com.heartbeat.ws_handler.PreVerifyMessageHandler;
 import com.stdprofile.thrift.StdProfileService;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
@@ -91,11 +93,17 @@ public class HBServer extends AbstractVerticle {
     //for faster startup, fucking couchbase java sdk T___T
     cruder = CBSession.getInstance();
 
-    transport = new TSocket(SERVICE.STD_PROFILE_HOST, SERVICE.STD_PROFILE_PORT);
-    ft        = new TFramedTransport(transport);
-    protocol  = new TBinaryProtocol(ft);
-    transport.open();
-    thriftClient = new StdProfileService.Client(protocol);
+    try {
+      transport = new TSocket(SERVICE.STD_PROFILE_HOST, SERVICE.STD_PROFILE_PORT);
+      ft        = new TFramedTransport(transport);
+      protocol  = new TBinaryProtocol(ft);
+      transport.open();
+      thriftClient = new StdProfileService.Client(protocol);
+    }
+    catch (Exception e) {
+      LOG.globalException("node", "HB Start Up", "Thrift client initialize failed");
+    }
+
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       SessionPool.removeAll();
@@ -206,11 +214,14 @@ public class HBServer extends AbstractVerticle {
         router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
                 ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
 
-        HttpServerOptions options = new HttpServerOptions().setSsl(true).setKeyStoreOptions(
-                new JksOptions().setPath("keystore.jks").setPassword("changeit")
-        );
+        HttpServerOptions options = new HttpServerOptions().setSsl(true)
+                .setKeyStoreOptions(new JksOptions().setPath("keystore.jks").setPassword("changeit"));
+
         vertx.createHttpServer(options)
-                .requestHandler(router).listen(nodePort);
+                .requestHandler(router)
+                .listen(nodePort);
+
+        vertx.createHttpServer().webSocketHandler(new PreVerifyMessageHandler()).listen(nodePort+1000);
 
         startPromise.complete();
       }
