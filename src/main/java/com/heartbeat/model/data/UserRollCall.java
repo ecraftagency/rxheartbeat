@@ -67,7 +67,9 @@ public class UserRollCall extends RollCall {
       }
 
       //todo critical
-      int nDays = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().boughtTime, second);
+      //int nDays = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().boughtTime, second);
+      int nDays = Utilities.dayDiff(entry.getValue().boughtTime, second);
+
       if (nDays > giftDto.expireDay) {
         entry.getValue().boughtTime     = 0;
         entry.getValue().remainDay      = 0;
@@ -77,7 +79,9 @@ public class UserRollCall extends RollCall {
       }
 
       entry.getValue().remainDay  = giftDto.expireDay - nDays;
-      int giftClaimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().lastClaimTime, second);
+      //int giftClaimDayDiff = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(entry.getValue().lastClaimTime, second);
+      int giftClaimDayDiff = Utilities.dayDiff(entry.getValue().lastClaimTime, second);
+
       entry.getValue().todayClaim = giftClaimDayDiff <= 0;
     }
 
@@ -89,7 +93,8 @@ public class UserRollCall extends RollCall {
       return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "daily_data_not_found");
 
     int second = (int)(curMs/1000);
-    int dayDiff   = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(lastDailyClaimTime, second);
+    //int dayDiff   = (second - lastDailyClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(lastDailyClaimTime, second);
+    int dayDiff   = Utilities.dayDiff(lastDailyClaimTime, second);
 
     if (dayDiff <= 0 || this.todayClaim) {
       return Msg.map.getOrDefault(Msg.ALREADY_CLAIM, "daily_gift_already_claimed");
@@ -162,9 +167,11 @@ public class UserRollCall extends RollCall {
     if (giftDto == null || giftDto.dailyReward == null)
       return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "gift_card_data_not_found");
 
-    int nDays = (second - giftInfo.lastClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.boughtTime, second);
-    int claimDayDiff = (second - giftInfo.lastClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.lastClaimTime, second);
+    //int nDays = (second - giftInfo.lastClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.boughtTime, second);
+    //int claimDayDiff = (second - giftInfo.lastClaimTime) >= 60 ? 1 : 0; //Utilities.dayDiff(giftInfo.lastClaimTime, second);
 
+    int nDays = Utilities.dayDiff(giftInfo.boughtTime, second);
+    int claimDayDiff = Utilities.dayDiff(giftInfo.lastClaimTime, second);
 
     if (nDays > giftDto.expireDay) {
       return Msg.map.getOrDefault(Msg.GIFT_CARD_EXPIRE, "gift_card_expire");

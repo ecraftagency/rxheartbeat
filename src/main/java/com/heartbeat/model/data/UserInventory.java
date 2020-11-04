@@ -197,6 +197,10 @@ public class UserInventory extends Inventory {
     return this;
   }
 
+  public int getItemCnt(int itemId) {
+    return userItems.getOrDefault(itemId, 0);
+  }
+
   /*FOR STATIC ITEMS***************************************************************************************************/
   private void addStaticItem(int itemId, int amount) {
     if (userItems.containsKey(itemId)) {

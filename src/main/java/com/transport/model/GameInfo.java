@@ -32,4 +32,6 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public Map<Integer, Integer> shopping;
   //mission data
   public Map<Integer, Boolean> crazyRewardClaim;
+
+  public long     netPoint        = 0;
 }

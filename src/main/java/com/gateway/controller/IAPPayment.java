@@ -32,6 +32,7 @@ public class IAPPayment implements Handler<RoutingContext> {
       long      gold         = Long.parseLong(ctx.request().getParam("gold"));
       int       time         = Integer.parseInt(ctx.request().getParam("time"));
       String    sign         = ctx.request().getParam("sign");
+      LOG.console(String.format("Incomming transaction: PHID: %s - sessionId: %d - transId: %s - itemId: %s", id100D, sessionId, iapTransId, itemId));
       String    verifySign   = Utilities.md5Encode(
               GlobalVariable.stringBuilder.get()
                       .append(id100D)

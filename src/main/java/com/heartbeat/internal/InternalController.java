@@ -484,7 +484,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           data.add(new      JsonObject()
                   .put("ID",        sessionId)
                   .put("RoleName",  session.userGameInfo.displayName)
-                  .put("Level",     session.userGameInfo.titleId));
+                  .put("Level",     session.userGameInfo.titleId)
+                  .put("NetPoint",  session.userGameInfo.netPoint)
+                  .put("NetCard",   session.userInventory.getItemCnt(135)));
 
           resp.put("getRoleData", data);
           ctx.reply(resp);
@@ -497,7 +499,8 @@ public class InternalController implements Handler<Message<JsonObject>> {
       else {
         resp.put("msg", sar.cause().getMessage());
         ctx.reply(resp);
-        LOG.globalException("node", "getRole100D", sar.cause());
+        String err = String.format("%s PHID: %s - SessionId: %d", sar.cause(), _100dId, sessionId);
+        LOG.globalException("node", "getRole100D", err);
       }
     });
   }

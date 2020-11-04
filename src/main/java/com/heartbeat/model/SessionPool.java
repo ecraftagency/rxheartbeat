@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class SessionPool {
-  static ConcurrentHashMap<Integer, Session> pool = new ConcurrentHashMap<>();
+  public static ConcurrentHashMap<Integer, Session> pool = new ConcurrentHashMap<>();
   private static int maxCCU;
   public static int maxTime;
 
