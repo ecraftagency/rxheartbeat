@@ -103,6 +103,7 @@ public class Transformer {
       }
     }
 
+    session.userInventory.reBalance();
     for (Map.Entry<Integer, List<Integer>> entry : session.userInventory.expireItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());
       if (prop != null) {
