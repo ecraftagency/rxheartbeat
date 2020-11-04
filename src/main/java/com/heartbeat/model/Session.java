@@ -2,11 +2,15 @@ package com.heartbeat.model;
 
 import com.common.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.reflect.TypeToken;
 import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.effect.EffectHandler;
+import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.data.*;
 import com.heartbeat.model.data.UserLDB;
 import com.statics.FightData;
+import com.statics.PropData;
 import com.stdprofile.thrift.StdProfile;
 import com.stdprofile.thrift.StdProfileResult;
 import com.transport.EffectResult;
@@ -15,6 +19,7 @@ import com.transport.model.CompactProfile;
 import io.vertx.core.http.ServerWebSocket;
 import org.apache.thrift.TException;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -354,6 +359,21 @@ public class Session {
     String res = this.userGameInfo.replaceDisplayName(this, newDisplayName);
     if (!res.equals("ok"))
       throw new RuntimeException(res);
+  }
+
+  public void gmtAddItem(int itemId, int amount) {
+    if (!PropData.propMap.containsKey(itemId))
+      return;
+
+    int curAmount = userInventory.updateAndGet().getItemCnt(itemId);
+    int newAmount = Math.max(curAmount + amount, 0);
+    userInventory.addItem(itemId, newAmount);
+  }
+
+  public void gmtCastEffect(String eff) {
+    Type listOfInt  = new TypeToken<List<Integer>>() {}.getType();
+    List<Integer> effect = Utilities.gson.fromJson(eff, listOfInt);
+    EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), this, effect);
   }
 
   public void syncStdProfile() {

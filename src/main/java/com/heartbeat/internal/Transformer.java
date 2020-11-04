@@ -80,6 +80,7 @@ public class Transformer {
     gi.put("Money",       session.userGameInfo.money);
     gi.put("View",        session.userGameInfo.view);
     gi.put("Fan",         session.userGameInfo.fan);
+    gi.put("NetPoint",    session.userGameInfo.netPoint);
 
 
     long time = session.userGameInfo.time;
@@ -96,6 +97,7 @@ public class Transformer {
     String ban    = formatter.format(start);
     gi.put("Bị ban đến",  ban);
 
+    session.userInventory.reBalance();
     for (Map.Entry<Integer, Integer> entry : session.userInventory.userItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());
       if (prop != null) {
@@ -103,7 +105,6 @@ public class Transformer {
       }
     }
 
-    session.userInventory.reBalance();
     for (Map.Entry<Integer, List<Integer>> entry : session.userInventory.expireItems.entrySet()) {
       PropData.Prop prop = PropData.propMap.get(entry.getKey());
       if (prop != null) {
