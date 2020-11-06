@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.LOG;
+import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.AbstractCruder;
 import com.heartbeat.db.dao.NetAwardDAO;
 import com.transport.model.NetAward;
@@ -24,7 +25,7 @@ public class UserNetAward {
 
 
   static {
-    cbNetAward        = new AbstractCruder<>(NetAwardDAO.class);
+    cbNetAward        = new AbstractCruder<>(NetAwardDAO.class, HBServer.rxIndexBucket);
     titles            = new ConcurrentHashMap<>();
     user2Title        = new ConcurrentHashMap<>();
 

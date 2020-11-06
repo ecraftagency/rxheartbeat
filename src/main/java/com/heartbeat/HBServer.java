@@ -23,7 +23,6 @@ import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
@@ -58,6 +57,7 @@ public class HBServer extends AbstractVerticle {
   public static ReactiveBucket   rxSessionBucket;
   public static ReactiveBucket   rxIndexBucket;
   public static ReactiveBucket   rxPersistBucket;
+  public static ReactiveBucket   rxStatsBucket;
 
   public static JsonObject       systemConfig;
   public static JsonObject       localConfig;
@@ -89,6 +89,7 @@ public class HBServer extends AbstractVerticle {
     rxSessionBucket = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.SESSION_BUCKET));
     rxIndexBucket   = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.INDEX_BUCKET));
     rxPersistBucket = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.PERSIST_BUCKET));
+    rxStatsBucket   = HBServer.rxCluster.bucket(String.format("%s%d_%s", DB.BUCKET_PREFIX, nodeId, DB.STATS_BUCKET));
 
     //for faster startup, fucking couchbase java sdk T___T
     cruder = CBSession.getInstance();
@@ -158,7 +159,8 @@ public class HBServer extends AbstractVerticle {
       UserInbox.loadInboxFromDB();
       UserInventory.loadItemStatsFromDB();
       UserNetAward.loadNetAwardFromDB();
-
+      DailyStats.inst().loadStatsFromDB(System.currentTimeMillis());
+      DailyStats.updateTask.run();
       HBServer.executor = vertx.createSharedWorkerExecutor("worker-pool");
     }
     catch (Exception ioe) {

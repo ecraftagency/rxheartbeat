@@ -3,6 +3,7 @@ package com.heartbeat.scheduler;
 import com.common.Constant;
 import com.common.LOG;
 import com.diabolicallabs.vertx.cron.CronObservable;
+import com.heartbeat.DailyStats;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInventory;

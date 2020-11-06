@@ -124,6 +124,11 @@ public class CBGroup implements Cruder<UserGroup> {
   }
 
   @Override
+  public void sync(String id, UserGroup obj, Handler<AsyncResult<String>> handler, long expire) {
+
+  }
+
+  @Override
   public UserGroup load(String id) {
     //todo implementation
     return null;

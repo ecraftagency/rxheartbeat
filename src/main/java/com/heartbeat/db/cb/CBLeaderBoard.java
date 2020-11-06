@@ -46,6 +46,11 @@ public class CBLeaderBoard implements Cruder<LeaderBoardDAO> {
   }
 
   @Override
+  public void sync(String id, LeaderBoardDAO obj, Handler<AsyncResult<String>> handler, long expire) {
+
+  }
+
+  @Override
   public LeaderBoardDAO load(String id) {
     try {
       GetResult gr = rxIndexBucket.defaultCollection().get(id).block();

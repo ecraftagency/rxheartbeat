@@ -1,6 +1,8 @@
 package com.heartbeat.model.data;
 
 import com.common.Msg;
+import com.heartbeat.DailyStats;
+import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.AbstractCruder;
 import com.heartbeat.db.dao.ItemStatsDAO;
 import com.heartbeat.effect.EffectHandler;
@@ -20,7 +22,7 @@ public class UserInventory extends Inventory {
   private static final String dbKey = "ItemStats";
 
   static {
-    cbItemStats = new AbstractCruder<>(ItemStatsDAO.class);
+    cbItemStats = new AbstractCruder<>(ItemStatsDAO.class, HBServer.rxIndexBucket);
     itemStats   = new ConcurrentHashMap<>();
     itemStats.putIfAbsent(123,0);
     itemStats.putIfAbsent(124,0);
@@ -34,6 +36,11 @@ public class UserInventory extends Inventory {
     itemStats.putIfAbsent(132,0);
     itemStats.putIfAbsent(133,0);
     itemStats.putIfAbsent(134,0);
+    itemStats.putIfAbsent(135,0);
+    itemStats.putIfAbsent(136,0);
+    itemStats.putIfAbsent(137,0);
+    itemStats.putIfAbsent(138,0);
+    itemStats.putIfAbsent(139,0);
   }
 
   public static void loadItemStatsFromDB() {
@@ -88,6 +95,7 @@ public class UserInventory extends Inventory {
       return;
 
     itemStats.computeIfPresent(itemId, (k,v) -> v + amount);
+    DailyStats.inst().addGainItem(itemId, amount);
     if (isExpireItem(itemId)) {
       updateExpire();
       addExpireItem(itemId, amount);
@@ -230,6 +238,7 @@ public class UserInventory extends Inventory {
     int remain = actualAmount - amount;
     userItems.put(itemId, remain);
     itemStats.computeIfPresent(itemId, (k,v) -> Math.max(v - amount, 0));
+    DailyStats.inst().addUseItem(itemId, amount);
     return true;
   }
 
@@ -268,6 +277,7 @@ public class UserInventory extends Inventory {
     List<Integer> newExp              = expireVector.subList(amount, expireVector.size());
     expireItems.put(itemId, newExp);
     itemStats.computeIfPresent(itemId, (k,v) -> Math.max(v - amount, 0));
+    DailyStats.inst().addUseItem(itemId, amount);
     return true;
   }
 }

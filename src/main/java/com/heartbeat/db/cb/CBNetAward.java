@@ -53,6 +53,11 @@ public class CBNetAward implements Cruder<NetAward> {
   }
 
   @Override
+  public void sync(String id, NetAward obj, Handler<AsyncResult<String>> handler, long expire) {
+
+  }
+
+  @Override
   public NetAward load(String id) {
     try {
       GetResult result = rxIndexBucket.defaultCollection().get(id).block();

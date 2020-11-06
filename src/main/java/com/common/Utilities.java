@@ -6,9 +6,12 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
+@SuppressWarnings("unused")
 public class Utilities {
   public static Gson gson = new GsonBuilder().create();
+  static HashMap<String, SimpleDateFormat> dateFormat = new HashMap<>();
 
   public static int dayDiff(int t1, int t2) {
     return dayDiff(((long)t1)*1000, ((long)t2)*1000);
@@ -74,5 +77,30 @@ public class Utilities {
   public static long getMillisFromDateString(String dateString, String pattern) throws Exception {
     Date date = new SimpleDateFormat(pattern).parse(dateString);
     return date.getTime();
+  }
+
+  public static int hourOfMs(long milliSecond) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(milliSecond);
+    return calendar.get(Calendar.HOUR_OF_DAY);
+  }
+
+  public static String formatTime(long milliSecond, String strFormat) {
+    SimpleDateFormat format = dateFormat.get(strFormat);
+    if(format == null) {
+      format = new SimpleDateFormat(strFormat);
+      dateFormat.put(strFormat, format);
+    }
+    return format.format(new Date(milliSecond));
+  }
+
+  public static int startOfDay(long milliSecond) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(milliSecond);
+    calendar.set(Calendar.HOUR_OF_DAY, 0);
+    calendar.set(Calendar.MINUTE, 0);
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
+    return (int)(calendar.getTimeInMillis()/1000);
   }
 }

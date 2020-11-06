@@ -17,6 +17,8 @@ public interface Cruder<T> {
   void    sync(String id, T obj, Handler<AsyncResult<String>> handler);
   void    add(String id, T obj, Handler<AsyncResult<String>> handler);
   void    remove(String id, Handler<AsyncResult<String>> handler);
+  void    sync(String id, T obj, Handler<AsyncResult<String>> handler, long expire);
+
   //sync
   T       load(String id);
   T       load(String id, String password);

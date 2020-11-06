@@ -14,7 +14,7 @@ public class DropEffectHandler implements EffectHandler{
 
     if (drop == null)
       return "invalid_drop_id";
-    if (drop.type == 1) {
+    if (drop.type == 1) { //pick 1 of them
       int rand = ThreadLocalRandom.current().nextInt(1, drop.totalRate + 1);
       DropData.Pack selectedPack = null;
       int acc = 0;

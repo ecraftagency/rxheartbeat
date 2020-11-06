@@ -4,6 +4,7 @@ import com.common.LOG;
 import com.common.Utilities;
 import com.gateway.model.Payload;
 import com.google.gson.reflect.TypeToken;
+import com.heartbeat.DailyStats;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.model.Session;
@@ -133,10 +134,18 @@ public class InternalController implements Handler<Message<JsonObject>> {
   private void processGetStats(Message<JsonObject> ctx) {
     JsonObject resp = new JsonObject();
     JsonArray itemStats = new JsonArray();
+    Map<Integer, Integer> dailyGain = DailyStats.inst().dailyGainItem;
+    Map<Integer, Integer> dailyUse = DailyStats.inst().dailyUseItem;
+    Map<Integer, Integer> dailyBacklog = DailyStats.inst().dailyBacklogItem;
+
     for (Map.Entry<Integer, Integer> entry : UserInventory.itemStats.entrySet()) {
       JsonObject itemStat = new JsonObject();
+      int itemId = entry.getKey();
       itemStat.put("itemId", entry.getKey());
-      itemStat.put("SL", entry.getValue());
+      itemStat.put("Tồn tổng", entry.getValue());
+      itemStat.put("Tồn ngày", dailyBacklog.getOrDefault(itemId, 0));
+      itemStat.put("Sử dụng trong ngày", dailyUse.getOrDefault(itemId, 0));
+      itemStat.put("Phát sinh trong ngày", dailyGain.getOrDefault(itemId, 0));
       itemStats.add(itemStat);
     }
 

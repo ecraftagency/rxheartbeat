@@ -47,6 +47,11 @@ public class CBInbox implements Cruder<PublicMailBoxDAO> {
   }
 
   @Override
+  public void sync(String id, PublicMailBoxDAO obj, Handler<AsyncResult<String>> handler, long expire) {
+
+  }
+
+  @Override
   public PublicMailBoxDAO load(String id) {
     try {
       GetResult gr = rxIndexBucket.defaultCollection().get(id).block();

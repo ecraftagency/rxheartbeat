@@ -86,6 +86,11 @@ public class CBSession implements Cruder<Session> {
   }
 
   @Override
+  public void sync(String id, Session obj, Handler<AsyncResult<String>> handler, long expire) {
+
+  }
+
+  @Override
   public Session load(String id) {
     //todo implementation
     return null;

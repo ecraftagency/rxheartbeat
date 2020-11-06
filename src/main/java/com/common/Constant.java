@@ -88,6 +88,8 @@ public class Constant {
     public static final String      SESSION_BUCKET                  = "sessions";
     public static final String      PERSIST_BUCKET                  = "persist";
     public static final String      INDEX_BUCKET                    = "index";
+    public static final String      STATS_BUCKET                    = "stats";
+
   }
 
   public static class SCHEDULE {
