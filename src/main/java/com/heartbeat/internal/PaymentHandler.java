@@ -73,7 +73,7 @@ public class PaymentHandler {
       session.userRollCall.isPaidUser = true;
     }
     catch (Exception e) {
-      LOG.paymentException(e);
+      LOG.paymentException("Node", "HandleFirstPayment", e);
     }
   }
 }

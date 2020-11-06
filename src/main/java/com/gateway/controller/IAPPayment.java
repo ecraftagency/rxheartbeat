@@ -49,14 +49,14 @@ public class IAPPayment implements Handler<RoutingContext> {
 
       if (!sign.equals(verifySign)) {
         response(ctx, -7, "Sign error");
-        LOG.paymentException(String.format("Sign Error. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
+        LOG.paymentException("Gateway", "IAPPaymentHandler", String.format("Sign Error. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
         return;
       }
 
       int curSec = (int)(System.currentTimeMillis()/1000);
       if (curSec - time > 60*3) {
         response(ctx, -2, "Expire time");
-        LOG.paymentException(String.format("Expire Time. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
+        LOG.paymentException("Gateway", "IAPPaymentHandler", String.format("Expire Time. sessionId:%d - itemId:%s - orderId:%s", sessionId, itemId, orderId));
         return;
       }
 
@@ -78,18 +78,18 @@ public class IAPPayment implements Handler<RoutingContext> {
           }
           catch (Exception e) {
             response(ctx, -9, "Exchange fail");
-            LOG.paymentException(e);
+            LOG.paymentException("Gateway", "IAPPaymentHandler", e);
           }
         }
         else {
           response(ctx, -9, "Exchange fail");
-          LOG.paymentException(far.cause().getCause());
+          LOG.paymentException("Gateway", "IAPPaymentHandler", far.cause().getCause());
         }
       });
     }
     catch (Exception e) {
       response(ctx, -9, "Exchange fail");
-      LOG.paymentException(e);
+      LOG.paymentException("Gateway", "IAPPaymentHandler", e);
     }
   }
 

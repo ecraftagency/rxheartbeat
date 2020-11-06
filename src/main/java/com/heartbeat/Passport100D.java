@@ -1,5 +1,6 @@
 package com.heartbeat;
 
+import com.common.Constant;
 import com.common.Utilities;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -11,7 +12,7 @@ import io.vertx.ext.web.client.WebClient;
 public class Passport100D {
   public static WebClient webClient;
   public static void verify(String jwtToken, Handler<AsyncResult<Player>> handler) {
-    String req = Passport100D.ENV.absRequest(jwtToken);
+    String req = Constant.PASSPORT.ENV.absRequest(jwtToken);
     webClient.requestAbs(HttpMethod.GET, req).send(ar -> {
       if (ar.succeeded()) {
         try {
@@ -74,13 +75,13 @@ public class Passport100D {
     }
   }
 
-  public static boolean PROD = false;
-  public static Env ENV;
-
-  static {
-    Env dev   = Env.of("https://dev-sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
-    Env prod  = Env.of("https://sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
-
-    ENV       = PROD ? prod : dev;
-  }
+//  public static boolean PROD = true;
+//  public static Env ENV;
+//
+//  static {
+//    Env dev   = Env.of("https://dev-sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
+//    Env prod  = Env.of("https://sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
+//
+//    ENV       = PROD ? prod : dev;
+//  }
 }

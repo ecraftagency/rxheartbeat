@@ -12,25 +12,33 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import static com.common.Constant.PAYMENT.*;
-import static com.gateway.HBGateway.*;
 
-public class GetRoleController implements Handler<RoutingContext> {
+import static com.common.Constant.PAYMENT.*;
+import static com.common.Constant.PAYMENT.NOT_FOUND_STATUS_CODE;
+import static com.gateway.HBGateway.eventBus;
+
+public class NetCardExchange implements Handler<RoutingContext> {
   private static DeliveryOptions deliOps  = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
   private static JsonArray blankData      = new JsonArray();
+
   @Override
   public void handle(RoutingContext ctx) {
     try {
       String _100dId      = ctx.request().getParam("userid");
-      int nodeId          = Integer.parseInt(ctx.request().getParam("server_id"));
-      int time            = Integer.parseInt(ctx.request().getParam("time"));
+      int    sessionId    = Integer.parseInt(ctx.request().getParam("roleid"));
+      int    nodeId       = Integer.parseInt(ctx.request().getParam("server_id"));
+      int    time         = Integer.parseInt(ctx.request().getParam("time"));
+      int    amount       = Integer.parseInt(ctx.request().getParam("amount"));
       String sign         = ctx.request().getParam("sign");
+
       String verifySign   = Utilities.md5Encode(
               GlobalVariable.stringBuilder.get()
-              .append(_100dId)
-              .append(nodeId)
-              .append(time)
-              .append(SECRET).toString()
+                      .append(_100dId)
+                      .append(sessionId)
+                      .append(nodeId)
+                      .append(amount)
+                      .append(time)
+                      .append(SECRET).toString()
       );
 
       if (!sign.equals(verifySign)) {
@@ -50,32 +58,30 @@ public class GetRoleController implements Handler<RoutingContext> {
       }
 
       JsonObject localReq = new JsonObject();
-      localReq.put("cmd", "getRole100D");
-      localReq.put("100DID", _100dId);
+      localReq.put("cmd", "nc_exchange");
+      localReq.put("sessionId", sessionId);
+      localReq.put("amount", amount);
+
       eventBus.request(node.bus, localReq, deliOps, far -> {
         if (far.succeeded()) {
           JsonObject localResp = (JsonObject) far.result().body();
           try {
-            if (localResp.getString("msg").equals("ok")) {
-              response(ctx, "Success", 1, localResp.getJsonArray("getRoleData"));
-            }
-            else {
-              response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
-            }
+            response(ctx, localResp.getString("msg"), localResp.getInteger("status"), blankData);
           }
           catch (Exception e) {
-            response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
-            LOG.paymentException("Node", "handleGetRole", e);
+            response(ctx, "Exchange fail", -9, blankData);
+            LOG.paymentException("Gateway", "NCExchangeHandler", e);
           }
         }
         else {
-          response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
+          response(ctx, "Exchange fail", -9, blankData);
+          LOG.paymentException("Gateway", "NCExchangeHandler", far.cause().getCause());
         }
       });
     }
     catch (Exception e) {
-      response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
-      LOG.paymentException("Node", "handleGetRole", e);
+      response(ctx, "Exchange fail", -9, blankData);
+      LOG.paymentException("Gateway", "NCExchangeHandler", e);
     }
   }
 

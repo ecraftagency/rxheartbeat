@@ -1,20 +1,24 @@
 package com.common;
 
+import com.heartbeat.Passport100D;
 import com.heartbeat.scheduler.ExtendEventInfo;
 import static com.statics.EventInfo.*;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class Constant {
   public static final String        EMPTY_STRING                    = "";
   public static final String        DATE_PATTERN                    = "dd/MM/yyyy HH:mm:ss";
   public static String              TIME_ZONE                       = "Asia/Ho_Chi_Minh";
 
   public static class GAME_INFO {
-    public static int               SERVER_VERSION                  = 150;
-    public static int               MIN_AVAILABLE_VERSION           = 147;
+    public static int               SERVER_VERSION                  = 140;
+    public static int               MIN_AVAILABLE_VERSION           = 140;
     public static final String      OS_ANDROID                      = "android";
     public static final String      DEFAULT_DEVICE_ID_ANDROID       = "6962556a555d60555660593961555d600xff";
+    public static String            CH_PLAY_APP_LINK                = "https://play.google.com/store/apps/details?id=com.kooapps.stackybirdandroid&hl=en";
+    public static String            APPLE_STORE_APP_LINK            = "https://apps.apple.com/vn/app/apple-store/id375380948?l=vi";
   }
 
   public static class SERVICE {
@@ -40,26 +44,19 @@ public class Constant {
   }
 
   public static class PASSPORT {
-    public static class Env {
-      public String host;
-      public String secret;
-      public String paramFormat;
-      public static Env of(String host, String secret, String paramFormat) {
-        Env e         = new Env();
-        e.host        = host;
-        e.secret      = secret;
-        e.paramFormat = paramFormat;
-        return e;
-      }
+    public static boolean PROD = true;
+    public static Passport100D.Env ENV;
+    static Passport100D.Env dev;
+    static Passport100D.Env prod;
+
+    public static void setEnv(boolean p) {
+      PROD = p;
+      ENV       = PROD ? prod : dev;
     }
 
-    public static boolean PROD = false;
-    public static Env     ENV;
-
     static {
-      Env dev   = Env.of("https://dev-sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
-      Env prod  = Env.of("https://sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
-
+      dev       = Passport100D.Env.of("https://dev-sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
+      prod      = Passport100D.Env.of("https://sdkapi.phoeniz.com/v1", "JKu8xxJR7edfMqUufi1OH2DXxR7qyf6g", "?authorization=%s&timestamp=%d&sign=%s");
       ENV       = PROD ? prod : dev;
     }
   }

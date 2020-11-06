@@ -201,7 +201,11 @@ public class Transformer {
     res.add(constField("Level active shopping nhanh", "UNLOCK_FUNCTION.FAST_SHOPPING_UNLOCK_LEVEL", "level", Integer.toString(UNLOCK_FUNCTION.FAST_SHOPPING_UNLOCK_LEVEL), "[1,18]"));
     res.add(constField("Level active chạy show", "UNLOCK_FUNCTION.RUN_SHOW_UNLOCK_LEVEL", "level", Integer.toString(UNLOCK_FUNCTION.RUN_SHOW_UNLOCK_LEVEL), "[1,18]"));
     res.add(constField("Level active chạy show nhanh", "UNLOCK_FUNCTION.FAST_RUN_SHOW_UNLOCK_LEVEL", "level", Integer.toString(UNLOCK_FUNCTION.FAST_RUN_SHOW_UNLOCK_LEVEL), "[1,18]"));
-
+    res.add(constField("Môi trường passport Phoenix", "PASSPORT.setEnv(boolean prod)", "true|false", Boolean.toString(PASSPORT.PROD), "[true, false]"));
+    res.add(constField("Server version", "GAME_INFO.SERVER_VERSION", "Số nguyên", Integer.toString(GAME_INFO.SERVER_VERSION), "[140, ]"));
+    res.add(constField("Min playable client version", "GAME_INFO.MIN_AVAILABLE_VERSION", "Số nguyên", Integer.toString(GAME_INFO.MIN_AVAILABLE_VERSION), "[140, ]"));
+    res.add(constField("Google Play", "GAME_INFO.CH_PLAY_APP_LINK", "Chuỗi", GAME_INFO.CH_PLAY_APP_LINK, ""));
+    res.add(constField("App Store", "GAME_INFO.APPLE_STORE_APP_LINK", "Chuỗi", GAME_INFO.APPLE_STORE_APP_LINK, ""));
     return res;
   }
 

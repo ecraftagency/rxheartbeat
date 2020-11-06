@@ -57,6 +57,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "genIAPPaymentLink":
           processGenIAPPaymentLink(ctx);
           return;
+        case "genNCExchangeLink":
+          processGenNCExchangeLink(ctx);
+          return;
         case "genGetRoleLink":
           processGenGetRoleLink(ctx);
           return;
@@ -83,6 +86,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "iapexchange":
           processIAPPayment(ctx);
+          return;
+        case "nc_exchange":
+          processNCExchange(ctx);
           return;
         case "updatePaymentPackage":
           processUpdatePaymentPackage(ctx);
@@ -197,6 +203,15 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
     resp.put("msg", "ok");
     resp.put("payment", Transformer.transformPaymentData());
+    ctx.reply(resp);
+  }
+
+  private void processGenNCExchangeLink(Message<JsonObject> ctx) throws Exception {
+    String sessionId            = ctx.body().getString("sessionId");
+    String amount               = ctx.body().getString("amount");
+    JsonObject resp             = new JsonObject();
+    resp.put("msg", "ok");
+    resp.put("exchangeRequest", RequestGenerator.genNCExchangeRequest(sessionId, Integer.parseInt(amount)));
     ctx.reply(resp);
   }
 
@@ -357,8 +372,56 @@ public class InternalController implements Handler<Message<JsonObject>> {
     ctx.reply(resp);
   }
 
+  private void processNCExchange(Message<JsonObject> ctx) {
+    JsonObject resp   = new JsonObject();
+    try {
+      JsonObject req  = ctx.body();
+      int sessionId   = req.getInteger("sessionId");
+      int amount      = req.getInteger("amount");
+      if (amount <= 0) {
+        resp.put("status", -9).put("msg", "Invalid Amount");
+        ctx.reply(resp);
+        LOG.paymentException("Node", "processNCExchange", String.format("Invalid amount sessionId:%d - amount:%d", sessionId, amount));
+        return;
+      }
+      loadSession(sessionId, resp, sar -> {
+        if (sar.succeeded()) {
+          try {
+            Session session = sar.result();
+            if (session.userInventory.useItem(135, amount)) {
+              boolean online  = resp.getString("state").equals("online");
+              if (!online) {
+                CBSession.getInstance().sync(Integer.toString(sessionId), session, ar -> {});
+              }
+              resp.put("status", 1).put("msg", "Success");
+            }
+            else {
+              resp.put("status", -8).put("msg", "Insufficient Amount");
+            }
+          }
+          catch (Exception e) {
+            resp.put("status", -9).put("msg", "Exchange fail");
+            LOG.paymentException("Node", "processNCExchange", e);
+          }
+        }
+        else {
+          resp.put("status", -8).put("msg", "Role name not exist");
+          LOG.paymentException("Node", "processNCExchange", String.format("Role name not exist sessionId: %d", sessionId));
+        }
+        ctx.reply(resp);
+      });
+
+    }
+    catch (Exception e) {
+      resp.put("status", -9).put("msg", "Exchange fail");
+      ctx.reply(resp);
+      LOG.paymentException("Node", "processNCExchange", e);
+    }
+  }
+
   private void processIAPPayment(Message<JsonObject> ctx) {
     JsonObject resp   = new JsonObject();
+
     try {
       JsonObject req  = ctx.body();
       Payload payload = Json.decodeValue(req.getString("payload"), Payload.class);
@@ -367,7 +430,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       if (dto == null || dto.reward == null) {
         resp.put("status", -9).put("msg", "Exchange fail");
         ctx.reply(resp);
-        LOG.paymentException(String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
+        LOG.paymentException("Node", "processIAPPayment", String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
         return;
       }
 
@@ -381,7 +444,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
             if (session.userPayment.isOrderLoop(payload.orderId) || session.userPayment.isIAPPayloadLoop(payload.iapTransId)) {
               resp.put("status", -4).put("msg", "Order Loop or payload loop");
-              LOG.paymentException(String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
+              LOG.paymentException("Node", "processIAPPayment", String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
             }
             else {
               boolean online  = resp.getString("state").equals("online");
@@ -392,12 +455,12 @@ public class InternalController implements Handler<Message<JsonObject>> {
           }
           catch (Exception e) {
             resp.put("status", -9).put("msg", "Exchange fail");
-            LOG.paymentException(e);
+            LOG.paymentException("Node", "processIAPPayment", e);
           }
         }
         else {
           resp.put("status", -8).put("msg", "Role name not exist");
-          LOG.paymentException(String.format("Role name not exist sessionId: %d", payload.sessionId));
+          LOG.paymentException("Node", "processIAPPayment", String.format("Role name not exist sessionId: %d", payload.sessionId));
         }
         ctx.reply(resp);
       });
@@ -405,7 +468,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     catch (Exception e) {
       resp.put("status", -9).put("msg", "Exchange fail");
       ctx.reply(resp);
-      LOG.paymentException(e);
+      LOG.paymentException("Node", "processIAPPayment", e);
     }
   }
 
@@ -420,7 +483,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       if (dto == null || dto.reward == null) {
         resp.put("status", -9).put("msg", "Exchange fail");
         ctx.reply(resp);
-        LOG.paymentException(String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
+        LOG.paymentException("Node", "processMobiWebPayment", String.format("Payment item not found | invalid. sessionId:%d - itemId:%s", payload.sessionId, payload.itemId));
         return;
       }
 
@@ -434,7 +497,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
             if (session.userPayment.isOrderLoop(payload.orderId)) {
               resp.put("status", -4).put("msg", "Order Loop");
-              LOG.paymentException(String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
+              LOG.paymentException("Node", "processMobiWebPayment", String.format("Order Loop. sessionId:%d - itemId:%s - orderId:%s", payload.sessionId, payload.itemId, payload.orderId));
             }
             else {
               boolean online  = resp.getString("state").equals("online");
@@ -445,12 +508,12 @@ public class InternalController implements Handler<Message<JsonObject>> {
           }
           catch (Exception e) {
             resp.put("status", -9).put("msg", "Exchange fail");
-            LOG.paymentException(e);
+            LOG.paymentException("Node", "processMobiWebPayment", e);
           }
         }
         else {
           resp.put("status", -8).put("msg", "Role name not exist");
-          LOG.paymentException(String.format("Role name not exist sessionId: %d", payload.sessionId));
+          LOG.paymentException("Node", "processMobiWebPayment", String.format("Role name not exist sessionId: %d", payload.sessionId));
         }
         ctx.reply(resp);
       });
@@ -458,7 +521,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
     catch (Exception e) {
       resp.put("status", -9).put("msg", "Exchange fail");
       ctx.reply(resp);
-      LOG.paymentException(e);
+      LOG.paymentException("Node", "processMobiWebPayment", e);
     }
   }
 

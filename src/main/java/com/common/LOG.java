@@ -148,12 +148,12 @@ public class LOG {
     }
   }
 
-  public static void paymentException(Throwable cause) {
+  public static void paymentException(String source, String action, Throwable cause) {
     if(SYSTEM_INFO.USE_PAYMENT_LOG) {
       StringBuilder builder = GlobalVariable.stringBuilder.get().append(cause.getMessage());
       for (StackTraceElement ste : cause.getStackTrace())
         builder.append(EXCEPTION_LINE_HEADER).append(ste.toString());
-      POOL_EXCEPTION.info(builder.toString());
+      PAYMENT_EXCEPTION.info(builder.toString());
 
       //fluent LOG
       Map<String, Object> data = new HashMap<>();
@@ -161,22 +161,27 @@ public class LOG {
       trace.add(0, cause.getMessage());
       data.put("type", "payment_exception");
       data.put("msg", trace);
+      data.put("source", source);
+      data.put("action", action);
       FLUENT.log("exception", data);
     }
   }
 
-  public static void paymentException(Object ... params) {
+  public static void paymentException(String source, String action, Object ... params) {
     if(SYSTEM_INFO.USE_PAYMENT_LOG) {
       if (params != null && params.length > 0) {
         StringBuilder logContent = GlobalVariable.stringBuilder.get().append(';');
         for (Object param : params)
           logContent.append(param).append(EXCEPTION_LINE_HEADER);
-        POOL_EXCEPTION.info(logContent.toString());
+        PAYMENT_EXCEPTION.info(logContent.toString());
 
         //fluent LOG
         Map<String, Object> data = new HashMap<>();
+
         data.put("type", "payment_exception");
         data.put("msg", logContent.toString());
+        data.put("source", source);
+        data.put("action", action);
         FLUENT.log("exception", data);
       }
       else {

@@ -102,6 +102,14 @@
                 <button type="button" class="btn btn-primary w-100" v-on:click="genGetRoleRequest">Tạo Link Get Role</button>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-4">
+               <input type="text" v-model="nc_amount" class="form-control" id="nc_amount" name="nc_amount" placeholder="Session Id">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-primary w-100" v-on:click="genNCExchangeRequest">Tạo trừ netCard</button>
+            </div>
+          </div>
            <div class="row">
                 <div class="col-sm-12 top-buffer">
                     <a v-bind:href="payReq" target="_blank">{{ payReq }}</a>
@@ -138,7 +146,8 @@ var app = new Vue({
         updateTime:'',
         updateVIP:'',
         updateItems:'',
-        updatePID:''
+        updatePID:'',
+        nc_amount:0
     }
   },
   filters: {
@@ -174,6 +183,20 @@ var app = new Vue({
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))
        .catch((error) => this.isLoaded = false);
+    },
+    genNCExchangeRequest: function(event) {
+        let data = { cmd:'genNCExchangeLink', sessionId: this.sessionId, amount: this.nc_amount};
+        fetch(host, postOptions(data)).then(response => response.json())
+           .then(data => {
+             if (data.msg == "ok") {
+                this.payReq = data.exchangeRequest;
+             }
+             else {
+                this.payReq = '';
+                alert(data.msg);
+             }
+           })
+           .catch((error) => alert(error));
     },
     genPaymentRequest: function(event) {
        let data = { cmd:'genWebPaymentLink', sessionId: this.sessionId, packageId: this.packageId};
