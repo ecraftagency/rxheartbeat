@@ -20,6 +20,8 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
+import java.util.HashMap;
+
 @SuppressWarnings("unused")
 public class SessionLoginService implements AuthService {
   GroupService groupService;
@@ -256,6 +258,9 @@ public class SessionLoginService implements AuthService {
       lr.avatar             = session.userGameInfo.avatar;
       lr.lastLogin          = session.userProfile.lastLogin;
       lr.registerAt         = session.registerAt;
+      lr.gameFunctions      = new HashMap<>();
+
+      lr.gameFunctions.putIfAbsent("giftCode", Constant.GAME_FUNCTIONS.GIFT_CODE);
       return lr;
     }
 

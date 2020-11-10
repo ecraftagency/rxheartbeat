@@ -213,11 +213,11 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/inbox").handler(new InboxController());
         router.post("/api/payment").handler(new PaymentController());
 
-        router.get("/loaderio-f8c2671f6ccbeec4f3a09a972475189c/").handler(ctx ->
-                ctx.response().end("loaderio-f8c2671f6ccbeec4f3a09a972475189c"));
+        router.get("/loaderio-9f589512e81ab81bdd49eb1a562768db/").handler(ctx ->
+                ctx.response().end("loaderio-9f589512e81ab81bdd49eb1a562768db"));
 
         HttpServerOptions options = new HttpServerOptions().setSsl(true)
-                .setKeyStoreOptions(new JksOptions().setPath("keystore.jks").setPassword("changeit"));
+        .setKeyStoreOptions(new JksOptions().setPath("keystore.jks").setPassword("changeit"));
 
         vertx.createHttpServer(options)
                 .requestHandler(router)

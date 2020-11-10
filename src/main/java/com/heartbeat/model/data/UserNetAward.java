@@ -17,11 +17,11 @@ public class UserNetAward {
   public static final int ALL_TIME_TITLE    = 5;
 
   private static Map<Integer, ConcurrentHashMap<Integer, NetAward>> titles;
-  private static Map<Integer, HashSet<Integer>> user2Title; // 1000000 => [1,2,3,4,5]
-  private static final String dbKey = "NetAward";
+  private static Map<Integer, HashSet<Integer>>                     user2Title; // 1000000 => [1,2,3,4,5]
+  private static final String                                       dbKey = "NetAward";
 
-  public  static AbstractCruder<NetAwardDAO> cbNetAward;
-  private static List<Integer> blankList = new ArrayList<>();
+  public  static AbstractCruder<NetAwardDAO>                        cbNetAward;
+  private static List<Integer>                                      blankList = new ArrayList<>();
 
 
   static {
@@ -51,7 +51,6 @@ public class UserNetAward {
       titles.get(DEDICATED_TITLE).putAll(dao.dedicatedTitle);
     if (dao.allTimeTitle != null)
       titles.get(ALL_TIME_TITLE).putAll(dao.allTimeTitle);
-
 
     for (Map.Entry<Integer, ConcurrentHashMap<Integer, NetAward>> entry : titles.entrySet()) {
       for (Map.Entry<Integer, NetAward> pair : entry.getValue().entrySet()) {

@@ -21,6 +21,10 @@ public class Constant {
     public static String            APPLE_STORE_APP_LINK            = "https://apps.apple.com/vn/app/apple-store/id375380948?l=vi";
   }
 
+  public static class GAME_FUNCTIONS {
+    public static boolean GIFT_CODE = true;
+  }
+
   public static class SERVICE {
     public static String  STD_PROFILE_HOST    = "13.229.140.173";
     public static int     STD_PROFILE_PORT    = 8888;

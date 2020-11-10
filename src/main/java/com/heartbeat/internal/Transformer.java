@@ -206,6 +206,8 @@ public class Transformer {
     res.add(constField("Min playable client version", "GAME_INFO.MIN_AVAILABLE_VERSION", "Số nguyên", Integer.toString(GAME_INFO.MIN_AVAILABLE_VERSION), "[140, ]"));
     res.add(constField("Google Play", "GAME_INFO.CH_PLAY_APP_LINK", "Chuỗi", GAME_INFO.CH_PLAY_APP_LINK, ""));
     res.add(constField("App Store", "GAME_INFO.APPLE_STORE_APP_LINK", "Chuỗi", GAME_INFO.APPLE_STORE_APP_LINK, ""));
+    res.add(constField("Tính năng gift code", "GAME_FUNCTIONS.GIFT_CODE", "true|false", Boolean.toString(GAME_FUNCTIONS.GIFT_CODE), "[true|false]"));
+
     return res;
   }
 
