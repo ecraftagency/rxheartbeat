@@ -16,9 +16,9 @@ import static com.common.Constant.PAYMENT.*;
 import static com.common.Constant.PAYMENT.SERVER_NOT_FOUND_STATUS_CODE;
 import static com.gateway.HBGateway.eventBus;
 
-public class NetCardExchange implements Handler<RoutingContext> {
-  private static DeliveryOptions  deliOps         = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
-  private static JsonObject       blankData       = new JsonObject();
+public class NetPointExchange implements Handler<RoutingContext> {
+  private static DeliveryOptions  deliOps     = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
+  private static JsonObject       blankData   = new JsonObject();
 
   @Override
   public void handle(RoutingContext ctx) {
@@ -46,7 +46,7 @@ public class NetCardExchange implements Handler<RoutingContext> {
       }
 
       int curSec = (int)(System.currentTimeMillis()/1000);
-      if (curSec - time > 60*3L) { //3 minutes
+      if (curSec - time > 60*3L) { //todo 3 minutes
         response(ctx, "expire time", EXPIRE_TIME_STATUS_CODE, blankData);
       }
 
@@ -57,7 +57,7 @@ public class NetCardExchange implements Handler<RoutingContext> {
       }
 
       JsonObject localReq = new JsonObject();
-      localReq.put("cmd", "nc_exchange");
+      localReq.put("cmd", "np_exchange");
       localReq.put("sessionId", sessionId);
       localReq.put("amount", amount);
 
@@ -73,19 +73,19 @@ public class NetCardExchange implements Handler<RoutingContext> {
                     respData);
           }
           catch (Exception e) {
-            response(ctx, "Exchange fail", -9, blankData);
-            LOG.paymentException("Gateway", "NCExchangeHandler", e);
+            response(ctx, "Exchange fail", EXCHANGE_FAIL_STATUS_CODE, blankData);
+            LOG.paymentException("Gateway", "NPExchangeHandler", e);
           }
         }
         else {
-          response(ctx, "Exchange fail", -9, blankData);
-          LOG.paymentException("Gateway", "NCExchangeHandler", far.cause().getCause());
+          response(ctx, "Exchange fail", EXCHANGE_FAIL_STATUS_CODE, blankData);
+          LOG.paymentException("Gateway", "NPExchangeHandler", far.cause().getCause());
         }
       });
     }
     catch (Exception e) {
-      response(ctx, "Exchange fail", -9, blankData);
-      LOG.paymentException("Gateway", "NCExchangeHandler", e);
+      response(ctx, "Exchange fail", EXCHANGE_FAIL_STATUS_CODE, blankData);
+      LOG.paymentException("Gateway", "NPExchangeHandler", e);
     }
   }
 

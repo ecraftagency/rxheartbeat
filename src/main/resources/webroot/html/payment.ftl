@@ -107,7 +107,15 @@
                <input type="text" v-model="nc_amount" class="form-control" id="nc_amount" name="nc_amount" placeholder="Session Id">
             </div>
             <div class="col-sm-2">
-                <button type="button" class="btn btn-primary w-100" v-on:click="genNCExchangeRequest">Tạo trừ netCard</button>
+                <button type="button" class="btn btn-primary w-100" v-on:click="genNCExchangeRequest">Tạo Link trừ netCard</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+               <input type="text" v-model="np_amount" class="form-control" id="np_amount" name="np_amount" placeholder="Session Id">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-primary w-100" v-on:click="genNPExchangeRequest">Tạo Link trừ netPoint</button>
             </div>
           </div>
            <div class="row">
@@ -147,7 +155,8 @@ var app = new Vue({
         updateVIP:'',
         updateItems:'',
         updatePID:'',
-        nc_amount:0
+        nc_amount:0,
+        np_amount:0
     }
   },
   filters: {
@@ -186,6 +195,20 @@ var app = new Vue({
     },
     genNCExchangeRequest: function(event) {
         let data = { cmd:'genNCExchangeLink', sessionId: this.sessionId, amount: this.nc_amount};
+        fetch(host, postOptions(data)).then(response => response.json())
+           .then(data => {
+             if (data.msg == "ok") {
+                this.payReq = data.exchangeRequest;
+             }
+             else {
+                this.payReq = '';
+                alert(data.msg);
+             }
+           })
+           .catch((error) => alert(error));
+    },
+    genNPExchangeRequest: function(event) {
+        let data = { cmd:'genNPExchangeLink', sessionId: this.sessionId, amount: this.np_amount};
         fetch(host, postOptions(data)).then(response => response.json())
            .then(data => {
              if (data.msg == "ok") {

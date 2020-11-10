@@ -34,4 +34,5 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
   public Map<Integer, Boolean> crazyRewardClaim;
 
   public long     netPoint        = 0;
+  public int      defaultCustom   = 0;
 }

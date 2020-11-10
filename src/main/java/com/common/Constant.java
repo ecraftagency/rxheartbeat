@@ -75,9 +75,12 @@ public class Constant {
 
   public static class PAYMENT {
     public static final String      SECRET                          = "HVzl34e6vwspyTUAUMc8sutz/IaT";
-    public static final int         NOT_FOUND_STATUS_CODE           = 2;
-    public static final int         SIGN_WRONG_STATUS_CODE          = 3;
-    public static final int         EXPIRE_TIME_STATUS_CODE         = 4;
+    public static final int         SERVER_NOT_FOUND_STATUS_CODE    = -2;
+    public static final int         SIGN_WRONG_STATUS_CODE          = -3;
+    public static final int         EXPIRE_TIME_STATUS_CODE         = -4;
+    public static final int         ROLE_NAME_NOT_EXIST             = -8;
+    public static final int         EXCHANGE_FAIL_STATUS_CODE       = -9;
+    public static final int         INSUFFICIENT_AMOUNT             = -10;
   }
 
   public static class DB {

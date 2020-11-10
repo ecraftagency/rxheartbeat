@@ -71,11 +71,14 @@ public class ProfileController implements Handler<RoutingContext> {
             resp = processUserLevelUp(session);
             break;
           case "getCompactProfile":
-          processCompactProfile(ctx, cmd);
-          return;
+            processCompactProfile(ctx, cmd);
+            return;
           case "claimGiftCode":
             processClaimGiftCode(session, ctx, cmd);
             return;
+          case "changeDefaultCustom":
+            resp = processChangeDefaultCustom(session, ctx, cmd);
+            break;
           default:
             resp = ExtMessage.profile();
             resp.msg = "unknown_cmd";
@@ -98,6 +101,18 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processChangeDefaultCustom(Session session, RoutingContext ctx, String cmd) {
+    int customId = ctx.getBodyAsJson().getInteger("customId");
+    if (customId < 0 || customId > 5)
+      customId = 0;
+    session.userGameInfo.defaultCustom = customId;
+    ExtMessage resp = ExtMessage.profile();
+    resp.cmd = cmd;
+    resp.msg = "ok";
+    resp.data.gameInfo = session.userGameInfo;
+    return resp;
   }
 
   private ExtMessage processGetUserAward(Session session) {

@@ -32,6 +32,7 @@ import io.vertx.core.json.JsonObject;
 import java.lang.reflect.Type;
 import java.util.*;
 import static com.common.Constant.*;
+import static com.common.Constant.PAYMENT.*;
 
 public class InternalController implements Handler<Message<JsonObject>> {
   SessionInjector sessionInjector;
@@ -60,6 +61,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "genNCExchangeLink":
           processGenNCExchangeLink(ctx);
+          return;
+        case "genNPExchangeLink":
+          processGenNPExchangeLink(ctx);
           return;
         case "genGetRoleLink":
           processGenGetRoleLink(ctx);
@@ -90,6 +94,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "nc_exchange":
           processNCExchange(ctx);
+          return;
+        case "np_exchange":
+          processNPExchange(ctx);
           return;
         case "updatePaymentPackage":
           processUpdatePaymentPackage(ctx);
@@ -221,6 +228,15 @@ public class InternalController implements Handler<Message<JsonObject>> {
     JsonObject resp             = new JsonObject();
     resp.put("msg", "ok");
     resp.put("exchangeRequest", RequestGenerator.genNCExchangeRequest(sessionId, Integer.parseInt(amount)));
+    ctx.reply(resp);
+  }
+
+  private void processGenNPExchangeLink(Message<JsonObject> ctx) throws Exception {
+    String sessionId            = ctx.body().getString("sessionId");
+    String amount               = ctx.body().getString("amount");
+    JsonObject resp             = new JsonObject();
+    resp.put("msg", "ok");
+    resp.put("exchangeRequest", RequestGenerator.genNPExchangeRequest(sessionId, Integer.parseInt(amount)));
     ctx.reply(resp);
   }
 
@@ -388,7 +404,7 @@ public class InternalController implements Handler<Message<JsonObject>> {
       int sessionId   = req.getInteger("sessionId");
       int amount      = req.getInteger("amount");
       if (amount <= 0) {
-        resp.put("status", -9).put("msg", "Invalid Amount");
+        resp.put("status", EXCHANGE_FAIL_STATUS_CODE).put("msg", "Invalid Amount");
         ctx.reply(resp);
         LOG.paymentException("Node", "processNCExchange", String.format("Invalid amount sessionId:%d - amount:%d", sessionId, amount));
         return;
@@ -402,19 +418,24 @@ public class InternalController implements Handler<Message<JsonObject>> {
               if (!online) {
                 CBSession.getInstance().sync(Integer.toString(sessionId), session, ar -> {});
               }
+              JsonObject data = new JsonObject();
+              data.put("NetPoint",  session.userGameInfo.netPoint);
+              data.put("NetCard",   session.userInventory.getItemCnt(135));
+
               resp.put("status", 1).put("msg", "Success");
+              resp.put("data", data);
             }
             else {
-              resp.put("status", -8).put("msg", "Insufficient Amount");
+              resp.put("status", INSUFFICIENT_AMOUNT).put("msg", "Insufficient Amount");
             }
           }
           catch (Exception e) {
-            resp.put("status", -9).put("msg", "Exchange fail");
+            resp.put("status", EXCHANGE_FAIL_STATUS_CODE).put("msg", "Exchange fail");
             LOG.paymentException("Node", "processNCExchange", e);
           }
         }
         else {
-          resp.put("status", -8).put("msg", "Role name not exist");
+          resp.put("status", ROLE_NAME_NOT_EXIST).put("msg", "Role name not exist");
           LOG.paymentException("Node", "processNCExchange", String.format("Role name not exist sessionId: %d", sessionId));
         }
         ctx.reply(resp);
@@ -422,9 +443,61 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
     }
     catch (Exception e) {
-      resp.put("status", -9).put("msg", "Exchange fail");
+      resp.put("status", EXCHANGE_FAIL_STATUS_CODE).put("msg", "Exchange fail");
       ctx.reply(resp);
       LOG.paymentException("Node", "processNCExchange", e);
+    }
+  }
+
+  private void processNPExchange(Message<JsonObject> ctx) {
+    JsonObject resp   = new JsonObject();
+    try {
+      JsonObject req  = ctx.body();
+      int sessionId   = req.getInteger("sessionId");
+      int amount      = req.getInteger("amount");
+      if (amount <= 0) {
+        resp.put("status", EXCHANGE_FAIL_STATUS_CODE).put("msg", "Invalid Amount");
+        ctx.reply(resp);
+        LOG.paymentException("Node", "processNPExchange", String.format("Invalid amount sessionId:%d - amount:%d", sessionId, amount));
+        return;
+      }
+      loadSession(sessionId, resp, sar -> {
+        if (sar.succeeded()) {
+          try {
+            Session session = sar.result();
+
+            if (session.userGameInfo.spendNetPoint(amount)) {
+              boolean online  = resp.getString("state").equals("online");
+              if (!online) {
+                CBSession.getInstance().sync(Integer.toString(sessionId), session, ar -> {});
+              }
+              JsonObject data = new JsonObject();
+              data.put("NetPoint",  session.userGameInfo.netPoint);
+              data.put("NetCard",   session.userInventory.getItemCnt(135));
+
+              resp.put("status", 1).put("msg", "Success");
+              resp.put("data", data);
+            }
+            else {
+              resp.put("status", INSUFFICIENT_AMOUNT).put("msg", "Insufficient Amount");
+            }
+          }
+          catch (Exception e) {
+            resp.put("status", EXCHANGE_FAIL_STATUS_CODE).put("msg", "Exchange fail");
+            LOG.paymentException("Node", "processNPExchange", e);
+          }
+        }
+        else {
+          resp.put("status", ROLE_NAME_NOT_EXIST).put("msg", "Role name not exist");
+          LOG.paymentException("Node", "processNPExchange", String.format("Role name not exist sessionId: %d", sessionId));
+        }
+        ctx.reply(resp);
+      });
+    }
+    catch (Exception e) {
+      resp.put("status", EXCHANGE_FAIL_STATUS_CODE).put("msg", "Exchange fail");
+      ctx.reply(resp);
+      LOG.paymentException("Node", "processNPExchange", e);
     }
   }
 

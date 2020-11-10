@@ -45,7 +45,7 @@ public class GetRoleController implements Handler<RoutingContext> {
 
       Node node = NodePool.getNodeFromPool(nodeId);
       if (node == null) {
-        response(ctx, "server not found", NOT_FOUND_STATUS_CODE, blankData);
+        response(ctx, "server not found", SERVER_NOT_FOUND_STATUS_CODE, blankData);
         return;
       }
 
@@ -60,21 +60,21 @@ public class GetRoleController implements Handler<RoutingContext> {
               response(ctx, "Success", 1, localResp.getJsonArray("getRoleData"));
             }
             else {
-              response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
+              response(ctx, "Error, role name not found", SERVER_NOT_FOUND_STATUS_CODE, blankData);
             }
           }
           catch (Exception e) {
-            response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
+            response(ctx, "Error, role name not found", SERVER_NOT_FOUND_STATUS_CODE, blankData);
             LOG.paymentException("Node", "handleGetRole", e);
           }
         }
         else {
-          response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
+          response(ctx, "Error, role name not found", SERVER_NOT_FOUND_STATUS_CODE, blankData);
         }
       });
     }
     catch (Exception e) {
-      response(ctx, "Error, role name not found", NOT_FOUND_STATUS_CODE, blankData);
+      response(ctx, "Error, role name not found", SERVER_NOT_FOUND_STATUS_CODE, blankData);
       LOG.paymentException("Node", "handleGetRole", e);
     }
   }

@@ -77,6 +77,7 @@ public class HBGateway extends AbstractVerticle {
     router.get("/exchange").handler(new MobiWebPayment());
     router.get("/iapexchange").handler(new IAPPayment());
     router.get("/nc_exchange").handler(new NetCardExchange());
+    router.get("/np_exchange").handler(new NetPointExchange());
 
     vertx.createHttpServer().requestHandler(router).listen(80);
 
