@@ -48,7 +48,7 @@ public class Constant {
   }
 
   public static class PASSPORT {
-    public static boolean PROD = true;
+    public static boolean PROD = false;
     public static Passport100D.Env ENV;
     static Passport100D.Env dev;
     static Passport100D.Env prod;
