@@ -40,33 +40,31 @@ public class NetAwardEffectHandler implements EffectHandler{
 
   @Override
   public String handleEffect(ExtArgs extArgs, Session session, List<Integer> effectFormat) {
-    int titleId = effectFormat.get(PARAM1);
-//    String key = titleKeyMap.get(effectFormat.get(PARAM1));
-//    if (key == null)
-//      return "invalid_title_id";
-    if (!WordFilter.isValidInput(extArgs.strParam, "VN"))
-      return Msg.map.getOrDefault(Msg.AWARD_TITLE_INVALID, "award_title_invalid");
-
-    NetAward netAward = NetAward.of(session.id,"", session.userGameInfo.displayName, extArgs.strParam);
-    netAward.userTitleId     = session.userGameInfo.titleId;
-    netAward.totalCrt        = session.userIdol.totalCrt();
-    netAward.totalPerf       = session.userIdol.totalPerf();
-    netAward.totalAttr       = session.userIdol.totalAttr();
-    netAward.curFightId      = session.userFight.currentFightLV.id;
-    netAward.avatar          = session.userGameInfo.avatar;
-    netAward.gender          = session.userGameInfo.gender;
-    netAward.exp             = session.userGameInfo.exp;
-
-    VipData.VipDto vip    = VipData.getVipData(session.userGameInfo.vipExp);
-    int vipLv             = 0;
-    if (vip != null)
-      vipLv = vip.level;
-
-    netAward.vipLevel        = vipLv;
-
-    if (UserNetAward.addNetAward(titleId, netAward))
-      return "ok";
-    return "invalid_title_id";
-    //return "title_already_placed";
+//    int titleId = effectFormat.get(PARAM1);
+//
+//    if (!WordFilter.isValidInput(extArgs.strParam, "VN"))
+//      return Msg.map.getOrDefault(Msg.AWARD_TITLE_INVALID, "award_title_invalid");
+//
+//    NetAward netAward = NetAward.of(session.id,"", session.userGameInfo.displayName, extArgs.strParam);
+//    netAward.userTitleId     = session.userGameInfo.titleId;
+//    netAward.totalCrt        = session.userIdol.totalCrt();
+//    netAward.totalPerf       = session.userIdol.totalPerf();
+//    netAward.totalAttr       = session.userIdol.totalAttr();
+//    netAward.curFightId      = session.userFight.currentFightLV.id;
+//    netAward.avatar          = session.userGameInfo.avatar;
+//    netAward.gender          = session.userGameInfo.gender;
+//    netAward.exp             = session.userGameInfo.exp;
+//
+//    VipData.VipDto vip    = VipData.getVipData(session.userGameInfo.vipExp);
+//    int vipLv             = 0;
+//    if (vip != null)
+//      vipLv = vip.level;
+//
+//    netAward.vipLevel        = vipLv;
+//
+//    if (UserNetAward.addNetAward(titleId, netAward))
+//      return "ok";
+//    return "invalid_title_id";
+    return "ok";
   }
 }

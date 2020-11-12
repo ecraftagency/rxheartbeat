@@ -4,6 +4,9 @@ import com.common.Constant;
 import com.common.LOG;
 import com.diabolicallabs.vertx.cron.CronObservable;
 import com.heartbeat.DailyStats;
+import com.heartbeat.HBServer;
+import com.heartbeat.db.cb.AbstractCruder;
+import com.heartbeat.db.dao.CommonEventDAO;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInventory;
@@ -37,7 +40,9 @@ public class TaskRunner {
   public Vertx      vertx;
 
   private static TaskRunner instance = new TaskRunner();
-  private TaskRunner() { }
+
+  private TaskRunner() {
+  }
   public static TaskRunner getInstance() { return instance; }
 
   public void setVXInstance(Vertx vertx) {

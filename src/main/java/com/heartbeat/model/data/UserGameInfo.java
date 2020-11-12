@@ -16,6 +16,8 @@ import static com.common.Constant.USER_GAME_INFO.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {
+  public static final int MAX_TUTORIAL = 0;
+
   public static UserGameInfo ofDefault() {
     UserGameInfo defaultInfo      = new UserGameInfo();
     defaultInfo.avatar            = -1;
@@ -38,6 +40,7 @@ public class UserGameInfo extends GameInfo {
     defaultInfo.timeChange        = false;
     defaultInfo.shopping          = new HashMap<>();
     defaultInfo.defaultCustom     = 0;
+    defaultInfo.tutorStep         = 0;
     return defaultInfo;
   }
 

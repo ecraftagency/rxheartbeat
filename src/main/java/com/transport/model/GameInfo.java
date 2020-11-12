@@ -35,4 +35,5 @@ public class GameInfo {   //todo almost field is use combine reflection, so don'
 
   public long     netPoint        = 0;
   public int      defaultCustom   = 0;
+  public int      tutorStep       = 0;
 }

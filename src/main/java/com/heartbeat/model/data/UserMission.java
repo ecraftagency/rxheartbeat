@@ -108,7 +108,7 @@ public class UserMission extends Mission {
           }
           return false;
 
-        case ACHIEVEMENT.IDOL_TITLE:
+        case ACHIEVEMENT.IDOL_TITLE://
           int qType = dto.queryFormat.get(1);
           UserIdol userIdol = session.userIdol;
 

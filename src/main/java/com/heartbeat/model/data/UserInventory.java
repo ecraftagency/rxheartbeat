@@ -1,6 +1,7 @@
 package com.heartbeat.model.data;
 
 import com.common.Msg;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.DailyStats;
 import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.AbstractCruder;
@@ -10,15 +11,19 @@ import com.heartbeat.effect.EffectManager;
 import com.heartbeat.model.Session;
 import com.statics.ItemMergeData;
 import com.statics.PropData;
+import com.statics.VipData;
 import com.transport.model.Inventory;
+import com.transport.model.NetAward;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInventory extends Inventory {
   public  static ConcurrentHashMap<Integer, Integer>  itemStats;
   public  static AbstractCruder<ItemStatsDAO>         cbItemStats;
+  public  static Map<Integer, Integer>                itemId2AwardId;
   private static final String dbKey = "ItemStats";
 
   static {
@@ -41,6 +46,13 @@ public class UserInventory extends Inventory {
     itemStats.putIfAbsent(137,0);
     itemStats.putIfAbsent(138,0);
     itemStats.putIfAbsent(139,0);
+
+    itemId2AwardId = new HashMap<>();
+    itemId2AwardId.put(97, 5);
+    itemId2AwardId.put(98, 4);
+    itemId2AwardId.put(99, 3);
+    itemId2AwardId.put(100, 2);
+    itemId2AwardId.put(101, 1);
   }
 
   public static void loadItemStatsFromDB() {
@@ -56,7 +68,7 @@ public class UserInventory extends Inventory {
 
   private UserInventory() {
     userItems   =   new HashMap<>();
-    expireItems =   new HashMap<>();
+    expItems =   new HashMap<>();
   }
 
   //shop data
@@ -64,16 +76,12 @@ public class UserInventory extends Inventory {
 
   public static UserInventory ofDefault() {
     UserInventory userInventory = new UserInventory();
-//    PropData.propMap.values().forEach(prop -> {
-//      if (prop.status > 0) {
-//        if (prop.isExpired >= 1) {
-//          userInventory.addExpireItem(prop.propID, 10);
-//        }
-//        else {
-//          userInventory.addStaticItem(prop.propID, 100);
-//        }
-//      }
-//    });
+    userInventory.expItems.putIfAbsent(97,0);
+    userInventory.expItems.putIfAbsent(98,0);
+    userInventory.expItems.putIfAbsent(99,0);
+    userInventory.expItems.putIfAbsent(100,0);
+    userInventory.expItems.putIfAbsent(101,0);
+
     return userInventory;
   }
 
@@ -84,11 +92,17 @@ public class UserInventory extends Inventory {
   public void reBalance() {
     if (dailyMerge == null)
       dailyMerge  = new HashMap<>();
-    if (expireItems == null)
-      expireItems = new HashMap<>();
+    if (expItems == null) {
+      expItems = new HashMap<>();
+      expItems.putIfAbsent(97,0);
+      expItems.putIfAbsent(98,0);
+      expItems.putIfAbsent(99,0);
+      expItems.putIfAbsent(100,0);
+      expItems.putIfAbsent(101,0);
+    }
   }
 
-  public void addItem(int itemId, int amount) {
+  public void addItem(Session session, int itemId, int amount) {
     if (amount <= 0)
       return;
     if (!PropData.propMap.containsKey(itemId))
@@ -98,7 +112,7 @@ public class UserInventory extends Inventory {
     DailyStats.inst().addGainItem(itemId, amount);
     if (isExpireItem(itemId)) {
       updateExpire();
-      addExpireItem(itemId, amount);
+      addExpireItem(session, itemId, amount);
     }
     else {
       addStaticItem(itemId, amount);
@@ -128,7 +142,7 @@ public class UserInventory extends Inventory {
   public boolean useItem(int itemId, int amount) {
     if (isExpireItem(itemId)) {
       updateExpire();
-      return userExpireItem(itemId, amount);
+      return useExpireItem(itemId, amount);
     }
     else {
       return userStaticItem(itemId, amount);
@@ -245,39 +259,60 @@ public class UserInventory extends Inventory {
   /*FOR EXPIRE ITEMS***************************************************************************************************/
   private void updateExpire() {
     int curSec = (int)(System.currentTimeMillis()/1000);
-    for (Map.Entry<Integer, List<Integer>> entry : expireItems.entrySet()) {
-      int expireSec = getExpireTime(entry.getKey());
-      if (expireSec < 0 || entry.getValue() == null || entry.getValue().size() == 0)
-        continue;
-      entry.getValue().removeIf(addedTime -> curSec - addedTime > expireSec);
+    for (Map.Entry<Integer, Integer> entry : expItems.entrySet()) {
+      int cas = entry.getValue();
+      if (curSec - cas <= 0)
+        entry.setValue(0);
     }
   }
 
-  private void addExpireItem(int itemId, int amount) {
+  private void addExpireItem(Session session, int itemId, int amount) {
     int curSec = (int)(System.currentTimeMillis()/1000);
-    if (!expireItems.containsKey(itemId)) {
-      expireItems.put(itemId, new ArrayList<>());
-    }
+    if (!expItems.containsKey(itemId)) {
+      int expireTime = getExpireTime(itemId);
+      if (expireTime > 0) {
+        List<Integer> format = Arrays.asList(102,itemId,0,0);
+        expItems.computeIfPresent(itemId, (k, v) -> curSec + expireTime);
 
-    List<Integer> expireVector = expireItems.get(itemId);
-    for (int i = 0; i < amount; i++)
-      expireVector.add(curSec);
+
+        NetAward netAward = NetAward.of(session.id,"", session.userGameInfo.displayName, "");
+        netAward.userTitleId     = session.userGameInfo.titleId;
+        netAward.totalCrt        = session.userIdol.totalCrt();
+        netAward.totalPerf       = session.userIdol.totalPerf();
+        netAward.totalAttr       = session.userIdol.totalAttr();
+        netAward.curFightId      = session.userFight.currentFightLV.id;
+        netAward.avatar          = session.userGameInfo.avatar;
+        netAward.gender          = session.userGameInfo.gender;
+        netAward.exp             = session.userGameInfo.exp;
+
+        VipData.VipDto vip    = VipData.getVipData(session.userGameInfo.vipExp);
+        int vipLv             = 0;
+        if (vip != null)
+          vipLv = vip.level;
+
+        netAward.vipLevel        = vipLv;
+        UserNetAward.addNetAward(itemId, netAward);
+      }
+    }
   }
 
   private boolean haveExpireItem(int itemId, int amount) {
-    if (expireItems.get(itemId) == null)
-      return false;
-    return expireItems.get(itemId).size() >= amount;
+//    if (expireItems.get(itemId) == null)
+//      return false;
+//    int curSec  = (int)(System.currentTimeMillis()/1000);
+//    int cas     = expireItems.get(itemId);
+//    return curSec - cas > 0;
+    return true;
   }
 
-  private boolean userExpireItem(int itemId, int amount) {
-    if (!haveExpireItem(itemId, amount))
-      return false;
-    List<Integer> expireVector        = expireItems.get(itemId);
-    List<Integer> newExp              = expireVector.subList(amount, expireVector.size());
-    expireItems.put(itemId, newExp);
-    itemStats.computeIfPresent(itemId, (k,v) -> Math.max(v - amount, 0));
-    DailyStats.inst().addUseItem(itemId, amount);
+  private boolean useExpireItem(int itemId, int amount) {
+//    if (!haveExpireItem(itemId, amount))
+//      return false;
+//    List<Integer> expireVector        = expireItems.get(itemId);
+//    List<Integer> newExp              = expireVector.subList(amount, expireVector.size());
+//    expireItems.put(itemId, newExp);
+//    itemStats.computeIfPresent(itemId, (k,v) -> Math.max(v - amount, 0));
+//    DailyStats.inst().addUseItem(itemId, amount);
     return true;
   }
 }

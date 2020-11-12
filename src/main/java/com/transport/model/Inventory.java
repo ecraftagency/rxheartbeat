@@ -5,5 +5,6 @@ import java.util.List;
 
 public class Inventory {
   public HashMap<Integer, Integer>              userItems;
+  public HashMap<Integer, Integer>              expItems;
   public HashMap<Integer, List<Integer>>        expireItems;
 }

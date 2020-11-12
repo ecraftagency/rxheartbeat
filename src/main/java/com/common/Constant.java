@@ -244,7 +244,21 @@ public class Constant {
     public static final int         VIP_INCR_EVT_ID           = 14;
 
     public static final Map<Integer, ExtendEventInfo> evtMap;
+    public static final Set<Integer>                  eventSet;
     static {
+      eventSet = new HashSet<>();
+      eventSet.add(TIME_SPEND_EVT_ID);
+      eventSet.add(APT_BUFF_USE_EVT_ID);
+      eventSet.add(MONEY_SPEND_EVT_ID);
+      eventSet.add(VIEW_SPEND_EVT_ID);
+      eventSet.add(FAN_SPEND_EVT_ID);
+      eventSet.add(CRT_PROD_EVT_ID);
+      eventSet.add(VIEW_PROD_EVT_ID);
+      eventSet.add(FAN_PROD_EVT_ID);
+      eventSet.add(GAME_SHOW_EVT_ID);
+      eventSet.add(TOTAL_TALENT_EVT_ID);
+      eventSet.add(VIP_INCR_EVT_ID);
+
       evtMap = new HashMap<>();
       evtMap.put(TIME_SPEND_EVT_ID,   ExtendEventInfo.of(TIME_SPEND_EVT_ID, 1));
       evtMap.put(APT_BUFF_USE_EVT_ID, ExtendEventInfo.of(APT_BUFF_USE_EVT_ID, 1));

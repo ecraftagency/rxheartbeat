@@ -105,14 +105,14 @@ public class Transformer {
       }
     }
 
-    for (Map.Entry<Integer, List<Integer>> entry : session.userInventory.expireItems.entrySet()) {
-      PropData.Prop prop = PropData.propMap.get(entry.getKey());
-      if (prop != null) {
-        List<Integer> itemVector = entry.getValue();
-        if (itemVector != null && itemVector.size() > 0)
-          items.add(new JsonObject().put("id", prop.propID).put("name", prop.name).put("qty", itemVector.size()));
-      }
-    }
+//    for (Map.Entry<Integer, List<Integer>> entry : session.userInventory.expItems.entrySet()) {
+//      PropData.Prop prop = PropData.propMap.get(entry.getKey());
+//      if (prop != null) {
+//        List<Integer> itemVector = entry.getValue();
+//        if (itemVector != null && itemVector.size() > 0)
+//          items.add(new JsonObject().put("id", prop.propID).put("name", prop.name).put("qty", itemVector.size()));
+//      }
+//    }
 
     if (session.userInbox.privateMails != null) {
       for (MailObj priMsg : session.userInbox.privateMails) {

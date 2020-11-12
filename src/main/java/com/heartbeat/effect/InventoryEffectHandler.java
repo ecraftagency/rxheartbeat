@@ -17,7 +17,7 @@ public class InventoryEffectHandler implements EffectHandler{
       return "item_not_exist";
     if (amount <= 0)
       return "zero or negative amount";
-    session.userInventory.addItem(propId, amount);
+    session.userInventory.addItem(session, propId, amount);
     session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.ITEM_EFFECT_RESULT,propId, amount));
     return EffectHandler.SUCCESS;
   }

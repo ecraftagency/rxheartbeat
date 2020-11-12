@@ -143,8 +143,8 @@ public class Session {
     int second = (int)(curMs/1000);
 
     //todo null check, consistency reBalance
-    if (userInventory.expireItems == null)
-      userInventory.expireItems = new HashMap<>();
+    if (userInventory.expItems == null)
+      userInventory.expItems = new HashMap<>();
 
     if (userDailyMission == null)
       userDailyMission = UserDailyMission.ofDefault();
@@ -367,7 +367,7 @@ public class Session {
 
     int curAmount = userInventory.updateAndGet().getItemCnt(itemId);
     int newAmount = Math.max(curAmount + amount, 0);
-    userInventory.addItem(itemId, newAmount);
+    userInventory.addItem(this, itemId, newAmount);
   }
 
   public void gmtCastEffect(String eff) {

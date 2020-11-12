@@ -91,7 +91,7 @@ public class ItemController implements Handler<RoutingContext> {
       EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.ofDefault(objId, intParam, strParam);
       resp.msg = EffectManager.inst().handleEffect(extArgs,session, prop.format);
       if (!resp.msg.equals("ok")) { //roll back
-        session.userInventory.addItem(propId, amount);
+        session.userInventory.addItem(session, propId, amount);
       }
       resp.data.gameInfo  = session.userGameInfo;
       resp.data.inventory = session.userInventory.updateAndGet();

@@ -28,7 +28,7 @@ public class PickEffectHandler implements EffectHandler{
     if (!dto.items.contains(chosen))
       return Msg.map.getOrDefault(Msg.MALFORM_ARGS, "malform_args");
 
-    session.userInventory.addItem(chosen, amount);
+    session.userInventory.addItem(session, chosen, amount);
     session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.ITEM_EFFECT_RESULT,chosen, amount));
     return "ok";
   }
