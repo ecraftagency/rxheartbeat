@@ -261,18 +261,18 @@ public class UserInventory extends Inventory {
     int curSec = (int)(System.currentTimeMillis()/1000);
     for (Map.Entry<Integer, Integer> entry : expItems.entrySet()) {
       int cas = entry.getValue();
-      if (curSec - cas <= 0)
+      if (cas - curSec <= 0)
         entry.setValue(0);
     }
   }
 
   private void addExpireItem(Session session, int itemId, int amount) {
     int curSec = (int)(System.currentTimeMillis()/1000);
-    if (!expItems.containsKey(itemId)) {
+    if (expItems.containsKey(itemId)) {
       int expireTime = getExpireTime(itemId);
       if (expireTime > 0) {
         List<Integer> format = Arrays.asList(102,itemId,0,0);
-        expItems.computeIfPresent(itemId, (k, v) -> curSec + expireTime);
+        expItems.computeIfPresent(itemId, (k, v) -> curSec + 300); //todo hardcode
 
 
         NetAward netAward = NetAward.of(session.id,"", session.userGameInfo.displayName, "");
@@ -291,7 +291,7 @@ public class UserInventory extends Inventory {
           vipLv = vip.level;
 
         netAward.vipLevel        = vipLv;
-        UserNetAward.addNetAward(itemId, netAward);
+        UserNetAward.addNetAward(itemId2AwardId.get(itemId), netAward);
       }
     }
   }

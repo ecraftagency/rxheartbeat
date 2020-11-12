@@ -143,8 +143,8 @@ public class Session {
     int second = (int)(curMs/1000);
 
     //todo null check, consistency reBalance
-    if (userInventory.expItems == null)
-      userInventory.expItems = new HashMap<>();
+    if (userInventory.expireItems == null)
+      userInventory.expireItems = new HashMap<>();
 
     if (userDailyMission == null)
       userDailyMission = UserDailyMission.ofDefault();

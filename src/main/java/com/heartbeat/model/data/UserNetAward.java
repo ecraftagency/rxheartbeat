@@ -106,7 +106,7 @@ public class UserNetAward {
       try {
         NetAward netAward = title.get(userID);
         if (netAward != null) {
-          if (curSec - netAward.addedTime > 300) { //todo change later
+          if (curSec - netAward.addedTime > 300) { //todo hard code
             title.remove(userID);
             user2Title.computeIfPresent(userID, (k, v) -> {
               v.remove(titleId);
