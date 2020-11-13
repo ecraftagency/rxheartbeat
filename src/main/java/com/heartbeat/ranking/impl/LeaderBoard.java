@@ -79,7 +79,7 @@ public class LeaderBoard<K, V extends Comparable<V> & Common.hasKey<K>> implemen
   }
 
   public void close() {
-    achiever  = new ArrayList<>(sorter);
+    achiever   = new ArrayList<>(sorter);
     recordLock = true;
     achiever.sort(Comparator.reverseOrder());
     LOG.console("close ranking");

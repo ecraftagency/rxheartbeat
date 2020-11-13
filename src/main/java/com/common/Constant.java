@@ -176,13 +176,21 @@ public class Constant {
     public static final int         FAN_SPEND_RANK_ID         = 17;
     public static final int         LDB_CAPACITY              = 100;
     public static final Map<Integer, ExtendEventInfo> evtMap;
+    public static final Set<Integer>                  eventSet;
     static {
+      eventSet    = new HashSet<>();
       evtMap      = new HashMap<>();
       evtMap.put(VIEW_SPEND_RANK_ID,    ExtendEventInfo.of(VIEW_SPEND_RANK_ID, 1));
       evtMap.put(FAN_SPEND_RANK_ID,     ExtendEventInfo.of(FAN_SPEND_RANK_ID, 1));
       evtMap.put(TOTAL_TALENT_RANK_ID,  ExtendEventInfo.of(TOTAL_TALENT_RANK_ID, 1));
       evtMap.put(FIGHT_RANK_ID,         ExtendEventInfo.of(FIGHT_RANK_ID, 1));
       evtMap.put(MONEY_SPEND_RANK_ID,   ExtendEventInfo.of(MONEY_SPEND_RANK_ID, 1));
+
+      eventSet.add(VIEW_SPEND_RANK_ID);
+      eventSet.add(FAN_SPEND_RANK_ID);
+      eventSet.add(TOTAL_TALENT_RANK_ID);
+      eventSet.add(FIGHT_RANK_ID);
+      eventSet.add(MONEY_SPEND_RANK_ID);
     }
   }
 

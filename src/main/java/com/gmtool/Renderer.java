@@ -22,8 +22,8 @@ import static com.gmtool.GMTool.eventBus;
 import static com.gmtool.GMTool.templateEngine;
 
 public class Renderer implements Handler<RoutingContext> {
-  public static String host = "http://localhost:3000";
-  //public static String host = "http://18.141.216.52:3000";
+  //public static String host = "http://localhost:3000";
+  public static String host = "http://18.141.216.52:3000";
 
   static TTransport transport;
   static TFramedTransport ft;

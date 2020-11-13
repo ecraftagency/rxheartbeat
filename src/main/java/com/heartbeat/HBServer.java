@@ -114,6 +114,8 @@ public class HBServer extends AbstractVerticle {
       UserInventory.syncItemStatToDB();
       UserNetAward.syncNetAwardToDB();
       StatefulSet.syncCommonEvtToDB();
+      StatefulSet.syncRankEvtToDB();
+      StatefulSet.syncIdolEventToDB();
       LOG.console("HBServer shutdown hook");
     }));
 
@@ -161,6 +163,8 @@ public class HBServer extends AbstractVerticle {
       UserInventory.loadItemStatsFromDB();
       UserNetAward.loadNetAwardFromDB();
       StatefulSet.loadCommonEvtFromDB();
+      StatefulSet.loadRankEvtFromDB();
+      StatefulSet.loadIdolEvtFromDB();
       DailyStats.inst().loadStatsFromDB(System.currentTimeMillis());
       DailyStats.updateTask.run();
       HBServer.executor = vertx.createSharedWorkerExecutor("worker-pool");

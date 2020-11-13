@@ -47,6 +47,7 @@ public class UserRanking extends Ranking {
     ur.records      = new HashMap<>();
     ur.claimed      = new HashMap<>();
     ur.evt2cas      = new HashMap<>();
+
     return ur;
   }
 
