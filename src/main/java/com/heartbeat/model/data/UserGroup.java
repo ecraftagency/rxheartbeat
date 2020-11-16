@@ -271,7 +271,7 @@ public class UserGroup extends Group {
     session.effectResults.clear();
     EffectHandler.ExtArgs extArgs = EffectHandler.ExtArgs.of();
 
-    List<List<Integer>> rewards = ei.rewardPack == 2 ? evt.reward2 : evt.reward1;
+    List<List<Integer>> rewards = evt.getRewardPack(ei.rewardPack);
 
     for (List<Integer> reward : rewards) {
         EffectManager.inst().handleEffect(extArgs, session, reward);

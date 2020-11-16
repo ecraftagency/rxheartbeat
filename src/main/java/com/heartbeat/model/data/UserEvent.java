@@ -137,7 +137,7 @@ public class UserEvent extends Event {
     if (checkClaim(eventType, milestoneId))
       return Msg.map.getOrDefault(Msg.ALREADY_CLAIM, "already_claim");
 
-    List<List<Integer>> rewards = ei.rewardPack == 2 ? dto.reward2 : dto.reward1;
+    List<List<Integer>> rewards = dto.getRewardPack(ei.rewardPack);
 
     if (rewards == null)
       return Msg.map.getOrDefault(Msg.BLANK_REWARD, "blank_reward");

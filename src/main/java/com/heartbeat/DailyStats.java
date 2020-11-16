@@ -21,7 +21,7 @@ public class DailyStats {
 
   private static final long                   DAY_MILLISECOND   = 24L * 60 * 60 * 1000;
   private static final long                   DB_SYNC_INTERVAL  = 60 * 1000;
-  private static final long                   STATS_EXPIRE_SEC  = 86400*30;
+  private static final long                   STATS_EXPIRE_SEC  = 86400*90;
 
   public ConcurrentHashMap<Integer, Integer>  dailyUseItem;
   public ConcurrentHashMap<Integer, Integer>  dailyGainItem;

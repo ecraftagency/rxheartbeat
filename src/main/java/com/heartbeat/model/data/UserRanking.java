@@ -156,7 +156,7 @@ public class UserRanking extends Ranking {
             return;
           }
 
-          List<List<Integer>> reward = ri.rewardPack == 2 ? dto.reward2 : dto.reward1;
+          List<List<Integer>> reward = dto.getRewardPack(ri.rewardPack);
           for (List<Integer> r : reward) {
             EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
           }

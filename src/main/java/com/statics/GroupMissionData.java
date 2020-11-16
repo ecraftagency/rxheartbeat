@@ -12,10 +12,25 @@ public class GroupMissionData {
     public String               desc;
     public List<List<Integer>>  reward1;
     public List<List<Integer>>  reward2;
+    public List<List<Integer>>  reward3;
+    public List<List<Integer>>  reward4;
 
     @Override
     public Integer mapKey() {
       return id;
+    }
+
+    public List<List<Integer>> getRewardPack(int packId) {
+      switch (packId){
+        case 2:
+          return reward2;
+        case 3:
+          return reward3;
+        case 4:
+          return reward4;
+        default:
+          return reward1;
+      }
     }
   }
 

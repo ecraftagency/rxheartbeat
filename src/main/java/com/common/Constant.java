@@ -22,7 +22,7 @@ public class Constant {
   }
 
   public static class GAME_FUNCTIONS {
-    public static boolean GIFT_CODE = true;
+    public static boolean GIFT_CODE = false;
   }
 
   public static class SERVICE {
@@ -215,16 +215,23 @@ public class Constant {
   public static class IDOL_EVENT {
     public static final int         BP_EVT_ID                 = 0;
     public static final int         DB_EVT_ID                 = 1;
+    public static final int         NT_EVT_ID                 = 2;
 
     public static final Map<Integer, ExtendEventInfo> evtMap;
     static {
       evtMap = new HashMap<>();
       ExtendEventInfo blackPinkEvt  = ExtendEventInfo.of(BP_EVT_ID, 1);
       blackPinkEvt.eventName        = "Blak Pink";
+
       ExtendEventInfo banDamEvt     = ExtendEventInfo.of(DB_EVT_ID, 1);
       banDamEvt.eventName           = "Ban Dam";
+
+      ExtendEventInfo ngocTrinhEvt = ExtendEventInfo.of(NT_EVT_ID, 1);
+      banDamEvt.eventName           = "Ban Dam";
+
       evtMap.put(BP_EVT_ID, blackPinkEvt);
       evtMap.put(DB_EVT_ID, banDamEvt);
+      evtMap.put(NT_EVT_ID, ngocTrinhEvt);
 
       banDamEvt.addIdol(IdolClaimInfo.of(48, 93, 10));
       banDamEvt.addIdol(IdolClaimInfo.of(49, 93, 10));
@@ -236,6 +243,8 @@ public class Constant {
       blackPinkEvt.addIdol(IdolClaimInfo.of(44, 92, 10));
       blackPinkEvt.addIdol(IdolClaimInfo.of(45, 92, 10));
       blackPinkEvt.addIdol(IdolClaimInfo.of(46, 92, 10));
+
+      ngocTrinhEvt.addIdol(IdolClaimInfo.of(53, 140, 10));
     }
   }
 
@@ -290,9 +299,9 @@ public class Constant {
     public static final int         MAX_GENDER                    = 2;
     public static final int         MEDIA_INTERVAL                = 1198; //unit second 20'
     public static final int         MEDIA_CONTRACT_ITEM           = 2;    //hợp đồng truyền thông
-    public static int               INIT_MONEY                    = 20000;
-    public static int               INIT_VIEW                     = 20000;
-    public static int               INIT_FAN                      = 20000;
+    public static int               INIT_MONEY                    = 500000;
+    public static int               INIT_VIEW                     = 500000;
+    public static int               INIT_FAN                      = 500000;
   }
 
   public static class USER_GROUP {
@@ -322,7 +331,7 @@ public class Constant {
 
     public static final int               APT_UP_COST               = 1;
     public static int                     APT_EXP_COST_PER_UPGRADE  = 200;
-    public static int                     INIT_APT_EXP              = 2000;
+    public static int                     INIT_APT_EXP              = 200;
 
     static {
       APT_UP_RATE.add(0);
@@ -349,14 +358,14 @@ public class Constant {
     public static int TIME_UNLOCK_LEVEL           = 2;
     public static int GAME_SHOW_UNLOCK_LEVEL      = 2;
     public static int SHOP_UNLOCK_LEVEL           = 2;
-    public static int TRAVEL_UNLOCK_LEVEL         = 3;
-    public static int GROUP_UNLOCK_LEVEL          = 4;
-    public static int FRIEND_QR_UNLOCK_LEVEL      = 5;
-    public static int SHOPPING_UNLOCK_LEVEL       = 6;
-    public static int SKIP_FIGHT_UNLOCK_LEVEL     = 6;
-    public static int FAST_SHOPPING_UNLOCK_LEVEL  = 7;
-    public static int RUN_SHOW_UNLOCK_LEVEL       = 7;
-    public static int FAST_RUN_SHOW_UNLOCK_LEVEL  = 7;
+    public static int TRAVEL_UNLOCK_LEVEL         = 2;
+    public static int GROUP_UNLOCK_LEVEL          = 2;
+    public static int FRIEND_QR_UNLOCK_LEVEL      = 2;
+    public static int SHOPPING_UNLOCK_LEVEL       = 2;
+    public static int SKIP_FIGHT_UNLOCK_LEVEL     = 5;
+    public static int FAST_SHOPPING_UNLOCK_LEVEL  = 5;
+    public static int RUN_SHOW_UNLOCK_LEVEL       = 2;
+    public static int FAST_RUN_SHOW_UNLOCK_LEVEL  = 5;
   }
 
   public static class EFFECT_RESULT {

@@ -212,7 +212,6 @@ public class InternalController implements Handler<Message<JsonObject>> {
       return;
     }
 
-
     dto.reward  = newItems;
     dto.time    = newTime;
     dto.vip     = newVip;
@@ -698,7 +697,10 @@ public class InternalController implements Handler<Message<JsonObject>> {
     for (List<Integer> eventId : uptInfo) {
       ExtendEventInfo ei = evtMap.get(eventId.get(0));
       if (ei != null) {
-        ei.updateTime(strStart, strEnd, flushDelay, eventId.get(1) == 2 ? 2 : 1);
+        int rewardPack = eventId.get(1);
+        if (rewardPack < 1 || rewardPack > 4)
+          rewardPack = 1;
+        ei.updateTime(strStart, strEnd, flushDelay, rewardPack);
       }
     }
 

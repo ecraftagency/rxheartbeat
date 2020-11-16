@@ -56,6 +56,7 @@ public class Transformer {
     idolEvtId2name = new HashMap<>();
     idolEvtId2name.put(IDOL_EVENT.BP_EVT_ID, "Idol Event Black Pink");
     idolEvtId2name.put(IDOL_EVENT.DB_EVT_ID, "Idol Event BB");
+    idolEvtId2name.put(IDOL_EVENT.NT_EVT_ID, "Idol Event Ngoc Trinh");
 
     groupEvtId2name = new HashMap<>();
     groupEvtId2name.put(GROUP_EVENT.GE_PROD_EVT_ID, "Nhiệm vụ sáng tác");
@@ -182,7 +183,7 @@ public class Transformer {
     res.add(constField("Time tặng ban đầu", "USER_GAME_INFO.INIT_TIME_GIFT", "Giây", Integer.toString(USER_GAME_INFO.INIT_TIME_GIFT), "(0-n]"));
     res.add(constField("Level active time", "USER_GAME_INFO.TIME_ACTIVE_LEVEL", "Level", Integer.toString(USER_GAME_INFO.TIME_ACTIVE_LEVEL), "phải nằm trong các giá trị hạng sao [1,18]"));
     res.add(constField("Time tạo công ty", "USER_GROUP.CREATE_GROUP_TIME_COST", "Giây", Integer.toString(USER_GROUP.CREATE_GROUP_TIME_COST), "(0-n]"));
-    res.add(constField("Thời gian lưu trên bảng thương hiệu", "TITLE.EXPIRY", "Phút", Integer.toString(NET_AWARD.EXPIRY), "(0-n]"));
+    res.add(constField("Thời gian lưu trên bảng thương hiệu", "NET_AWARD.EXPIRY", "Phút", Integer.toString(NET_AWARD.EXPIRY), "(0-n]"));
     res.add(constField("Exp tư chất tiêu hao khi up tư chất", "USER_IDOL.APT_EXP_COST_PER_UPGRADE", "Số nguyên", Integer.toString(USER_IDOL.APT_EXP_COST_PER_UPGRADE), "(0-n]"));
     res.add(constField("Exp tư chất ban đầu", "USER_IDOL.INIT_APT_EXP", "Số nguyên", Integer.toString(USER_IDOL.INIT_APT_EXP), "(0-n]"));
 
