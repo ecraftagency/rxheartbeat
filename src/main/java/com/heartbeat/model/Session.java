@@ -378,6 +378,7 @@ public class Session {
 
   public void syncStdProfile() {
     StdProfile profile = new StdProfile();
+
     profile.setUserId(this.id);
     profile.setDisplayName(this.userGameInfo.displayName);
 

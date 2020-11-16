@@ -34,6 +34,7 @@ public class Constant {
   public static class SYSTEM_INFO {
     public static int               EVENT_LOOP_SLEEP_INV            = 1000;       //millis
     public static String            GATEWAY_EVT_BUS                 = "balancer";
+    public static String            PREF_EVT_BUS                    = "pref";
     public static int               GATEWAY_NOTIFY_INTERVAL         = 1000;       //millis
     public static int               STATS_DATA_SYNC_INTERVAL        = 60000;       //millis
 

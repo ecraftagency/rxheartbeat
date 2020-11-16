@@ -11,7 +11,7 @@ import com.transport.model.PaymentTransaction;
 import static com.common.Constant.USER_PAYMENT.*;
 
 public class PaymentHandler {
-  public static final String MONTH_GC_ID = "phv001.107";
+  public static final String MONTH_GC_ID = "phv001.207";
 
   public static void _100DPaymentSuccess(Session session, Payload payload, boolean online, PaymentData.PaymentDto dto) {
     PaymentTransaction trans = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_100D, payload.money, payload.time);

@@ -34,9 +34,7 @@ public class CBSession implements Cruder<Session> {
     rxSessionBucket.defaultCollection().get(id).subscribe(res -> {
       Session session = res.contentAs(Session.class);
       handler.handle(Future.succeededFuture(session));
-    }, err -> {
-      handler.handle(Future.failedFuture(err.getMessage()));
-    });
+    }, err -> handler.handle(Future.failedFuture(err.getMessage())));
   }
 
   @Override

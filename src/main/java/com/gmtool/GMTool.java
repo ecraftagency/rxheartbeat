@@ -1,6 +1,5 @@
 package com.gmtool;
 
-import com.common.Constant;
 import com.common.LOG;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
@@ -25,11 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 // A SIMPLE YET FURIOUS GM TOOL
-@SuppressWarnings("unused")
 public class GMTool extends AbstractVerticle {
   public static JsonObject                localConfig;
   public static String                    gatewayIP       = "";
-  public static String                    gatewayPublicIP = "";
 
   public static String                    localIP = "";
   public static ClusterManager            mgr;
@@ -107,14 +104,6 @@ public class GMTool extends AbstractVerticle {
   }
 
   public static Node getNodeById(int nodeId) {
-    for (Node node : nodes)
-      if (node.id == nodeId)
-        return node;
-    return Node.ofNullObject();
-  }
-
-  public static Node getNodeBySessionId(int sessionId) {
-    int nodeId = sessionId / Constant.SYSTEM_INFO.MAX_USER_PER_NODE;
     for (Node node : nodes)
       if (node.id == nodeId)
         return node;

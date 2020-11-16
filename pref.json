@@ -1,0 +1,7 @@
+{
+  "gatewayIP" :                           "127.0.0.1",
+  "localIP" :                             "127.0.0.1",
+  "DB.HOST":                              "13.212.159.107",
+  "DB.USER":                              "Administrator",
+  "DB.PWD":                               "n5t5lnsct"
+}

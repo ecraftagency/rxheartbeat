@@ -117,15 +117,15 @@ public class LOG {
       for (StackTraceElement ste : cause.getStackTrace())
         builder.append(EXCEPTION_LINE_HEADER).append(ste.toString());
       POOL_EXCEPTION.info(builder.toString());
-
-      //fluent LOG
-      Map<String, Object> data = new HashMap<>();
-      List<String> trace       = Arrays.stream(cause.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
-      trace.add(0, cause.getMessage());
-      data.put("type", "pool_exception");
-      data.put("msg", trace);
-      FLUENT.log("exception", data);
     }
+
+    //fluent LOG
+    Map<String, Object> data = new HashMap<>();
+    List<String> trace       = Arrays.stream(cause.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
+    trace.add(0, cause.getMessage());
+    data.put("type", "pool_exception");
+    data.put("msg", trace);
+    FLUENT.log("exception", data);
   }
 
   public static void poolException(Object ... params) {
