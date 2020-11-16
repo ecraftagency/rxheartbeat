@@ -21,12 +21,15 @@ public class Test {
     refBuckets.put(7, rxCluster.bucket(String.format("ref_%d", 7)));
     refBuckets.put(8, rxCluster.bucket(String.format("ref_%d", 8)));
     PrefService svc = new CBPrefImpl(refBuckets);
-    //svc.addProfile("92310143", 1000001);
-    svc.linkCnt("92310143", ar -> {
-      if (ar.succeeded()) {
+
+    svc.addProfile("9000000", 1000000, ar -> {
+      if (ar.succeeded())
         System.out.println(ar.result());
-      }
+      else
+        System.out.println(ar.cause().getMessage());
     });
+
+
     Thread.sleep(5000);
 
 //    DB db = DBMaker

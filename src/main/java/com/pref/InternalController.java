@@ -5,6 +5,7 @@ import com.couchbase.client.java.ReactiveBucket;
 import com.heartbeat.db.cb.AbstractCruder;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.util.HashMap;
@@ -12,11 +13,9 @@ import java.util.Map;
 
 public class InternalController implements Handler<Message<JsonObject>> {
   private Map<Integer,AbstractCruder<Identity>> cbAccessMap;
-
+  private CBPrefImpl prefService;
   public InternalController(){
-    cbAccessMap = new HashMap<>();
-    for (Map.Entry<Integer, ReactiveBucket> entry : HBPref.refBuckets.entrySet())
-      cbAccessMap.put(entry.getKey(), new AbstractCruder<>(Identity.class, entry.getValue()));
+    prefService = new CBPrefImpl(HBPref.refBuckets);
   }
 
   @Override
@@ -33,19 +32,79 @@ public class InternalController implements Handler<Message<JsonObject>> {
           return;
         case "getIdentity":
           processGetIdentity(ctx);
-        default:break;
+          return;
+        case "linkAccount":
+          processLinkAccount(ctx);
+          return;
+        case "claimLinkReward":
+          processClaimLinkReward(ctx);
+          return;
+        default:
+          JsonObject resp = new JsonObject();
+          resp.put("msg", "unknown_command");
+          ctx.reply(resp);
+          break;
       }
     }
     catch (Exception e) {
+      JsonObject resp = new JsonObject();
+      resp.put("msg", e.getMessage());
+      ctx.reply(resp);
       LOG.globalException("gateway", cmd, e);
     }
   }
 
-  private void processGetIdentity(Message<JsonObject> ctx) {
+  private void processClaimLinkReward(Message<JsonObject> ctx) {
+    String phoenix = ctx.body().getString("phoenixId");
+    prefService.claimLinkReward(phoenix, ar -> {
+      JsonObject resp = new JsonObject();
+      if (ar.succeeded())
+        resp.put("msg", ar.result());
+      else
+        resp.put("msg", ar.cause().getMessage());
+      ctx.reply(resp);
+    });
+  }
 
+  private void processLinkAccount(Message<JsonObject> ctx) {
+    String phoenixId  = ctx.body().getString("phoenixId");
+    String upLinkId   = ctx.body().getString("upLinkId");
+    prefService.linkIdentity(phoenixId, upLinkId, ar -> {
+      JsonObject resp = new JsonObject();
+      if (ar.succeeded())
+        resp.put("msg", ar.result());
+      else
+        resp.put("msg", ar.cause().getMessage());
+      ctx.reply(resp);
+    });
+  }
+
+  private void processGetIdentity(Message<JsonObject> ctx) {
+    String phoenixId  = ctx.body().getString("phoenixId");
+    prefService.loadIdentity(phoenixId, ar -> {
+      JsonObject resp = new JsonObject();
+      if (ar.succeeded()) {
+        resp.put("msg", "ok");
+        resp.put("data", Json.encode(ar.result()));
+      }
+      else
+        resp.put("msg", ar.cause().getMessage());
+      ctx.reply(resp);
+    });
   }
 
   private void processCreateProfile(Message<JsonObject> ctx) {
-
+    String  phoenixId = ctx.body().getString("phoenixId");
+    long    profileID = ctx.body().getLong("profileId");
+    prefService.addProfile(phoenixId, profileID, ar -> {
+      JsonObject resp = new JsonObject();
+      if (ar.succeeded()) {
+        resp.put("msg", "ok");
+        resp.put("data", Json.encode(ar.result()));
+      }
+      else
+        resp.put("msg", ar.cause().getMessage());
+      ctx.reply(resp);
+    });
   }
 }

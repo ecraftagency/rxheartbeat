@@ -4,9 +4,9 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
 public interface PrefService {
-  boolean haveUpLink(String id);
-  void    linkIdentity(String id, String upLink, Handler<AsyncResult<Integer>> handler);
-  void    addProfile(String id, long profileId);
-  void    linkCnt(String id, Handler<AsyncResult<Integer>> handler);
+  void    addProfile(String id, long profileId, Handler<AsyncResult<Identity>> handler);
+  void    linkIdentity(String id, String upLink, Handler<AsyncResult<String>> handler);
+  void    claimLinkReward(String id, Handler<AsyncResult<String>> handler);
   void    loadIdentity(String id, Handler<AsyncResult<Identity>> handler);
+  void    syncIdentity(String id, Identity identity);
 }

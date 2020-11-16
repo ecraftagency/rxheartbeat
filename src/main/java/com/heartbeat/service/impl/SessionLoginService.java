@@ -3,6 +3,7 @@ package com.heartbeat.service.impl;
 import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
+import com.heartbeat.HBServer;
 import com.heartbeat.Passport100D;
 import com.heartbeat.db.cb.CBCounter;
 import com.heartbeat.db.cb.CBMapper;
@@ -19,6 +20,8 @@ import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
 
 import java.util.HashMap;
 
@@ -70,6 +73,13 @@ public class SessionLoginService implements AuthService {
                 Session register = rar.result();
                 Profile profile  = handleLoginResult("ok", register, "", request);
                 CBMapper.getInstance().mapOverride(Integer.toString(register.id), key);
+
+                //todo pref record
+                JsonObject jsonMessage = new JsonObject().put("cmd", "createProfile");
+                jsonMessage.put("phoenixId", pInfo.player_id);
+                jsonMessage.put("profileId", register.id);
+                HBServer.eventBus.send(Constant.SYSTEM_INFO.PREF_EVT_BUS, jsonMessage);
+
                 handler.handle(Future.succeededFuture(profile));
               }
               else {

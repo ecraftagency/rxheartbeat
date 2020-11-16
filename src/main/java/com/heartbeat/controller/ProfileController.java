@@ -2,6 +2,7 @@ package com.heartbeat.controller;
 
 import com.common.*;
 import com.google.gson.reflect.TypeToken;
+import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
@@ -17,6 +18,7 @@ import com.statics.ShopData;
 import com.transport.ExtMessage;
 import com.transport.model.CompactProfile;
 import io.vertx.core.Handler;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -32,6 +34,7 @@ import static com.common.Constant.*;
 
 
 public class ProfileController implements Handler<RoutingContext> {
+  private static DeliveryOptions options = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
   private GroupService        groupService;
   public  static WebClient     webClient;
   static Type listOfListOfInt  = new TypeToken<List<List<Integer>>>() {}.getType();
@@ -80,6 +83,9 @@ public class ProfileController implements Handler<RoutingContext> {
           case "changeDefaultCustom":
             resp = processChangeDefaultCustom(session, ctx, cmd);
             break;
+          case "getIdentity":
+            processGetIdentity(ctx, cmd);
+            return;
           default:
             resp = ExtMessage.profile();
             resp.msg = "unknown_cmd";
@@ -102,6 +108,27 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private void processGetIdentity(RoutingContext ctx, String cmd) {
+    String phoenixId  = "9000000";
+    ExtMessage resp   = ExtMessage.profile();
+    resp.cmd          = cmd;
+
+    JsonObject jsonMessage = new JsonObject().put("cmd", "getIdentity");
+    jsonMessage.put("phoenixId", phoenixId);
+    HBServer.eventBus.send(Constant.SYSTEM_INFO.PREF_EVT_BUS, jsonMessage, options, ar -> {
+      JsonObject evtBusResp = (JsonObject)ar.result().body();
+      if (ar.succeeded()) {
+        if (evtBusResp.getString("msg").equals("ok")) {
+          resp.data.extObj = evtBusResp.getString("data");
+        }
+        resp.msg = evtBusResp.getString("msg");
+      }
+      else
+        resp.msg = ar.cause().getMessage();
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+    });
   }
 
   private ExtMessage processChangeDefaultCustom(Session session, RoutingContext ctx, String cmd) {
