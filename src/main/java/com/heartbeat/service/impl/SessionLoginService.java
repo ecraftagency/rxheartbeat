@@ -62,8 +62,8 @@ public class SessionLoginService implements AuthService {
       if (ar.succeeded()) {
         try {
           Passport100D.Player pInfo = ar.result();
-          String key = String.format("100d_%s", pInfo.player_id);
-          String strUserId = CBMapper.getInstance().getValue(key);
+          String phoenixId = String.format("100d_%s", pInfo.player_id);
+          String strUserId = CBMapper.getInstance().getValue(phoenixId);
           if (Utilities.isValidString(strUserId)) {
             handle100DLogin(request, Integer.parseInt(strUserId), strUserId, d100Token, handler);
           }
@@ -71,8 +71,9 @@ public class SessionLoginService implements AuthService {
             registerAccount(request, rar -> {
               if (rar.succeeded()) {
                 Session register = rar.result();
+                register.userProfile.phoenixId = pInfo.player_id;
                 Profile profile  = handleLoginResult("ok", register, "", request);
-                CBMapper.getInstance().mapOverride(Integer.toString(register.id), key);
+                CBMapper.getInstance().mapOverride(Integer.toString(register.id), phoenixId);
 
                 //todo pref record
                 JsonObject jsonMessage = new JsonObject().put("cmd", "createProfile");

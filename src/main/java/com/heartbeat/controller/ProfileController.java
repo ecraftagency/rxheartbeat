@@ -84,7 +84,7 @@ public class ProfileController implements Handler<RoutingContext> {
             resp = processChangeDefaultCustom(session, ctx, cmd);
             break;
           case "getIdentity":
-            processGetIdentity(ctx, cmd);
+            processGetIdentity(session, ctx, cmd);
             return;
           default:
             resp = ExtMessage.profile();
@@ -110,13 +110,12 @@ public class ProfileController implements Handler<RoutingContext> {
     }
   }
 
-  private void processGetIdentity(RoutingContext ctx, String cmd) {
-    String phoenixId  = "9000000";
+  private void processGetIdentity(Session session, RoutingContext ctx, String cmd) {
     ExtMessage resp   = ExtMessage.profile();
     resp.cmd          = cmd;
 
     JsonObject jsonMessage = new JsonObject().put("cmd", "getIdentity");
-    jsonMessage.put("phoenixId", phoenixId);
+    jsonMessage.put("phoenixId", session.userProfile.phoenixId);
     HBServer.eventBus.send(Constant.SYSTEM_INFO.PREF_EVT_BUS, jsonMessage, options, ar -> {
       JsonObject evtBusResp = (JsonObject)ar.result().body();
       if (ar.succeeded()) {

@@ -1,4 +1,4 @@
-package com.pref;
+package com.transport;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

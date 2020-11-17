@@ -16,7 +16,6 @@ import static com.common.Constant.USER_GAME_INFO.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserGameInfo extends GameInfo {
-  public static final int MAX_TUTORIAL = 0;
 
   public static UserGameInfo ofDefault() {
     UserGameInfo defaultInfo      = new UserGameInfo();

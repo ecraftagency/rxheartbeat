@@ -41,6 +41,8 @@ public class UserProfile {
   public boolean          isCloneUser;//is seconds account on one device
   public int              totalPlayingTime;
 
+  public String           phoenixId;
+
   public UserProfile() {
     deviceUIDs = new HashSet<>();
     languageCode = TextData.LANGUAGE_CODE_DEFAULT;
@@ -60,6 +62,7 @@ public class UserProfile {
     UserProfile defaultUserProfile = new UserProfile();
     defaultUserProfile.registerAt = (int)(System.currentTimeMillis()/1000);
     defaultUserProfile.loginToday = 1;
+    defaultUserProfile.phoenixId = "";
     return defaultUserProfile;
   }
 }
