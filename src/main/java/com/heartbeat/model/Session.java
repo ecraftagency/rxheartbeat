@@ -200,6 +200,7 @@ public class Session {
     userGameInfo.reBalance();
     userInventory.reBalance();
     userProduction.reBalance(this.userIdol.totalCrt());
+    userProfile.reBalance();
 
     userLDB                 = UserLDB.ofDefault();
     userIdol.userEvent      = userEvent;        //ref

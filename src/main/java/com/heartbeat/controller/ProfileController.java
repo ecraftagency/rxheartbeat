@@ -26,6 +26,7 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.WebClient;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,11 @@ public class ProfileController implements Handler<RoutingContext> {
           case "getIdentity":
             processGetIdentity(session, ctx, cmd);
             return;
+          case "claimLinkReward":
+            processClaimLinkReward(session, ctx, cmd);
+            return;
+          case "linkAccount":
+            processLinkAccount(session, ctx, cmd);
           default:
             resp = ExtMessage.profile();
             resp.msg = "unknown_cmd";
@@ -108,6 +114,47 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  //getIdentity, linkAccount, claimLinkReward
+  private void processClaimLinkReward(Session session, RoutingContext ctx, String cmd) {
+    ExtMessage resp   = ExtMessage.profile();
+    resp.cmd          = cmd;
+    JsonObject jsonMessage = new JsonObject().put("cmd", cmd);
+    jsonMessage.put("phoenixId", session.userProfile.phoenixId);
+
+    HBServer.eventBus.send(Constant.SYSTEM_INFO.PREF_EVT_BUS, jsonMessage, options, ar -> {
+      JsonObject evtBusResp = (JsonObject)ar.result().body();
+      if (ar.succeeded()) {
+        resp.msg = evtBusResp.getString("msg");
+        if (resp.msg.equals("ok")) {
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,1,1,0));
+          resp.effectResults = session.effectResults;
+        }
+      }
+      else
+        resp.msg = ar.cause().getMessage();
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+    });
+  }
+
+  private void processLinkAccount(Session session, RoutingContext ctx, String cmd) {
+    ExtMessage resp   = ExtMessage.profile();
+    resp.cmd          = cmd;
+    String upLinkId   = ctx.getBodyAsJson().getString("upLinkId");
+    JsonObject jsonMessage = new JsonObject().put("cmd", cmd);
+    jsonMessage.put("phoenixId", session.userProfile.phoenixId);
+    jsonMessage.put("upLinkId", upLinkId);
+
+    HBServer.eventBus.send(Constant.SYSTEM_INFO.PREF_EVT_BUS, jsonMessage, options, ar -> {
+      JsonObject evtBusResp = (JsonObject)ar.result().body();
+      if (ar.succeeded()) {
+        resp.msg = evtBusResp.getString("msg");
+      }
+      else
+        resp.msg = ar.cause().getMessage();
+      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
+    });
   }
 
   private void processGetIdentity(Session session, RoutingContext ctx, String cmd) {

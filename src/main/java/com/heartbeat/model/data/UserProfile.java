@@ -65,4 +65,9 @@ public class UserProfile {
     defaultUserProfile.phoenixId = "";
     return defaultUserProfile;
   }
+
+  public void reBalance() {
+    if (phoenixId == null)
+      phoenixId = "";
+  }
 }
