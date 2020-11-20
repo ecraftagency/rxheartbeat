@@ -15,6 +15,7 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class Renderer implements Handler<RoutingContext> {
     String path = ctx.request().getParam("path");
     ctx.put("host", host);
     switch (path) {
+      case "login":
+        render("webroot/html/login.ftl", ctx);
+        return;
       case "server":
         renderIndex(ctx);
         return;
@@ -122,8 +126,14 @@ public class Renderer implements Handler<RoutingContext> {
         ctx.put("nodes", nodes);
         ctx.put("cacheStat", cacheStat);
         GMTool.setNodes(nodes);
-        render("webroot/html/index.ftl", ctx);
       }
+      else {
+        List<Node> nodes = new ArrayList<>();
+        ctx.put("nodes", nodes);
+        ctx.put("cacheStat", "");
+        GMTool.setNodes(nodes);
+      }
+      render("webroot/html/index.ftl", ctx);
     });
   }
 }

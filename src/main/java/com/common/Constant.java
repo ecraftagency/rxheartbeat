@@ -66,6 +66,12 @@ public class Constant {
     }
   }
 
+  public static class REF_INFO {
+    public static       int MAX_LINK    = 2;
+    public static final int HASH_CNT    = 8;  //todo never change this
+
+  }
+
   public static class ONLINE_INFO {
     public static int               ONLINE_RECORD_UPDATE_TIME       = 20; // 20'
     public static int               ONLINE_RECORD_LDB_TIME          = 4; // 20'
@@ -302,6 +308,8 @@ public class Constant {
     public static int               INIT_MONEY                    = 500000;
     public static int               INIT_VIEW                     = 500000;
     public static int               INIT_FAN                      = 500000;
+    public static int               MIN_TUTOR_STEP                = 1;
+    public static int               MAX_TUTOR_STEP                = 8;
   }
 
   public static class USER_GROUP {

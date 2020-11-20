@@ -39,7 +39,7 @@ public class UserGameInfo extends GameInfo {
     defaultInfo.timeChange        = false;
     defaultInfo.shopping          = new HashMap<>();
     defaultInfo.defaultCustom     = 0;
-    defaultInfo.tutorStep         = 0;
+    defaultInfo.tutorStep         = MIN_TUTOR_STEP;
     return defaultInfo;
   }
 
@@ -103,6 +103,8 @@ public class UserGameInfo extends GameInfo {
   public void reBalance() {
     if (shopping == null)
       shopping = new HashMap<>();
+    if (tutorStep < MIN_TUTOR_STEP || tutorStep > MAX_TUTOR_STEP)
+      tutorStep = 1;
   }
 
   public String updateDisplayName(Session session,  String dName) throws Exception {

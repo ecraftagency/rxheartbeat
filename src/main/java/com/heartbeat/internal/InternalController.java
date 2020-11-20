@@ -796,13 +796,20 @@ public class InternalController implements Handler<Message<JsonObject>> {
     String   strSessionId   = ctx.body().getString("sessionId");
     JsonObject  req         = ctx.body();
     JsonObject  resp        = IntMessage.resp(req.getString("cmd"));
+    LOG.info("node", "InternalController:processGetSession", ctx.body());
     loadSession(Integer.parseInt(strSessionId), resp, sr -> {
-      if (sr.succeeded()) {
-        resp.put("msg", "ok");
-        resp.put("session", Transformer.transformSession(sr.result()));
+      try {
+        if (sr.succeeded()) {
+          resp.put("msg", "ok");
+          resp.put("session", Transformer.transformSession(sr.result()));
+        }
+        else {
+          resp.put("msg", "session not found");
+        }
       }
-      else {
-        resp.put("msg", "session not found");
+      catch (Exception e) {
+        LOG.globalException("node", "InternalController:processGetSession", e);
+        resp.put("msg", e.getMessage());
       }
       ctx.reply(resp);
     });

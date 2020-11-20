@@ -11,7 +11,6 @@ import io.vertx.core.json.JsonObject;
 import java.util.Map;
 
 public class InternalController implements Handler<Message<JsonObject>> {
-  private Map<Integer,AbstractCruder<Identity>> cbAccessMap;
   private CBPrefImpl prefService;
   public InternalController(){
     prefService = new CBPrefImpl(HBPref.refBuckets);

@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="card top-buffer">
+    <div v-if="resp.session.userInventory.length > 0" class="card top-buffer">
       <div class="card-header" id="inventoryHeader">
           <h5 class="text-center">
             <button class="btn" data-toggle="collapse" data-target="#inventoryCollapse" aria-expanded="false" aria-controls="inventoryCollapse">

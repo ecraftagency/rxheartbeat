@@ -1,5 +1,6 @@
 package com.pref;
 
+import com.common.Constant;
 import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCollection;
@@ -48,7 +49,7 @@ public class CBPrefImpl implements PrefService {
               handler.handle(Future.failedFuture("circle_link"));
               return;
             }
-            if (upLinkIdentity.links.size() >= 5) { //todo hard code
+            if (upLinkIdentity.links.size() >= Constant.REF_INFO.MAX_LINK) { //todo hard code
               handler.handle(Future.failedFuture("up_link_full"));
               return;
             }
@@ -76,7 +77,7 @@ public class CBPrefImpl implements PrefService {
     loadIdentity(id, ar -> {
       if (ar.succeeded()) {
         Identity identity = ar.result();
-        if (identity.links.size() < 5) {
+        if (identity.links.size() < Constant.REF_INFO.MAX_LINK) {
           handler.handle(Future.failedFuture("insufficient_claim"));
           return;
         }
@@ -128,6 +129,6 @@ public class CBPrefImpl implements PrefService {
   }
 
   private int hash(String id) { //todo hard code
-    return ((id.hashCode() & 0x7fffffff) % 8) + 1;
+    return ((id.hashCode() & 0x7fffffff) % Constant.REF_INFO.HASH_CNT) + 1;
   }
 }

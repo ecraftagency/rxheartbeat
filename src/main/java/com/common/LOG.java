@@ -1,5 +1,6 @@
 package com.common;
 
+import io.vertx.core.json.JsonObject;
 import org.fluentd.logger.FluentLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,5 +189,15 @@ public class LOG {
         globalException("", "", new Throwable("ScribeReporter.writeGlobalExceptionLog(...) with no param!!!"));
       }
     }
+  }
+
+  public static void info(String source, String action, JsonObject param) {
+    //fluent LOG
+    Map<String, Object> data = new HashMap<>();
+    data.put("type", "info");
+    data.put("msg", param);
+    data.put("source", source);
+    data.put("action", action);
+    FLUENT.log("info", data);
   }
 }

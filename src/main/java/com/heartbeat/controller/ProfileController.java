@@ -92,6 +92,10 @@ public class ProfileController implements Handler<RoutingContext> {
             return;
           case "linkAccount":
             processLinkAccount(session, ctx, cmd);
+            return;
+            case "recordTutorial":
+            resp = processRecordTutorial(session, ctx, cmd);
+            break;
           default:
             resp = ExtMessage.profile();
             resp.msg = "unknown_cmd";
@@ -114,6 +118,16 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processRecordTutorial(Session session, RoutingContext ctx, String cmd) {
+    ExtMessage resp   = ExtMessage.profile();
+    resp.cmd          = cmd;
+    int tutorStep     = ctx.getBodyAsJson().getInteger("tutorStep");
+    if (tutorStep < USER_GAME_INFO.MIN_TUTOR_STEP || tutorStep > USER_GAME_INFO.MAX_TUTOR_STEP)
+      return resp;
+    session.userGameInfo.tutorStep = tutorStep;
+    return resp;
   }
 
   //getIdentity, linkAccount, claimLinkReward
