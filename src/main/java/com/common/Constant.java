@@ -164,14 +164,15 @@ public class Constant {
 
   /*RECORD*/
   public static class DAILY_MISSION {
-    public static final int         MEDIA_MISSION_TYPE        = 4;
-    public static final int         GAME_SHOW_MISSION_TYPE    = 5; //phụ bản game show
-    public static final int         FIGHT_MISSION_TYPE        = 6; //đời sống showbiz, ải
-    public static final int         TRAVEL_MISSION_TYPE       = 7;
-    public static final int         IDOL_LV_MISSION_TYPE      = 8;
-    public static final int         IDOL_APT_MISSION_TYPE     = 9;
-    public static final int         RUN_SHOW_MISSION_TYPE     = 11;
-    public static final int         SHOPPING_MISSION_TYPE     = 12;
+    public static final int         MEDIA_MISSION_TYPE              = 4;
+    public static final int         GAME_SHOW_MISSION_TYPE          = 5; //phụ bản game show
+    public static final int         FIGHT_MISSION_TYPE              = 6; //đời sống showbiz, ải
+    public static final int         TRAVEL_MISSION_TYPE             = 7;
+    public static final int         IDOL_LV_MISSION_TYPE            = 8;
+    public static final int         IDOL_APT_MISSION_TYPE           = 9;
+    public static final int         GIFT_CARD_BUY_MISSION_TYPE      = 10; //mua gift card
+    public static final int         RUN_SHOW_MISSION_TYPE           = 11;
+    public static final int         SHOPPING_MISSION_TYPE           = 12;
   }
 
   /*EVENT*/
@@ -309,7 +310,7 @@ public class Constant {
     public static int               INIT_VIEW                     = 500000;
     public static int               INIT_FAN                      = 500000;
     public static int               MIN_TUTOR_STEP                = 1;
-    public static int               MAX_TUTOR_STEP                = 8;
+    public static int               MAX_TUTOR_STEP                = 9;
   }
 
   public static class USER_GROUP {

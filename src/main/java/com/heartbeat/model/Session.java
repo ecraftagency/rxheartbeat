@@ -367,8 +367,9 @@ public class Session {
       return;
 
     int curAmount = userInventory.updateAndGet().getItemCnt(itemId);
-    int newAmount = Math.max(curAmount + amount, 0);
-    userInventory.addItem(this, itemId, newAmount);
+    if ((curAmount + amount) < 0)
+      return;
+    userInventory.addItem(this, itemId, amount);
   }
 
   public void gmtCastEffect(String eff) {

@@ -68,7 +68,7 @@ public class UserInventory extends Inventory {
 
   private UserInventory() {
     userItems   =   new HashMap<>();
-    expItems =   new HashMap<>();
+    expItems    =   new HashMap<>();
   }
 
   //shop data

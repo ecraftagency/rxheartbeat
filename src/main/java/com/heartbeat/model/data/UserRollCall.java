@@ -1,5 +1,6 @@
 package com.heartbeat.model.data;
 
+import com.common.Constant;
 import com.common.LOG;
 import com.common.Msg;
 import com.common.Utilities;
@@ -210,6 +211,7 @@ public class UserRollCall extends RollCall {
       EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
 
     giftCards.put(type, giftInfo);
+    session.userDailyMission.addRecord(Constant.DAILY_MISSION.GIFT_CARD_BUY_MISSION_TYPE);
     return "ok";
   }
 }
