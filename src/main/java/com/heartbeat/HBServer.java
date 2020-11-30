@@ -15,9 +15,12 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.*;
+import com.heartbeat.netaChat.NetaAPI;
 import com.heartbeat.scheduler.TaskRunner;
 import com.heartbeat.ws_handler.PreVerifyMessageHandler;
 import com.stdprofile.thrift.StdProfileService;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
@@ -229,7 +232,8 @@ public class HBServer extends AbstractVerticle {
                 .requestHandler(router)
                 .listen(nodePort);
 
-        vertx.createHttpServer().webSocketHandler(new PreVerifyMessageHandler()).listen(nodePort+1000);
+        NetaAPI.initNetaChat();
+        //vertx.createHttpServer().webSocketHandler(new PreVerifyMessageHandler()).listen(nodePort+1000);
 
         startPromise.complete();
       }

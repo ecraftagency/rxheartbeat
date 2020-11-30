@@ -200,4 +200,14 @@ public class LOG {
     data.put("action", action);
     FLUENT.log("info", data);
   }
+
+  public static void info(String source, String action, String info) {
+    //fluent LOG
+    Map<String, Object> data = new HashMap<>();
+    data.put("type", "info");
+    data.put("msg", info);
+    data.put("source", source);
+    data.put("action", action);
+    FLUENT.log("info", data);
+  }
 }

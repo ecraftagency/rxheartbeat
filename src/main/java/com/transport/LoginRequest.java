@@ -17,5 +17,6 @@ public class LoginRequest {
   public String clientAddress;
   public int    snsFlag;
   public String snsToken;
+  public String netaUID;
   public int    languageCode;
 }

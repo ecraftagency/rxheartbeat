@@ -35,6 +35,9 @@ dependencies {
     compile group: 'org.fluentd',               name:   'fluent-logger',    version: '0.3.4'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.11.0'
     compile group: 'org.apache.thrift', name: 'libthrift', version: '0.13.0'
+
+    compile ('io.socket:socket.io-client:1.0.0')
+
 // https://mvnrepository.com/artifact/org.mapdb/mapdb
     //compile group: 'org.mapdb', name: 'mapdb', version: '3.0.8'
 
@@ -44,7 +47,6 @@ dependencies {
     testCompile group: 'io.vertx',              name:   'vertx-junit5-web-client', version: '3.9.1'
     testCompile 'org.apache.commons:commons-pool2:2.8.0'
 
-    testCompile ('io.socket:socket.io-client:1.0.0')
 }
 
 jar {

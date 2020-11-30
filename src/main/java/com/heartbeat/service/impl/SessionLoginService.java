@@ -12,6 +12,7 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
+import com.heartbeat.netaChat.NetaAPI;
 import com.heartbeat.service.AuthService;
 import com.heartbeat.service.GroupService;
 import com.transport.LoginRequest;
@@ -20,7 +21,6 @@ import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class SessionLoginService implements AuthService {
     if (versionCheck) {
       int snsFlag = request.snsFlag;
       if (snsFlag == 1) {
-        process100dLogin(request, handler);
+        processPhoenixLogin(request, handler);
       }
       else {
         processCommonLogin(request, handler);
@@ -56,7 +56,7 @@ public class SessionLoginService implements AuthService {
     }
   }
 
-  private void process100dLogin(LoginRequest request, Handler<AsyncResult<Profile>> handler) {
+  private void processPhoenixLogin(LoginRequest request, Handler<AsyncResult<Profile>> handler) {
     String d100Token = request.snsToken;
     Passport100D.verify(d100Token, ar -> {
       if (ar.succeeded()) {
@@ -65,7 +65,7 @@ public class SessionLoginService implements AuthService {
           String phoenixId = String.format("100d_%s", pInfo.player_id);
           String strUserId = CBMapper.getInstance().getValue(phoenixId);
           if (Utilities.isValidString(strUserId)) {
-            handle100DLogin(request, Integer.parseInt(strUserId), strUserId, d100Token, handler);
+            handlePhoenixLogin(request, Integer.parseInt(strUserId), strUserId, d100Token, handler);
           }
           else {
             registerAccount(request, rar -> {
@@ -101,8 +101,8 @@ public class SessionLoginService implements AuthService {
     });
   }
 
-  private void handle100DLogin(LoginRequest request, int userID, String strId,
-                               String snsToken, Handler<AsyncResult<Profile>> handler) {
+  private void handlePhoenixLogin(LoginRequest request, int userID, String strId,
+                                  String snsToken, Handler<AsyncResult<Profile>> handler) {
     Session oldSession = SessionPool.getSessionFromPool(userID);
     if (oldSession != null) {
       if (oldSession.id == userID) {
@@ -124,6 +124,7 @@ public class SessionLoginService implements AuthService {
           }
           session.id = userID;
           Profile profile = handleLoginResult("ok", session, snsToken, request);
+          NetaAPI.joinGroup(request.netaUID);
           handler.handle(Future.succeededFuture(profile));
         }
         else {
