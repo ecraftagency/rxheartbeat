@@ -22,23 +22,23 @@ public class NetaChat {
     socket.connect();
 
 
-//    JSONObject createGroup = new JSONObject();
-//    try {
-//      createGroup.put("type", 2);
-//      createGroup.put("owner_uin", "281474976981364");
-//      createGroup.put("name", "GroupTest 101");
-//      createGroup.put("avatar_url", "");
-//      createGroup.put("occupants_uins", Collections.singletonList("281474976981364"));
-//      createGroup.put("sender_name", "Admin");
-//
-//      socket.emit("create_group", createGroup).on("create_group", groupResp -> {
-//        JSONObject resp = (JSONObject)groupResp[0];
-//        System.out.println(resp);
-//      });
-//    } catch (JSONException e) {
-//      e.printStackTrace();
-//    }
-//
+    JSONObject createGroup = new JSONObject();
+    try {
+      createGroup.put("type", 2);
+      createGroup.put("owner_uin", "281474976981364");
+      createGroup.put("name", "GroupTest 101");
+      createGroup.put("avatar_url", "");
+      createGroup.put("occupants_uins", Collections.singletonList("281474976981364"));
+      createGroup.put("sender_name", "Admin");
+
+      socket.emit("create_group", createGroup).on("create_group", groupResp -> {
+        JSONObject resp = (JSONObject)groupResp[0];
+        System.out.println(resp);
+      });
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
 
     JSONObject joinGroupMsg = new JSONObject();
     try {

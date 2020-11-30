@@ -22,13 +22,13 @@ public class DB {
     rootPerms = new HashSet<>();
 
     readPerms.addAll(Arrays.asList("getSession", "getEvents", "getRole100D", "getConfig",
-            "getLDB", "getSessionId", "getPaymentInfo", "getShopInfo", "getStats"));
+            "getLDB", "getSessionId", "getPaymentInfo", "getShopInfo", "getStats", "getNetaGroup"));
 
     rootPerms.addAll(Arrays.asList("injectSession", "genWebPaymentLink", "genIAPPaymentLink",
             "genNCExchangeLink", "genNPExchangeLink", "genGetRoleLink", "getSession",
             "sendMail", "sendPrivateMail", "getEvents", "setUserEventTime", "getRole100D",
             "updatePaymentPackage", "getConfig", "injectConstant", "getLDB", "getSessionId",
-            "getPaymentInfo", "getShopInfo", "updateShopStatus", "getStats", "planEvent"));
+            "getPaymentInfo", "getShopInfo", "updateShopStatus", "getStats", "planEvent", "getNetaGroup", "addNetaGroup"));
 
     users.put("ly_mac_sau",   GmtUser.of("ly_mac_sau", "12345678").setPerms(rootPerms));
     users.put("duy79",        GmtUser.of("duy79", "12345678").setPerms(rootPerms));

@@ -35,6 +35,7 @@ public class ExtMessage {
     public Ranking            ranking;
     public Inbox              inbox;
     public int                currentGroupState;
+    public Map<String, NetaGroup> netaGroup;
     public String             extObj;
     public List<Integer>      extIntObj;
   }
@@ -45,6 +46,15 @@ public class ExtMessage {
     result.msg = "ok";
     result.data = new Data();
     result.group = "payment";
+    return result;
+  }
+
+  public static ExtMessage netalo() {
+    ExtMessage result = new ExtMessage();
+    result.cmd = "";
+    result.msg = "ok";
+    result.data = new Data();
+    result.group = "netalo";
     return result;
   }
 

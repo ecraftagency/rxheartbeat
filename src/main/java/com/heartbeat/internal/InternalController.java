@@ -17,6 +17,7 @@ import com.heartbeat.model.data.UserInbox;
 import com.heartbeat.model.data.UserInventory;
 import com.heartbeat.model.data.UserLDB;
 import com.heartbeat.model.data.UserPayment;
+import com.heartbeat.netaChat.NetaAPI;
 import com.heartbeat.scheduler.ExtendEventInfo;
 import com.heartbeat.service.ConstantInjector;
 import com.heartbeat.service.SessionInjector;
@@ -25,6 +26,7 @@ import com.heartbeat.service.impl.MaydayInjector;
 import com.statics.PaymentData;
 import com.statics.ShopData;
 import com.transport.IntMessage;
+import com.transport.NetaGroup;
 import com.transport.model.MailObj;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -132,6 +134,12 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "planEvent":
           processPlanEvent(ctx);
           return;
+        case "getNetaGroup":
+          processGetNetaGroup(ctx);
+          return;
+        case "addNetaGroup":
+          processAddNetaGroup(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -144,6 +152,44 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processAddNetaGroup(Message<JsonObject> ctx) {
+    JsonObject resp       = new JsonObject();
+    String groupName = ctx.body().getString("groupName");
+    NetaAPI.addGroup(groupName, ar -> {
+      if (ar.result().equals("ok")) {
+        JsonArray netaGroups  = new JsonArray();
+        for (Map.Entry<String, NetaGroup> entry : NetaAPI.chatGroup.entrySet()) {
+          JsonObject netaGroup = new JsonObject();
+          netaGroup.put("groupId", entry.getKey());
+          netaGroup.put("groupName", entry.getValue().groupName);
+          netaGroup.put("member", entry.getValue().nMember);
+          netaGroups.add(netaGroup);
+        }
+
+        resp.put("netaGroups", netaGroups);
+      }
+      resp.put("msg", ar.result());
+      ctx.reply(resp);
+    });
+  }
+
+  private void processGetNetaGroup(Message<JsonObject> ctx) {
+    JsonObject resp       = new JsonObject();
+    JsonArray netaGroups  = new JsonArray();
+
+    for (Map.Entry<String, NetaGroup> entry : NetaAPI.chatGroup.entrySet()) {
+      JsonObject netaGroup = new JsonObject();
+      netaGroup.put("groupId", entry.getKey());
+      netaGroup.put("groupName", entry.getValue().groupName);
+      netaGroup.put("member", entry.getValue().nMember);
+      netaGroups.add(netaGroup);
+    }
+
+    resp.put("netaGroups", netaGroups);
+    resp.put("msg", "ok");
+    ctx.reply(resp);
   }
 
   private void processPlanEvent(Message<JsonObject> ctx) {

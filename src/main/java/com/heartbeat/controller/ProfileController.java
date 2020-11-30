@@ -95,7 +95,7 @@ public class ProfileController implements Handler<RoutingContext> {
           case "linkAccount":
             processLinkAccount(session, ctx, cmd);
             return;
-            case "recordTutorial":
+          case "recordTutorial":
             resp = processRecordTutorial(session, ctx, cmd);
             break;
           default:

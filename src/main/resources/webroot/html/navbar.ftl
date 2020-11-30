@@ -15,6 +15,7 @@
             <a class="nav-item nav-link" href="/shop">Shop</a>
             <a class="nav-item nav-link" href="/stats">Stats</a>
             <a class="nav-item nav-link" href="/gift">Gift</a>
+            <a class="nav-item nav-link" href="/chat">netaChat</a>
         </div>
       </div>
     </nav>

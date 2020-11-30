@@ -168,6 +168,7 @@ public class HBServer extends AbstractVerticle {
       StatefulSet.loadTimingEvtFromDB();
       StatefulSet.loadRankEvtFromDB();
       StatefulSet.loadIdolEvtFromDB();
+      NetaAPI.loadChatGroupsFromDB();
       DailyStats.inst().loadStatsFromDB(System.currentTimeMillis());
       DailyStats.updateTask.run();
       HBServer.executor = vertx.createSharedWorkerExecutor("worker-pool");
@@ -221,6 +222,7 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/leaderboard").handler(new LeaderBoardController());
         router.post("/api/inbox").handler(new InboxController());
         router.post("/api/payment").handler(new PaymentController());
+        router.post("/api/netalo").handler(new NetaChatController());
 
         router.get("/loaderio-9f589512e81ab81bdd49eb1a562768db/").handler(ctx ->
                 ctx.response().end("loaderio-9f589512e81ab81bdd49eb1a562768db"));

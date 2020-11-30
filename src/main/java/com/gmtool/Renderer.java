@@ -92,6 +92,10 @@ public class Renderer implements Handler<RoutingContext> {
         ctx.put("nodes", GMTool.getNodes());
         render("webroot/html/giftcode.ftl", ctx);
         return;
+      case "chat":
+        ctx.put("nodes", GMTool.getNodes());
+        render("webroot/html/neta_chat.ftl", ctx);
+        return;
       default:
         ctx.response().setStatusCode(404).end();
     }

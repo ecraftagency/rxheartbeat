@@ -124,7 +124,6 @@ public class SessionLoginService implements AuthService {
           }
           session.id = userID;
           Profile profile = handleLoginResult("ok", session, snsToken, request);
-          NetaAPI.joinGroup(request.netaUID);
           handler.handle(Future.succeededFuture(profile));
         }
         else {
