@@ -5,6 +5,8 @@ import com.common.Msg;
 import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.event.IdolEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.scheduler.ExtendEventInfo;
 import com.statics.EventData;
@@ -69,7 +71,7 @@ public class UserEvent extends Event {
       claimed.putIfAbsent(eventType, Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
       evt2cas.putIfAbsent(eventType, 0);
 
-      EventInfo ei = COMMON_EVENT.evtMap.get(eventType);
+      EventInfo ei = TimingEvent.evtMap.get(eventType);
       if (ei != null && invalidCas(eventType, ei.startTime))
         resetEventData(eventType);
     }
@@ -90,7 +92,7 @@ public class UserEvent extends Event {
     if (!EventData.eventMap.containsKey(eventType))
       return;
 
-    EventInfo ei = COMMON_EVENT.evtMap.get(eventType);
+    EventInfo ei = TimingEvent.evtMap.get(eventType);
     if (ei == null)
       return;
 
@@ -107,7 +109,7 @@ public class UserEvent extends Event {
   }
 
   public String claimEventReward(Session session, int eventType, int milestoneId, int second) {
-    EventInfo ei = COMMON_EVENT.evtMap.get(eventType);
+    EventInfo ei = TimingEvent.evtMap.get(eventType);
     if (ei == null)
       return Msg.map.getOrDefault(Msg.EVENT_NOT_FOUND, "event_not_found");
 
@@ -151,7 +153,7 @@ public class UserEvent extends Event {
   }
 
   public String claimEventIdol(Session session, int idolId, int eventId, int second) {
-    ExtendEventInfo ei  = IDOL_EVENT.evtMap.get(eventId);
+    ExtendEventInfo ei  = IdolEvent.evtMap.get(eventId);
     if (ei == null)
       return "event_not_found";
 

@@ -34,8 +34,17 @@
   </div>
 </div>
 
-<#list evtType as type>
 <div v-if="isLoaded == true" class="row top-buffer">
+   <div class="col-sm-8">
+      <textarea v-model="eventPlan" class="form-control" id="eventPlan" rows="10"></textarea>
+   </div>
+   <div class="col-sm-4">
+      <button type="button" class="btn btn-primary" v-on:click="planEvent">Plan Event</button>
+   </div>
+</div>
+
+<#list evtType as type>
+<div v-if="isLoaded == true && resp.${type}.length > 0" v-if="" class="row top-buffer">
   <table class="table table-dark col-sm-12">
     <thead>
       <tr>
@@ -71,7 +80,8 @@ var app = new Vue({
         userEventStart: '',
         userEventEnd: '',
         flushDelay: '',
-        eventType: '0'
+        eventType: '0',
+        eventPlan:''
     }
   },
   methods: {
@@ -80,6 +90,19 @@ var app = new Vue({
        fetch(host, postOptions(data)).then(response => response.json())
        .then(data => this.success(data))
        .catch((error) => this.isLoaded = false);
+    },
+    planEvent: function(event) {
+        if(!confirm("Coi chừng sự kiện loại này mà id thì của loại kia nha :-w"))
+            return;
+        let data = {
+                    cmd:'planEvent',
+                    eventType: this.eventType,
+                    serverId: this.serverId,
+                    eventPlan: this.eventPlan
+                   };
+        fetch(host, postOptions(data)).then(response => response.json())
+        .then(data => this.success(data))
+        .catch((error) => (error) => this.isLoaded = false);
     },
     setUserEventTime: function(event) {
        if(!confirm("Coi chừng sự kiện loại này mà id thì của loại kia nha :-w"))

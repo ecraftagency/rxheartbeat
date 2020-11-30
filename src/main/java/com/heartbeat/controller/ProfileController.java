@@ -17,6 +17,7 @@ import com.statics.OfficeData;
 import com.statics.ShopData;
 import com.transport.ExtMessage;
 import com.transport.model.CompactProfile;
+import com.transport.model.NetAward;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.http.HttpMethod;
@@ -24,6 +25,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.WebClient;
+
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -193,13 +195,26 @@ public class ProfileController implements Handler<RoutingContext> {
 
   private ExtMessage processChangeDefaultCustom(Session session, RoutingContext ctx, String cmd) {
     int customId = ctx.getBodyAsJson().getInteger("customId");
+    String manifesto  = ctx.getBodyAsJson().getString("manifesto");
+
     if (customId < 0 || customId > 5)
       customId = 0;
     session.userGameInfo.defaultCustom = customId;
+
+    //update manifesto
+    List<NetAward> awardList = UserNetAward.getNetAwardList(customId);
+    for (NetAward netAward : awardList)
+      if (netAward.id == session.id) {
+        netAward.manifesto = manifesto;
+        break;
+      }
+
+
     ExtMessage resp = ExtMessage.profile();
     resp.cmd = cmd;
     resp.msg = "ok";
     resp.data.gameInfo = session.userGameInfo;
+    session.syncStdProfile();
     return resp;
   }
 
@@ -292,19 +307,20 @@ public class ProfileController implements Handler<RoutingContext> {
         UserGroup group                 = GroupPool.getGroupFromPool(session.groupID);
         String groupName                = group != null ? group.name : "";
 
-        profile.displayName = session.userGameInfo.displayName;
-        profile.titleId     = session.userGameInfo.titleId;
-        profile.vipExp      = session.userGameInfo.vipExp;
-        profile.totalCrt    = session.userGameInfo.totalCrt;
-        profile.totalAttr   = session.userGameInfo.totalPerf;
-        profile.totalPerf   = session.userGameInfo.totalAttr;
-        profile.groupName   = groupName;
-        profile.userId      = userId;
-        profile.avatar      = session.userGameInfo.avatar;
-        profile.gender      = session.userGameInfo.gender;
-        profile.exp         = session.userGameInfo.exp;
-        profile.curFightLV  = session.userFight.currentFightLV;
-        profile.awards      = UserNetAward.getUserNetAward(userId);
+        profile.displayName   = session.userGameInfo.displayName;
+        profile.titleId       = session.userGameInfo.titleId;
+        profile.vipExp        = session.userGameInfo.vipExp;
+        profile.totalCrt      = session.userGameInfo.totalCrt;
+        profile.totalAttr     = session.userGameInfo.totalPerf;
+        profile.totalPerf     = session.userGameInfo.totalAttr;
+        profile.groupName     = groupName;
+        profile.userId        = userId;
+        profile.avatar        = session.userGameInfo.avatar;
+        profile.gender        = session.userGameInfo.gender;
+        profile.exp           = session.userGameInfo.exp;
+        profile.curFightLV    = session.userFight.currentFightLV;
+        profile.awards        = UserNetAward.getUserNetAward(userId);
+        profile.defaultCustom = session.userGameInfo.defaultCustom;
         resp.msg = "ok";
         resp.data.extObj    = Utilities.gson.toJson(profile);
         session.syncStdProfile();

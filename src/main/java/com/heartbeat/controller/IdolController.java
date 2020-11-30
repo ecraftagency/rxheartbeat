@@ -3,6 +3,7 @@ package com.heartbeat.controller;
 import com.common.Constant;
 import com.common.LOG;
 import com.common.Msg;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserIdol;
@@ -132,7 +133,7 @@ public class IdolController implements Handler<RoutingContext> {
     }
     if (resp.msg.equals("ok") || resp.msg.equals("apt_up_fail")) {
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.APT_BUFF_ITEM_ACHIEVEMENT, 1);
-      session.userEvent.addEventRecord(Constant.COMMON_EVENT.APT_BUFF_USE_EVT_ID, 1);
+      session.userEvent.addEventRecord(TimingEvent.APT_BUFF_USE_EVT_ID, 1);
     }
 
     return resp;

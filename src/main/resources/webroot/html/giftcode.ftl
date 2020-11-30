@@ -100,7 +100,7 @@
 
 <script>
 const host = '${host}/api/fwd'
-const giftSvc = 'http://a47233bd069ec42b69f101a5fa681eb6-1872285878.ap-southeast-1.elb.amazonaws.com/gift_api'
+const giftSvc = 'http://f901a710-default-defaultin-56c2-2091124869.ap-southeast-1.elb.amazonaws.com/gift_api'
 
 const postOptions = function(data) {
 return {

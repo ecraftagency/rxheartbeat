@@ -272,6 +272,8 @@ public class SessionLoginService implements AuthService {
       lr.gameFunctions      = new HashMap<>();
 
       lr.gameFunctions.putIfAbsent("giftCode", Constant.GAME_FUNCTIONS.GIFT_CODE);
+      lr.gameFunctions.putIfAbsent("netaChat", Constant.GAME_FUNCTIONS.NETA_CHAT);
+
       return lr;
     }
 

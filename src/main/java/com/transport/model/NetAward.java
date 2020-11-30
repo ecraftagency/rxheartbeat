@@ -1,7 +1,7 @@
 package com.transport.model;
 
 public class NetAward {
-  public int    id;
+  public int    id;               //sessionId
   public String titleName;
   public String username;
   public String manifesto;

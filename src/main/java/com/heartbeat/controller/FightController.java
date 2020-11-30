@@ -4,6 +4,8 @@ import com.common.Constant;
 import com.common.LOG;
 import com.common.Msg;
 import com.common.Utilities;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
@@ -167,7 +169,7 @@ public class FightController implements Handler<RoutingContext> {
     if (resp.msg.equals("ok")) {
       session.userDailyMission.addRecord(Constant.DAILY_MISSION.FIGHT_MISSION_TYPE);
       session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.FIGHT_ACHIEVEMENT, 1);
-      session.userRanking.addEventRecord(Constant.RANK_EVENT.FIGHT_RANK_ID, 1);
+      session.userRanking.addEventRecord(RankingEvent.FIGHT_RANK_ID, 1);
     }
     return resp;
   }
@@ -193,7 +195,7 @@ public class FightController implements Handler<RoutingContext> {
 
         session.userDailyMission.addRecord(Constant.DAILY_MISSION.GAME_SHOW_MISSION_TYPE);
         session.userAchievement.addAchieveRecord(Constant.ACHIEVEMENT.GAME_SHOW_ACHIEVEMENT, 1);
-        session.userEvent.addEventRecord(Constant.COMMON_EVENT.GAME_SHOW_EVT_ID, 1);
+        session.userEvent.addEventRecord(TimingEvent.GAME_SHOW_EVT_ID, 1);
       }
     }
 

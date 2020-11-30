@@ -76,9 +76,9 @@ public class InboxController implements Handler<RoutingContext> {
   }
 
   private ExtMessage processGetInboxMessage(Session session, long curMs) {
-    ExtMessage resp   = ExtMessage.inbox();
-    resp.data.inbox   = session.userInbox;
-    resp.data.extObj  = Utilities.gson.toJson(UserInbox.publicInbox);
+    ExtMessage resp                     = ExtMessage.inbox();
+    resp.data.inbox                     = session.userInbox;
+    resp.data.extObj                    = Utilities.gson.toJson(UserInbox.publicInbox);
     session.userInbox.lastMailCheckTime = curMs;
     return resp;
   }

@@ -7,6 +7,10 @@ import com.google.gson.reflect.TypeToken;
 import com.heartbeat.DailyStats;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.event.Common;
+import com.heartbeat.event.IdolEvent;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
@@ -125,6 +129,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getStats":
           processGetStats(ctx);
           return;
+        case "planEvent":
+          processPlanEvent(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -133,9 +140,49 @@ public class InternalController implements Handler<Message<JsonObject>> {
     }
     catch (Exception e) {
       resp.put("msg", e.getMessage());
+
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processPlanEvent(Message<JsonObject> ctx) {
+    String eventPlan = ctx.body().getString("eventPlan");
+    int eventType = Integer.parseInt(ctx.body().getString("eventType"));
+
+    JsonObject resp = new JsonObject();
+
+    Map<Integer, List<ExtendEventInfo>> curPlan;
+    if (eventType == 0) {
+      curPlan = TimingEvent.evtPlan;
+    }
+    else if (eventType == 1) {
+      curPlan = IdolEvent.evtPlan;
+    }
+    else if (eventType == 2){
+      curPlan = RankingEvent.evtPlan;
+    }
+    else {
+      resp.put("msg", "invalid event type");
+      ctx.reply(resp);
+      return;
+    }
+
+    String res = Common.updatePlan(curPlan, eventPlan);
+    resp.put("msg", res);
+
+    if (res.equals("ok")) {
+      JsonArray userEvent   = Transformer.transformEvents(TimingEvent.evtPlan, Transformer.userEvtId2Name);
+      JsonArray idolEvent   = Transformer.transformEvents(IdolEvent.evtPlan, Transformer.idolEvtId2name);
+      JsonArray rankEvent   = Transformer.transformEvents(RankingEvent.evtPlan, Transformer.rankEvtId2name);
+      JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
+      resp.put("userEvents", userEvent);
+      resp.put("idolEvents", idolEvent);
+      resp.put("rankEvents", rankEvent);
+      resp.put("groupEvents", groupEvent);
+    }
+
+    ctx.reply(resp);
   }
 
   private void processGetStats(Message<JsonObject> ctx) {
@@ -675,13 +722,13 @@ public class InternalController implements Handler<Message<JsonObject>> {
 
     Map<Integer, ExtendEventInfo> evtMap;
     if (eventType == 0) {
-      evtMap = COMMON_EVENT.evtMap;
+      evtMap = TimingEvent.evtMap;
     }
     else if (eventType == 1) {
-      evtMap = IDOL_EVENT.evtMap;
+      evtMap = IdolEvent.evtMap;
     }
     else if (eventType == 2){
-      evtMap = RANK_EVENT.evtMap;
+      evtMap = RankingEvent.evtMap;
     }
     else {
       evtMap  = GROUP_EVENT.evtMap;
@@ -694,38 +741,49 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ));
     }
 
-    for (List<Integer> eventId : uptInfo) {
-      ExtendEventInfo ei = evtMap.get(eventId.get(0));
+    for (List<Integer> evtInfo : uptInfo) {
+      ExtendEventInfo ei = evtMap.get(evtInfo.get(0));
       if (ei != null) {
-        int rewardPack = eventId.get(1);
+        int rewardPack = evtInfo.get(1);
         if (rewardPack < 1 || rewardPack > 4)
           rewardPack = 1;
         ei.updateTime(strStart, strEnd, flushDelay, rewardPack);
       }
     }
 
-    JsonArray userEvent   = Transformer.transformEvent(COMMON_EVENT.evtMap, Transformer.userEvtId2Name);
-    JsonArray idolEvent   = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
-    JsonArray rankEvent   = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
+    JsonArray userEvent   = Transformer.transformEvents(TimingEvent.evtPlan, Transformer.userEvtId2Name);
+    JsonArray idolEvent   = Transformer.transformEvents(IdolEvent.evtPlan, Transformer.idolEvtId2name);
+    JsonArray rankEvent   = Transformer.transformEvents(RankingEvent.evtPlan, Transformer.rankEvtId2name);
     JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
     resp.put("userEvents", userEvent);
     resp.put("idolEvents", idolEvent);
     resp.put("rankEvents", rankEvent);
     resp.put("groupEvents", groupEvent);
+
     ctx.reply(resp);
   }
 
   private void processGetEvents(Message<JsonObject> ctx) {
     JsonObject resp     = IntMessage.resp(ctx.body().getString("cmd"));
-    JsonArray userEvent = Transformer.transformEvent(COMMON_EVENT.evtMap, Transformer.userEvtId2Name);
-    JsonArray rankEvent = Transformer.transformEvent(RANK_EVENT.evtMap, Transformer.rankEvtId2name);
-    JsonArray idolEvent = Transformer.transformEvent(IDOL_EVENT.evtMap, Transformer.idolEvtId2name);
-    JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
 
+    JsonArray userEvent   = Transformer.transformEvents(TimingEvent.evtPlan, Transformer.userEvtId2Name);
+    JsonArray idolEvent   = Transformer.transformEvents(IdolEvent.evtPlan, Transformer.idolEvtId2name);
+    JsonArray rankEvent   = Transformer.transformEvents(RankingEvent.evtPlan, Transformer.rankEvtId2name);
+    JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
     resp.put("userEvents", userEvent);
     resp.put("idolEvents", idolEvent);
     resp.put("rankEvents", rankEvent);
     resp.put("groupEvents", groupEvent);
+//
+//    JsonArray userEvent = Transformer.transformEvent(TimingEvent.evtMap, Transformer.userEvtId2Name);
+//    JsonArray rankEvent = Transformer.transformEvent(RankingEvent.evtMap, Transformer.rankEvtId2name);
+//    JsonArray idolEvent = Transformer.transformEvent(IdolEvent.evtMap, Transformer.idolEvtId2name);
+//    JsonArray groupEvent  = Transformer.transformEvent(GROUP_EVENT.evtMap, Transformer.groupEvtId2name);
+//
+//    resp.put("userEvents", userEvent);
+//    resp.put("idolEvents", idolEvent);
+//    resp.put("rankEvents", rankEvent);
+//    resp.put("groupEvents", groupEvent);
     ctx.reply(resp);
   }
   /*EVENTS*/

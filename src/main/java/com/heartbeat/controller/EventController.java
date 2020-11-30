@@ -1,21 +1,23 @@
 package com.heartbeat.controller;
 
-import com.common.Constant;
 import com.common.LOG;
 import com.common.Utilities;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.event.IdolEvent;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserEvent;
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.statics.GoldenTimeData;
 import com.transport.ExtMessage;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class EventController implements Handler<RoutingContext> {
   @Override
@@ -49,6 +51,9 @@ public class EventController implements Handler<RoutingContext> {
           case "claimGoldenReward":
             resp = processClaimGoldenReward(session, curMs);
             break;
+          case "getActiveEvents":
+            resp = processGetActiveEvents(curMs);
+            break;
           default:
             resp = ExtMessage.event();
             resp.msg = "unknown_cmd";
@@ -71,6 +76,39 @@ public class EventController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processGetActiveEvents(long curMs) {
+    ExtMessage resp         = ExtMessage.event();
+
+    Map<Integer, Set<Integer>> activeEvent = new HashMap<>();
+    activeEvent.put(TimingEvent.EVENT_TYPE,   new HashSet<>());
+    activeEvent.put(RankingEvent.EVENT_TYPE,  new HashSet<>());
+    activeEvent.put(IdolEvent.EVENT_TYPE,     new HashSet<>());
+
+    int curSec = (int)(curMs/1000);
+    for (Map.Entry<Integer, ExtendEventInfo> entry : TimingEvent.evtMap.entrySet()) {
+      ExtendEventInfo eei = entry.getValue();
+      if (curSec > eei.startTime && curSec < (eei.endTime + eei.flushDelay))
+        activeEvent.get(TimingEvent.EVENT_TYPE).add(eei.eventId);
+    }
+
+    for (Map.Entry<Integer, ExtendEventInfo> entry : RankingEvent.evtMap.entrySet()) {
+      ExtendEventInfo eei = entry.getValue();
+      if (curSec > eei.startTime && curSec < (eei.endTime + eei.flushDelay))
+        activeEvent.get(RankingEvent.EVENT_TYPE).add(eei.eventId);
+
+    }
+
+    for (Map.Entry<Integer, ExtendEventInfo> entry : IdolEvent.evtMap.entrySet()) {
+      ExtendEventInfo eei = entry.getValue();
+      if (curSec > eei.startTime && curSec < (eei.endTime + eei.flushDelay))
+        activeEvent.get(IdolEvent.EVENT_TYPE).add(eei.eventId);
+    }
+
+    resp.data.extObj        = Json.encode(activeEvent);
+    resp.serverTime         = (int)(System.currentTimeMillis()/1000);
+    return resp;
   }
 
   private ExtMessage processClaimGoldenReward(Session session, long curMs) {
@@ -129,7 +167,7 @@ public class EventController implements Handler<RoutingContext> {
 
   private ExtMessage processGetIdolEvt() {
     ExtMessage resp         = ExtMessage.event();
-    resp.data.extObj        = Json.encode(Constant.IDOL_EVENT.evtMap);
+    resp.data.extObj        = Json.encode(IdolEvent.evtMap);
     resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }
@@ -152,7 +190,7 @@ public class EventController implements Handler<RoutingContext> {
     session.userEvent.reBalance();
     ExtMessage resp         = ExtMessage.event();
     resp.data.event         = session.userEvent;
-    resp.data.extObj        = Json.encode(Constant.COMMON_EVENT.evtMap);
+    resp.data.extObj        = Json.encode(TimingEvent.evtMap);
     resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }

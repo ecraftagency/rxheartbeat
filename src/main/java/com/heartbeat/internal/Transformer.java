@@ -2,6 +2,9 @@ package com.heartbeat.internal;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.heartbeat.event.IdolEvent;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.data.UserLDB;
 import com.heartbeat.scheduler.ExtendEventInfo;
@@ -34,29 +37,29 @@ public class Transformer {
     formatter.setTimeZone(TimeZone.getTimeZone(Constant.TIME_ZONE));
 
     userEvtId2Name = new HashMap<>();
-    userEvtId2Name.put(COMMON_EVENT.APT_BUFF_USE_EVT_ID,    "Sử dụng cuộn cường hóa");
-    userEvtId2Name.put(COMMON_EVENT.VIEW_PROD_EVT_ID,       "Cày View");
-    userEvtId2Name.put(COMMON_EVENT.VIEW_SPEND_EVT_ID,      "Tiêu hao view");
-    userEvtId2Name.put(COMMON_EVENT.CRT_PROD_EVT_ID,        "Sáng tác");
-    userEvtId2Name.put(COMMON_EVENT.FAN_PROD_EVT_ID,        "Fan metting");
-    userEvtId2Name.put(COMMON_EVENT.FAN_SPEND_EVT_ID,       "Tiêu hao fan");
-    userEvtId2Name.put(COMMON_EVENT.GAME_SHOW_EVT_ID,       "Phụ bản game show");
-    userEvtId2Name.put(COMMON_EVENT.MONEY_SPEND_EVT_ID,     "Tiêu hao gole");
-    userEvtId2Name.put(COMMON_EVENT.TIME_SPEND_EVT_ID,      "Tiêu hao time");
-    userEvtId2Name.put(COMMON_EVENT.TOTAL_TALENT_EVT_ID,    "Tăng tổng tài năng");
-    userEvtId2Name.put(COMMON_EVENT.VIP_INCR_EVT_ID,        "Thưởng Nạp");
+    userEvtId2Name.put(TimingEvent.APT_BUFF_USE_EVT_ID,    "Sử dụng cuộn cường hóa");
+    userEvtId2Name.put(TimingEvent.VIEW_PROD_EVT_ID,       "Cày View");
+    userEvtId2Name.put(TimingEvent.VIEW_SPEND_EVT_ID,      "Tiêu hao view");
+    userEvtId2Name.put(TimingEvent.CRT_PROD_EVT_ID,        "Sáng tác");
+    userEvtId2Name.put(TimingEvent.FAN_PROD_EVT_ID,        "Fan metting");
+    userEvtId2Name.put(TimingEvent.FAN_SPEND_EVT_ID,       "Tiêu hao fan");
+    userEvtId2Name.put(TimingEvent.GAME_SHOW_EVT_ID,       "Phụ bản game show");
+    userEvtId2Name.put(TimingEvent.MONEY_SPEND_EVT_ID,     "Tiêu hao gole");
+    userEvtId2Name.put(TimingEvent.TIME_SPEND_EVT_ID,      "Tiêu hao time");
+    userEvtId2Name.put(TimingEvent.TOTAL_TALENT_EVT_ID,    "Tăng tổng tài năng");
+    userEvtId2Name.put(TimingEvent.VIP_INCR_EVT_ID,        "Thưởng Nạp");
 
     rankEvtId2name = new HashMap<>();
-    rankEvtId2name.put(RANK_EVENT.TOTAL_TALENT_RANK_ID,   "Top tăng tổng tài năng");
-    rankEvtId2name.put(RANK_EVENT.FAN_SPEND_RANK_ID,      "Top tiêu hao fan");
-    rankEvtId2name.put(RANK_EVENT.MONEY_SPEND_RANK_ID,    "Top tiêu hao money");
-    rankEvtId2name.put(RANK_EVENT.VIEW_SPEND_RANK_ID,     "Top tiêu hao view");
-    rankEvtId2name.put(RANK_EVENT.FIGHT_RANK_ID,          "Top đi ải");
+    rankEvtId2name.put(RankingEvent.TOTAL_TALENT_RANK_ID,   "Top tăng tổng tài năng");
+    rankEvtId2name.put(RankingEvent.FAN_SPEND_RANK_ID,      "Top tiêu hao fan");
+    rankEvtId2name.put(RankingEvent.MONEY_SPEND_RANK_ID,    "Top tiêu hao money");
+    rankEvtId2name.put(RankingEvent.VIEW_SPEND_RANK_ID,     "Top tiêu hao view");
+    rankEvtId2name.put(RankingEvent.FIGHT_RANK_ID,          "Top đi ải");
 
     idolEvtId2name = new HashMap<>();
-    idolEvtId2name.put(IDOL_EVENT.BP_EVT_ID, "Idol Event Black Pink");
-    idolEvtId2name.put(IDOL_EVENT.DB_EVT_ID, "Idol Event BB");
-    idolEvtId2name.put(IDOL_EVENT.NT_EVT_ID, "Idol Event Ngoc Trinh");
+    idolEvtId2name.put(IdolEvent.BP_EVT_ID, "Idol Event Black Pink");
+    idolEvtId2name.put(IdolEvent.DB_EVT_ID, "Idol Event BB");
+    idolEvtId2name.put(IdolEvent.NT_EVT_ID, "Idol Event Ngoc Trinh");
 
     groupEvtId2name = new HashMap<>();
     groupEvtId2name.put(GROUP_EVENT.GE_PROD_EVT_ID, "Nhiệm vụ sáng tác");
@@ -142,6 +145,47 @@ public class Transformer {
     return ss;
   }
 
+  public static JsonArray transformEvents(Map<Integer, List<ExtendEventInfo>> evtPlan, Map<Integer, String> nameMap) {
+    JsonArray res = new JsonArray();
+    int curSec = (int)(System.currentTimeMillis()/1000);
+
+    for (List<ExtendEventInfo> subPlan : evtPlan.values()) {
+      for (ExtendEventInfo ei : subPlan){
+        String  name        = nameMap.getOrDefault(ei.eventId, "");
+        String  strStart;
+        String  strEnd;
+
+        try {
+          if (ei.startTime <= 0 || ei.endTime <= 0)
+            throw new IllegalArgumentException();
+          if (curSec - (ei.endTime + ei.flushDelay) > 60)
+            continue;
+          Date start  = new Date(ei.startTime*1000L);
+          strStart    = formatter.format(start);
+
+          Date end    = new Date(ei.endTime*1000L);
+          strEnd      = formatter.format(end);
+        }
+        catch (Exception e) {
+          strEnd    = "";
+          strStart  = "";
+        }
+        JsonObject evt =  new JsonObject();
+        evt.put("eventId",    ei.eventId);
+        evt.put("eventName",  name);
+        evt.put("startDate",  strStart);
+        evt.put("endDate",    strEnd);
+        evt.put("flushDelay", ei.flushDelay);
+        evt.put("active",     ei.active ? "Active" : "InActive");
+        evt.put("rewardPack", ei.rewardPack);
+
+        res.add(evt);
+      }
+    }
+
+    return res;
+  }
+
   public static JsonArray transformEvent(Map<Integer, ExtendEventInfo> evtMap, Map<Integer, String> nameMap) {
     JsonArray res = new JsonArray();
 
@@ -208,6 +252,7 @@ public class Transformer {
     res.add(constField("Google Play", "GAME_INFO.CH_PLAY_APP_LINK", "Chuỗi", GAME_INFO.CH_PLAY_APP_LINK, ""));
     res.add(constField("App Store", "GAME_INFO.APPLE_STORE_APP_LINK", "Chuỗi", GAME_INFO.APPLE_STORE_APP_LINK, ""));
     res.add(constField("Tính năng gift code", "GAME_FUNCTIONS.GIFT_CODE", "true|false", Boolean.toString(GAME_FUNCTIONS.GIFT_CODE), "[true|false]"));
+    res.add(constField("Tính năng chat netalo", "GAME_FUNCTIONS.NETA_CHAT", "true|false", Boolean.toString(GAME_FUNCTIONS.NETA_CHAT), "[true|false]"));
 
     return res;
   }

@@ -17,4 +17,5 @@ public class CompactProfile {
   public long     exp;
   public FightData.FightLV curFightLV;
   public List<Integer> awards;
+  public int      defaultCustom;
 }

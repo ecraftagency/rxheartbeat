@@ -1,10 +1,10 @@
 package com.heartbeat.model.data;
 
-import com.common.Constant;
 import com.common.Msg;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.event.RankingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.ranking.EventLoop;
 import com.heartbeat.ranking.impl.*;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.common.Constant.RANK_EVENT.*;
+import static com.heartbeat.event.RankingEvent.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRanking extends Ranking {
@@ -64,7 +64,7 @@ public class UserRanking extends Ranking {
       claimed.putIfAbsent(rankId, 0);
       evt2cas.putIfAbsent(rankId, 0);
 
-      EventInfo ri = Constant.RANK_EVENT.evtMap.get(rankId);
+      EventInfo ri = RankingEvent.evtMap.get(rankId);
       if (ri != null && invalidCas(rankId, ri.startTime))
         resetEventData(rankId);
     }

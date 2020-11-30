@@ -76,7 +76,8 @@ public class UserLDB {
               session.id,
               session.userGameInfo.displayName,
               session.userGameInfo.titleId,
-              score
+              score,
+              session.userGameInfo.defaultCustom
             ));
 
     ldbEventLoop.addCommand(recordCommand);

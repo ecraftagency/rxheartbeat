@@ -6,6 +6,8 @@ import com.common.Utilities;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.statics.*;
 import com.transport.model.GameInfo;
@@ -50,8 +52,8 @@ public class UserGameInfo extends GameInfo {
       return false;
     money -= amount;
     try {
-      session.userEvent.addEventRecord(COMMON_EVENT.MONEY_SPEND_EVT_ID, amount);
-      session.userRanking.addEventRecord(RANK_EVENT.MONEY_SPEND_RANK_ID, amount);
+      session.userEvent.addEventRecord(TimingEvent.MONEY_SPEND_EVT_ID, amount);
+      session.userRanking.addEventRecord(RankingEvent.MONEY_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
       //
@@ -71,8 +73,8 @@ public class UserGameInfo extends GameInfo {
       return false;
     view -= amount;
     try {
-      session.userEvent.addEventRecord(COMMON_EVENT.VIEW_SPEND_EVT_ID, amount);
-      session.userRanking.addEventRecord(RANK_EVENT.VIEW_SPEND_RANK_ID, amount);
+      session.userEvent.addEventRecord(TimingEvent.VIEW_SPEND_EVT_ID, amount);
+      session.userRanking.addEventRecord(RankingEvent.VIEW_SPEND_RANK_ID, amount);
     }
     catch (Exception e){
       //
@@ -85,8 +87,8 @@ public class UserGameInfo extends GameInfo {
       return false;
     fan -= amount;
     try {
-      session.userEvent.addEventRecord(COMMON_EVENT.FAN_SPEND_EVT_ID, amount);
-      session.userRanking.addEventRecord(RANK_EVENT.FAN_SPEND_RANK_ID, amount);
+      session.userEvent.addEventRecord(TimingEvent.FAN_SPEND_EVT_ID, amount);
+      session.userRanking.addEventRecord(RankingEvent.FAN_SPEND_RANK_ID, amount);
     }
     catch (Exception e) {
       //
@@ -251,7 +253,7 @@ public class UserGameInfo extends GameInfo {
     timeChange = true;
 
     //todo delta time is always >= real time consume, but just let it be
-    session.userEvent.addEventRecord(COMMON_EVENT.TIME_SPEND_EVT_ID, amount);
+    session.userEvent.addEventRecord(TimingEvent.TIME_SPEND_EVT_ID, amount);
 
     return true;
   }
@@ -281,7 +283,7 @@ public class UserGameInfo extends GameInfo {
 
     //todo delta time is always >= real time consume, but just let it be
     long timeSpent = deltaTime > time ? time : deltaTime;
-    session.userEvent.addEventRecord(COMMON_EVENT.TIME_SPEND_EVT_ID, timeSpent);
+    session.userEvent.addEventRecord(TimingEvent.TIME_SPEND_EVT_ID, timeSpent);
 
     session.userGameInfo.time -= deltaTime;
     if (session.userGameInfo.time < 0)

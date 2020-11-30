@@ -61,11 +61,6 @@ public class NetAwardController implements Handler<RoutingContext> {
       resp.msg = Msg.map.getOrDefault(Msg.MALFORM_ARGS, "invalid_title_id");
     }
 
-//    NetAward title     = CBNetAward.getInstance().load(key);
-//    if (title == null)
-//      title = NetAward.of(0, "","", "");
-
-    //title.titleName     = name;
     resp.data.netAward  = UserNetAward.getNetAwardList(titleId);
     resp.msg            = "ok";
     return resp;

@@ -2,6 +2,7 @@ package com.heartbeat.controller;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.heartbeat.event.RankingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.transport.ExtMessage;
@@ -118,7 +119,7 @@ public class RankingController implements Handler<RoutingContext> {
 
   private ExtMessage processGetRankingInfo() {
     ExtMessage resp         = ExtMessage.ranking();
-    resp.data.extObj        = Json.encode(Constant.RANK_EVENT.evtMap);
+    resp.data.extObj        = Json.encode(RankingEvent.evtMap);
     resp.serverTime         = (int)(System.currentTimeMillis()/1000);
     return resp;
   }

@@ -1,4 +1,4 @@
-haloID,name,imageID,lv,preFixHalo,haloType,fOrUHalo
+id,name,imageID,lv,preFixHalo,haloType,fOrUHalo
 1,BlakPink,6,0,[],0,0
 2,DanBam Class,5,0,[],0,0
 3,Ngũ Hổ Thượng Tướng,1,0,[],0,0
@@ -6,9 +6,21 @@ haloID,name,imageID,lv,preFixHalo,haloType,fOrUHalo
 5,Nữ Idol Đương Đại,3,0,[],0,0
 6,Super Idols Quốc Dân,4,0,"[5,10]",0,0
 7,Sự quyến rũ của tuổi trẻ,12,0,[],0,0
-8,Vươn tầm thương hiệu,13,0,[],0,0
-9,Danh Tướng Thục Hán,14,0,[],0,0
-10,Trung Can Nghĩa Đảm,11,0,[],0,0
-11,Thủy Bạc Anh Hùng,15,0,[],0,0
-12,Trung Can Nghĩa Đảm,19,0,[],0,0
-13,Quyết chiến Đại Mạc,20,1,[],0,0
+8,Vươn tầm thương hiệu,13,0,"[7,10]",0,0
+9,Halo9,14,0,[],0,0
+10,Halo10,11,0,[],0,0
+11,Halo11,15,0,[],0,0
+12,Halo12,19,0,[],0,0
+13,Halo13,20,0,[],0,0
+14,Halo14,20,0,[],0,0
+15,Halo15,20,0,[],0,0
+16,Vòng Sáng PiuPiu,20,0,[],0,0
+17,Vòng Sáng Thomas Nou,20,0,[],0,0
+18,Vòng Sáng Chou Chou,20,0,[],0,0
+19,Vòng Sáng Kane Huy,20,0,[],0,0
+20,Vòng Sáng Hari Lưu,20,0,[],0,0
+21,Vòng Sáng Nhi Ruby,20,0,[],0,0
+22,Vòng Sáng Thủy Ribi,20,0,[],0,0
+23,Vòng Sáng Hằng Milly,20,0,[],0,0
+24,Dáng chuẩn nuột nà,20,0,[],0,0
+25,Đẹp và thông minh,20,0,"[24,10]",0,0

@@ -1,9 +1,9 @@
 package com.heartbeat.internal;
 
-import com.common.Constant;
 import com.common.LOG;
 import com.gateway.model.Payload;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.statics.PaymentData;
 import com.transport.model.PaymentTransaction;
@@ -14,7 +14,7 @@ public class PaymentHandler {
   public static final String MONTH_GC_ID = "phv001.207";
 
   public static void _100DPaymentSuccess(Session session, Payload payload, boolean online, PaymentData.PaymentDto dto) {
-    PaymentTransaction trans = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_100D, payload.money, payload.time);
+    PaymentTransaction trans = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_100D, payload.money, payload.time, dto.vip);
 
     session.userGameInfo.addTime(dto.time);
     session.userGameInfo.addVipExp(session, dto.vip);
@@ -27,7 +27,7 @@ public class PaymentHandler {
     }
 
     if (session.userEvent != null)
-      session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIP_INCR_EVT_ID, dto.vip);
+      session.userEvent.addEventRecord(TimingEvent.VIP_INCR_EVT_ID, dto.vip);
 
     if (session.userPayment != null && session.userPayment.firstPaying()) {
       handleFirstPayment(session);
@@ -41,7 +41,7 @@ public class PaymentHandler {
   }
 
   public static void IAPPaymentSuccess(Session session, Payload payload, boolean online, PaymentData.PaymentDto dto) {
-    PaymentTransaction trans  = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_GOOGLE_IAP, payload.money, payload.time);
+    PaymentTransaction trans  = PaymentTransaction.of(payload.orderId, payload.itemId, payload.gold, 0, PAYMENT_CHANNEL_GOOGLE_IAP, payload.money, payload.time, dto.vip);
     trans.iapTransId          = payload.iapTransId;
 
     session.userGameInfo.addTime(dto.time);
@@ -55,7 +55,7 @@ public class PaymentHandler {
     }
 
     if (session.userEvent != null)
-      session.userEvent.addEventRecord(Constant.COMMON_EVENT.VIP_INCR_EVT_ID, dto.vip);
+      session.userEvent.addEventRecord(TimingEvent.VIP_INCR_EVT_ID, dto.vip);
 
     if (session.userPayment != null && session.userPayment.firstPaying()) {
       handleFirstPayment(session);

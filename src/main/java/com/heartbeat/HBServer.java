@@ -113,7 +113,7 @@ public class HBServer extends AbstractVerticle {
       UserLDB.syncLDBToDB(LEADER_BOARD.FIGHT_LDB_ID);
       UserInventory.syncItemStatToDB();
       UserNetAward.syncNetAwardToDB();
-      StatefulSet.syncCommonEvtToDB();
+      StatefulSet.syncTimingEvtToDB();
       StatefulSet.syncRankEvtToDB();
       StatefulSet.syncIdolEventToDB();
       LOG.console("HBServer shutdown hook");
@@ -162,7 +162,7 @@ public class HBServer extends AbstractVerticle {
       UserInbox.loadInboxFromDB();
       UserInventory.loadItemStatsFromDB();
       UserNetAward.loadNetAwardFromDB();
-      StatefulSet.loadCommonEvtFromDB();
+      StatefulSet.loadTimingEvtFromDB();
       StatefulSet.loadRankEvtFromDB();
       StatefulSet.loadIdolEvtFromDB();
       DailyStats.inst().loadStatsFromDB(System.currentTimeMillis());

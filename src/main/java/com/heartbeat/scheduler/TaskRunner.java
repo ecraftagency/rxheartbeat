@@ -3,10 +3,10 @@ package com.heartbeat.scheduler;
 import com.common.Constant;
 import com.common.LOG;
 import com.diabolicallabs.vertx.cron.CronObservable;
-import com.heartbeat.DailyStats;
-import com.heartbeat.HBServer;
-import com.heartbeat.db.cb.AbstractCruder;
-import com.heartbeat.db.dao.CommonEventDAO;
+import com.heartbeat.StatefulSet;
+import com.heartbeat.event.IdolEvent;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInventory;
@@ -26,7 +26,7 @@ import static com.heartbeat.HBServer.*;
 
 public class TaskRunner {
   public interface ScheduleAble {
-    void updateTime(String startDate, String endDate, int flushDelay, int rewardPack) throws Exception;
+    boolean updateTime(String startDate, String endDate, int flushDelay, int rewardPack) throws Exception;
   }
 
   public Disposable gameShowOpenTask;
@@ -38,6 +38,8 @@ public class TaskRunner {
   public long       rankingSyncTaskId;
   public Scheduler  scheduler;
   public Vertx      vertx;
+  public long       eventSyncTaskId;
+  public long       eventUpdateTaskId;
 
   private static TaskRunner instance = new TaskRunner();
 
@@ -83,8 +85,21 @@ public class TaskRunner {
     });
 
     rankingSyncTaskId = vertx.setPeriodic(60*1000, id -> {
-      EventLoop.Command closeCommand = new TimeCheckCommand<>(UserRanking.rankings, Constant.RANK_EVENT.evtMap, System.currentTimeMillis());
+      EventLoop.Command closeCommand = new TimeCheckCommand<>(UserRanking.rankings, RankingEvent.evtMap, System.currentTimeMillis());
       UserRanking.rankingEventLoop.addCommand(closeCommand);
+
+    });
+
+    eventSyncTaskId = vertx.setPeriodic(5*60*1000, id -> {
+      StatefulSet.syncIdolEventToDB();
+      StatefulSet.syncRankEvtToDB();
+      StatefulSet.syncTimingEvtToDB();
+    });
+
+    eventUpdateTaskId = vertx.setPeriodic(60*1000, id -> {
+      TimingEvent.update();
+      RankingEvent.update();
+      IdolEvent.update();
     });
 
     /*NEW DAY TASK*/

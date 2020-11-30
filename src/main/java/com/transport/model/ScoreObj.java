@@ -9,9 +9,9 @@ public class ScoreObj implements Comparable<ScoreObj>, Common.hasKey<Integer> {
 
   public static ScoreObj of(int id, long score, String name) {
     ScoreObj scoreObj = new ScoreObj();
-    scoreObj.id = id;
-    scoreObj.score = score;
-    scoreObj.name = name;
+    scoreObj.id             = id;
+    scoreObj.score          = score;
+    scoreObj.name           = name;
     return scoreObj;
   }
 

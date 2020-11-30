@@ -7,13 +7,15 @@ public class LDBObj implements Comparable<LDBObj>, Common.hasKey<Integer> {
   public String displayName;
   public int    titleId;
   public long   score;
+  public int    defaultCustom;
 
-  public static LDBObj of (int id, String dn, int tId, long score) {
-    LDBObj ldbObj       = new LDBObj();
-    ldbObj.id           = id;
-    ldbObj.displayName  = dn;
-    ldbObj.titleId      = tId;
-    ldbObj.score        = score;
+  public static LDBObj of (int id, String dn, int tId, long score, int defaultCustom) {
+    LDBObj ldbObj         = new LDBObj();
+    ldbObj.id             = id;
+    ldbObj.displayName    = dn;
+    ldbObj.titleId        = tId;
+    ldbObj.score          = score;
+    ldbObj.defaultCustom  = defaultCustom;
     return ldbObj;
   }
 

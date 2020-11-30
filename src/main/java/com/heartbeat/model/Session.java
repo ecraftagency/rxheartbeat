@@ -7,6 +7,7 @@ import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.data.*;
 import com.heartbeat.model.data.UserLDB;
 import com.statics.FightData;
@@ -99,8 +100,8 @@ public class Session {
     userIdol.userEvent      = userEvent;        //ref
     userIdol.userRanking    = userRanking;      //ref
 
-    userRanking.sessionId   = id;
-    userRanking.displayName = userGameInfo.displayName;
+    userRanking.sessionId     = id;
+    userRanking.displayName   = userGameInfo.displayName;
 
     long curMs            = System.currentTimeMillis();
     userProduction.updateProduction(this, curMs);
@@ -237,7 +238,7 @@ public class Session {
       //record time spent event
       long remainTime = userGameInfo.remainTime();
       long timeSpent  = deltaTime > remainTime ? remainTime : deltaTime;
-      userEvent.addEventRecord(COMMON_EVENT.TIME_SPEND_EVT_ID, timeSpent);
+      userEvent.addEventRecord(TimingEvent.TIME_SPEND_EVT_ID, timeSpent);
       userGameInfo.subtractTime(deltaTime);
     }
 
@@ -387,6 +388,7 @@ public class Session {
     profile.setGender(userGameInfo.gender);
     profile.setAvatarVersion((short)userGameInfo.avatar);//avatar
     profile.setBirthdate(userGameInfo.vipExp);
+    profile.setJoinedTime(userGameInfo.defaultCustom);
     UserGroup group = GroupPool.getGroupFromPool(groupID);
     String groupName = group != null ? group.name : "";
 
@@ -404,6 +406,7 @@ public class Session {
     try {
       HBServer.thriftClient.ow_put(profile);
     } catch (TException e) {
+      LOG.globalException(String.format("node_%d", HBServer.nodeId), "Session.syncStdProfile", e);
       System.out.println(e.getMessage());
     }
   }
@@ -433,6 +436,11 @@ public class Session {
           cProf.totalAttr = Long.parseLong(attr[2]);
           cProf.exp       = Long.parseLong(attr[3]);
         }
+
+        int defaultCustom = sProf.getCertDate();
+        if (defaultCustom < 0 || defaultCustom > 5)
+          defaultCustom = 0;
+        cProf.defaultCustom = defaultCustom;
         return cProf;
       }
       return null;

@@ -1,7 +1,7 @@
 package com.heartbeat.controller;
 
-import com.common.Constant;
 import com.common.LOG;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserInbox;
@@ -52,16 +52,16 @@ public class SystemController implements Handler<RoutingContext> {
     //todo delta time is always >= real time consume, but just let it be
     long remainTime = session.userGameInfo.remainTime();
     long timeSpent = deltaTime > remainTime ? remainTime : deltaTime;
-    session.userEvent.addEventRecord(Constant.COMMON_EVENT.TIME_SPEND_EVT_ID, timeSpent);
+    session.userEvent.addEventRecord(TimingEvent.TIME_SPEND_EVT_ID, timeSpent);
 
-    session.userGameInfo.subtractTime(deltaTime);
+    session.userGameInfo.subtractTime(deltaTime); //todo money money money ^^!
 
     session.updateOnline(curMs);
     resp.userRemainTime = session.userGameInfo.remainTime();
 
     //check new inbox message
     long lastPublicMsgTime = UserInbox.checkNewMessage(session.userInbox.lastMailCheckTime);
-    resp.newInbox = lastPublicMsgTime > 0 && session.userInbox.haveNewPriMsg();
+    resp.newInbox = lastPublicMsgTime > 0 || session.userInbox.haveNewPriMsg();
 
     resp.serverTime = second;
     return resp;

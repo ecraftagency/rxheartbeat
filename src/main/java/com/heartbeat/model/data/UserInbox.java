@@ -154,6 +154,6 @@ public class UserInbox extends Inbox {
   }
 
   public boolean haveNewPriMsg() {
-    return lastMailCheckTime > lastPriMsgTime;
+    return lastMailCheckTime < lastPriMsgTime;
   }
 }
