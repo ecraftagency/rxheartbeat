@@ -21,8 +21,8 @@ public class Constant {
   }
 
   public static class GAME_FUNCTIONS {
-    public static boolean GIFT_CODE = false;
-    public static boolean NETA_CHAT = false;
+    public static boolean GIFT_CODE = true;
+    public static boolean NETA_CHAT = true;
   }
 
   public static class SERVICE {

@@ -26,8 +26,8 @@ public class NetaChatController implements Handler<RoutingContext> {
             resp = processGetNetaGroup();
             break;
           case "joinNetaGroup":
-            processJoinNetaGroup(ctx);
-            return;
+            resp = processJoinNetaGroup(ctx, cmd);
+            break;
           default:
             resp = ExtMessage.title();
             resp.msg = "unknown_cmd";
@@ -52,23 +52,16 @@ public class NetaChatController implements Handler<RoutingContext> {
     }
   }
 
-  private void processJoinNetaGroup(RoutingContext ctx) {
-    //cmd = "getNetaGroup"
+  private ExtMessage processJoinNetaGroup(RoutingContext ctx, String cmd) {
     ExtMessage resp   = ExtMessage.netalo();
     String groupId    = ctx.getBodyAsJson().getString("groupId");
     String netaUid    = ctx.getBodyAsJson().getString("userId");
-
-    NetaAPI.joinGroup(groupId, netaUid, ar -> {
-      if (ar.succeeded())
-        resp.msg = ar.result();
-      else
-        resp.msg = ar.cause().getMessage();
-      ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
-    });
+    resp.cmd          = cmd;
+    NetaAPI.joinGroup(groupId, netaUid);
+    return resp;
   }
 
   private ExtMessage processGetNetaGroup() {
-    //cmd = "joinNetaGroup"
     ExtMessage resp   = ExtMessage.netalo();
     resp.data.netaGroup = NetaAPI.chatGroup;
     return resp;

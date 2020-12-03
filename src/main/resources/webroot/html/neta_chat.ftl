@@ -7,8 +7,8 @@
          <input v-model="groupName" type="text" class="form-control" id="groupName" name="groupName" placeholder="Group Name">
    </div>
 
-  <div class="float-left col-sm-1">
-     <button type="button" class="btn btn-primary w-100" v-on:click="addGroup">Ban</button>
+  <div class="float-left col-sm-2">
+     <button type="button" class="btn btn-primary w-100" v-on:click="addGroup">Tạo Group Chat</button>
   </div>
 </div>
 

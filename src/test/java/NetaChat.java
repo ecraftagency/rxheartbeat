@@ -4,11 +4,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.Collections;
+import java.util.Arrays;
 
 public class NetaChat {
 
-  public static void main(String[] args) throws URISyntaxException, InterruptedException {
+  public static void main(String[] args) throws URISyntaxException, InterruptedException, JSONException {
 
     IO.Options opts = new IO.Options();
     opts.transports = new String[]{"websocket"};
@@ -22,38 +22,43 @@ public class NetaChat {
     socket.connect();
 
 
-    JSONObject createGroup = new JSONObject();
-    try {
-      createGroup.put("type", 2);
-      createGroup.put("owner_uin", "281474976981364");
-      createGroup.put("name", "GroupTest 101");
-      createGroup.put("avatar_url", "");
-      createGroup.put("occupants_uins", Collections.singletonList("281474976981364"));
-      createGroup.put("sender_name", "Admin");
+//    JSONObject createGroup = new JSONObject();
+//    try {
+//      createGroup.put("type", 2);
+//      createGroup.put("owner_uin", "281474976981364");
+//      createGroup.put("name", "type2_011");
+//      createGroup.put("avatar_url", "");
+//      createGroup.put("occupants_uins", Collections.singletonList("281474976981364"));
+//      createGroup.put("sender_name", "Admin");
+//
+//      socket.emit("create_group", createGroup).on("create_group", groupResp -> {
+//        JSONObject resp = (JSONObject)groupResp[0];
+//        System.out.println(resp);
+//      });
+//    } catch (JSONException e) {
+//      e.printStackTrace();
+//    }
 
-      socket.emit("create_group", createGroup).on("create_group", groupResp -> {
-        JSONObject resp = (JSONObject)groupResp[0];
-        System.out.println(resp);
-      });
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
 
+//type2_010 - 286081340983552
+
+//
+//    //thao - 3096224744741499
+//    //unknown - 3096224743817508
+
+    socket.on("update_group", joinGroupResp -> {
+      JSONObject resp = (JSONObject)joinGroupResp[0];
+      System.out.println(resp.toString());
+    });
 
     JSONObject joinGroupMsg = new JSONObject();
-    try {
-      joinGroupMsg.put("group_id", "286075168996800");
-      joinGroupMsg.put("name", "GroupTest 101");
+      joinGroupMsg.put("group_id", 286081352828800L);
+      joinGroupMsg.put("name", "type2_011");
+      joinGroupMsg.put("owner_uin", 281474976981364L);
       joinGroupMsg.put("avatar_url", "");
-      joinGroupMsg.put("push_all", Collections.singletonList("3096224744741413"));
-      socket.emit("update_group", joinGroupMsg).on("update_group", joinGroupResp -> {
-        JSONObject resp = (JSONObject)joinGroupResp[0];
-        System.out.println(resp.toString());
-      });
-    }
-    catch (JSONException e) {
-      e.printStackTrace();
-    }
+      joinGroupMsg.put("push_all", Arrays.asList(3096224744741499L));
+
+      socket.emit("update_group", joinGroupMsg);
     Thread.sleep(10000);
     System.out.println("done");
   }

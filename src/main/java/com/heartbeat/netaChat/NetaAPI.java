@@ -7,10 +7,10 @@ import com.heartbeat.db.dao.ChatGroupDAO;
 import com.transport.NetaGroup;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.impl.FailedFuture;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,6 +60,7 @@ public class NetaAPI {
                 socket = null;
                 LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.initNetaChat", "Error on Connection");
               });
+      socket.on("update_group", new UpdateGroupHandler());
       socket.connect();
     }
     catch (Exception e) {
@@ -75,7 +76,7 @@ public class NetaAPI {
 
     JSONObject createGroup = new JSONObject();
     try {
-      createGroup.put("type", 2);
+      createGroup.put("type", 1);
       createGroup.put("owner_uin", NETACHAT_UID);
       createGroup.put("name", groupName);
       createGroup.put("avatar_url", "");
@@ -106,16 +107,14 @@ public class NetaAPI {
     }
   }
 
-  public static void joinGroup(String gid, String uid, Handler<AsyncResult<String>> handler) {
+  public static void joinGroup(String gid, String uid) {
     if (socket == null) {
       LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.joinGroup", "no connection");
-      handler.handle(Future.failedFuture("no_connection"));
       return;
     }
 
     NetaGroup netaGroup = chatGroup.get(gid);
     if (netaGroup == null) {
-      handler.handle(Future.failedFuture("group_not_found"));
       return;
     }
 
@@ -125,27 +124,23 @@ public class NetaAPI {
       joinGroupMsg.put("name", netaGroup.groupName);
       joinGroupMsg.put("avatar_url", "");
       joinGroupMsg.put("push_all", Collections.singletonList(uid));
-      socket.emit("update_group", joinGroupMsg).on("update_group", joinGroupResp -> {
-        try {
-          JSONObject resp = (JSONObject)joinGroupResp[0];
-          int resCode = resp.getInt("result");
-          if (resCode == 0) {
-            handler.handle(Future.succeededFuture("ok"));
-          }
-          else {
-            handler.handle(Future.failedFuture("unknown_error"));
-            LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.joinGroup", String.format("resCode:%d", 0));
-          }
-        }
-        catch (Exception e) {
-          handler.handle(Future.failedFuture(e.getMessage()));
-          LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.joinGroup", e);
-        }
-      });
+      socket.emit("update_group", joinGroupMsg);
+      LOG.info(String.format("node_%d", HBServer.nodeId), "NetaAPI.joinGroup",
+              String.format("uid:%s - gid:%s", uid,gid));
     }
     catch (JSONException e) {
-      handler.handle(Future.failedFuture(e.getMessage()));
       LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.joinGroup", e);
+    }
+  }
+
+
+  public static class UpdateGroupHandler implements Emitter.Listener {
+    public Handler<AsyncResult<String>> handler;
+    @Override
+    public void call(Object... args) {
+      JSONObject resp = (JSONObject)args[0];
+      if (resp != null)
+        LOG.info(String.format("node_%d", HBServer.nodeId), "NetaEvent:update_group", resp.toString());
     }
   }
 }

@@ -15,6 +15,7 @@ public class UserNetAward {
   public static final int BRAND_TITLE       = 3;
   public static final int DEDICATED_TITLE   = 4;
   public static final int ALL_TIME_TITLE    = 5;
+  public static final int EXPIRE_TIME       = 84600*30; //a month;
 
   private static Map<Integer, ConcurrentHashMap<Integer, NetAward>> titles;
   private static Map<Integer, HashSet<Integer>>                     user2Title; // 1000000 => [1,2,3,4,5]
@@ -106,7 +107,7 @@ public class UserNetAward {
       try {
         NetAward netAward = title.get(userID);
         if (netAward != null) {
-          if (curSec - netAward.addedTime > 300) { //todo hard code
+          if (curSec - netAward.addedTime > EXPIRE_TIME) { //todo hard code
             title.remove(userID);
             user2Title.computeIfPresent(userID, (k, v) -> {
               v.remove(titleId);
