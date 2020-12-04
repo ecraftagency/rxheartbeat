@@ -272,7 +272,7 @@ public class UserInventory extends Inventory {
       int expireTime = getExpireTime(itemId);
       if (expireTime > 0) {
         List<Integer> format = Arrays.asList(102,itemId,0,0);
-        expItems.computeIfPresent(itemId, (k, v) -> curSec + 300); //todo hardcode
+        expItems.computeIfPresent(itemId, (k, v) -> curSec + UserNetAward.EXPIRE_TIME);
 
 
         NetAward netAward = NetAward.of(session.id,"", session.userGameInfo.displayName, "");

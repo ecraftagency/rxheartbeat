@@ -125,6 +125,7 @@ public class ProfileController implements Handler<RoutingContext> {
   private ExtMessage processRecordTutorial(Session session, RoutingContext ctx, String cmd) {
     ExtMessage resp   = ExtMessage.profile();
     resp.cmd          = cmd;
+    resp.group        = "none";
     int tutorStep     = ctx.getBodyAsJson().getInteger("tutorStep");
     if (tutorStep < USER_GAME_INFO.MIN_TUTOR_STEP || tutorStep > USER_GAME_INFO.MAX_TUTOR_STEP)
       return resp;

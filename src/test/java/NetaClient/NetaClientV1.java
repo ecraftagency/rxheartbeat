@@ -10,7 +10,6 @@ import io.socket.client.Socket;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -126,10 +125,10 @@ public class NetaClientV1 implements NetaService {
   }
 
   @Override
-  public void createGroup(String groupName, List<Long> occupants) {
+  public void createGroup(long appId, String groupName, List<Long> occupants) {
     if (!isConnect)
       return;
-    CreateGroupReq req = CreateGroupReq.of(4, groupName, COM_GRP, "", admin_uin, occupants);
+    CreateGroupReq req = CreateGroupReq.of(appId, groupName, COM_GRP, "", admin_uin, occupants);
     try {
       JSONObject jr = new JSONObject(Utilities.gson.toJson(req));
       socket.emit("create_group", jr);

@@ -96,6 +96,24 @@ public class UserGameInfo extends GameInfo {
     return true;
   }
 
+  public void incrFan(long amount) {
+    fan += amount;
+    if (fan < 0)
+      fan = 0;
+  }
+
+  public void incrMoney(long amount) {
+    money += amount;
+    if (money < 0)
+      money = 0;
+  }
+
+  public void incrView(long amount) {
+    view += amount;
+    if (view < 0)
+      view = 0;
+  }
+
   public void newDay() {
     crazyDegree = 0;
     crazyRewardClaim.clear();

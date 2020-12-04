@@ -108,14 +108,16 @@ public class Constant {
 
   public static class SCHEDULE {
     public static boolean           gameShowOpen              = false;
-    public static final int         gameShowOneOpenHour       = 12;
-    public static final int         gameShowTwoOpenHour       = 19;
+    public static final int         gameShowOneOpenHour       = 0;//12;
+    public static final int         gameShowTwoOpenHour       = 13;//19;
+
+    public static final int         gameShowOneCloseHour      = 12;
+    public static final int         gameShowTwoCloseHour      = 23;
+
     public static final int         gameShowOneOpenSec        = 0;
     public static final int         gameShowOneOpenMin        = 0;
-    public static final int         gameShowOneCloseHour      = 14;
-    public static final int         gameShowTwoCloseHour      = 21;
-    public static final int         gameShowOneCloseSec       = 0;
     public static final int         gameShowOneCloseMin       = 0;
+    public static final int         gameShowOneCloseSec       = 0;
   }
 
   public static class LEADER_BOARD {

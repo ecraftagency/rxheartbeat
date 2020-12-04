@@ -101,7 +101,8 @@ public class UserProduction extends com.transport.model.Production{
         if (currentFanClaimCount > 0 && session.userGameInfo.view >= totalFanAdd) {
           currentFanClaimCount -= 1;
           if (session.userGameInfo.isActiveTime()) {
-            session.userGameInfo.fan += totalFanAdd;
+            //session.userGameInfo.fan += totalFanAdd;
+            session.userGameInfo.incrFan(totalFanAdd);
             session.userGameInfo.spendView(session, totalFanAdd);
           }
           lastFanClaim = (int)(curMs/1000);
@@ -125,7 +126,8 @@ public class UserProduction extends com.transport.model.Production{
               dailyRampage++;
             }
 
-            session.userGameInfo.money += moneyAdd;
+            //session.userGameInfo.money += moneyAdd;
+            session.userGameInfo.incrMoney(moneyAdd);
           }
           lastGoldClaim = (int)(curMs/1000);
           return "ok";
@@ -136,7 +138,8 @@ public class UserProduction extends com.transport.model.Production{
         if (currentViewClaimCount > 0) {
           currentViewClaimCount -= 1;
           if (session.userGameInfo.isActiveTime()) {
-            session.userGameInfo.view += session.userIdol.totalPerf();
+            //session.userGameInfo.view += session.userIdol.totalPerf();
+            session.userGameInfo.incrView(session.userIdol.totalPerf());
           }
           lastViewClaim = (int)(curMs/1000);
           return "ok";
@@ -179,7 +182,8 @@ public class UserProduction extends com.transport.model.Production{
             }
             dailyRampage++;
           }
-          session.userGameInfo.money += moneyAdd;
+          //session.userGameInfo.money += moneyAdd;
+          session.userGameInfo.incrMoney(moneyAdd);
           if (rampageCnt > 0) {
             session.effectResults.add(EffectResult.of(Constant.EFFECT_RESULT.RAMPAGE_EFFECT_RESULT,rampageCnt ,0));
           }
@@ -192,7 +196,8 @@ public class UserProduction extends com.transport.model.Production{
     //view
     if (currentViewClaimCount > 0) {
       if (session.userGameInfo.isActiveTime()) {
-        session.userGameInfo.view  += currentViewClaimCount*session.userIdol.totalPerf();
+        //session.userGameInfo.view  += currentViewClaimCount*session.userIdol.totalPerf();
+        session.userGameInfo.incrView(currentFanClaimCount*session.userIdol.totalPerf());
       }
       lastViewClaim               = (int)(curMs/1000);
       currentViewClaimCount       = 0;
@@ -201,7 +206,8 @@ public class UserProduction extends com.transport.model.Production{
     //fan
     if (currentFanClaimCount > 0 && shouldDoFanProduce) {
       if (session.userGameInfo.isActiveTime()) {
-        session.userGameInfo.fan   += totalFanAdd;
+        //session.userGameInfo.fan   += totalFanAdd;
+        session.userGameInfo.incrFan(totalFanAdd);
         session.userGameInfo.spendView(session, totalFanAdd);
       }
 

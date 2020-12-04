@@ -81,7 +81,10 @@ public class UserEffectHandler implements EffectHandler{
       if (field != null) {
         try {
           long oldValue = field.getLong(session.userGameInfo);
-          field.setLong(session.userGameInfo, oldValue + amount);
+          long newValue = oldValue + amount;
+          if (newValue < 0)
+            newValue = 0;
+          field.setLong(session.userGameInfo, newValue);
           session.effectResults.add(EffectResult.of(0,propertyId, amount));
           result = EffectHandler.SUCCESS;
 
@@ -102,19 +105,22 @@ public class UserEffectHandler implements EffectHandler{
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (int)(session.userIdol.totalCrt()*percent);
-          session.userGameInfo.money += additionalMoney;
+          //session.userGameInfo.money += additionalMoney;
+          session.userGameInfo.incrMoney(additionalMoney);
           session.effectResults.add(EffectResult.of(0,propertyId, additionalMoney));
           return EffectHandler.SUCCESS;
 
         case VIEW_PROPERTY:
           long additionalView = (int)(session.userIdol.totalPerf()*percent);
-          session.userGameInfo.view += additionalView;
+          //session.userGameInfo.view += additionalView;
+          session.userGameInfo.incrView(additionalView);
           session.effectResults.add(EffectResult.of(0,propertyId, additionalView));
           return EffectHandler.SUCCESS;
 
         case FAN_PROPERTY:
           long additionalFan = (int)(session.userIdol.totalAttr()*percent);
-          session.userGameInfo.fan += additionalFan;
+          //session.userGameInfo.fan += additionalFan;
+          session.userGameInfo.incrFan(additionalFan);
           session.effectResults.add(EffectResult.of(0,propertyId, additionalFan));
           return EffectHandler.SUCCESS;
 
@@ -134,8 +140,11 @@ public class UserEffectHandler implements EffectHandler{
       if (field != null) {
         try {
           long    oldVale         = field.getLong(session.userGameInfo);
-          int     rangeIncrement  = ThreadLocalRandom.current().nextInt(lowBound, upBound);
-          field.setLong(session.userGameInfo, oldVale + rangeIncrement);
+          long    rangeIncrement  = ThreadLocalRandom.current().nextLong(lowBound, upBound);
+          long    newValue        = oldVale + rangeIncrement;
+          if (newValue < 0)
+            newValue = 0;
+          field.setLong(session.userGameInfo, newValue);
           session.effectResults.add(EffectResult.of(0,propertyId, rangeIncrement));
 
           result = EffectHandler.SUCCESS;
@@ -157,8 +166,11 @@ public class UserEffectHandler implements EffectHandler{
       if (field != null) {
         try {
           long    oldVale         = field.getLong(session.userGameInfo);
-          int     increment       = step*level;
-          field.setLong(session.userGameInfo, oldVale + increment);
+          long    increment       = step*level;
+          long    newValue        = increment + oldVale;
+          if (newValue < 0)
+            newValue = 0;
+          field.setLong(session.userGameInfo, newValue);
           session.effectResults.add(EffectResult.of(0,propertyId, increment));
           result = EffectHandler.SUCCESS;
 
@@ -183,7 +195,10 @@ public class UserEffectHandler implements EffectHandler{
           float   _rate           = rate/100f;
           float   rand            = ThreadLocalRandom.current().nextFloat();
           if (_rate > rand) {
-            field.setLong(session.userGameInfo, oldVale + amount);
+            long newValue         = oldVale + amount;
+            if (newValue < 0)
+              newValue = 0;
+            field.setLong(session.userGameInfo, newValue);
             session.effectResults.add(EffectResult.of(0,propertyId, amount));
             result = EffectHandler.SUCCESS;
           }
@@ -204,19 +219,22 @@ public class UserEffectHandler implements EffectHandler{
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (int)(session.userIdol.totalCrt()*percent);
-          session.userGameInfo.money += additionalMoney;
+          //session.userGameInfo.money += additionalMoney;
+          session.userGameInfo.incrMoney(additionalMoney);
           session.effectResults.add(EffectResult.of(0,propertyId, additionalMoney));
           return EffectHandler.SUCCESS;
 
         case VIEW_PROPERTY:
           long additionalView = (int)(session.userIdol.totalPerf()*percent);
-          session.userGameInfo.view += additionalView;
+          //session.userGameInfo.view += additionalView;
+          session.userGameInfo.incrView(additionalView);
           session.effectResults.add(EffectResult.of(0,propertyId, additionalView));
           return EffectHandler.SUCCESS;
 
         case FAN_PROPERTY:
           long additionalFan = (int)(session.userIdol.totalAttr()*percent);
-          session.userGameInfo.fan += additionalFan;
+          //session.userGameInfo.fan += additionalFan;
+          session.userGameInfo.incrFan(additionalFan);
           session.effectResults.add(EffectResult.of(0,propertyId, additionalFan));
           return EffectHandler.SUCCESS;
         default:
@@ -232,19 +250,22 @@ public class UserEffectHandler implements EffectHandler{
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (session.userIdol.totalCrt()*level/step);
-          session.userGameInfo.money += additionalMoney;
+          //session.userGameInfo.money += additionalMoney;
+          session.userGameInfo.incrMoney(additionalMoney);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
           return EffectHandler.SUCCESS;
 
         case VIEW_PROPERTY:
           long additionalView = (session.userIdol.totalPerf()*level/step);
-          session.userGameInfo.view += additionalView;
+          //session.userGameInfo.view += additionalView;
+          session.userGameInfo.incrView(additionalView);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
           return EffectHandler.SUCCESS;
 
         case FAN_PROPERTY:
           long additionalFan = (session.userIdol.totalAttr()*level/step);
-          session.userGameInfo.fan += additionalFan;
+          //session.userGameInfo.fan += additionalFan;
+          session.userGameInfo.incrFan(additionalFan);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
           return EffectHandler.SUCCESS;
 
@@ -306,19 +327,22 @@ public class UserEffectHandler implements EffectHandler{
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (long)(session.userIdol.totalCrt()*percent) + inr_amount;
-          session.userGameInfo.money += additionalMoney;
+          //session.userGameInfo.money += additionalMoney;
+          session.userGameInfo.incrMoney(additionalMoney);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
           return EffectHandler.SUCCESS;
 
         case VIEW_PROPERTY:
           long additionalView = (long)(session.userIdol.totalPerf()*percent) + inr_amount;
-          session.userGameInfo.view += additionalView;
+          //session.userGameInfo.view += additionalView;
+          session.userGameInfo.incrView(additionalView);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
           return EffectHandler.SUCCESS;
 
         case FAN_PROPERTY:
           long additionalFan = (long)(session.userIdol.totalAttr()*percent) + inr_amount;
-          session.userGameInfo.fan += additionalFan;
+          //session.userGameInfo.fan += additionalFan;
+          session.userGameInfo.incrFan(additionalFan);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
           return EffectHandler.SUCCESS;
 
@@ -336,19 +360,23 @@ public class UserEffectHandler implements EffectHandler{
       switch (propertyId) {
         case MONEY_PROPERTY:
           long additionalMoney = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
-          session.userGameInfo.money += additionalMoney;
+          //session.userGameInfo.money += additionalMoney;
+          session.userGameInfo.incrMoney(additionalMoney);
+          session.userGameInfo.incrMoney(additionalMoney);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalMoney));
           return EffectHandler.SUCCESS;
 
         case VIEW_PROPERTY:
           long additionalView = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
-          session.userGameInfo.view += additionalView;
+          //session.userGameInfo.view += additionalView;
+          session.userGameInfo.incrView(additionalView);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalView));
           return EffectHandler.SUCCESS;
 
         case FAN_PROPERTY:
           long additionalFan = (long)(1000*(level+1)*(level+1)) + coefficient*totalCrt;
-          session.userGameInfo.fan += additionalFan;
+          //session.userGameInfo.fan += additionalFan;
+          session.userGameInfo.incrFan(additionalFan);
           session.effectResults.add(EffectResult.of(0,propertyId, (int)additionalFan));
           return EffectHandler.SUCCESS;
         default:

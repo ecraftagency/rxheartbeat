@@ -28,25 +28,26 @@ public class IdolEvent {
     banDamEvt.eventName           = "Ban Dam";
 
     ExtendEventInfo ngocTrinhEvt = ExtendEventInfo.of(NT_EVT_ID, 1);
-    banDamEvt.eventName           = "Ban Dam";
+    ngocTrinhEvt.eventName           = "Ngọc Trinh";
 
     evtMap.put(BP_EVT_ID, blackPinkEvt);
     evtMap.put(DB_EVT_ID, banDamEvt);
     evtMap.put(NT_EVT_ID, ngocTrinhEvt);
 
     evtIdols.put(BP_EVT_ID, Arrays.asList(
-      EventInfo.IdolClaimInfo.of(48, 93, 10),
-      EventInfo.IdolClaimInfo.of(49, 93, 10),
-      EventInfo.IdolClaimInfo.of(50, 93, 10),
-      EventInfo.IdolClaimInfo.of(51, 93, 10),
-      EventInfo.IdolClaimInfo.of(52, 93, 10)
+            EventInfo.IdolClaimInfo.of(43, 92, 10),
+            EventInfo.IdolClaimInfo.of(44, 92, 10),
+            EventInfo.IdolClaimInfo.of(45, 92, 10),
+            EventInfo.IdolClaimInfo.of(46, 92, 10)
+
     ));
 
     evtIdols.put(DB_EVT_ID, Arrays.asList(
-      EventInfo.IdolClaimInfo.of(43, 92, 10),
-      EventInfo.IdolClaimInfo.of(44, 92, 10),
-      EventInfo.IdolClaimInfo.of(45, 92, 10),
-      EventInfo.IdolClaimInfo.of(46, 92, 10)
+            EventInfo.IdolClaimInfo.of(48, 93, 10),
+            EventInfo.IdolClaimInfo.of(49, 93, 10),
+            EventInfo.IdolClaimInfo.of(50, 93, 10),
+            EventInfo.IdolClaimInfo.of(51, 93, 10),
+            EventInfo.IdolClaimInfo.of(52, 93, 10)
     ));
 
     evtIdols.put(NT_EVT_ID, Collections.singletonList(EventInfo.IdolClaimInfo.of(53, 140, 10)));
