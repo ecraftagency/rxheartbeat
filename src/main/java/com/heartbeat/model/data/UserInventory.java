@@ -94,12 +94,12 @@ public class UserInventory extends Inventory {
       dailyMerge  = new HashMap<>();
     if (expItems == null) {
       expItems = new HashMap<>();
-      expItems.putIfAbsent(97,0);
-      expItems.putIfAbsent(98,0);
-      expItems.putIfAbsent(99,0);
-      expItems.putIfAbsent(100,0);
-      expItems.putIfAbsent(101,0);
     }
+    expItems.putIfAbsent(97, 0);
+    expItems.putIfAbsent(98, 0);
+    expItems.putIfAbsent(99, 0);
+    expItems.putIfAbsent(100, 0);
+    expItems.putIfAbsent(101, 0);
   }
 
   public void addItem(Session session, int itemId, int amount) {

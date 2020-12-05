@@ -68,7 +68,7 @@ public class UserFight extends Fight {
     uf.usedIdols      = new ArrayList<>();
     uf.restoreIdols   = new ArrayList<>();
 
-    uf.currentGameShow      = GameShowData.of(24);
+    uf.currentGameShow      = GameShowData.of(1);
     uf.gameShowUsedIdols    = new ArrayList<>();
     uf.gameShowRestoreIdols = new ArrayList<>();
     uf.currentRunShow       = RunShowData.of(1);
