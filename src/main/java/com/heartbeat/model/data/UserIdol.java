@@ -267,7 +267,7 @@ public class UserIdol extends Idols {
     switch (speciality) {
       case CREATIVITY:
         if (!session.userInventory.haveItem(CRT_UP_ITEM, APT_UP_COST))
-          return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+          return Msg.map.getOrDefault(Msg.APT_UP_INSUFFICIENT, "apt_insufficient_item");
 
         if (idol.crtApt + EXP_UP_STEP > currentLimit)
           return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");
@@ -283,7 +283,7 @@ public class UserIdol extends Idols {
         }
       case PERFORMANCE:
         if (!session.userInventory.haveItem(PERF_UP_ITEM, APT_UP_COST))
-          return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+          return Msg.map.getOrDefault(Msg.APT_UP_INSUFFICIENT, "apt_insufficient_item");
 
         if (idol.perfApt + EXP_UP_STEP > currentLimit)
           return Msg.map.getOrDefault(Msg.APT_LIMIT, "aptitude_limit");
@@ -299,7 +299,7 @@ public class UserIdol extends Idols {
         }
       case ATTRACTIVE:
         if (!session.userInventory.haveItem(ATTR_UP_ITEM, APT_UP_COST))
-          return Msg.map.getOrDefault(Msg.INSUFFICIENT_ITEM, "insufficient_item");
+          return Msg.map.getOrDefault(Msg.APT_UP_INSUFFICIENT, "apt_insufficient_item");
 
         if (idol.attrApt + EXP_UP_STEP > currentLimit)
           return Msg.map.getOrDefault(Msg.APT_LIMIT, "idol_apt_limit");

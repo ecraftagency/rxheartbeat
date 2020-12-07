@@ -440,7 +440,7 @@ public class Session {
           cProf.exp       = Long.parseLong(attr[3]);
         }
 
-        int defaultCustom = sProf.getCertDate();
+        int defaultCustom = sProf.getJoinedTime();
         if (defaultCustom < 0 || defaultCustom > 5)
           defaultCustom = 0;
         cProf.defaultCustom = defaultCustom;

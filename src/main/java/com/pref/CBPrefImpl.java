@@ -2,6 +2,7 @@ package com.pref;
 
 import com.common.Constant;
 import com.common.LOG;
+import com.common.Msg;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.ReactiveCollection;
 import com.transport.Identity;
@@ -32,7 +33,7 @@ public class CBPrefImpl implements PrefService {
   @Override
   public void linkIdentity(String id, String upLink, Handler<AsyncResult<String>> handler) {
     if (id == null || id.equals("") || upLink == null || upLink.equals("") || upLink.equals(id)) {
-      handler.handle(Future.failedFuture("invalid_identity"));
+      handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.INVALID_IDENTITY, "invalid_identity")));
       return;
     }
     loadIdentity(id, ar -> {
@@ -50,7 +51,7 @@ public class CBPrefImpl implements PrefService {
               return;
             }
             if (upLinkIdentity.links.size() >= Constant.REF_INFO.MAX_LINK) { //todo hard code
-              handler.handle(Future.failedFuture("up_link_full"));
+              handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UP_LINK_FUlL, "up_link_full")));
               return;
             }
             if (upLinkIdentity.links.contains(identity.id)) {
@@ -64,7 +65,7 @@ public class CBPrefImpl implements PrefService {
             syncIdentity(upLink, upLinkIdentity);
           }
           else
-            handler.handle(Future.failedFuture("up_link_not_exist"));
+            handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.UP_LINK_NOT_EXIST, "up_link_not_exist")));
         });
       }
       else
@@ -78,11 +79,11 @@ public class CBPrefImpl implements PrefService {
       if (ar.succeeded()) {
         Identity identity = ar.result();
         if (identity.links.size() < Constant.REF_INFO.MAX_LINK) {
-          handler.handle(Future.failedFuture("insufficient_claim"));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.LINK_INSUFFICIENT_CLAIM, "link_insufficient_claim")));
           return;
         }
         if (identity.claimLinkReward){
-          handler.handle(Future.failedFuture("already_claimed"));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.LINK_INSUFFICIENT_CLAIM, "link_already_claim")));
           return;
         }
         identity.claimLinkReward = true;

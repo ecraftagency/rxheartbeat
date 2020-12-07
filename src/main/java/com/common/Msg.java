@@ -82,7 +82,8 @@ public class Msg {
   public static final int HALO_DATA_INVALID           = 410;
   public static final int HALO_LEVEL_UP_FAIL          = 411;
   public static final int HALO_LEVEL_MAX              = 412;
-
+  public static final int APT_UP_FAILED               = 413;
+  public static final int APT_UP_INSUFFICIENT         = 414;
   //inbox
   public static final int MSG_REWARD_CLAIM_ALREADY    = 500;
   public static final int MSG_NOT_EXIST               = 501;
@@ -117,6 +118,18 @@ public class Msg {
 
   //netAward
   public static final int AWARD_TITLE_INVALID         = 1200;
+
+
+  //userEvent
+  public static final int CLAIM_IDOL_INSUFFICIENT_ITEM  = 1300;
+
+  //Ma Gioi Thieu
+  public static final int UP_LINK_NOT_EXIST             = 1400;
+  public static final int UP_LINK_FUlL                  = 1401;
+  public static final int LINK_INSUFFICIENT_CLAIM       = 1402;
+  public static final int INVALID_IDENTITY              = 1403;
+  public static final int ALREADY_LINK                  = 1404;
+  public static final int LINK_ALREADY_CLAIM            = 1405;
 
   static {
     map = new HashMap<>();
@@ -156,6 +169,7 @@ public class Msg {
     //Achievement Controller
     //DailyMission  Controller
     //Event Controller
+
     //Fight Controller
     map.put(GAME_SHOW_TIMEOUT,                  "Phụ bản Gameshow chưa mở, vui lòng thử lại sau");
     map.put(MAX_FIGHT,                          "Bạn đã hoàn thành tất cả các ải");
@@ -193,12 +207,14 @@ public class Msg {
     map.put(IDOL_LV_UP_INSUFFICIENT,            "Cát xê không đủ để tăng cấp Idol");
     map.put(IDOL_HONOR_MAX_LEVEL,               "Idol đã đạt cấp danh hiệu tối đa");
     map.put(INSUFFICIENT_APT_EXP,               "EXP tố chất không đủ");
-    map.put(APT_LIMIT,                          "Đạt giới hạn tố chất");
+    map.put(APT_LIMIT,                          "Tố chất đã đạt giới hạn");
     map.put(HALO_NOT_EXIST,                     "Vòng sáng không tồn tại");
     map.put(HALO_PREFIX_NOT_MATCH,              "Cần vòng sáng trước max cấp");
     map.put(HALO_DATA_INVALID,                  "Dữ liệu vòng sáng không hợp lệ");
     map.put(HALO_LEVEL_UP_FAIL,                 "Tăng cấp vòng sáng thất bại");
     map.put(HALO_LEVEL_MAX,                     "Vòng sáng đã đạt cấp tối đa");
+    map.put(APT_UP_FAILED,                      "Thất bại");
+    map.put(APT_UP_INSUFFICIENT,                "Không đủ vật phẩm");
 
     //Inbox Controller
     map.put(MSG_REWARD_CLAIM_ALREADY,           "Bạn đã nhận vật phẩm đính kèm");
@@ -234,5 +250,17 @@ public class Msg {
 
     //NetAward Controller
     map.put(AWARD_TITLE_INVALID,          "Tuyên ngôn không hợp lệ");
+
+
+    //Event COntroller
+    map.put(CLAIM_IDOL_INSUFFICIENT_ITEM, "Không đủ đạo cụ chiêu mộ");
+
+    //User Linking
+    map.put(UP_LINK_NOT_EXIST, "Mã giới thiệu không tồn tại");
+    map.put(UP_LINK_FUlL, "Mã giới thiệu đã full");
+    map.put(LINK_INSUFFICIENT_CLAIM, "Chưa đạt điều kiện lĩnh thưởng");
+    map.put(INVALID_IDENTITY, "Không thể tự nhập ãm của mình");
+    map.put(ALREADY_LINK, "Đã giới thiệu qua");
+    map.put(LINK_ALREADY_CLAIM, "Đã nhận thưởng");
   }
 }

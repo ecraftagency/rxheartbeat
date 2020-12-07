@@ -6,15 +6,20 @@ import com.heartbeat.HBServer;
 import com.heartbeat.db.cb.CBSession;
 import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
+import com.heartbeat.event.IdolEvent;
+import com.heartbeat.event.RankingEvent;
+import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
 import com.heartbeat.model.data.UserNetAward;
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.heartbeat.service.GroupService;
 import com.heartbeat.service.impl.GroupServiceV1;
 import com.statics.OfficeData;
 import com.statics.ShopData;
+import com.statics.VipData;
 import com.transport.ExtMessage;
 import com.transport.model.CompactProfile;
 import com.transport.model.NetAward;
@@ -28,10 +33,7 @@ import io.vertx.ext.web.client.WebClient;
 
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.common.Constant.*;
 
@@ -56,6 +58,9 @@ public class ProfileController implements Handler<RoutingContext> {
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         ExtMessage resp;
         switch (cmd) {
+          case "enterHome":
+            resp = processEnterHome(session);
+            break;
           case "buyShopItem":
             resp = processBuyShopItem(session, ctx);
             break;
@@ -120,6 +125,66 @@ public class ProfileController implements Handler<RoutingContext> {
       ctx.response().setStatusCode(404).end();
       LOG.globalException("node", cmd, e);
     }
+  }
+
+  private ExtMessage processEnterHome(Session session) {
+    long serverTime       = System.currentTimeMillis();
+    ExtMessage resp       = ExtMessage.profile();
+
+    //roll call section
+    resp.msg              = session.userRollCall.getRollCallInfo(session, serverTime);
+    resp.data.rollCall    = session.userRollCall;
+
+    //active Event section
+    Map<Integer, Map<Integer, ExtendEventInfo>> activeEvent = new HashMap<>();
+    activeEvent.put(TimingEvent.EVENT_TYPE,   new HashMap<>());
+    activeEvent.put(RankingEvent.EVENT_TYPE,  new HashMap<>());
+    activeEvent.put(IdolEvent.EVENT_TYPE,     new HashMap<>());
+
+    int curSec = (int)(serverTime/1000);
+    for (Map.Entry<Integer, ExtendEventInfo> entry : TimingEvent.evtMap.entrySet()) {
+      ExtendEventInfo eei = entry.getValue();
+      if (curSec > eei.startTime && curSec < (eei.endTime + eei.flushDelay))
+        activeEvent.get(TimingEvent.EVENT_TYPE).put(eei.eventId, eei);
+    }
+
+    for (Map.Entry<Integer, ExtendEventInfo> entry : RankingEvent.evtMap.entrySet()) {
+      ExtendEventInfo eei = entry.getValue();
+      if (curSec > eei.startTime && curSec < (eei.endTime + eei.flushDelay))
+        activeEvent.get(RankingEvent.EVENT_TYPE).put(eei.eventId, eei);
+    }
+
+    for (Map.Entry<Integer, ExtendEventInfo> entry : IdolEvent.evtMap.entrySet()) {
+      ExtendEventInfo eei = entry.getValue();
+      if (curSec > eei.startTime && curSec < (eei.endTime + eei.flushDelay))
+        activeEvent.get(IdolEvent.EVENT_TYPE).put(eei.eventId, eei);
+    }
+
+    resp.data.extObj        = Json.encode(activeEvent);
+
+    //production section
+    session.userProduction.updateProduction(session, serverTime);
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.idols       = session.userIdol;
+
+    //media section
+    session.userGameInfo.updateUserMedia(serverTime);
+    resp.data.gameInfo = session.userGameInfo;
+
+
+    //achievement section
+    long totalTalent        = session.userIdol.totalCrt() + session.userIdol.totalPerf() + session.userIdol.totalAttr();
+    VipData.VipDto vipData  = VipData.getVipData(session.userGameInfo.vipExp);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.TOTAL_TALENT_ACHIEVEMENT, totalTalent);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.LEVEL_ACHIEVEMENT, session.userGameInfo.titleId);
+    session.userAchievement.setAchieveRecord(Constant.ACHIEVEMENT.VIP_ACHIEVEMENT, vipData.level);
+    resp.data.achievement   = session.userAchievement;
+
+    //award section
+    resp.data.extIntObj = UserNetAward.getUserNetAward(session.id);
+
+    resp.serverTime         = (int)(serverTime);
+    return resp;
   }
 
   private ExtMessage processRecordTutorial(Session session, RoutingContext ctx, String cmd) {
@@ -462,4 +527,8 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.fight       = session.userFight;
     return resp;
   }
+
+  /*
+
+   */
 }

@@ -13,6 +13,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
+import static com.common.Msg.APT_UP_FAILED;
+
 public class IdolController implements Handler<RoutingContext> {
   @Override
   public void handle(RoutingContext ctx) {
@@ -136,6 +138,8 @@ public class IdolController implements Handler<RoutingContext> {
       session.userEvent.addEventRecord(TimingEvent.APT_BUFF_USE_EVT_ID, 1);
     }
 
+    if (resp.msg.equals("apt_up_fail"))
+      resp.msg = Msg.map.getOrDefault(APT_UP_FAILED, "apt_up_fail");
     return resp;
   }
 

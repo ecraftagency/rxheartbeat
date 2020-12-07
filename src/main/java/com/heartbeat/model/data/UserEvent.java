@@ -168,7 +168,7 @@ public class UserEvent extends Event {
       return "idol_already_claim";
 
     if (!session.userInventory.haveItem(icp.requireItem, icp.amount))
-      return "insufficient_item";
+      return Msg.map.getOrDefault(Msg.CLAIM_IDOL_INSUFFICIENT_ITEM, "claim_idol_insufficient_item");
 
     session.userInventory.useItem(icp.requireItem, icp.amount);
     Idols.Idol idol = UserIdol.buildIdol(idolId);
