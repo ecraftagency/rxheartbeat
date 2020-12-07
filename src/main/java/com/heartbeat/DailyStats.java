@@ -21,7 +21,7 @@ public class DailyStats {
 
   private static final long                   DAY_MILLISECOND   = 24L * 60 * 60 * 1000;
   private static final long                   DB_SYNC_INTERVAL  = 60 * 1000;
-  private static final long                   STATS_EXPIRE_SEC  = 86400*90;
+  private static final long                   STATS_EXPIRE_SEC  = 86400*30;
 
   public ConcurrentHashMap<Integer, Integer>  dailyUseItem;
   public ConcurrentHashMap<Integer, Integer>  dailyGainItem;
@@ -75,11 +75,13 @@ public class DailyStats {
   }
 
   public void saveStatsToDB(long curMs) {
-    String key = GlobalVariable.stringBuilder.get().append(keyPrefix).append('_').append(Utilities.formatTime(curMs, DATE_FORMAT)).toString();
+    String key = GlobalVariable.stringBuilder.get().append(keyPrefix).append('_')
+            .append(Utilities.formatTime(curMs, DATE_FORMAT)).toString();
     dbAccess.sync(key, this, null, STATS_EXPIRE_SEC); //todo asynchronous
   }
 
   public long update(long curMs) {
+    System.out.println("stats sync");
     saveStatsToDB(curMs);
     int dayDiff = Utilities.dayDiff(startTime, curMs);
     boolean isNewDay = dayDiff != 0;
@@ -92,9 +94,9 @@ public class DailyStats {
   }
 
   public void newDay() {
-    dailyUseItem.clear();
-    dailyGainItem.clear();
-    dailyBacklogItem.clear();
+    dailyUseItem.forEach((k,v) -> v = 0);
+    dailyUseItem.forEach((k,v) -> v = 0);
+    dailyGainItem.forEach((k,v) -> v = 0);
   }
 
   public void addGainItem(int itemId, int amount) {

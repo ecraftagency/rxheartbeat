@@ -17,12 +17,13 @@ public interface Cruder<T> {
   void    sync(String id, T obj, Handler<AsyncResult<String>> handler);
   void    add(String id, T obj, Handler<AsyncResult<String>> handler);
   void    remove(String id, Handler<AsyncResult<String>> handler);
-  void    sync(String id, T obj, Handler<AsyncResult<String>> handler, long expire);
+  void    sync(String id, T obj, Handler<AsyncResult<String>> handler, long expireSec);
 
   //sync
   T       load(String id);
   T       load(String id, String password);
   boolean sync(String id, T obj);
+  boolean sync(String id, T obj, long expireSec);
   boolean add(String id, T obj);
   boolean remove(String id);
 }

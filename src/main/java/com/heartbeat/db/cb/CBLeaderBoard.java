@@ -46,7 +46,7 @@ public class CBLeaderBoard implements Cruder<LeaderBoardDAO> {
   }
 
   @Override
-  public void sync(String id, LeaderBoardDAO obj, Handler<AsyncResult<String>> handler, long expire) {
+  public void sync(String id, LeaderBoardDAO obj, Handler<AsyncResult<String>> handler, long expireSec) {
 
   }
 
@@ -78,6 +78,11 @@ public class CBLeaderBoard implements Cruder<LeaderBoardDAO> {
       LOG.globalException("node","CBLeaderboad:sync",e);
       return false;
     }
+  }
+
+  @Override
+  public boolean sync(String id, LeaderBoardDAO obj, long expireSec) {
+    return false;
   }
 
   @Override

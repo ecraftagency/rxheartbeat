@@ -39,10 +39,11 @@ import static com.common.Constant.*;
 
 
 public class ProfileController implements Handler<RoutingContext> {
-  private static DeliveryOptions options = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
-  private GroupService        groupService;
-  public  static WebClient     webClient;
-  static Type listOfListOfInt  = new TypeToken<List<List<Integer>>>() {}.getType();
+  private static  DeliveryOptions options           = new DeliveryOptions().setSendTimeout(Constant.SYSTEM_INFO.EB_SEND_TIMEOUT);
+  private         GroupService    groupService;
+  public  static  WebClient       webClient;
+  static          Type            listOfListOfInt   = new TypeToken<List<List<Integer>>>() {}.getType();
+
   public ProfileController() {
     groupService = new GroupServiceV1();
   }
@@ -160,7 +161,7 @@ public class ProfileController implements Handler<RoutingContext> {
         activeEvent.get(IdolEvent.EVENT_TYPE).put(eei.eventId, eei);
     }
 
-    resp.data.extObj        = Json.encode(activeEvent);
+    resp.data.activeEvent = activeEvent;
 
     //production section
     session.userProduction.updateProduction(session, serverTime);
@@ -527,8 +528,4 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.fight       = session.userFight;
     return resp;
   }
-
-  /*
-
-   */
 }

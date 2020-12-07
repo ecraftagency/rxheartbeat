@@ -19,21 +19,21 @@ public class DB {
   static {
     users       = new HashMap<>();
     readPerms   = new HashSet<>();
-    rootPerms = new HashSet<>();
+    rootPerms   = new HashSet<>();
 
     readPerms.addAll(Arrays.asList("getSession", "getEvents", "getRole100D", "getConfig",
-            "getLDB", "getSessionId", "getPaymentInfo", "getShopInfo", "getStats", "getNetaGroup"));
+            "getLDB", "getSessionId", "getPaymentInfo", "getShopInfo", "getStats", "getNetaGroup", "queryStats"));
 
     rootPerms.addAll(Arrays.asList("injectSession", "genWebPaymentLink", "genIAPPaymentLink",
             "genNCExchangeLink", "genNPExchangeLink", "genGetRoleLink", "getSession",
             "sendMail", "sendPrivateMail", "getEvents", "setUserEventTime", "getRole100D",
             "updatePaymentPackage", "getConfig", "injectConstant", "getLDB", "getSessionId",
-            "getPaymentInfo", "getShopInfo", "updateShopStatus", "getStats", "planEvent", "getNetaGroup", "addNetaGroup"));
+            "getPaymentInfo", "getShopInfo", "updateShopStatus", "getStats", "planEvent", "getNetaGroup", "addNetaGroup", "queryStats"));
 
     users.put("ly_mac_sau",   GmtUser.of("ly_mac_sau", "12345678").setPerms(rootPerms));
     users.put("duy79",        GmtUser.of("duy79", "12345678").setPerms(rootPerms));
     users.put("duy99",        GmtUser.of("duy99", "12345678").setPerms(rootPerms));
-    users.put("vu_lo_gach",   GmtUser.of("vu_lo_gach", "n5t5lnsct").setPerms(rootPerms));
+    users.put("vu",           GmtUser.of("vu", "n5t5lnsct").setPerms(rootPerms));
   }
   public static class DummyAuthProvider implements AuthProvider {
     @Override

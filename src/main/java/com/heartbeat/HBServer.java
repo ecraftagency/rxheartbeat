@@ -17,10 +17,7 @@ import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.*;
 import com.heartbeat.netaChat.NetaAPI;
 import com.heartbeat.scheduler.TaskRunner;
-import com.heartbeat.ws_handler.PreVerifyMessageHandler;
 import com.stdprofile.thrift.StdProfileService;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
@@ -171,7 +168,6 @@ public class HBServer extends AbstractVerticle {
       NetaAPI.loadChatGroupsFromDB();
       DailyStats.inst().loadStatsFromDB(System.currentTimeMillis());
       DailyStats.updateTask.run();
-      HBServer.executor = vertx.createSharedWorkerExecutor("worker-pool");
     }
     catch (Exception ioe) {
       startPromise.fail(ioe);

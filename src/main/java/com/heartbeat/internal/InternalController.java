@@ -1,12 +1,16 @@
 package com.heartbeat.internal;
 
+import com.common.GlobalVariable;
 import com.common.LOG;
 import com.common.Utilities;
 import com.gateway.model.Payload;
 import com.google.gson.reflect.TypeToken;
 import com.heartbeat.DailyStats;
+import com.heartbeat.HBServer;
+import com.heartbeat.db.cb.AbstractCruder;
 import com.heartbeat.db.cb.CBMapper;
 import com.heartbeat.db.cb.CBSession;
+import com.heartbeat.db.dao.DailyStatsDAO;
 import com.heartbeat.event.Common;
 import com.heartbeat.event.IdolEvent;
 import com.heartbeat.event.RankingEvent;
@@ -43,9 +47,11 @@ import static com.common.Constant.PAYMENT.*;
 public class InternalController implements Handler<Message<JsonObject>> {
   SessionInjector sessionInjector;
   ConstantInjector constantInjector;
+  AbstractCruder<DailyStatsDAO> dailyStatsCB;
   public InternalController() {
-    sessionInjector = new EvilInjector();
-    constantInjector = new MaydayInjector();
+    sessionInjector   = new EvilInjector();
+    constantInjector  = new MaydayInjector();
+    dailyStatsCB      = new AbstractCruder<>(DailyStatsDAO.class, HBServer.rxStatsBucket);
   }
 
   @Override
@@ -140,6 +146,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "addNetaGroup":
           processAddNetaGroup(ctx);
           return;
+        case "queryStats":
+          processQueryStats(ctx);
+          return;
         default:
           resp.put("msg", "unknown_cmd");
           ctx.reply(resp);
@@ -152,6 +161,37 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processQueryStats(Message<JsonObject> ctx) {
+    JsonObject resp       = new JsonObject();
+    String date           = ctx.body().getString("date");
+    String key = GlobalVariable.stringBuilder.get().append("daily_stats").append('_').append(date).toString();
+    DailyStatsDAO dao = dailyStatsCB.load(key);
+    if (dao == null)
+      resp.put("msg", "not_found");
+    else {
+      JsonArray itemStats = new JsonArray();
+      Map<Integer, Integer> dailyGain = dao.dailyGainItem;
+      Map<Integer, Integer> dailyUse = dao.dailyUseItem;
+      Map<Integer, Integer> dailyBacklog = dao.dailyBacklogItem;
+
+      for (Map.Entry<Integer, Integer> entry : UserInventory.itemStats.entrySet()) {
+        JsonObject itemStat = new JsonObject();
+        int itemId = entry.getKey();
+        itemStat.put("itemId", entry.getKey());
+        itemStat.put("Tồn tổng", entry.getValue());
+        itemStat.put("Tồn ngày", dailyBacklog.getOrDefault(itemId, 0));
+        itemStat.put("Sử dụng trong ngày", dailyUse.getOrDefault(itemId, 0));
+        itemStat.put("Phát sinh trong ngày", dailyGain.getOrDefault(itemId, 0));
+        itemStats.add(itemStat);
+      }
+
+      resp.put("statItem", itemStats);
+      resp.put("msg", "ok");
+    }
+
+    ctx.reply(resp);
   }
 
   private void processAddNetaGroup(Message<JsonObject> ctx) {

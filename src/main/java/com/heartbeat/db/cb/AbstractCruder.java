@@ -4,7 +4,6 @@ import com.common.LOG;
 import com.couchbase.client.java.ReactiveBucket;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.UpsertOptions;
-import com.heartbeat.HBServer;
 import com.heartbeat.db.Cruder;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -51,11 +50,11 @@ public class AbstractCruder<T> implements Cruder<T> {
   }
 
   @Override
-  public void sync(String id, T obj, Handler<AsyncResult<String>> handler, long expireSecond) {
+  public void sync(String id, T obj, Handler<AsyncResult<String>> handler, long expireSec) {
     try {
-      rxBucket.defaultCollection().upsert(id, obj, UpsertOptions.upsertOptions().expiry(Duration.ofSeconds(expireSecond))).subscribe(
-              res -> System.out.println("ok"),
-              err -> System.out.println(err.getMessage())
+      rxBucket.defaultCollection().upsert(id, obj, UpsertOptions.upsertOptions().expiry(Duration.ofSeconds(expireSec))).subscribe(
+              res -> {},
+              err -> LOG.globalException("node",String.format("%s:sync2DB", type.getName()),err.getMessage())
       );
     }
     catch (Exception e) {
@@ -86,6 +85,18 @@ public class AbstractCruder<T> implements Cruder<T> {
   public boolean sync(String id, T obj) {
     try {
       rxBucket.defaultCollection().upsert(id, obj).block();
+      return true;
+    }
+    catch (Exception e) {
+      LOG.globalException("node",String.format("%s:sync2DB", type.getName()),e);
+      return false;
+    }
+  }
+
+  @Override
+  public boolean sync(String id, T obj, long expireSec) {
+    try {
+      rxBucket.defaultCollection().upsert(id, obj, UpsertOptions.upsertOptions().expiry(Duration.ofSeconds(expireSec))).block();
       return true;
     }
     catch (Exception e) {

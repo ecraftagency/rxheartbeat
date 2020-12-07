@@ -53,7 +53,7 @@ public class CBNetAward implements Cruder<NetAward> {
   }
 
   @Override
-  public void sync(String id, NetAward obj, Handler<AsyncResult<String>> handler, long expire) {
+  public void sync(String id, NetAward obj, Handler<AsyncResult<String>> handler, long expireSec) {
 
   }
 
@@ -80,6 +80,11 @@ public class CBNetAward implements Cruder<NetAward> {
   @Override
   public boolean sync(String id, NetAward obj) {
     //todo implementation
+    return false;
+  }
+
+  @Override
+  public boolean sync(String id, NetAward obj, long expireSec) {
     return false;
   }
 

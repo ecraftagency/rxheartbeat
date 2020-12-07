@@ -338,15 +338,6 @@ public class Session {
 
   }
 
-  public void syncGroupInfo(String syncField) {
-    UserGroup group = GroupPool.getGroupFromPool(groupID);
-    if (group != null)
-      HBServer.executor.executeBlocking(promise -> {
-        group.updateMemberInfo(this, "totalProperty");
-        promise.complete();
-      }, res -> {});
-  }
-
   public static Session of(int id) {
     Session res = new Session();
     res.id = id;

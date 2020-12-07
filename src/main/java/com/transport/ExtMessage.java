@@ -1,5 +1,6 @@
 package com.transport;
 
+import com.heartbeat.scheduler.ExtendEventInfo;
 import com.transport.model.*;
 
 import java.util.List;
@@ -18,26 +19,27 @@ public class ExtMessage {
   public Map<String, Integer> unlockFunction;
 
   public static class Data {
-    public GameInfo           gameInfo;
-    public Idols              idols;
-    public Production         production;
-    public Profile            profile;
-    public Inventory          inventory;
-    public Fight              fight;
-    public Travel             travel;
-    public List<NetAward>     netAward;
-    public Group              group;
-    public DailyMission       dailyMission;
-    public Achievement        achievement;
-    public Mission            mission;
-    public RollCall           rollCall;
-    public Event              event;
-    public Ranking            ranking;
-    public Inbox              inbox;
-    public int                currentGroupState;
-    public Map<String, NetaGroup> netaGroup;
-    public String             extObj;
-    public List<Integer>      extIntObj;
+    public GameInfo                                     gameInfo;
+    public Idols                                        idols;
+    public Production                                   production;
+    public Profile                                      profile;
+    public Inventory                                    inventory;
+    public Fight                                        fight;
+    public Travel                                       travel;
+    public List<NetAward>                               netAward;
+    public Group                                        group;
+    public DailyMission                                 dailyMission;
+    public Achievement                                  achievement;
+    public Mission                                      mission;
+    public RollCall                                     rollCall;
+    public Event                                        event;
+    public Ranking                                      ranking;
+    public Inbox                                        inbox;
+    public int                                          currentGroupState;
+    public Map<String, NetaGroup>                       netaGroup;
+    public String                                       extObj;
+    public List<Integer>                                extIntObj;
+    public Map<Integer, Map<Integer, ExtendEventInfo>>  activeEvent;
   }
 
   public static ExtMessage payment() {
@@ -222,32 +224,5 @@ public class ExtMessage {
   }
 
   public void reset() {
-    cmd                     = "";
-    msg                     = "ok";
-    group                   = "";
-    serverTime              = 0;
-    userRemainTime          = 0;
-    timeChange              = false;
-    newInbox                = false;
-    effectResults           = null;
-
-    data.gameInfo           = null;
-    data.idols              = null;
-    data.production         = null;
-    data.profile            = null;
-    data.inventory          = null;
-    data.fight              = null;
-    data.travel             = null;
-    data.netAward           = null;
-    data.group              = null;
-    data.dailyMission       = null;
-    data.achievement        = null;
-    data.mission            = null;
-    data.rollCall           = null;
-    data.event              = null;
-    data.ranking            = null;
-    data.inbox              = null;
-    data.currentGroupState  = 0;
-    data.extObj             = "";
   }
 }

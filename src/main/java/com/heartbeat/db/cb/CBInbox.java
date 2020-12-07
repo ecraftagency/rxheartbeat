@@ -47,7 +47,7 @@ public class CBInbox implements Cruder<PublicMailBoxDAO> {
   }
 
   @Override
-  public void sync(String id, PublicMailBoxDAO obj, Handler<AsyncResult<String>> handler, long expire) {
+  public void sync(String id, PublicMailBoxDAO obj, Handler<AsyncResult<String>> handler, long expireSec) {
 
   }
 
@@ -79,6 +79,11 @@ public class CBInbox implements Cruder<PublicMailBoxDAO> {
       LOG.globalException("node", "CBInbox:sync", e);
       return false;
     }
+  }
+
+  @Override
+  public boolean sync(String id, PublicMailBoxDAO obj, long expireSec) {
+    return false;
   }
 
   @Override
