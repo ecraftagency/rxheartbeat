@@ -162,6 +162,7 @@ public class ProfileController implements Handler<RoutingContext> {
     }
 
     resp.data.activeEvent = activeEvent;
+    resp.data.event       = session.userEvent;
 
     //production section
     session.userProduction.updateProduction(session, serverTime);
@@ -184,7 +185,7 @@ public class ProfileController implements Handler<RoutingContext> {
     //award section
     resp.data.extIntObj = UserNetAward.getUserNetAward(session.id);
 
-    resp.serverTime         = (int)(serverTime);
+    resp.serverTime         = (int)(serverTime/1000);
     return resp;
   }
 

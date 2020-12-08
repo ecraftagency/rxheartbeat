@@ -270,10 +270,13 @@ public class SessionLoginService implements AuthService {
       lr.lastLogin          = session.userProfile.lastLogin;
       lr.registerAt         = session.registerAt;
       lr.gameFunctions      = new HashMap<>();
+      lr.gameTuning         = new HashMap<>();
 
       lr.gameFunctions.putIfAbsent("giftCode", Constant.GAME_FUNCTIONS.GIFT_CODE);
       lr.gameFunctions.putIfAbsent("netaChat", Constant.GAME_FUNCTIONS.NETA_CHAT);
-
+      lr.gameTuning.putIfAbsent("fanPage", Constant.GAME_INFO.FAN_PAGE);
+      lr.gameTuning.putIfAbsent("refCodeLink", Constant.GAME_INFO.REF_CODE_SHARE_LINK);
+      lr.gameTuning.putIfAbsent("adminEmail", Constant.GAME_INFO.ADMIN_MAIL);
       return lr;
     }
 

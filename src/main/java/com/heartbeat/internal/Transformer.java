@@ -253,7 +253,9 @@ public class Transformer {
     res.add(constField("App Store", "GAME_INFO.APPLE_STORE_APP_LINK", "Chuỗi", GAME_INFO.APPLE_STORE_APP_LINK, ""));
     res.add(constField("Tính năng gift code", "GAME_FUNCTIONS.GIFT_CODE", "true|false", Boolean.toString(GAME_FUNCTIONS.GIFT_CODE), "[true|false]"));
     res.add(constField("Tính năng chat netalo", "GAME_FUNCTIONS.NETA_CHAT", "true|false", Boolean.toString(GAME_FUNCTIONS.NETA_CHAT), "[true|false]"));
-
+    res.add(constField("Admin email", "GAME_INFO.ADMIN_MAIL", "Chuỗi", GAME_INFO.ADMIN_MAIL, "Đừng để = rỗng hoặc null"));
+    res.add(constField("Link chia sẻ MGT", "GAME_INFO.REF_CODE_SHARE_LINK", "Chuỗi", GAME_INFO.REF_CODE_SHARE_LINK, "Đừng để = rỗng hoặc null"));
+    res.add(constField("Fan Page", "GAME_INFO.FAN_PAGE", "Chuỗi", GAME_INFO.FAN_PAGE, "Đừng để = rỗng hoặc null"));
     return res;
   }
 

@@ -18,6 +18,9 @@ public class Constant {
     public static final String      DEFAULT_DEVICE_ID_ANDROID       = "6962556a555d60555660593961555d600xff";
     public static String            CH_PLAY_APP_LINK                = "https://play.google.com/store/apps/details?id=com.kooapps.stackybirdandroid&hl=en";
     public static String            APPLE_STORE_APP_LINK            = "https://apps.apple.com/vn/app/apple-store/id375380948?l=vi";
+    public static String            REF_CODE_SHARE_LINK             = "https://localhost.com";
+    public static String            ADMIN_MAIL                      = "cskh.talangoisao@gmail.com";
+    public static String            FAN_PAGE                        = "https://www.facebook.com/TaLaNgoiSaoIdols";
   }
 
   public static class GAME_FUNCTIONS {

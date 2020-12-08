@@ -24,4 +24,5 @@ public class Profile {
   public int          registerAt;
 
   public HashMap<String, Boolean> gameFunctions;
+  public HashMap<String, String>  gameTuning;
 }
