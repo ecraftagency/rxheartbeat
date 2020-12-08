@@ -183,7 +183,12 @@ public class ProfileController implements Handler<RoutingContext> {
     resp.data.achievement   = session.userAchievement;
 
     //award section
-    resp.data.extIntObj = UserNetAward.getUserNetAward(session.id);
+    resp.data.extIntObj     = UserNetAward.getUserNetAward(session.id);
+
+
+    //mission section
+    session.userMission.updateAccomplishment(session);
+    resp.data.mission       = session.userMission;
 
     resp.serverTime         = (int)(serverTime/1000);
     return resp;

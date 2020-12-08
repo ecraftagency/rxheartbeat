@@ -201,7 +201,7 @@ public class UserRollCall extends RollCall {
       return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "gift_card_data_not_found");
 
     GiftInfo giftInfo       = new GiftInfo();
-    giftInfo.todayClaim     = true;
+    giftInfo.todayClaim     = false;
     giftInfo.remainDay      = giftDto.expireDay;
     giftInfo.lastClaimTime  = curSec;
     giftInfo.boughtTime     = curSec;
