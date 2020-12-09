@@ -259,8 +259,8 @@ public class Msg {
     map.put(UP_LINK_NOT_EXIST, "Mã giới thiệu không tồn tại");
     map.put(UP_LINK_FUlL, "Mã giới thiệu đã full");
     map.put(LINK_INSUFFICIENT_CLAIM, "Chưa đạt điều kiện lĩnh thưởng");
-    map.put(INVALID_IDENTITY, "Không thể tự nhập ãm của mình");
-    map.put(ALREADY_LINK, "Đã giới thiệu qua");
+    map.put(INVALID_IDENTITY, "Không thể tự nhập mã của mình");
+    map.put(ALREADY_LINK, "Không thể tự nhập mã của mình");
     map.put(LINK_ALREADY_CLAIM, "Đã nhận thưởng");
   }
 }

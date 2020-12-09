@@ -12,11 +12,13 @@ import com.heartbeat.event.TimingEvent;
 import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
+import com.heartbeat.model.data.UserEvent;
 import com.heartbeat.model.data.UserGroup;
 import com.heartbeat.model.data.UserNetAward;
 import com.heartbeat.scheduler.ExtendEventInfo;
 import com.heartbeat.service.GroupService;
 import com.heartbeat.service.impl.GroupServiceV1;
+import com.statics.GoldenTimeData;
 import com.statics.OfficeData;
 import com.statics.ShopData;
 import com.statics.VipData;
@@ -162,7 +164,13 @@ public class ProfileController implements Handler<RoutingContext> {
     }
 
     resp.data.activeEvent = activeEvent;
+
+    //golden time
+    int goldenTimeId      = UserEvent.getCurrentGoldenEvent(serverTime);
+    resp.data.extObj      = Utilities.gson.toJson(GoldenTimeData.goldenTimeMap);
+    session.userEvent.currentGoldenEvent = goldenTimeId;
     resp.data.event       = session.userEvent;
+
 
     //production section
     session.userProduction.updateProduction(session, serverTime);
@@ -217,7 +225,7 @@ public class ProfileController implements Handler<RoutingContext> {
       if (ar.succeeded()) {
         resp.msg = evtBusResp.getString("msg");
         if (resp.msg.equals("ok")) {
-          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,1,1,0));
+          EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, Arrays.asList(100,130,10,0));
           resp.effectResults = session.effectResults;
         }
       }

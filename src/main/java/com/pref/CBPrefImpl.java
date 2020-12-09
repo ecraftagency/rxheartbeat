@@ -40,7 +40,7 @@ public class CBPrefImpl implements PrefService {
       if (ar.succeeded()) {
         Identity identity = ar.result();
         if (identity.upLink != null && !identity.upLink.equals("")) {
-          handler.handle(Future.failedFuture("already_link"));
+          handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.ALREADY_LINK, "already_link")));
           return;
         }
         loadIdentity(upLink, uar -> {
@@ -55,7 +55,7 @@ public class CBPrefImpl implements PrefService {
               return;
             }
             if (upLinkIdentity.links.contains(identity.id)) {
-              handler.handle(Future.failedFuture("already_linked"));
+              handler.handle(Future.failedFuture(Msg.map.getOrDefault(Msg.ALREADY_LINK, "already_link")));
               return;
             }
             upLinkIdentity.links.add(identity.id);

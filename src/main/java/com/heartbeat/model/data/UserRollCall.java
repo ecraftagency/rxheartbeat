@@ -201,14 +201,19 @@ public class UserRollCall extends RollCall {
       return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "gift_card_data_not_found");
 
     GiftInfo giftInfo       = new GiftInfo();
-    giftInfo.todayClaim     = false;
-    giftInfo.remainDay      = giftDto.expireDay;
+    /* todo un mark this for enabling first day claim
+    giftInfo.todayClaim     = true;
     giftInfo.lastClaimTime  = curSec;
+     */
+    giftInfo.todayClaim     = false;
+    giftInfo.lastClaimTime  = curSec - 86400;
+    giftInfo.remainDay      = giftDto.expireDay;
     giftInfo.boughtTime     = curSec;
     giftInfo.giftType       = type;
 
-    for (List<Integer> r : giftDto.initReward)
-      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
+    //todo this effect is moving to payment reward
+//    for (List<Integer> r : giftDto.initReward)
+//      EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
 
     giftCards.put(type, giftInfo);
     session.userDailyMission.addRecord(Constant.DAILY_MISSION.GIFT_CARD_BUY_MISSION_TYPE);

@@ -10,4 +10,7 @@ public class GatewayMsg {
   public String     ggPlay;
   public int        serverVersion;
   public int        minClientVersion;
+  public String     adminEmail;
+  public String     fanPage;
+  public String     refCodeLink;
 }
