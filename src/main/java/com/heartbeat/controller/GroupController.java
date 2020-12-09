@@ -241,7 +241,7 @@ public class GroupController implements Handler<RoutingContext> {
 
   private ExtMessage processGroupApproval(Session session, RoutingContext ctx) {
     int memberId    = ctx.getBodyAsJson().getInteger("memberId");
-    String action   = ctx.getBodyAsJson().getString("action");
+    String action   = ctx.getBodyAsJson().getString("action"); //todo [approve, refuse, refuse_all]
     ExtMessage resp = ExtMessage.group();
 
     if (session.userGameInfo.titleId < UNLOCK_FUNCTION.GROUP_UNLOCK_LEVEL) {
@@ -249,7 +249,6 @@ public class GroupController implements Handler<RoutingContext> {
       return resp;
     }
 
-    //resp.msg        = session.approveMember(memberId, action);
     resp.msg        = groupService.approveMember(session, memberId, action);
     resp.data.group = GroupPool.getGroupFromPool(session.groupID);
     resp.data.currentGroupState = session.groupID;

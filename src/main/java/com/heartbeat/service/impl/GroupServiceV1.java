@@ -14,7 +14,6 @@ import com.heartbeat.service.GroupService;
 import com.statics.WordFilter;
 import com.transport.model.GameInfo;
 import com.transport.model.Group;
-import com.transport.model.Profile;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

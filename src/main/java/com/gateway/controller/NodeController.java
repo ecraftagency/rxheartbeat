@@ -2,14 +2,10 @@ package com.gateway.controller;
 
 import com.common.Constant;
 import com.transport.GatewayMsg;
-import com.transport.model.Node;
 import com.gateway.NodePool;
 import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
-
-import java.util.List;
-
 
 public class NodeController implements Handler<RoutingContext> {
   @Override

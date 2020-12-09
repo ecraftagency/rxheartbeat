@@ -123,6 +123,11 @@ public class UserGroup extends Group {
       isChange = true;
       return "ok";
     }
+    else if(action.equals("refuse_all")) {
+      pendingMembers.clear();
+      isChange = true;
+      return "ok";
+    }
     else {
       return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
     }
