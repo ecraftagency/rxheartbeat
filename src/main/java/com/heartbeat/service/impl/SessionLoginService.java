@@ -12,7 +12,6 @@ import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.heartbeat.model.SessionPool;
 import com.heartbeat.model.data.UserGroup;
-import com.heartbeat.netaChat.NetaAPI;
 import com.heartbeat.service.AuthService;
 import com.heartbeat.service.GroupService;
 import com.transport.LoginRequest;
