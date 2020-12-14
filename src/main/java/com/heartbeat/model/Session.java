@@ -47,6 +47,7 @@ public class Session {
   transient public String osPlatForm        = Constant.EMPTY_STRING;
   transient public String osVersion         = Constant.EMPTY_STRING;
   transient public String buildSource       = "VI";
+  transient public boolean sleep            = false;
   transient public int    serverVersionInt  = Constant.GAME_INFO.SERVER_VERSION;
   transient public DeviceUID.DeviceUIDUpdateInfo deviceInfo;
   transient public ServerWebSocket wsCtx;

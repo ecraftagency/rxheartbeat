@@ -198,6 +198,8 @@ public class ProfileController implements Handler<RoutingContext> {
     session.userMission.updateAccomplishment(session);
     resp.data.mission       = session.userMission;
 
+    //golden hour section
+
     resp.serverTime         = (int)(serverTime/1000);
     return resp;
   }
@@ -527,9 +529,9 @@ public class ProfileController implements Handler<RoutingContext> {
     }
 
     resp.msg = result;
-    resp.data.gameInfo = session.userGameInfo;
-    resp.data.idols = session.userIdol;
-    resp.data.production = session.userProduction;
+    resp.data.gameInfo    = session.userGameInfo;
+    resp.data.idols       = session.userIdol;
+    resp.data.production  = session.userProduction;
     return resp;
   }
 

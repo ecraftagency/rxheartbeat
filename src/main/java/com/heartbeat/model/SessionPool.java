@@ -71,7 +71,10 @@ public class SessionPool {
           Integer sessionId = e.nextElement();
           Session session = pool.get(sessionId);
           if (session != null) {
-            if (second - session.lastHearBeatTime >= Constant.ONLINE_INFO.ONLINE_HEARTBEAT_TIME) {
+            int hbInterval = session.osPlatForm.equals("ios") && session.sleep ?
+                    Constant.ONLINE_INFO.SLEEP_HEARTBEAT_TIME :
+                    Constant.ONLINE_INFO.ONLINE_HEARTBEAT_TIME;
+            if (second - session.lastHearBeatTime >= hbInterval) {
               pool.remove(sessionId);
               session.close();
             }

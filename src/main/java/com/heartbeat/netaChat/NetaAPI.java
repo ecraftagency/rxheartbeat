@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NetaAPI {
   private static String  NETACHAT_ENDPOINT   = "http://dev.conn1.netalo.vn:2082/data";
-  private static String  NETACHAT_TOKEN      = "54ca583b474538c5f77bab6fa30f1598972db50d";
-  private static String  NETACHAT_UID        = "281474976981364";
+  private static String  NETACHAT_TOKEN      = "c81303946bb63eab834e6131bc70e12e314269a6";
+  private static long    NETACHAT_UID        = 1125899907239071L;
   private static String  TEST_GID            = "286075168996800";
 
   public static Map<String, NetaGroup>  chatGroup;
@@ -76,12 +76,12 @@ public class NetaAPI {
 
     JSONObject createGroup = new JSONObject();
     try {
-      createGroup.put("type", 1);
-      createGroup.put("owner_uin", NETACHAT_UID);
+      createGroup.put("appid", 4);
       createGroup.put("name", groupName);
+      createGroup.put("type", 2);
       createGroup.put("avatar_url", "");
+      createGroup.put("owner_uin", NETACHAT_UID);
       createGroup.put("occupants_uins", Collections.singletonList(NETACHAT_UID));
-      createGroup.put("sender_name", "Admin");
 
       socket.emit("create_group", createGroup).on("create_group", groupResp -> {
         JSONObject resp = (JSONObject)groupResp[0];

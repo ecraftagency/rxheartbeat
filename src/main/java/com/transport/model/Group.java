@@ -99,6 +99,15 @@ public class Group {
 
       return member;
     }
+
+    public void reBalance() {
+      if (GroupMissionData.missionMap != null) {
+        for (GroupMissionData.GroupMission gm : GroupMissionData.missionMap.values()) {
+          Mission mission = Mission.of(gm.id, 0);
+          missions.putIfAbsent(gm.id, mission);
+        }
+      }
+    }
   }
 
   public static boolean isValidGid(int gid) {

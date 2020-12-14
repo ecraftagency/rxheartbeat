@@ -25,6 +25,7 @@ public class GroupPool {
 
   public static void addGroup(UserGroup group) {
     if (group != null && pool.get(group.id) == null) {
+      group.reBalance();
       pool.put(group.id, group);
     }
   }

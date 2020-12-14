@@ -23,14 +23,20 @@ public class SystemController implements Handler<RoutingContext> {
       if (session != null && session.userProfile.lastLogin == lastIssued) {
         long curMs = System.currentTimeMillis();
         ExtMessage resp;
-        if (cmd.equals("heartbeat")) {
-          resp = processHeartBeat(session, curMs);
+        switch (cmd) {
+          case "heartbeat":
+            resp = processHeartBeat(session, curMs);
+            break;
+          case "sleep":
+            resp = ExtMessage.system();
+            resp.group = "none";
+            session.sleep = true;
+            break;
+          default:
+            resp = ExtMessage.system();
+            resp.msg = "unknown_cmd";
+            break;
         }
-        else {
-          resp = ExtMessage.system();
-          resp.msg = "unknown_cmd";
-        }
-
         resp.cmd = cmd;
         ctx.response().putHeader("Content-Type", "text/json").end(Json.encode(resp));
       }
@@ -57,6 +63,7 @@ public class SystemController implements Handler<RoutingContext> {
     session.userGameInfo.subtractTime(deltaTime); //todo money money money ^^!
 
     session.updateOnline(curMs);
+    session.sleep = false;
     resp.userRemainTime = session.userGameInfo.remainTime();
 
     //check new inbox message
@@ -64,6 +71,7 @@ public class SystemController implements Handler<RoutingContext> {
     resp.newInbox = lastPublicMsgTime > 0 || session.userInbox.haveNewPriMsg();
 
     resp.serverTime = second;
+
     return resp;
   }
 }

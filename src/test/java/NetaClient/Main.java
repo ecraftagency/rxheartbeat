@@ -31,11 +31,11 @@ public class Main {
                                         281474976710854L,   281474977316610L,    281474976981262L,  281474976711244L,   281474976710805L
     );
     //netaService.listGroup();
-    //netaService.createGroup(4, "awk {print $1}", emptyList);
+    netaService.createGroup(4, "awk {print $1}", emptyList);
 //    netaService.updateGroup(286097293284097L, "awk {print $1}",Arrays.asList(), mix);
 
-    for (Long uin : mix) {
-      netaService.updateGroup(286097293284097L, "awk {print $1}",Arrays.asList(uin), new ArrayList<>());
-    }
+//    for (Long uin : mix) {
+//      netaService.updateGroup(286097293284097L, "awk {print $1}",Arrays.asList(uin), new ArrayList<>());
+//    }
   }
 }

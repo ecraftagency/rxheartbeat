@@ -18,10 +18,10 @@ public class NetaClientV1 implements NetaService {
   private NetaHandler listener;
   Socket                    socket;
 
-  private String            adminToken  = "54ca583b474538c5f77bab6fa30f1598972db50d";
+  private String            adminToken  = "c81303946bb63eab834e6131bc70e12e314269a6";//"54ca583b474538c5f77bab6fa30f1598972db50d";
   private String            uri         = "http://dev.conn1.netalo.vn:2082/data";
   private boolean           isConnect   = false;
-  private long              admin_uin   = 281474976981364L;
+  private long              admin_uin   = 1125899907239071L;//281474976981364L;
   private static final int  PRI_GRP     = 1;
   private static final int  COM_GRP     = 2;
   private static final int  PUB_GRP     = 3;

@@ -79,6 +79,8 @@ public class Constant {
     public static int               ONLINE_RECORD_UPDATE_TIME       = 20; // 20'
     public static int               ONLINE_RECORD_LDB_TIME          = 4; // 20'
     public static int               ONLINE_HEARTBEAT_TIME           = 30; //second
+    public static int               SLEEP_HEARTBEAT_TIME            = 60*10; //second
+
     public static int               ONLINE_HEARTBEAT_CHECK_INTERVAL = 10000; //MILIS
     public static int               SYNC_GROUP_INTERVAL             = 10000; //MILIS
   }

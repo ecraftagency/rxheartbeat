@@ -298,6 +298,12 @@ public class UserGroup extends Group {
     return true;
   }
 
+  public void reBalance() {
+    for (Member member : members.values()) {
+      member.reBalance();
+    }
+  }
+
   public void updateMemberInfo(Session session, String updateFields) {
     Member member = members.get(session.id);
     if (member == null)
