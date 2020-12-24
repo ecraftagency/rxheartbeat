@@ -164,6 +164,7 @@ public class ProfileController implements Handler<RoutingContext> {
     }
 
     resp.data.activeEvent = activeEvent;
+    session.userEvent.reBalance();
 
     //golden time
     int goldenTimeId      = UserEvent.getCurrentGoldenEvent(serverTime);

@@ -143,6 +143,9 @@ public class InternalController implements Handler<Message<JsonObject>> {
         case "getNetaGroup":
           processGetNetaGroup(ctx);
           return;
+        case "deleteNetaGroup":
+          processDeleteNetaGroup(ctx);
+          return;
         case "addNetaGroup":
           processAddNetaGroup(ctx);
           return;
@@ -161,6 +164,42 @@ public class InternalController implements Handler<Message<JsonObject>> {
       ctx.reply(resp);
       LOG.globalException("node", String.format("InternalCall:%s", cmd), e);
     }
+  }
+
+  private void processDeleteNetaGroup(Message<JsonObject> ctx) {
+    String groupId        = ctx.body().getString("groupId");
+    NetaAPI.chatGroup.remove(groupId);
+    JsonObject resp       = new JsonObject();
+    JsonArray netaGroups  = new JsonArray();
+
+    for (Map.Entry<String, NetaGroup> entry : NetaAPI.chatGroup.entrySet()) {
+      JsonObject netaGroup = new JsonObject();
+      netaGroup.put("groupId", entry.getKey());
+      netaGroup.put("groupName", entry.getValue().groupName);
+      netaGroup.put("member", entry.getValue().nMember);
+      netaGroups.add(netaGroup);
+    }
+
+    resp.put("netaGroups", netaGroups);
+    resp.put("msg", "ok");
+    ctx.reply(resp);
+  }
+
+  private void processGetNetaGroup(Message<JsonObject> ctx) {
+    JsonObject resp       = new JsonObject();
+    JsonArray netaGroups  = new JsonArray();
+
+    for (Map.Entry<String, NetaGroup> entry : NetaAPI.chatGroup.entrySet()) {
+      JsonObject netaGroup = new JsonObject();
+      netaGroup.put("groupId", entry.getKey());
+      netaGroup.put("groupName", entry.getValue().groupName);
+      netaGroup.put("member", entry.getValue().nMember);
+      netaGroups.add(netaGroup);
+    }
+
+    resp.put("netaGroups", netaGroups);
+    resp.put("msg", "ok");
+    ctx.reply(resp);
   }
 
   private void processQueryStats(Message<JsonObject> ctx) {
@@ -213,23 +252,6 @@ public class InternalController implements Handler<Message<JsonObject>> {
       resp.put("msg", ar.result());
       ctx.reply(resp);
     });
-  }
-
-  private void processGetNetaGroup(Message<JsonObject> ctx) {
-    JsonObject resp       = new JsonObject();
-    JsonArray netaGroups  = new JsonArray();
-
-    for (Map.Entry<String, NetaGroup> entry : NetaAPI.chatGroup.entrySet()) {
-      JsonObject netaGroup = new JsonObject();
-      netaGroup.put("groupId", entry.getKey());
-      netaGroup.put("groupName", entry.getValue().groupName);
-      netaGroup.put("member", entry.getValue().nMember);
-      netaGroups.add(netaGroup);
-    }
-
-    resp.put("netaGroups", netaGroups);
-    resp.put("msg", "ok");
-    ctx.reply(resp);
   }
 
   private void processPlanEvent(Message<JsonObject> ctx) {

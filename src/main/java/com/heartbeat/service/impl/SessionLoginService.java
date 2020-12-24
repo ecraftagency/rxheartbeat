@@ -272,6 +272,7 @@ public class SessionLoginService implements AuthService {
 
       lr.gameFunctions.putIfAbsent("giftCode", Constant.GAME_FUNCTIONS.GIFT_CODE);
       lr.gameFunctions.putIfAbsent("netaChat", Constant.GAME_FUNCTIONS.NETA_CHAT);
+      lr.gameFunctions.putIfAbsent("refCode", Constant.GAME_FUNCTIONS.REF_CODE);
       return lr;
     }
 
@@ -316,7 +317,7 @@ public class SessionLoginService implements AuthService {
         if (!clientVersion.isEmpty())
           session.userProfile.clientVersion = Integer.parseInt(clientVersion);
 
-        LOG.console("createNewPlayer - userID: " + strUserID);
+        //LOG.console("createNewPlayer - userID: " + strUserID);
 
         handler.handle(Future.succeededFuture(session));
       }

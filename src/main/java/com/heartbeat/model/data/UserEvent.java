@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.common.Constant.*;
-
 public class UserEvent extends Event {
   public static UserEvent ofDefault() {
     UserEvent ue      = new UserEvent();

@@ -56,6 +56,8 @@ public class GroupPool {
         while (e.hasMoreElements()) {
           Integer groupID = e.nextElement();
           UserGroup group = pool.get(groupID);
+          if (group != null)
+            group.reEvaluateEventState();
           if (group != null && group.isChange) {
             CBGroup.getInstance().sync(Integer.toString(group.id), group, ar -> {
               group.isChange = false;

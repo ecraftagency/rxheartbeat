@@ -28,15 +28,15 @@ public class TimeCheckCommand<K, V extends Comparable<V> & Common.hasKey<K>> imp
         continue;
       if (curSec > eri.endTime + eri.flushDelay) {
         ldb.flush();
-        LOG.console(String.format("LDB %d flush", eri.eventId));
+        //LOG.console(String.format("LDB %d flush", eri.eventId));
       }
       else if (curSec > eri.endTime) {
         ldb.close();
-        LOG.console(String.format("LDB %d close", eri.eventId));
+        //LOG.console(String.format("LDB %d close", eri.eventId));
       }
       else if (curSec > eri.startTime) {
         ldb.open();
-        LOG.console(String.format("LDB %d open", eri.eventId));
+        //LOG.console(String.format("LDB %d open", eri.eventId));
       }
     }
   }

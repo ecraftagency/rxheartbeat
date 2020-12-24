@@ -28,7 +28,7 @@ public class DB {
             "genNCExchangeLink", "genNPExchangeLink", "genGetRoleLink", "getSession",
             "sendMail", "sendPrivateMail", "getEvents", "setUserEventTime", "getRole100D",
             "updatePaymentPackage", "getConfig", "injectConstant", "getLDB", "getSessionId",
-            "getPaymentInfo", "getShopInfo", "updateShopStatus", "getStats", "planEvent", "getNetaGroup", "addNetaGroup", "queryStats"));
+            "getPaymentInfo", "getShopInfo", "updateShopStatus", "getStats", "planEvent", "getNetaGroup", "addNetaGroup", "queryStats", "deleteNetaGroup"));
 
     users.put("ly_mac_sau",   GmtUser.of("ly_mac_sau", "12345678").setPerms(rootPerms));
     users.put("duy79",        GmtUser.of("duy79", "12345678").setPerms(rootPerms));

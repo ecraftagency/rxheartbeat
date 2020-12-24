@@ -4,6 +4,7 @@ import com.heartbeat.Passport100D;
 import com.heartbeat.scheduler.ExtendEventInfo;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class Constant {
@@ -26,6 +27,7 @@ public class Constant {
   public static class GAME_FUNCTIONS {
     public static boolean GIFT_CODE = true;
     public static boolean NETA_CHAT = true;
+    public static boolean REF_CODE  = true;
   }
 
   public static class SERVICE {
@@ -191,7 +193,7 @@ public class Constant {
     public static final Map<Integer, ExtendEventInfo> evtMap;
 
     static {
-      evtMap = new HashMap<>();
+      evtMap = new ConcurrentHashMap<>();
       evtMap.put(GE_PROD_EVT_ID,        ExtendEventInfo.of(GE_PROD_EVT_ID, 1));
       evtMap.put(GE_GS_EVT_ID,          ExtendEventInfo.of(GE_GS_EVT_ID, 1));
       evtMap.put(GE_CRZ_DEGREE_EVT_ID,  ExtendEventInfo.of(GE_CRZ_DEGREE_EVT_ID, 1));

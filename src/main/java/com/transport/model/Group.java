@@ -32,29 +32,43 @@ public class Group {
   public String                   internalInform;
   public int                      joinType;
   public String                   docType           = "group";
+
+  //a map from (evt_id) to current state under that event!
+  //should be refresh each time a new event placed from gmtool
+  public Map<Integer, GroupMissionState> evt2MS;
+
   public transient boolean        isChange;
 
   //runtime data
   public transient Map<Integer, GroupMissionData.GroupMission>  missions;
   public Map<Integer, Integer>                                  missionHitMember;
-//  public int                      missionStartDate;
-//  public int                      missionEndDate;
-//  public String                   strStartDate;
-//  public String                   strEndDate;
 
   public void close() {
 
   }
 
+  public static class GroupMissionState {
+    public int id;      //event id
+    public int cas;
+    public int totalCM; //total claimed member
+    public static GroupMissionState of(int id, int cas, int totalCM) {
+      GroupMissionState gs = new GroupMissionState();
+      gs.id = id;
+      gs.cas = cas;
+      gs.totalCM = totalCM;
+      return gs;
+    }
+  }
+
   public static class Mission {
-    public int id;
-    public int count;
-    public boolean claim;
+    public int      id;
+    public int      count;
+    public boolean  claim;
     public static Mission of(int id, int count) {
       Mission res = new Mission();
-      res.id = id;
-      res.count = count;
-      res.claim = true;
+      res.id      = id;
+      res.count   = count;
+      res.claim   = true;
       return res;
     }
     public void resetMission() {
@@ -108,6 +122,8 @@ public class Group {
         }
       }
     }
+
+
   }
 
   public static boolean isValidGid(int gid) {

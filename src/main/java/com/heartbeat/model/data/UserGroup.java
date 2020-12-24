@@ -20,6 +20,7 @@ import static com.statics.GroupMissionData.*;
 import static com.common.Constant.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@SuppressWarnings("unused")
 public class UserGroup extends Group {
   public static final long MAX_GROUP_MEMBER = 25;
 
@@ -37,6 +38,13 @@ public class UserGroup extends Group {
     re.name               = name;
     re.externalInform     = externalInform;
     re.internalInform     = internalInform;
+    re.evt2MS             = new HashMap<>();
+
+    if (GroupMissionData.missionMap != null) {
+      for (GroupMissionData.GroupMission gm : GroupMissionData.missionMap.values()) {
+        re.evt2MS.putIfAbsent(gm.id, GroupMissionState.of(gm.id, 0, 0));
+      }
+    }
 
     Member owner          = Member.of(session.id, session.userGameInfo.displayName);
     owner.role            = OWNER_ROLE;
@@ -49,6 +57,19 @@ public class UserGroup extends Group {
     owner.avatarId        = session.userGameInfo.avatar;
     re.members.put(session.id, owner);
     return re;
+  }
+
+  public void reEvaluateEventState() {
+    for (ExtendEventInfo eei : GROUP_EVENT.evtMap.values()) {
+      evt2MS.computeIfPresent(eei.eventId, (k,v) -> {
+        if (v.cas != eei.startTime) {
+          v.cas = eei.startTime;
+          v.totalCM = 0;
+        }
+        isChange = true;
+        return v;
+      });
+    }
   }
 
   @Override
@@ -106,30 +127,28 @@ public class UserGroup extends Group {
   }
 
   public synchronized String approveGroup(int memberId, String action) {
-    if (action.equals("approve")) {
-      if (members.size() >= MAX_GROUP_MEMBER)
-        return Msg.map.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
+    switch (action) {
+      case "approve":
+        if (members.size() >= MAX_GROUP_MEMBER)
+          return Msg.map.getOrDefault(Msg.GROUP_FULL_SEAT, "group_full_seat");
 
-      Member member = pendingMembers.get(memberId);
-      if (member == null)
-        return Msg.map.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
-      members.put(memberId, member);
-      pendingMembers.remove(memberId);
-      isChange = true;
-      return "ok";
-    }
-    else if(action.equals("refuse")) {
-      pendingMembers.remove(memberId);
-      isChange = true;
-      return "ok";
-    }
-    else if(action.equals("refuse_all")) {
-      pendingMembers.clear();
-      isChange = true;
-      return "ok";
-    }
-    else {
-      return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
+        Member member = pendingMembers.get(memberId);
+        if (member == null)
+          return Msg.map.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
+        members.put(memberId, member);
+        pendingMembers.remove(memberId);
+        isChange = true;
+        return "ok";
+      case "refuse":
+        pendingMembers.remove(memberId);
+        isChange = true;
+        return "ok";
+      case "refuse_all":
+        pendingMembers.clear();
+        isChange = true;
+        return "ok";
+      default:
+        return Msg.map.getOrDefault(Msg.UNKNOWN_ERR, "unknown_err");
     }
   }
 
@@ -258,7 +277,10 @@ public class UserGroup extends Group {
       return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
     }
 
-    if (calcTotalClaimedMember(missionId) >= MAX_GROUP_MEMBER)
+//    if (calcTotalClaimedMember(missionId) >= MAX_GROUP_MEMBER)
+//      return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
+    GroupMissionState missionState = evt2MS.get(missionId);
+    if (missionState == null || missionState.totalCM >= MAX_GROUP_MEMBER)
       return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
 
     if (!checkPreviousClaim(member, missionId))
@@ -283,14 +305,14 @@ public class UserGroup extends Group {
     }
 
     mission.claim = true;
-
+    missionState.totalCM++;
     return "ok";
   }
 
   //todo must finish prev mission before claim current mission
   private boolean checkPreviousClaim(Member member, int missionId) {
     for (int i = 1; i < missionId; i++) {
-      Mission mission = member.missions.get(missionId);
+      Mission mission = member.missions.get(i);
       if (mission != null)
         if (!mission.claim)
           return false;
@@ -302,19 +324,21 @@ public class UserGroup extends Group {
     for (Member member : members.values()) {
       member.reBalance();
     }
+    if (GroupMissionData.missionMap != null) {
+      for (GroupMissionData.GroupMission gm : GroupMissionData.missionMap.values()) {
+        evt2MS.putIfAbsent(gm.id, GroupMissionState.of(gm.id, 0, 0));
+      }
+    }
   }
 
   public void updateMemberInfo(Session session, String updateFields) {
     Member member = members.get(session.id);
     if (member == null)
       return;
-    switch (updateFields) {
-      case "totalProperty" :
-        member.totalCrt = session.userIdol.totalCrt();
-        member.totalAttr = session.userIdol.totalAttr();
-        member.totalPerf = session.userIdol.totalPerf();
-        return;
-      default:
+    if ("totalProperty".equals(updateFields)) {
+      member.totalCrt = session.userIdol.totalCrt();
+      member.totalAttr = session.userIdol.totalAttr();
+      member.totalPerf = session.userIdol.totalPerf();
     }
   }
 }

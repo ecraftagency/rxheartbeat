@@ -256,6 +256,8 @@ public class Transformer {
     res.add(constField("Admin email", "GAME_INFO.ADMIN_MAIL", "Chuỗi", GAME_INFO.ADMIN_MAIL, "Đừng để = rỗng hoặc null"));
     res.add(constField("Link chia sẻ MGT", "GAME_INFO.REF_CODE_SHARE_LINK", "Chuỗi", GAME_INFO.REF_CODE_SHARE_LINK, "Đừng để = rỗng hoặc null"));
     res.add(constField("Fan Page", "GAME_INFO.FAN_PAGE", "Chuỗi", GAME_INFO.FAN_PAGE, "Đừng để = rỗng hoặc null"));
+    res.add(constField("Bật tắt tính năng MGT", "GAME_FUNCTIONS.REF_CODE", "true|false", Boolean.toString(GAME_FUNCTIONS.REF_CODE), "[true|false]"));
+
     return res;
   }
 

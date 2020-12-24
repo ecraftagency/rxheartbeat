@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NetaAPI {
   private static String  NETACHAT_ENDPOINT   = "http://dev.conn1.netalo.vn:2082/data";
-  private static String  NETACHAT_TOKEN      = "c81303946bb63eab834e6131bc70e12e314269a6";
+  private static String  NETACHAT_TOKEN      = "a057d63b7811534555142bd2fc0cb22592fc3b71";
   private static long    NETACHAT_UID        = 1125899907239071L;
   private static String  TEST_GID            = "286075168996800";
 
@@ -49,17 +49,17 @@ public class NetaAPI {
 
   public static void initNetaChat() {
     try {
-      IO.Options opts = new IO.Options();
-      opts.transports = new String[]{"websocket"};
-      opts.query      = String.format("session=%s", NETACHAT_TOKEN);
-      opts.reconnection = false;
+      IO.Options opts   = new IO.Options();
+      opts.transports   = new String[]{"websocket"};
+      opts.query        = String.format("session=%s", NETACHAT_TOKEN);
+      opts.reconnection = true;
 
       socket = IO.socket(NETACHAT_ENDPOINT, opts);
       socket  .on(Socket.EVENT_CONNECT, ca -> System.out.println("connected"))
-              .on(Socket.EVENT_ERROR, ea -> {
-                socket = null;
-                LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.initNetaChat", "Error on Connection");
-              });
+              .on(Socket.EVENT_ERROR, ea ->
+                      LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.initNetaChat", "Socket.EVENT_ERROR"))
+              .on(Socket.EVENT_DISCONNECT, de ->
+                      LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.initNetaChat", "Socket.EVENT_DISCONNECT"));
       socket.on("update_group", new UpdateGroupHandler());
       socket.connect();
     }
@@ -70,7 +70,7 @@ public class NetaAPI {
 
   public static void addGroup(String groupName, Handler<AsyncResult<String>> handler) {
     if (socket == null) {
-      LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.joinGroup", "no connection");
+      LOG.globalException(String.format("node_%d", HBServer.nodeId), "NetaAPI.addGroup", "no connection");
       handler.handle(Future.failedFuture("no_connection"));
     }
 

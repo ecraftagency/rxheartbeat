@@ -31,8 +31,14 @@
               </thead>
               <tbody>
                   <tr v-for="group in resp.netaGroups">
-                    <td v-for="key in Object.keys(resp.netaGroups[0])">{{ group[key] }}</td>
+                      <td>{{ group['groupId'] }}</td>
+                      <td>{{ group['groupName'] }}</td>
+                      <td>{{ group['member'] }}</td>
+                      <td>
+                        <button type="button" class="btn btn-primary w-100 btn-sm" v-on:click="deleteGroup(group['groupId'])">Xóa Group</button>
+                      </td>
                   </tr>
+
               </tbody>
           </table>
         </div>
@@ -73,6 +79,12 @@ var app = new Vue({
     },
     addGroup: function(event) {
       let data = { cmd:'addNetaGroup', serverId: this.serverId, groupName:this.groupName};
+      fetch(host, postOptions(data)).then(response => response.json())
+      .then(data => this.success(data))
+      .catch((error) => this.isLoaded = false);
+    },
+    deleteGroup: function(event) {
+      let data = {cmd:'deleteNetaGroup', serverId:this.serverId, groupId:event};
       fetch(host, postOptions(data)).then(response => response.json())
       .then(data => this.success(data))
       .catch((error) => this.isLoaded = false);

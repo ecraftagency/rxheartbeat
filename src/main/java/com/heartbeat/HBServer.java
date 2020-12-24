@@ -220,12 +220,12 @@ public class HBServer extends AbstractVerticle {
         router.post("/api/payment").handler(new PaymentController());
         router.post("/api/netalo").handler(new NetaChatController());
 
-        router.get("/loaderio-9f589512e81ab81bdd49eb1a562768db/").handler(ctx ->
-                ctx.response().end("loaderio-9f589512e81ab81bdd49eb1a562768db"));
+        router.get("/loaderio-a59b4da106950817e948970913ef55d8/").handler(ctx ->
+                ctx.response().end("loaderio-a59b4da106950817e948970913ef55d8"));
 
-        HttpServerOptions options = new HttpServerOptions().setSsl(true)
+        HttpServerOptions options = new HttpServerOptions()
+        .setSsl(true)
         .setKeyStoreOptions(new JksOptions().setPath("keystore.jks").setPassword("changeit"));
-
         vertx.createHttpServer(options)
                 .requestHandler(router)
                 .listen(nodePort);
