@@ -50,7 +50,7 @@ public class UserRollCall extends RollCall {
     return "ok";
   }
 
-  private void reCalcGiftCardInfo(Session session, int second) {
+  public void reCalcGiftCardInfo(Session session, int second) {
     for (Map.Entry<Integer, GiftInfo> entry : giftCards.entrySet()) {
       GiftCardData.GiftCardDto giftDto = GiftCardData.giftCardDtoMap.stream()
               .filter(e -> e.type == entry.getKey()) //key = type of gift [1,2,3] -> [week, month, year]
@@ -186,6 +186,8 @@ public class UserRollCall extends RollCall {
       EffectManager.inst().handleEffect(EffectHandler.ExtArgs.of(), session, r);
 
     giftInfo.remainDay      = giftDto.expireDay - nDays;
+    if (giftInfo.remainDay < 0)
+      giftInfo.remainDay = 0;
     giftInfo.lastClaimTime  = second;
     giftInfo.todayClaim     = true;
     return "ok";

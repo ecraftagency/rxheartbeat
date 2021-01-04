@@ -127,45 +127,29 @@
         </div>
       </div>
     </div>
-
-    <!--div class="card top-buffer">
-      <div class="card-header" id="sendHeader">
-          <h5 class="text-center">
-            <button class="btn" data-toggle="collapse" data-target="#sendCollapse" aria-expanded="false" aria-controls="sendCollapse">
-              Gửi mail cá nhân
-            </button>
-          </h5>
-      </div>
-      <div id="sendCollapse" class="collapse" aria-labelledby="sendHeader" data-parent="#accordion">
-        <div class="card-body">
-          <div class="row">
-             <div class="receipts col-sm-12">
-                <input v-model="receipts" type="text" class="form-control" id="receipts" name="receipts"
-                placeholder="id...">
-             </div>
+    <div v-if="resp.session.userGift.length > 0" class="card top-buffer">
+          <div class="card-header" id="userGiftHeader">
+              <h5 class="text-center">
+                <button class="btn" data-toggle="collapse" data-target="#userGiftCollapse" aria-expanded="false" aria-controls="userGiftCollapse">
+                  Thông tin giftcard
+                </button>
+              </h5>
           </div>
-          <div class="row top-buffer">
-             <div class="col-sm-4">
-                <input v-model="mailTitle" type="text" class="form-control" id="mailTitle" name="mailTitle"
-                placeholder="Tiêu đề" v-on:keyup.enter="injectUser">
-             </div>
-             <div class="col-sm-7">
-                <input v-model="mailItems" type="text" class="form-control" id="mailItems" name="mailItems"
-                placeholder="Vật phẩm...">
-             </div>
-             <div class="col-sm-1">
-                <button type="button" class="btn btn-primary w-100" v-on:click="sendMail">Send</button>
-             </div>
-          </div>
-          <div class="row top-buffer">
-             <div class="mailInput col-sm-12">
-                <input v-model="mailContent" type="text" class="form-control" id="mailContent" name="mailTitle"
-                placeholder="Nội Dung">
-             </div>
+          <div id="userGiftCollapse" class="collapse show" aria-labelledby="userGiftHeader" data-parent="#accordion">
+            <div class="card-body">
+              <table class="table table-bordered table-responsive-md table-striped text-center">
+                  <thead>
+                    <tr><th class="text-center" v-for="key in Object.keys(resp.session.userGift[0])">{{ key }}</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr class="pt-3-half" v-for="gift in resp.session.userGift" :key="gift.giftType">
+                      <td v-for="key in Object.keys(resp.session.userGift[0])" :key="gift[key]">{{ gift[key] }}</td>
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    </div-->
 </div>
 
 <div class="row big-buffer" >

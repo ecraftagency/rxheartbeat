@@ -324,6 +324,8 @@ public class UserGroup extends Group {
     for (Member member : members.values()) {
       member.reBalance();
     }
+    if (evt2MS == null)
+      evt2MS = new HashMap<>();
     if (GroupMissionData.missionMap != null) {
       for (GroupMissionData.GroupMission gm : GroupMissionData.missionMap.values()) {
         evt2MS.putIfAbsent(gm.id, GroupMissionState.of(gm.id, 0, 0));
@@ -339,6 +341,7 @@ public class UserGroup extends Group {
       member.totalCrt = session.userIdol.totalCrt();
       member.totalAttr = session.userIdol.totalAttr();
       member.totalPerf = session.userIdol.totalPerf();
+      isChange = true;
     }
   }
 }

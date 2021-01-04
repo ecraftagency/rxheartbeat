@@ -377,6 +377,9 @@ public class GroupServiceV1 implements GroupService {
 
     if (approveRes.equals("ok") && action.equals("approve")) {
       CBMapper.getInstance().map(Integer.toString(group.id), Integer.toString(memberId));
+      Session joinMember = SessionPool.getSessionFromPool(memberId);
+      if (joinMember != null)
+        joinMember.groupID = group.id;
     }
     return approveRes;
   }

@@ -12,6 +12,7 @@ import com.statics.*;
 import com.transport.model.LDBObj;
 import com.transport.model.MailObj;
 import com.transport.model.PaymentTransaction;
+import com.transport.model.RollCall;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -74,6 +75,7 @@ public class Transformer {
     JsonArray mails       = new JsonArray();
     JsonObject ss         = new JsonObject();
     JsonArray payment     = new JsonArray();
+    JsonArray userGift    = new JsonArray();
 
     gi.put("Tên",         session.userGameInfo.displayName);
     gi.put("Giới Tính",   session.userGameInfo.gender == 0 ? "Nam" : "Nữ");
@@ -137,10 +139,25 @@ public class Transformer {
       }
     }
 
+
+    session.userRollCall.reCalcGiftCardInfo(session, (int)(System.currentTimeMillis()/1000));
+    for (RollCall.GiftInfo giftInfo : session.userRollCall.giftCards.values()) {
+      Date pd = new Date(giftInfo.boughtTime*1000L);
+      Date lc = new Date(giftInfo.lastClaimTime*1000L);
+      String paidDate = formatter.format(pd);
+      String lastClaim = formatter.format(lc);
+      userGift.add(new JsonObject()
+      .put("giftType", giftInfo.giftType)
+      .put("Thanh toán lúc", paidDate)
+      .put("Lần cuối nhận thẻ", lastClaim)
+      .put("Số ngày còn hiệu lực", giftInfo.remainDay));
+    }
+
     ss.put("userGameInfo", gi);
     ss.put("userInventory", items);
     ss.put("userInbox", mails);
     ss.put("userPayment", payment);
+    ss.put("userGift", userGift);
 
     return ss;
   }

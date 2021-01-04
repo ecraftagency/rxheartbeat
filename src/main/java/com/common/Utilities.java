@@ -35,10 +35,7 @@ public class Utilities {
     int d2 = cal.get(Calendar.DAY_OF_YEAR);
     int y2 = cal.get(Calendar.YEAR);
 
-    if (y2 > y1)
-      return 1;
-
-    return Math.abs(d2 - d1);
+    return Math.abs(d2 - d1 + 365*(y2 - y1));
   }
 
   public static String md5Encode(String string) throws Exception {

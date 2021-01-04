@@ -379,7 +379,6 @@ public class Session {
 
     profile.setUserId(this.id);
     profile.setDisplayName(this.userGameInfo.displayName);
-
     profile.setGender(userGameInfo.gender);
     profile.setAvatarVersion((short)userGameInfo.avatar);//avatar
     profile.setBirthdate(userGameInfo.vipExp);

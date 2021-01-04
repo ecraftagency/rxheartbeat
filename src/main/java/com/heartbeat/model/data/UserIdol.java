@@ -5,6 +5,7 @@ import com.heartbeat.effect.EffectHandler;
 import com.heartbeat.effect.EffectManager;
 import com.heartbeat.event.RankingEvent;
 import com.heartbeat.event.TimingEvent;
+import com.heartbeat.model.GroupPool;
 import com.heartbeat.model.Session;
 import com.statics.*;
 import com.transport.EffectResult;
@@ -145,6 +146,10 @@ public class UserIdol extends Idols {
       session.userGameInfo.totalCrt = totalCrt();
       session.userGameInfo.totalPerf = totalPerf();
       session.userGameInfo.totalAttr = totalAttr();
+      UserGroup group = GroupPool.getGroupFromPool(session.groupID);
+      if (group != null) {
+        group.updateMemberInfo(session, "totalProperty");
+      }
     }
   }
 
