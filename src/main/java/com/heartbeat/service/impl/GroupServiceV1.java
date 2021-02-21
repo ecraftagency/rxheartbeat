@@ -18,7 +18,33 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupServiceV1 implements GroupService {
+  private void consistencyCheck(Group group) {
+    List<Group.Member> invalidMembers = new ArrayList<>();
+    try {
+      for (Group.Member member : group.members.values()) {
+        String groupState = CBMapper.getInstance().getValue(Integer.toString(member.id));
+        try {
+          int gs = Integer.parseInt(groupState);
+          if (gs != group.id)
+            invalidMembers.add(member);
+        }
+        catch (Exception e) {
+          invalidMembers.add(member);
+        }
+      }
+
+      for (Group.Member invalidMember : invalidMembers)
+        group.members.remove(invalidMember.id);
+    }
+    catch (Exception e) {
+      LOG.globalException("node", "Group.consistencyCheck", e.getMessage());
+    }
+  }
+
   @Override
   public void loadSessionGroup(Session session, Handler<AsyncResult<String>> handler) {
     CBMapper.getInstance().getValue(Integer.toString(session.id), ar -> {
@@ -44,6 +70,7 @@ public class GroupServiceV1 implements GroupService {
                 if (gar.succeeded()) {
                   GroupPool.addGroup(gar.result());
                   session.groupID = gid;
+                  consistencyCheck(gar.result());
                 }
                 else { //user have sid-gid mapping entry but no doc under gid //todo critical part
                   CBMapper.getInstance().unmap(Integer.toString(session.id), a -> {});
@@ -298,7 +325,7 @@ public class GroupServiceV1 implements GroupService {
       if (group == null) { //todo critical
         String err = String.format("leave_group_fail_[sid:%d,gid:%d,runtime:%s,members:%s]",
                 session.id, session.groupID, "no", "_");
-        LOG.globalException("node", "leave group", err);
+        LOG.globalException("node", "leave_group", err);
         return err;
       }
 
@@ -316,7 +343,7 @@ public class GroupServiceV1 implements GroupService {
       else { //todo critical
         String err = String.format("leave_group_fail_[sid:%d,gid:%d,runtime:%s,members:%s]",
                 session.id, session.groupID, "valid", "no");
-        LOG.globalException("node", "leave group", err);
+        LOG.globalException("node", "leave_group", err);
         return err;
       }
     }

@@ -255,44 +255,44 @@ public class UserGroup extends Group {
   public String claimReward(Session session, int missionId, int second) {
     GroupMissionData.GroupMission evt = missionMap.get(missionId);
     if (evt == null)
-      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "mission_not_found");
+      return Msg.map.getOrDefault(Msg.DTO_DATA_NOT_FOUND, "Không tìm thấy dữ liệu, vui lòng thử lại");
 
     Member member = members.get(session.id);
     if (member == null)
-      return Msg.map.getOrDefault(Msg.MEMBER_NOT_FOUND, "member_not_found");
+      return Msg.map.getOrDefault(Msg.MEMBER_NOT_FOUND, "Không tìm thấy dữ liệu thành viên");
 
     ExtendEventInfo ei = GROUP_EVENT.evtMap.get(missionId);
     if (ei == null)
-      return Msg.map.getOrDefault(Msg.EVENT_NOT_FOUND, "event_not_found");
+      return Msg.map.getOrDefault(Msg.EVENT_NOT_FOUND, "Không tìm thấy dữ liệu sự kiện");
 
     Mission mission = member.missions.get(missionId);
     if (mission == null)
-      return Msg.map.getOrDefault(Msg.MISSION_NOT_FOUND, "mission_not_found");
+      return Msg.map.getOrDefault(Msg.MISSION_NOT_FOUND, "Không tìm thấy dữ liệu nhiệm vụ công ty");
 
     if (ei.startTime <= 0     ||
         ei.endTime <= 0       ||
         second < ei.startTime ||
         second > ei.endTime ||
         mission.claim) {
-      return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
+      return Msg.map.getOrDefault(Msg.GROUP_CLAIM_TIME_OUT, "Số lượng phần thưởng đã hết");
     }
 
 //    if (calcTotalClaimedMember(missionId) >= MAX_GROUP_MEMBER)
 //      return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
     GroupMissionState missionState = evt2MS.get(missionId);
     if (missionState == null || missionState.totalCM >= MAX_GROUP_MEMBER)
-      return Msg.map.getOrDefault(Msg.TIMEOUT_CLAIM, "group_claim_timeout");
+      return Msg.map.getOrDefault(Msg.GROUP_CLAIM_TIME_OUT, "Số lượng phần thưởng đã hết");
 
     if (!checkPreviousClaim(member, missionId))
-      return Msg.map.getOrDefault(Msg.PREV_CLAIM, "group_prev_claim");
+      return Msg.map.getOrDefault(Msg.PREV_CLAIM, "Bạn phải hoàn thành/ nhận phần thưởng của NV trước");
 
     Map<Integer, Integer> hitMembers = calcMissionHitMember();
     Integer missionHitM = hitMembers.get(evt.id);
     if (missionHitM == null)
-      return Msg.map.getOrDefault(Msg.MISSION_NOT_FOUND, "mission_not_found");
+      return Msg.map.getOrDefault(Msg.MISSION_NOT_FOUND, "Không tìm thấy dữ liệu nhiệm vụ công ty");
 
     if (missionHitM < evt.hitMember) {//
-      return Msg.map.getOrDefault(Msg.INSUFFICIENT_CLAIM, "insufficient_claim"); // :D, chưa đủ tuổi
+      return Msg.map.getOrDefault(Msg.INSUFFICIENT_CLAIM, "Bạn chưa đạt yêu cầu nhận thưởng"); // :D, chưa đủ tuổi
     }
 
     session.effectResults.clear();

@@ -38,7 +38,6 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,7 +45,7 @@ import java.nio.file.Paths;
 import static com.common.Constant.*;
 
 /*
- * RXServer = reactive server, a server that try not to waiting on anything, hope so!!
+ * RXServer = reactive server, an UGLY asynchronous server that try not to waiting on anything, hope so!!
  */
 
 // AVAILABILITY > CONSISTENCY
@@ -79,7 +78,7 @@ public class HBServer extends AbstractVerticle {
   static TProtocol                        protocol;
   public static StdProfileService.Client  thriftClient;
 
-  public static void main(String[] args) throws IOException, TTransportException {
+  public static void main(String[] args) throws IOException {
     System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
     String conf             = new String(Files.readAllBytes(Paths.get("config.json")));
     localConfig             = new JsonObject(conf);

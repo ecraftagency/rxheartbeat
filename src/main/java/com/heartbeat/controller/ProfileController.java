@@ -199,9 +199,12 @@ public class ProfileController implements Handler<RoutingContext> {
     session.userMission.updateAccomplishment(session);
     resp.data.mission       = session.userMission;
 
-    //golden hour section
+    //daily mission
+    resp.data.dailyMission  = session.userDailyMission;
 
+    //golden hour section
     resp.serverTime         = (int)(serverTime/1000);
+
     return resp;
   }
 
